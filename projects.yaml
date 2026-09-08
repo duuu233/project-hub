@@ -1,12 +1,28 @@
-# 共享项目注册表：只记录与机器无关的信息。同名项目复用同一个 ID。
+# 共享项目注册表：同名项目复用同一个 ID，路径由各环境独立配置。
 version: 1
-projects: {}
-
-# 接入示例：把上面的 projects: {} 替换为以下结构。
-# projects:
-#   admin:
-#     name: 管理后台
-#     description: 管理后台前端
-#     context: context/admin.md
-#     enabled: true
-#     default_branch: main  # 可选；只有核实后才填写
+projects:
+  flowerpot-app:
+    name: 花盆APP
+    description: 花盆移动应用
+    context: context/flowerpot-app.md
+    enabled: true
+  flowerpot-admin:
+    name: 花盆后台
+    description: 花盆后台管理项目
+    context: context/flowerpot-admin.md
+    enabled: true
+  album-admin:
+    name: 相册后台
+    description: 相册后台管理项目
+    context: context/album-admin.md
+    enabled: true
+  album-miniapp:
+    name: 相册小程序
+    description: 相册小程序项目
+    context: context/album-miniapp.md
+    enabled: true
+  album-app:
+    name: 相册APP
+    description: 相册移动应用
+    context: context/album-app.md
+    enabled: true
