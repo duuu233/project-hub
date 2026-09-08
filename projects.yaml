@@ -1,0 +1,12 @@
+# 共享项目注册表：只记录与机器无关的信息。同名项目复用同一个 ID。
+version: 1
+projects: {}
+
+# 接入示例：把上面的 projects: {} 替换为以下结构。
+# projects:
+#   admin:
+#     name: 管理后台
+#     description: 管理后台前端
+#     context: context/admin.md
+#     enabled: true
+#     default_branch: main  # 可选；只有核实后才填写

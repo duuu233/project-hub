@@ -1,0 +1,18 @@
+# 复制为 projects.local.yaml 后编辑；不要在此示例中填写真实私有路径或主机。
+version: 1
+environment: company  # 自定义，例如 home、ssh-dev
+paths: {}
+
+# 本地项目（先确保 ID 已在 projects.yaml 注册）：
+# paths:
+#   admin:
+#     transport: local
+#     path: '${PROJECTS_ROOT}/admin-web'
+#     default_branch: main  # 可选，本环境覆盖；仅填写核实过的默认分支
+#   api:
+#     transport: ssh
+#     host: dev-server  # ~/.ssh/config 内的别名，不填写密码
+#     path: /srv/projects/api
+
+# 本地 path 也可以是 D:/Work/admin-web、../admin-web 或 ~/Projects/admin-web。
+# 在 SSH 服务器内运行 Hub 时，用 transport: local 和服务器路径。

@@ -1,0 +1,15 @@
+# 所有环境的实际映射仅本机保存；允许提交脱敏模板。
+projects.local*.yaml
+!projects.local.example.yaml
+*.local.yaml
+.env
+.env.*
+!.env.example
+
+# 本机缓存、工具临时文件
+.codex-tmp/
+.codegraph/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
