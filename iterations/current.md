@@ -1,39 +1,42 @@
 # 当前迭代
 
-状态：已完成（四个项目均已提交推送）
+状态：代码已修复并提交 `08dfce1`；push 待用户指令
 日期：2026-09-08
-环境：ssh（本次由 Agent 按路径解析判定：ssh 映射 6/6 通过，work 映射 0/5 通过，已在汇报中说明）
+环境：ssh（用户本次未声明；按 environments/ssh/projects.local.yaml 解析全部命中，沿用上一轮判定）
 
-## 需求与分发
+## 需求
 
-| 项目 | 需求 | 交付 |
-| --- | --- | --- |
-| album-miniapp | ① 套餐卡赠送角标位置与配色都固定，不随选中变化 ② 卡片右侧留白缩短（当日三次：300 → 276 → 248 → 208rpx） | c33125f、01e7b6c、fcedd6a、487869b |
-| album-app | 同上（150 → 138 → 124 → 104） | 0969685、4da1397、b37d5f4、be2d80f |
-| flowerpot-admin | 植物新增/编辑/详情新增 categoryType 与四条建议字段 | 60eee3a |
-| flowerpot-app | 读取上述字段并在植物详情展示 | 9dfc52d |
+正矿（minerals-admin）进口采购单 `src/views/import-manage` 新增 / 编辑页：合同金额、定价依据列表的成分要求明明填了值，点击提交仍报必填。检查校验规则并修复。
 
-四个项目改动前均执行 `git pull --ff-only`，工作分支保持各自当前的 main。
+## 同步
 
-## 验证摘要
+| 仓库 | 分支 | 同步方式 | 结果 |
+| --- | --- | --- | --- |
+| project-hub | main | `git pull --ff-only` | 6af1a83 → 3c51353 |
+| minerals-admin | feature-v1.8.3（无 upstream） | `git pull --ff-only origin feature-v1.8.3` | 快进至 f02f394 |
 
-- album-miniapp：`node --test tests/token-pay.test.js` 通过。纯样式改动，真机未验。
-- flowerpot-admin：`npm run build` 通过（2430 模块，31.89s）。后台页面人工验收未做。
-- album-app / flowerpot-app：**均未验证**，SSH 开发机没有 Flutter / Dart SDK，analyze / test / format 一个都跑不了。
-- 四个仓库本机均无 CodeGraph 索引。
+## 定位结论（两个独立缺陷）
 
-## 需要用户确认与复核
+1. **成分要求 / 成分名称必现红字**：`定价依据` 的 `PricingBasisTable` 放在合同表单 `</el-form>` 之后、商品表单之外，组件里的 `el-form-item` 带 `prop="pricingBasisList.N.value"` 和必填规则却拿不到任何 `el-form` 上下文。Element Plus 的 `fieldValue` 取自 `formContext.model`，没有表单时恒为 `undefined`，于是用户一输入触发 change 校验就报"请输入成分要求"；提交时这些字段又完全不参与整表校验。代理订单页（`order/agency-order`）把同一组件放在主表单内，所以那边正常。
+2. **合同金额红字不消失**：`contractAmount` 规则只写了 `trigger: 'blur'`。合同金额会被 `calculateProductTotal`（单价×重量汇总）、AI 回显、代理订单带值等程序化写入，这类赋值只触发 el-input 的 change 校验；Element Plus 在"本次 trigger 没有匹配规则"时直接 return，不清除已有错误态，导致之前空值时留下的"请输入合同金额"红字，在金额被自动填上后依然挂着。
 
-1. **需求写「新增二个字段」但列了五个**（categoryType、lightingSuggestions、waterSuggestion、temperatureSuggestion、humiditySuggestion）。按显式字段清单实现了全部五个。
-2. **`humiditySuggestion` 的中文标签取「湿度建议」**，需求原文写的是「温度建议」；同批已有 temperatureSuggestion（空气温度建议），按字段名定标签，产品若坚持原文改一处 label 即可。
-3. **五个新字段都设为选填**，以免卡住既有植物资料的编辑保存；要改必填需明确。
-4. **`categoryType` 是行为字段不是展示字段**：APP 把它下发进设备 DP 161。此前 APP 猜的四个字段名后端从未返回，即分类一直为 null、DP 161 实际没下发过；本轮起会真的下发，需真机复核。
-5. 两个 Flutter 项目的改动至今没被编译过，必须在有 SDK 的机器上补跑。
-6. **「六位数值」口径已更正**：是连小数点后两位一共六位（整数部分四位，最大 ￥9999.99），不是六位整数。上一轮据此把卡片从设计稿的 200rpx 加宽到 300rpx、主价格字号 48 → 40rpx，这个加宽本来就不必要，现已收到 208rpx（APP 104）。
-7. **主价格字号仍是 40rpx，未回滚到设计稿的 48rpx**：回滚需要 216rpx 以上的卡片，与「继续收窄」冲突，二选一待产品定。
+## 修复（minerals-frontend，feature-v1.8.3）
 
-## 遗留（沿用上一轮）
+- 定价依据 Collapse 外层包 `<el-form ref="pricingBasisFormRef" :model="contractForm">`，与页面里"附件信息"表单同款写法，prop 路径得以解析。
+- `contractAmount` / `contractNo` / `originCountry` / `departurePort` 的必填 trigger 改为 `['blur', 'change']`，程序化回填后错误态会被正常清除。
+- 定价依据数据由程序重建（`syncPricingBasis`）、详情回显、AI 回显三处补 `pricingBasisFormRef.clearValidate()`，避免自动带出的空成分行一上来就飘红。
 
-album-admin 有四处 import 大小写与实际文件名不符，Linux 上会中断构建；用户本轮决定先不改。
+## 验证
 
-上一轮记录见 `iterations/archive/2026-09-08-原价字段接入-收尾.md` 与 `archive/2026-09-08-原价字段接入.md`。
+- `@vue/compiler-sfc` 解析 + 模板编译 + `<script setup>` 编译：handleDetail.vue、PricingBasisTable/index.vue 均无错误。
+- 生产构建：本机 node_modules 缺 `vite-plugin-svg-icons-ng`，先 `npm install` 补齐，再以 1024 MB 堆执行 `node scripts/build.mjs --memory 1024 --concurrency 2`，32.2s 通过（965 文件 / 31.5 MB），未放大堆。
+- 项目无 lint / 测试脚本；页面实机与后端联调未做。
+
+## 需要用户确认
+
+1. **push 未执行**：feature-v1.8.3 没有 upstream，需明确后再 `git push origin feature-v1.8.3`。
+2. 合同金额币种 `currencyCode`、原产国 `originCountry` 两条必填规则是**死规则**：`contractRules` 里写了，但页面上没有任何 `el-form-item` 的 prop 是它们（币种 select 被放在 `prop="contractAmount"` 的表单项内），整表校验只跑已注册的表单项，所以这两项目前永远不会被拦。本轮未擅自补，要不要真正生效请示下。
+3. **"保存"按钮不做整表校验**：`saveForm` 直接组装数据提交，合同 / 商品 / 附件三个表单都不校验，只有"合同完成"开关那条路径才走 `contractFormRef.validate()`。本轮维持原状。
+4. 定价依据的必填规则现在能正确解析，但仍不在提交门禁里（`validateOtherComponents` 未纳入 `pricingBasisFormRef`）。代理订单页是纳入主表单校验的，是否对齐由你定。
+
+上一轮记录见 `iterations/archive/2026-09-08-套餐卡收窄与植物字段.md`。
