@@ -8,10 +8,12 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 
 ## 文件用途
 
-| 文件 | 用途 | Git 同步 |
+| 文件/目录 | 用途 | Git 同步 |
 | --- | --- | --- |
-| AGENTS.md | Agent 执行顺序、先 pull 规则、项目定位约定 | 是 |
-| projects.yaml | 所有环境共享的项目身份和背景入口 | 是 |
+| AGENTS.md | Agent 执行顺序、先 pull 规则、项目定位约定、留痕规范 | 是 |
+| projects.yaml | 所有环境共享的项目身份和背景入口（含 private_mounts） | 是 |
+| private/ | 所有私有需求项目的统一收拢大文件夹（按 `<id>/` 物理隔离与扩展） | 是 |
+| logs/ | 统筹日志：含 Hub 自身留痕（`hub/`）、跨项目看板（`projects/`）、方案库（`solutions/`） | 是 |
 | environments/README.md | 环境目录说明与当前环境判定规则 | 是 |
 | environments/&lt;env&gt;/projects.local.yaml | 该环境的项目路径和 SSH 映射 | 是 |
 | environments/projects.local.example.yaml | 脱敏的本机配置模板 | 是 |
@@ -19,7 +21,8 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | context/&lt;id&gt;.md | 接入后创建的项目背景 | 是 |
 | iterations/current.md | 本轮需求、同步和验证记录 | 是 |
 | iterations/archive/ | 历史迭代 | 是 |
-| docs/configuration.md | 字段、路径解析、接入、解绑及校验清单 | 是 |
+| docs/configuration.md | 字段、路径解析、私有挂载、接入、解绑及校验清单 | 是 |
+| scripts/setup-links.mjs | 私有目录软链接初始化、迁移与解绑脚本 | 是 |
 | .gitignore | 排除机器信息和临时文件 | 是 |
 
 各环境的实际路径按环境分目录保存：`environments/home/`（家里电脑）、`environments/work/`（公司电脑）、`environments/ssh/`（SSH 开发机）。这些 `projects.local.yaml` 随 Git 同步，每台机器都能看到全部环境的位置；当前环境以你在任务开头声明的为准，细则见 [environments/README.md](environments/README.md)。文件里只放路径，不放任何凭据。第一版直接维护 YAML，无安装依赖，无固定项目数量。
@@ -100,6 +103,37 @@ api：增加相应搜索条件。
 Agent 会解析当前环境位置，加载上下文，先同步各目标仓库当前所在的分支，再实现和验证。即使不写最后一句，也不会自动 commit 或 push。需要例外时明确说明，例如“本轮不要 pull”；需要提交或推送时明确给出指令。
 
 任务需求、分发状态和简要结果写入 `iterations/current.md`，完成后归档到 `iterations/archive/`。技术和业务细节维护在目标项目文档中，Hub Context 只维护身份和文档入口。
+
+## 私有目录与软链接（Private Mounts）
+
+项目中的私有文件或目录（如 `.codegraph/`、私有文档等）“住”在 Project Hub 的 `private/<project_id>/` 下，通过本地软链接出现在业务项目中，并在业务仓库的 `.git/info/exclude` 中自动忽略，不污染团队 Git。
+
+在新电脑初始化或需要一键恢复软链接时，执行：
+
+```bash
+node scripts/setup-links.mjs --env <env>
+```
+
+指定单个项目迁移或解绑软链接：
+
+```bash
+# 安全迁移已有私有目录
+node scripts/setup-links.mjs --env <env> --project <id> --migrate
+
+# 仅解除业务项目内的软链接（保留 Hub 私有真实数据）
+node scripts/setup-links.mjs --env <env> --project <id> --detach
+```
+
+详细规范与说明见 [配置维护说明](docs/configuration.md#私有挂载private_mounts)。
+
+## 留痕日志与跨项目方案库（Logs & Solutions）
+
+为了实现系统演进全流程可追溯并沉淀通用知识，Hub 建立了统一的日志与方案中枢：
+
+- **`logs/hub/`（统筹项目自身留痕）**：严格遵循小项目的留痕规则，记录 Hub 自身的配置、工具脚本、规则改动的每一次流水与详细说明。
+- **`logs/projects/`（跨项目变更看板）**：按时间倒序记录通过 Hub 调度修改的各业务项目的全局时间线流水。
+- **`logs/solutions/`（跨项目方案库）**：从各个子项目实践中提炼出的高价值通用方案（如 Symlink 方案、构建拆包优化等），供所有项目学习复用。
+- **`private/<project_id>/logs/`（私有需求专属日志）**：凡具有私人需求的项目，其业务细节、内部排障和定制需求写入各自的私有目录下，与公共日志彻底物理隔离。
 
 ## 解绑
 

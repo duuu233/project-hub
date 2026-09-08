@@ -37,3 +37,19 @@ projects:
     context: context/minerals-admin.md
     default_branch: master
     enabled: true
+    private_mounts:
+      .codegraph:
+        target: .codegraph
+        type: directory
+      docs:
+        target: docs
+        type: directory
+      AGENTS.md:
+        target: instructions/AGENTS.md
+        type: file
+      AI_CONTEXT.md:
+        target: instructions/AI_CONTEXT.md
+        type: file
+      logs:
+        target: logs
+        type: directory

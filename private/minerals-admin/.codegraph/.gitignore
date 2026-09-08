@@ -1,0 +1,9 @@
+# Private Hub tracks the checkpointed database and maintained task files.
+# Runtime state belongs to the current machine only.
+*-wal
+*-shm
+*.pid
+*.log
+*.sock
+*.lock
+lock

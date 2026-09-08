@@ -30,6 +30,68 @@ SSH 路径不在本机展开变量；要求填写远端绝对路径。所有远�
 
 若同一机器有多个工作副本，当前只选择一个映射；切换副本时更新本机映射，复用同一个 ID。不要创建重复公共项目。
 
+## 私有挂载（private_mounts）
+
+在团队协作项目中，个人的私有文件或目录（如 `.codegraph/`、`docs/` 私有文档、个人笔记、指令规则等）通过软链接（symlink/junction）挂载到业务项目中，真实文件则由 Project Hub 的 `private/<project_id>/` 目录保存在私有 Git 仓库中统一同步。
+
+在 `projects.yaml` 的项目定义下配置 `private_mounts`：
+
+```yaml
+projects:
+  minerals-admin:
+    name: 正矿
+    context: context/minerals-admin.md
+    enabled: true
+    private_mounts:
+      .codegraph:
+        target: .codegraph
+        type: directory
+      docs:
+        target: docs
+        type: directory
+      AGENTS.md:
+        target: instructions/AGENTS.md
+        type: file
+      AI_CONTEXT.md:
+        target: instructions/AI_CONTEXT.md
+        type: file
+      logs:
+        target: logs
+        type: directory
+```
+
+- **挂载键名**（如 `docs`、`logs`、`AGENTS.md`）：在业务项目根目录下创建的软链接名称。
+- `target`：相对于 `project-hub/private/<project_id>/` 的存储路径（禁止绝对路径或 `..` 越界）。
+- `type`：`directory` 或 `file`。在 Windows 下目录创建 NTFS Junction，文件创建 SymbolicLink；类 Unix 系统创建标准软链接。
+
+### 私人需求大文件夹（private/）与扩展机制
+
+所有具有私人需求的项目，其非公开资产统一存放在 `private/` 大文件夹下，按项目 ID 建立子目录（如 `private/minerals-admin/`），彼此物理隔离。未来任何其他项目（如 `flowerpot-admin`）若产生私有需求，直接在 `private/` 下新建同名子目录并在 `projects.yaml` 增加 `private_mounts` 即可平滑扩展。
+
+### 管理脚本与安全机制
+
+使用 `scripts/setup-links.mjs`（或 `scripts/setup-links.sh`）进行自动化挂载与解绑：
+
+1. **新电脑/新环境恢复挂载**：
+   ```bash
+   node scripts/setup-links.mjs --env work
+   ```
+   自动遍历当前环境已映射项目，将 `private/` 内的私有目录/文件建立软链接，并在业务仓库的 `.git/info/exclude` 中自动忽略，确保业务仓库 `git status` 干净，不污染团队 Git。
+2. **首次安全迁移已有私有目录**：
+   ```bash
+   node scripts/setup-links.mjs --env work --project minerals-admin --migrate
+   ```
+   采用快照对比、原子备份、建立软链接后清理原备份的安全流程，保证数据不丢失、不损坏；若私有目标已存在则拒绝覆盖。
+3. **试运行（Dry-run）**：
+   ```bash
+   node scripts/setup-links.mjs --env work --dry-run
+   ```
+4. **解绑软链接（Detach）**：
+   ```bash
+   node scripts/setup-links.mjs --env work --project minerals-admin --detach
+   ```
+   仅解除业务项目内的软链接，绝对不删除 Hub 内的真实文件，不影响业务项目源码与 Git 历史。
+
 ## Attach（接入）
 
 1. 修改 Hub 受控配置前，按 AGENTS.md 完成 Hub 的默认分支 pull。

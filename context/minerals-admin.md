@@ -7,13 +7,14 @@
 
 ## 项目内上下文入口
 
-以下路径均相对于目标项目根目录，接入时已核实：
+以下路径在业务项目中均通过 `private_mounts` 软链接呈现，真实文件统一保存在 Project Hub 的 `private/minerals-admin/` 下：
 
-- `README.md`：技术栈、环境要求与启动 / 构建命令，目前是项目唯一的公开说明入口。
-- `docs/build-opt/`：打包优化相关脚本与基线数据。
-- `AGENTS.md`：work 环境已存在，执行任务前读取；该项目将它作为本机维护资料，不随源码提交。
-- `AI_CONTEXT.md`：work 环境已存在，执行任务前读取；其他环境需按实际文件核实。
-- `.codegraph/`：本机产物，存在时先使用 CodeGraph 定位或理解代码；不存在时按项目自身方式检索。
+- `README.md`：团队仓库源码，技术栈、环境要求与启动 / 构建命令。
+- `docs/`：挂载自 `private/minerals-admin/docs/`，包含架构、优化记录、领域模型与维护说明，不随团队 Git 提交。
+- `AGENTS.md`：挂载自 `private/minerals-admin/instructions/AGENTS.md`，执行任务前读取。
+- `AI_CONTEXT.md`：挂载自 `private/minerals-admin/instructions/AI_CONTEXT.md`，执行任务前读取。
+- `.codegraph/`：挂载自 `private/minerals-admin/.codegraph/`，包含 CodeGraph 索引数据库。
+- 以上软链接均已在正矿项目 `.git/info/exclude` 中忽略，业务仓库 `git status` 保持干净。
 
 Hub 只负责映射和分发，不维护本项目实现细节。每轮迭代先核实并读取项目已有的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/README.md` 和任务相关维护文档；不存在时读取 `README.md` 及任务相关源码与配置。技术栈、架构、业务规则及验证方式均以项目自身文档和实际配置为准，相关维护也在本项目内完成。是否补建项目级上下文文档由用户决定，Hub 不代为创建。
 

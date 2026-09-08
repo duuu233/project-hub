@@ -6,7 +6,7 @@
 
 # 本机缓存、工具临时文件
 .codex-tmp/
-.codegraph/
+/.codegraph/
 __pycache__/
 *.pyc
 .DS_Store
