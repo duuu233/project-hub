@@ -8,6 +8,7 @@
 
 1. 把当前 SSH 环境上的全部项目接入 Hub，并建立完整映射关系。
 2. 各环境配置文件按 `home` / `work` / `ssh` 分目录存放，Hub 根目录不再堆放本机映射文件。目录名一律小写英文，Markdown 文件名可用中文。
+3. 明确分支约定：同步、修改和提交都在仓库当前检出的分支上进行，没有特殊说明不切分支（例如正矿当前停在 `feature-v1.8.3`）。
 
 ## 分发与映射结果
 
@@ -38,6 +39,8 @@ Hub 内改动：
 - `projects.yaml`：新增 `minerals-admin`；为全部 6 个项目补 `default_branch`（依据远端 HEAD 与本地跟踪分支核实）。
 - 新增 `context/minerals-admin.md`；`AGENTS.md`、`README.md`、`docs/configuration.md` 同步新的环境目录布局。
 - 修正 5 份已有 Context 的两处失实描述：`.codegraph/` 改为“本机产物，随环境而定”（本环境 6 个仓库均无索引目录）；默认分支改为已在共享配置中登记。
+- `AGENTS.md` / `README.md` / `docs/configuration.md` / 6 份 Context 落实分支约定：工作分支 = 当前检出分支，`default_branch` 降级为“远端默认分支记录”，不作为自动切换目标；功能分支无 upstream 时不猜远端分支。
+- `context/minerals-admin.md` 记录正矿的例外：私钥有口令，pull / commit / push 由用户自行完成；口令解除后可去掉该例外。
 
 校验结果：
 
@@ -49,7 +52,7 @@ Hub 内改动：
 ## 待确认与阻塞
 
 - `minerals-admin` 的项目名称按用户指定改为「正矿」，ID 保持 `minerals-admin` 不变（改名不改 ID）。
-- `minerals-admin` 的远端在企业 Codeup，本 SSH 机器当前没有该远端的访问权限（`ls-remote` 被拒绝），所以本环境暂时无法 pull；执行任务前需先解决访问权限，否则按 AGENTS.md 应停止该项目的修改。其余 5 个仓库远端可达。
+- `minerals-admin`（正矿）走 Codeup 远端和单独的 SSH 身份，该私钥设了口令，Agent 非交互环境无法使用（`ls-remote` 被拒绝为 publickey）。按用户约定：pull / commit / push 由用户自行完成，Agent 只改动和验证。其余 5 个仓库远端可达，按通用约定执行。
 - 本环境所有仓库都没有 `.codegraph/` 索引，定位代码时按项目自身方式检索；是否建索引由用户决定。
 - `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`。
 

@@ -12,7 +12,7 @@
 | description | 可选，机器无关的说明 |
 | context | 必填，Hub 内现存的相对 Markdown 路径 |
 | enabled | 必填，布尔值 true / false |
-| default_branch | 可选，经过确认的默认分支；省略时运行前核实 |
+| default_branch | 可选，该仓库经过确认的**远端默认分支**，仅供判断和汇报；工作分支按仓库当前检出的分支，不据此自动切换 |
 
 公共注册表是所有环境项目的集合，不能因为公司电脑没有某个项目就把它全局删除。
 
@@ -54,7 +54,7 @@ SSH 路径不在本机展开变量；要求填写远端绝对路径。所有远�
 3. 必填字段完整，enabled 是布尔值；Context 是 Hub 内实际存在的文件，不能越出 Hub。
 4. 本机映射不存在未知 ID；公共项目未映射不是错误，只表示当前环境不可用。全局停用项目不能执行。
 5. transport 合法，位置字段齐全；本地环境变量存在，解析后的目录存在，路径指向正确项目的 Git 根目录；SSH 路径在远端检查。
-6. 默认分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。
+6. 分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。工作分支以当前检出的分支为准，`default_branch` 只是远端默认分支的记录。
 7. `git check-ignore environments/<env>/projects.local.yaml` 应返回该路径；`git ls-files environments` 中不应出现任何 `projects.local.yaml`。若已被跟踪，说明情况并由用户决定移出索引，不能仅依赖 .gitignore。
 8. `git diff --check` 应通过；审阅 `git diff` 与新增文件，确认共享文件没有真实本机路径、SSH 信息或凭据。
 
