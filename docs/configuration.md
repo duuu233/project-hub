@@ -18,7 +18,9 @@
 
 ## 私有映射
 
-`projects.local.yaml` 包含 `version: 1`、非空的 `environment` 和 `paths` 映射。paths 的键必须是公共注册表中已存在的 ID；可以只配置其中一部分。每个 ID 在一个配置中只能有一个执行位置。
+私有映射保存在 `environments/<env>/projects.local.yaml`，环境目录名与文件内 `environment` 字段一致（当前使用 `home` 家里电脑、`work` 公司电脑、`ssh` SSH 开发机；新增环境新建目录即可）。当前环境的判定规则见 `environments/README.md`。
+
+该文件包含 `version: 1`、非空的 `environment` 和 `paths` 映射。paths 的键必须是公共注册表中已存在的 ID；可以只配置其中一部分。每个 ID 在一个配置中只能有一个执行位置。
 
 本地位置需要 `transport: local`、非空 `path`；远程位置需要 `transport: ssh`、SSH 别名 `host`、远端绝对 `path`。两种位置均可选填 `default_branch`，其优先级高于公共配置。不存密码、私钥和 token。
 
@@ -53,7 +55,7 @@ SSH 路径不在本机展开变量；要求填写远端绝对路径。所有远�
 4. 本机映射不存在未知 ID；公共项目未映射不是错误，只表示当前环境不可用。全局停用项目不能执行。
 5. transport 合法，位置字段齐全；本地环境变量存在，解析后的目录存在，路径指向正确项目的 Git 根目录；SSH 路径在远端检查。
 6. 默认分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。
-7. `git check-ignore projects.local.yaml` 应返回该路径；`git ls-files projects.local.yaml` 应无输出。若已被跟踪，说明情况并由用户决定移出索引，不能仅依赖 .gitignore。
+7. `git check-ignore environments/<env>/projects.local.yaml` 应返回该路径；`git ls-files environments` 中不应出现任何 `projects.local.yaml`。若已被跟踪，说明情况并由用户决定移出索引，不能仅依赖 .gitignore。
 8. `git diff --check` 应通过；审阅 `git diff` 与新增文件，确认共享文件没有真实本机路径、SSH 信息或凭据。
 
 静态校验不能证明 SSH 可连接或远端仓库存在；执行前必须实际核实。未经检查的项目标记为待验证，不宣称通过。

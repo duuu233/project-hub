@@ -16,14 +16,15 @@
 
 ## 项目身份和路径
 
-- `projects.yaml` 是共享注册表；`projects.local.yaml` 是当前执行环境的私有映射。不得提交本机配置、绝对路径、SSH 主机信息或凭据。
+- `projects.yaml` 是共享注册表；`environments/<env>/projects.local.yaml` 是该执行环境的私有映射（`environments/home/` 家里电脑、`environments/work/` 公司电脑、`environments/ssh/` SSH 开发机）。不得提交本机配置、绝对路径、SSH 主机信息或凭据。
+- 当前环境按 `environments/README.md` 的规则确定：扫描 `environments/*/projects.local.yaml`，正常只命中本机那一份；命中多个时读取各自的 `environment` 字段并请用户指明，一个都没有时说明本机未配置，不猜测路径。根目录若残留旧版 `projects.local.yaml`，先迁移到对应环境目录。
 - 使用 `project_id` 定位；也接受精确的项目名称。**相同名称视为同一个逻辑项目**，复用已有 ID、上下文和历史，不因电脑、目录或连接方式创建重复项目。名称去除首尾空白后按大小写精确比较，不做模糊合并；多个匹配项属于配置错误，先解决再修改。
 - ID 创建后保持稳定，建议使用小写英文字母、数字和连字符；改名不改 ID。绑定同名目录前核实用户意图或仓库身份，目录名本身不等于项目名称。
 - 每个环境只映射实际存在的项目；公共注册表数量与本机映射数量可以不同。未映射表示当前环境不可用，不自动创建、clone 或猜测路径。
 - `enabled: false` 表示全局停用；本机解绑只移除当前环境映射，不影响其他环境。
 - `transport: local`：`path` 为绝对路径，或相对于 Hub 根目录的路径；支持开头的 `~/` 和 `${VARIABLE}` 环境变量占位符。解析前检查变量存在，禁止执行路径中的 shell 表达式；解析后验证目录和仓库身份。
 - `transport: ssh`：`host` 是本机 SSH config 别名，`path` 必须为远端绝对路径。使用 SSH 工具在远端执行状态检查、pull、修改和验证，不把远端路径当本地路径。工具不支持远程编辑或连接失败时说明阻塞，不暗中改本地副本。凭据交由 SSH 管理。
-- 在 SSH 服务器内运行 Agent 时，把服务器当独立环境，使用服务器自己的 `projects.local.yaml` 和 `transport: local`。
+- 在 SSH 服务器内运行 Agent 时，把服务器当独立环境，使用 `environments/ssh/projects.local.yaml` 和 `transport: local`。
 
 ## 上下文和执行
 

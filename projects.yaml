@@ -5,24 +5,35 @@ projects:
     name: 花盆APP
     description: 花盆移动应用
     context: context/flowerpot-app.md
+    default_branch: main
     enabled: true
   flowerpot-admin:
     name: 花盆后台
     description: 花盆后台管理项目
     context: context/flowerpot-admin.md
+    default_branch: main
     enabled: true
   album-admin:
     name: 相册后台
     description: 相册后台管理项目
     context: context/album-admin.md
+    default_branch: main
     enabled: true
   album-miniapp:
     name: 相册小程序
     description: 相册小程序项目
     context: context/album-miniapp.md
+    default_branch: main
     enabled: true
   album-app:
     name: 相册APP
     description: 相册移动应用
     context: context/album-app.md
+    default_branch: main
+    enabled: true
+  minerals-admin:
+    name: 正矿管理系统
+    description: 正矿管理系统前端
+    context: context/minerals-admin.md
+    default_branch: master
     enabled: true

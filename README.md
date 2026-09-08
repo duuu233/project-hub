@@ -12,8 +12,9 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | --- | --- | --- |
 | AGENTS.md | Agent 执行顺序、先 pull 规则、项目定位约定 | 是 |
 | projects.yaml | 所有环境共享的项目身份和背景入口 | 是 |
-| projects.local.yaml | 当前环境的项目路径和 SSH 映射 | 否 |
-| projects.local.example.yaml | 脱敏的本机配置模板 | 是 |
+| environments/README.md | 环境目录说明与当前环境判定规则 | 是 |
+| environments/&lt;env&gt;/projects.local.yaml | 该环境的项目路径和 SSH 映射 | 否 |
+| environments/projects.local.example.yaml | 脱敏的本机配置模板 | 是 |
 | context/_template.md | 新项目长期上下文模板 | 是 |
 | context/&lt;id&gt;.md | 接入后创建的项目背景 | 是 |
 | iterations/current.md | 本轮需求、同步和验证记录 | 是 |
@@ -21,7 +22,9 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | docs/configuration.md | 字段、路径解析、接入、解绑及校验清单 | 是 |
 | .gitignore | 排除机器信息和临时文件 | 是 |
 
-已接入以下项目，公司电脑的实际路径保存在被 Git 忽略的 `projects.local.yaml` 中。第一版直接维护 YAML，无安装依赖，无固定项目数量。
+各环境的实际路径按环境分目录保存：`environments/home/`（家里电脑）、`environments/work/`（公司电脑）、`environments/ssh/`（SSH 开发机），其中的 `projects.local.yaml` 被 Git 忽略，只存在于对应机器上。第一版直接维护 YAML，无安装依赖，无固定项目数量。
+
+已接入以下项目：
 
 | 项目名称 | project_id |
 | --- | --- |
@@ -30,6 +33,7 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | 相册后台 | album-admin |
 | 相册小程序 | album-miniapp |
 | 相册APP | album-app |
+| 正矿管理系统 | minerals-admin |
 
 可以直接使用名称发起任务，例如“花盆APP：修复设备列表刷新问题”。其他环境接入同名项目时，复用这些 ID，仅添加该环境自己的路径映射。
 
@@ -47,11 +51,11 @@ projects:
     enabled: true
 ```
 
-复制 `context/_template.md` 为 `context/admin.md`，填写已知背景。在本机 `projects.local.yaml` 写入实际位置：
+复制 `context/_template.md` 为 `context/admin.md`，填写已知背景。在本环境的 `environments/<env>/projects.local.yaml` 写入实际位置：
 
 ```yaml
 version: 1
-environment: company
+environment: work
 paths:
   admin:
     transport: local
@@ -64,7 +68,9 @@ paths:
 
 ## 家里电脑与 SSH
 
-新环境获取 Hub 后，将 `projects.local.example.yaml` 复制为 `projects.local.yaml`，修改 environment 和 paths；只填写该环境实际拥有的项目。公共配置保存项目全集，各环境路径和数量独立。相同名称就是同一项目，继续使用已有 ID。
+新环境获取 Hub 后，将 `environments/projects.local.example.yaml` 复制为 `environments/<env>/projects.local.yaml`（`home` 家里电脑、`work` 公司电脑、`ssh` SSH 开发机，其他环境新建同名目录），修改 environment 和 paths；只填写该环境实际拥有的项目。公共配置保存项目全集，各环境路径和数量独立。相同名称就是同一项目，继续使用已有 ID。
+
+Agent 通过扫描 `environments/*/projects.local.yaml` 判断当前环境，每台机器只会有自己那一份；判定细则见 [environments/README.md](environments/README.md)。
 
 在 SSH 服务器内部运行 Hub 时，按普通本地项目配置服务器路径。若从公司或家里电脑操作 SSH 项目，在本机映射中使用：
 

@@ -1,6 +1,6 @@
-# 复制为 projects.local.yaml 后编辑；不要在此示例中填写真实私有路径或主机。
+# 复制到 environments/<环境名>/projects.local.yaml 后编辑；不要在此示例中填写真实私有路径或主机。
 version: 1
-environment: company  # 自定义，例如 home、ssh-dev
+environment: work  # 与所在目录名一致：home 家里电脑、work 公司电脑、ssh SSH 开发机
 paths: {}
 
 # 本地项目（先确保 ID 已在 projects.yaml 注册）：
@@ -15,4 +15,4 @@ paths: {}
 #     path: /srv/projects/api
 
 # 本地 path 也可以是 D:/Work/admin-web、../admin-web 或 ~/Projects/admin-web。
-# 在 SSH 服务器内运行 Hub 时，用 transport: local 和服务器路径。
+# 在 SSH 服务器内运行 Hub 时，用 environments/ssh/ 目录、transport: local 和服务器路径。
