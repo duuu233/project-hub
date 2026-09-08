@@ -1,7 +1,7 @@
-# 正矿管理系统
+# 正矿
 
 - project_id：minerals-admin
-- 用途：正矿管理系统 PC 端前端（依据仓库 README 与 package.json 核实）。
+- 用途：正矿管理系统 PC 端前端（依据仓库 README 与 package.json 核实）；对话中使用简称「正矿」。
 - 项目名称在各环境中保持一致；本机路径只保存在对应环境的 projects.local.yaml。
 - 代码托管与花盆 / 相册系列不在同一平台（企业 Codeup 仓库），各环境需自行具备访问权限后才能同步。
 

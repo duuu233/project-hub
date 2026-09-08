@@ -32,7 +32,7 @@ projects:
     default_branch: main
     enabled: true
   minerals-admin:
-    name: 正矿管理系统
+    name: 正矿
     description: 正矿管理系统前端
     context: context/minerals-admin.md
     default_branch: master

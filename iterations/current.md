@@ -20,7 +20,7 @@
 | 相册APP | album-app | flutter | Flutter，BoltStar 智能相框客户端 | main |
 | 相册后台 | album-admin | web-ui-v2 | Vue3 后台，BoltFox PC 管理后台 | main |
 | 相册小程序 | album-miniapp | photo-album | 微信小程序，BoltStar 相框客户端 | main |
-| 正矿管理系统 | minerals-admin | minerals-frontend | Vue3 后台，README/package.json 标注“正矿管理系统” | master |
+| 正矿 | minerals-admin | minerals-frontend | Vue3 后台，README/package.json 标注“正矿管理系统” | master |
 
 前 5 个为已有注册项目，本次只补本环境路径映射，复用原 ID 与 Context。第 6 个为新接入项目，新增公共注册记录与 `context/minerals-admin.md`。
 
@@ -48,7 +48,7 @@ Hub 内改动：
 
 ## 待确认与阻塞
 
-- `minerals-admin` 的名称与 ID 由 Agent 依据仓库 README 与 package.json 推定；如与实际叫法不同，现在改动成本最低。
+- `minerals-admin` 的项目名称按用户指定改为「正矿」，ID 保持 `minerals-admin` 不变（改名不改 ID）。
 - `minerals-admin` 的远端在企业 Codeup，本 SSH 机器当前没有该远端的访问权限（`ls-remote` 被拒绝），所以本环境暂时无法 pull；执行任务前需先解决访问权限，否则按 AGENTS.md 应停止该项目的修改。其余 5 个仓库远端可达。
 - 本环境所有仓库都没有 `.codegraph/` 索引，定位代码时按项目自身方式检索；是否建索引由用户决定。
 - `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`。
