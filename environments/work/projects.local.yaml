@@ -1,0 +1,20 @@
+# 公司电脑路径映射，随 Git 同步；仅保存路径，不存凭据。
+# 只添加这台电脑能访问的项目，不需要覆盖公共注册表中的所有项目。
+version: 1
+environment: work
+paths:
+  flowerpot-app:
+    transport: local
+    path: 'D:/Work/learn/flowerpot'
+  flowerpot-admin:
+    transport: local
+    path: 'D:/Work/learn/flowerpot-web'
+  album-admin:
+    transport: local
+    path: 'D:/Work/learn/web-ui-v2'
+  album-miniapp:
+    transport: local
+    path: 'D:/Work/learn/photo-album'
+  album-app:
+    transport: local
+    path: 'D:/Work/learn/flutter'
