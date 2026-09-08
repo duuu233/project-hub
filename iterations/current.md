@@ -40,7 +40,7 @@ Hub 内改动：
 - 新增 `context/minerals-admin.md`；`AGENTS.md`、`README.md`、`docs/configuration.md` 同步新的环境目录布局。
 - 修正 5 份已有 Context 的两处失实描述：`.codegraph/` 改为“本机产物，随环境而定”（本环境 6 个仓库均无索引目录）；默认分支改为已在共享配置中登记。
 - `AGENTS.md` / `README.md` / `docs/configuration.md` / 6 份 Context 落实分支约定：工作分支 = 当前检出分支，`default_branch` 降级为“远端默认分支记录”，不作为自动切换目标；功能分支无 upstream 时不猜远端分支。
-- `context/minerals-admin.md` 记录正矿的例外：私钥有口令，pull / commit / push 由用户自行完成；口令解除后可去掉该例外。
+- `context/minerals-admin.md` 一度记录正矿的密钥口令例外，用户解除口令后已去掉，恢复通用约定。
 
 校验结果：
 
@@ -52,7 +52,7 @@ Hub 内改动：
 ## 待确认与阻塞
 
 - `minerals-admin` 的项目名称按用户指定改为「正矿」，ID 保持 `minerals-admin` 不变（改名不改 ID）。
-- `minerals-admin`（正矿）走 Codeup 远端和单独的 SSH 身份，该私钥设了口令，Agent 非交互环境无法使用（`ls-remote` 被拒绝为 publickey）。按用户约定：pull / commit / push 由用户自行完成，Agent 只改动和验证。其余 5 个仓库远端可达，按通用约定执行。
+- `minerals-admin`（正矿）走 Codeup 远端和单独的 SSH 身份。接入时该私钥有口令导致 Agent 无法访问远端，用户已解除口令，现已可正常 `ls-remote` / `fetch`，本项目回到 Hub 通用约定，无例外。6 个仓库远端均可达。
 - 本环境所有仓库都没有 `.codegraph/` 索引，定位代码时按项目自身方式检索；是否建索引由用户决定。
 - `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`。
 
