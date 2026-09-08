@@ -4,20 +4,27 @@
 
 | 目录 | 含义 | 映射文件 | Git 同步 |
 | --- | --- | --- | --- |
-| `home/` | 家里电脑 | `home/projects.local.yaml` | 否 |
-| `work/` | 公司电脑 | `work/projects.local.yaml` | 否 |
-| `ssh/` | SSH 开发机（在服务器内运行 Hub） | `ssh/projects.local.yaml` | 否 |
+| `home/` | 家里电脑 | `home/projects.local.yaml` | 是 |
+| `work/` | 公司电脑 | `work/projects.local.yaml` | 是 |
+| `ssh/` | SSH 开发机（在服务器内运行 Hub） | `ssh/projects.local.yaml` | 是 |
 | — | 脱敏模板 | `projects.local.example.yaml` | 是 |
 
 ## 当前环境如何确定
 
-1. Agent 扫描 `environments/*/projects.local.yaml`。每台机器只放自己那一份，因此正常情况下只会命中一个文件，它就是当前环境。
-2. 命中多个时不猜测：读取各文件的 `environment` 字段，请用户指明本次使用哪一个。
-3. 一个都没有时说明本机尚未配置，不自动创建、clone 或猜测路径。
-4. 若根目录还残留旧版 `projects.local.yaml`，说明是旧布局，先迁移到对应环境目录再执行任务。
+**以用户在任务开头声明的环境为准。** 映射文件随 Git 同步，每台机器都能看到全部环境目录，所以不靠“哪个文件存在”来猜。
+
+1. 用户在需求开头说明本次是哪个环境（例如“当前是 ssh”“现在在公司电脑”），据此选定 `environments/<env>/projects.local.yaml`。
+2. 在该环境的映射里查本次涉及的 project_id，解析其 `path`：展开 `${VARIABLE}` 和开头的 `~/`，相对路径以 Hub 根目录为基准。
+3. 逐项核对：目录存在、是 Git 根目录、且就是该 project_id 对应的仓库。全部通过才开始工作。
+4. **只要有一项对不上就停下**，不改任何文件、不切换到别的环境的映射、不创建目录、不 clone、不猜其他路径。向用户说明具体是哪个项目、解析出的路径以及卡在哪一步（目录不存在 / 不是 Git 根目录 / 仓库对不上），并提示确认是不是把当前环境说错了。
+5. 声明的环境在 `environments/` 下没有对应映射文件，或该环境里没有这个 project_id，同样停下并说明，由用户决定是补映射还是改环境。
+6. 用户没有声明环境时先问，不要按目录猜；只有当全部环境映射里恰好只有一份能完整解析通过时，才可以据此继续，并在汇报里写明用的是哪个环境。
+7. 若根目录还残留旧版 `projects.local.yaml`，说明是旧布局，先迁移到对应环境目录再执行任务。
+
+改映射时只动自己所在环境那一份，不要顺手改其他机器的路径。
 
 ## 新增环境
 
 复制 `projects.local.example.yaml` 到新目录（例如 `environments/laptop/projects.local.yaml`），填写 `environment` 和该环境实际拥有的项目路径。目录名与 `environment` 字段保持一致，一律使用小写英文，不使用中文；Markdown 文档的文件名可以用中文。只填写本机真实存在的项目；公共注册表的项目数量与本机映射数量可以不同。
 
-映射文件被 `.gitignore` 排除，不随 Git 同步；不要在其中写入密码、私钥或 token，也不要把真实主机信息写进共享文件。
+映射文件随 Git 同步，方便各环境互相看到对方的位置；因此其中只放路径，**绝不写入密码、私钥、token**，SSH 也只写 `~/.ssh/config` 里的别名，不写真实主机地址或凭据。

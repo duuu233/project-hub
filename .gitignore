@@ -1,7 +1,5 @@
-# 所有环境的实际映射仅本机保存；允许提交脱敏模板。
-projects.local*.yaml
-!projects.local.example.yaml
-*.local.yaml
+# 各环境的映射文件随 Git 同步（environments/<env>/projects.local.yaml），
+# 其中只放路径，绝不放密码、私钥或 token。
 .env
 .env.*
 !.env.example

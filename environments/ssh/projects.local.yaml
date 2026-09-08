@@ -1,0 +1,29 @@
+# SSH 开发机环境映射：Hub 在服务器内部运行，全部使用 transport: local。
+# 本文件随 Git 同步，只放路径，不放任何凭据。
+version: 1
+environment: ssh
+paths:
+  flowerpot-app:
+    transport: local
+    path: /pgdata/pg/dh/flowerpot
+    default_branch: main
+  flowerpot-admin:
+    transport: local
+    path: /pgdata/pg/dh/flowerpot-web
+    default_branch: main
+  album-app:
+    transport: local
+    path: /pgdata/pg/dh/flutter
+    default_branch: main
+  album-admin:
+    transport: local
+    path: /pgdata/pg/dh/web-ui-v2
+    default_branch: main
+  album-miniapp:
+    transport: local
+    path: /pgdata/pg/dh/photo-album
+    default_branch: main
+  minerals-admin:
+    transport: local
+    path: /pgdata/pg/dh/minerals-frontend
+    default_branch: master

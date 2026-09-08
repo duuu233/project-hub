@@ -16,13 +16,13 @@
 
 公共注册表是所有环境项目的集合，不能因为公司电脑没有某个项目就把它全局删除。
 
-## 私有映射
+## 环境映射
 
-私有映射保存在 `environments/<env>/projects.local.yaml`，环境目录名与文件内 `environment` 字段一致（当前使用 `home` 家里电脑、`work` 公司电脑、`ssh` SSH 开发机；新增环境新建目录即可）。当前环境的判定规则见 `environments/README.md`。
+环境映射保存在 `environments/<env>/projects.local.yaml`，随 Git 同步，各环境的映射彼此可见；当前用哪一份以用户在任务开头声明的环境为准，环境目录名与文件内 `environment` 字段一致（当前使用 `home` 家里电脑、`work` 公司电脑、`ssh` SSH 开发机；新增环境新建目录即可）。当前环境的判定规则见 `environments/README.md`。
 
 该文件包含 `version: 1`、非空的 `environment` 和 `paths` 映射。paths 的键必须是公共注册表中已存在的 ID；可以只配置其中一部分。每个 ID 在一个配置中只能有一个执行位置。
 
-本地位置需要 `transport: local`、非空 `path`；远程位置需要 `transport: ssh`、SSH 别名 `host`、远端绝对 `path`。两种位置均可选填 `default_branch`，其优先级高于公共配置。不存密码、私钥和 token。
+本地位置需要 `transport: local`、非空 `path`；远程位置需要 `transport: ssh`、SSH 别名 `host`、远端绝对 `path`。两种位置均可选填 `default_branch`，其优先级高于公共配置。不存密码、私钥和 token；这些文件会进入 Git 历史，只写路径和 SSH 别名。
 
 本地路径解析顺序：展开 `${VARIABLE}`（未定义则报错）→ 展开开头 `~/` → 相对路径以 Hub 根目录为基准转绝对路径 → 检查目录、Git 根目录及项目身份。Windows 推荐正斜杠；使用引号包住路径。绝不通过 eval 或执行字符串来解析路径。
 
@@ -53,9 +53,9 @@ SSH 路径不在本机展开变量；要求填写远端绝对路径。所有远�
 2. ID 非空且稳定，推荐匹配 `^[a-z][a-z0-9-]*$`；name 去除首尾空白后唯一，同名项目没有多个 ID。
 3. 必填字段完整，enabled 是布尔值；Context 是 Hub 内实际存在的文件，不能越出 Hub。
 4. 本机映射不存在未知 ID；公共项目未映射不是错误，只表示当前环境不可用。全局停用项目不能执行。
-5. transport 合法，位置字段齐全；本地环境变量存在，解析后的目录存在，路径指向正确项目的 Git 根目录；SSH 路径在远端检查。
+5. transport 合法，位置字段齐全；本地环境变量存在，解析后的目录存在，路径指向正确项目的 Git 根目录；SSH 路径在远端检查。用户声明的环境里解析不出有效路径时停止并请用户确认环境，不要改用其他环境的映射。
 6. 分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。工作分支以当前检出的分支为准，`default_branch` 只是远端默认分支的记录。
-7. `git check-ignore environments/<env>/projects.local.yaml` 应返回该路径；`git ls-files environments` 中不应出现任何 `projects.local.yaml`。若已被跟踪，说明情况并由用户决定移出索引，不能仅依赖 .gitignore。
-8. `git diff --check` 应通过；审阅 `git diff` 与新增文件，确认共享文件没有真实本机路径、SSH 信息或凭据。
+7. 环境映射随 Git 同步：`git ls-files environments` 应能看到各环境的 `projects.local.yaml`。提交前逐行确认其中只有路径、`transport`、`host` 别名和 `default_branch`，没有密码、私钥、token 或真实主机地址。
+8. `git diff --check` 应通过；审阅 `git diff` 与新增文件，确认除环境映射外的共享文件没有本机路径，且任何文件都没有 SSH 主机地址或凭据。
 
 静态校验不能证明 SSH 可连接或远端仓库存在；执行前必须实际核实。未经检查的项目标记为待验证，不宣称通过。

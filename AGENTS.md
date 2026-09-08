@@ -18,8 +18,8 @@
 
 ## 项目身份和路径
 
-- `projects.yaml` 是共享注册表；`environments/<env>/projects.local.yaml` 是该执行环境的私有映射（`environments/home/` 家里电脑、`environments/work/` 公司电脑、`environments/ssh/` SSH 开发机）。不得提交本机配置、绝对路径、SSH 主机信息或凭据。
-- 当前环境按 `environments/README.md` 的规则确定：扫描 `environments/*/projects.local.yaml`，正常只命中本机那一份；命中多个时读取各自的 `environment` 字段并请用户指明，一个都没有时说明本机未配置，不猜测路径。根目录若残留旧版 `projects.local.yaml`，先迁移到对应环境目录。
+- `projects.yaml` 是共享注册表；`environments/<env>/projects.local.yaml` 是各执行环境的映射（`environments/home/` 家里电脑、`environments/work/` 公司电脑、`environments/ssh/` SSH 开发机）。映射文件随 Git 同步，里面只放路径和 SSH 别名；**密码、私钥、token 一律不得提交**。
+- **当前环境以用户在任务开头声明的为准**（映射随 Git 同步，本机能看到全部环境，不按文件是否存在判断）。按声明的环境查映射、解析路径，核对目录存在、是 Git 根目录且仓库对得上；**任一项对不上立即停止**，不改文件、不换环境、不创建目录、不 clone、不猜路径，说明卡在哪一步并提示用户确认是否把当前环境说错了。用户未声明时先问。细则见 `environments/README.md`。改映射只动自己环境那一份。根目录若残留旧版 `projects.local.yaml`，先迁移到对应环境目录。
 - 使用 `project_id` 定位；也接受精确的项目名称。**相同名称视为同一个逻辑项目**，复用已有 ID、上下文和历史，不因电脑、目录或连接方式创建重复项目。名称去除首尾空白后按大小写精确比较，不做模糊合并；多个匹配项属于配置错误，先解决再修改。
 - ID 创建后保持稳定，建议使用小写英文字母、数字和连字符；改名不改 ID。绑定同名目录前核实用户意图或仓库身份，目录名本身不等于项目名称。
 - 每个环境只映射实际存在的项目；公共注册表数量与本机映射数量可以不同。未映射表示当前环境不可用，不自动创建、clone 或猜测路径。

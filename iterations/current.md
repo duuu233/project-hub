@@ -35,7 +35,7 @@
 Hub 内改动：
 
 - 新增 `environments/`：`home/`、`work/`、`ssh/` 三个环境目录，`projects.local.example.yaml`（从根目录移入）和 `README.md`（环境判定规则）。
-- 新增本机映射 `environments/ssh/projects.local.yaml`，6 个项目全部 `transport: local`（Hub 与项目同在服务器内）。该文件被 Git 忽略。
+- 新增本机映射 `environments/ssh/projects.local.yaml`，6 个项目全部 `transport: local`（Hub 与项目同在服务器内）。按用户要求该文件随 Git 同步，不再忽略。
 - `projects.yaml`：新增 `minerals-admin`；为全部 6 个项目补 `default_branch`（依据远端 HEAD 与本地跟踪分支核实）。
 - 新增 `context/minerals-admin.md`；`AGENTS.md`、`README.md`、`docs/configuration.md` 同步新的环境目录布局。
 - 修正 5 份已有 Context 的两处失实描述：`.codegraph/` 改为“本机产物，随环境而定”（本环境 6 个仓库均无索引目录）；默认分支改为已在共享配置中登记。
@@ -46,7 +46,7 @@ Hub 内改动：
 
 - 两份 YAML 解析通过，version 均为 1，无重复键；ID 均匹配 `^[a-z][a-z0-9-]*$`，name 唯一；context 文件全部存在。
 - 6 个映射路径均存在且是对应仓库的 Git 根目录；本机映射无未知 ID。
-- `git check-ignore environments/ssh/projects.local.yaml` 命中，`git ls-files` 未跟踪该文件；`git diff --check` 通过；共享文件未写入本机绝对路径、SSH 主机或凭据。
+- 环境映射已纳入 Git 跟踪，内容只有路径、`transport` 和 `default_branch`，无凭据、无 SSH 主机地址；`git diff --check` 通过。
 - 未执行任何项目的 lint / 测试 / 构建（本轮无代码改动）。
 
 ## 待确认与阻塞
@@ -54,7 +54,8 @@ Hub 内改动：
 - `minerals-admin` 的项目名称按用户指定改为「正矿」，ID 保持 `minerals-admin` 不变（改名不改 ID）。
 - `minerals-admin`（正矿）走 Codeup 远端和单独的 SSH 身份。接入时该私钥有口令导致 Agent 无法访问远端，用户已解除口令，现已可正常 `ls-remote` / `fetch`，本项目回到 Hub 通用约定，无例外。6 个仓库远端均可达。
 - 本环境所有仓库都没有 `.codegraph/` 索引，定位代码时按项目自身方式检索；是否建索引由用户决定。
-- `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`。
+- `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`，提交后所有环境都能看到彼此的位置。
+- 环境映射改为随 Git 同步后，当前环境以用户在任务开头声明的为准；按该环境的映射解析路径，对不上就停下并提示用户确认环境，不换环境重试。判定细则见 `environments/README.md`。
 
 ## 交付
 
