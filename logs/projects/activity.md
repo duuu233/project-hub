@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-08** | **花盆、相册系列 5 个项目** | home / `main` | 家里环境映射接入；对干净仓库执行 `git pull --ff-only`，同步已有 CodeGraph 索引。花盆后台因 `dist.zip` 本地修改暂缓拉取。 | 花盆 APP `9dfc52d`；相册 APP `be2d80f`；相册后台 `746407d`；小程序 `487869b`；花盆后台待处理 |
 | **2026-09-08** | **minerals-admin (正矿)** | ssh / `feature-v1.8.3` | **进口采购单新增/编辑校验修复**：修复定价依据缺少 el-form 上下文导致成分要求报必填，修复合同金额错误态不清除，补清空校验。 | `08dfce1`（已提交待推送） |
 | **2026-09-08** | **minerals-admin (正矿)** | work / `feature-v1.8.3` | **私有目录 Symlink 方案落地与原文件迁移**：将正矿的 docs、.codegraph、logs、AGENTS 等私有资料安全迁移至 Hub，正矿原物理实体彻底删除并替换为 Windows NTFS Junction / SymbolicLink 链接，双重本地忽略防团队污染。 | `private/minerals-admin` 纳入 Hub 管理，业务仓库干净 |
 | **2026-09-08** | **minerals-admin (正矿)** | work / `feature-v1.8.3` | **堆场提货详情状态机补齐**：补齐提货详情页中「提货中」状态显示与按钮交互逻辑。 | `c16df7d`（已推送） |

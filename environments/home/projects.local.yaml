@@ -1,0 +1,19 @@
+# 家里电脑环境映射；本文件随 Git 同步，只保存本机项目路径。
+version: 1
+environment: home
+paths:
+  flowerpot-app:
+    transport: local
+    path: 'D:/work/flowerpot'
+  flowerpot-admin:
+    transport: local
+    path: 'D:/work/flowerpot-web'
+  album-app:
+    transport: local
+    path: 'D:/work/flutter'
+  album-admin:
+    transport: local
+    path: 'D:/work/web-ui-v2'
+  album-miniapp:
+    transport: local
+    path: 'D:/work/photo-album'
