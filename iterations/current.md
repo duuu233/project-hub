@@ -1,33 +1,37 @@
 # 当前迭代
 
-状态：已完成（代码与文档均已提交推送）
+状态：已完成（四个项目均已提交推送）
 日期：2026-09-08
-环境：ssh（用户本次声明；路径从 environments/ssh/projects.local.yaml 解析）
+环境：ssh（本次由 Agent 按路径解析判定：ssh 映射 6/6 通过，work 映射 0/5 通过，已在汇报中说明）
 
 ## 需求与分发
 
-延续 work 端中断的「原价字段接入」，完成剩余工作。
-
 | 项目 | 需求 | 交付 |
 | --- | --- | --- |
-| album-admin | 商品详情/新增/编辑新增四语种划线价（marketAmount 及英/繁/日三个变体） | 代码 e949ce3（work 端），文档 746407d |
-| album-app | 星币管理接入划线价字段 marketAmount | 代码 9ccc387（work 端），文档 03c985a |
-| album-miniapp | 星币管理接入划线价字段 marketAmount | 代码 834c9d7（work 端），文档 0b1a7b3 |
+| album-miniapp | ① 套餐卡赠送角标选中/未选中位置一致，只差背景色 ② 卡片右侧留白缩短 | c33125f |
+| album-app | 同上 | 0969685 |
+| flowerpot-admin | 植物新增/编辑/详情新增 categoryType 与四条建议字段 | 60eee3a |
+| flowerpot-app | 读取上述字段并在植物详情展示 | 9dfc52d |
 
-三个项目恢复时均先 `git pull --ff-only`，工作分支保持各自当前的 main。代码部分在 work 端已由用户提交推送，本端核对 diff 无误；缺失的维护文档在本端按各项目自身约定补齐。
+四个项目改动前均执行 `git pull --ff-only`，工作分支保持各自当前的 main。
 
 ## 验证摘要
 
-- album-miniapp：定向测试全部通过，另做运行时冒烟核对语种码与原价归一。
-- album-admin：字段检查脚本通过；生产构建通过（3044 模块）。
-- album-app：**未验证**，本机无 Flutter / Dart SDK。
-- 三个仓库本机均无 CodeGraph 索引，索引同步未执行。真机与页面验收未做。
+- album-miniapp：`node --test tests/token-pay.test.js` 通过。纯样式改动，真机未验。
+- flowerpot-admin：`npm run build` 通过（2430 模块，31.89s）。后台页面人工验收未做。
+- album-app / flowerpot-app：**均未验证**，SSH 开发机没有 Flutter / Dart SDK，analyze / test / format 一个都跑不了。
+- 四个仓库本机均无 CodeGraph 索引。
 
-## 遗留
+## 需要用户确认与复核
 
-1. album-admin 有四处 import 大小写与实际文件名不符，在 Linux 上会中断构建；既有问题，本轮未修，待用户决定修法。
-2. album-app 的本轮测试仍需在有 Flutter SDK 的机器上补跑。
-3. 客户端原价接口形态（按语种投影 vs 四字段全给）尚未固化，两端当前都兼容。
-4. 三端真机 / 后台页面验收未做。
+1. **需求写「新增二个字段」但列了五个**（categoryType、lightingSuggestions、waterSuggestion、temperatureSuggestion、humiditySuggestion）。按显式字段清单实现了全部五个。
+2. **`humiditySuggestion` 的中文标签取「湿度建议」**，需求原文写的是「温度建议」；同批已有 temperatureSuggestion（空气温度建议），按字段名定标签，产品若坚持原文改一处 label 即可。
+3. **五个新字段都设为选填**，以免卡住既有植物资料的编辑保存；要改必填需明确。
+4. **`categoryType` 是行为字段不是展示字段**：APP 把它下发进设备 DP 161。此前 APP 猜的四个字段名后端从未返回，即分类一直为 null、DP 161 实际没下发过；本轮起会真的下发，需真机复核。
+5. 两个 Flutter 项目的改动至今没被编译过，必须在有 SDK 的机器上补跑。
 
-详细过程与技术口径见 `iterations/archive/2026-09-08-原价字段接入.md` 及各项目自身的变更记录。
+## 遗留（沿用上一轮）
+
+album-admin 有四处 import 大小写与实际文件名不符，Linux 上会中断构建；用户本轮决定先不改。
+
+上一轮记录见 `iterations/archive/2026-09-08-原价字段接入-收尾.md` 与 `archive/2026-09-08-原价字段接入.md`。
