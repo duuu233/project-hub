@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 植物 DP 契约改版（116 / 162）
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `fa54740`）。
+- 需求：DP 定义改版 —— 162 改为 0 不弹窗 / 1 弹窗；植物 DPID 改为 -1 无植物、0..N 具体植物 id（= 管理后台「涂鸦标识 ID」，0 为通用植物），以及配套的 7 条交互逻辑与 6 条界面要求。
+- 交付：**flowerpot-app `275942c`（已推送）**
+  - **数据层**：`PlantConfirmState` 收敛为 `hidden(0)`/`prompt(1)`（`fromDp` 只认 1）；新增 `PlantVariety`（`none = -1`、`parse`、`hasPlant`、`isMissing`）；`FlowerpotState` 的 `hasPlant` 先判 -1，新增 `plantMissing` / `plantGuidePending` / `reportedPlantName`；新增 `_plantKey` 归一化标识——**能解析成整数就按整数比，否则退回小写字符串**，这样后台数据改造和固件升级不同步时老设备也不会突然变「无植物」；删除 `answerPlantConfirm`（App 不再写 162），新增 `confirmDetectedPlant`（把设备当前上报的 id 原样回写 116，能解析出植物时顺带下发 161）；设备报 -1 时清掉本地「有植物」缓存。
+  - **交互**：设备列表页删掉「没有植物就先送去选植物」这道门禁（需求第 6 条），只留离线拦截；详情页进页先补植物资料再看 162，报 1 就弹「发现新植物」引导窗（正文按 116 从后端目录取名字，按钮「确认」= 回写当前上报 id、「选择植物」= 跳选择流程，下方两条提示按需求原文，返回键关掉则不发、下次再弹）；116 = -1 时首页画不带植物的设备图（忽略后台图片）、「今日养护」整行换成惊叹号 + 「未检测到植物，请将植物种入花盆。」、设备设置页「植物」入口点了只提示同一句不进选择页。
+- 两处刻意的取舍：① 116 = -1 时**不清** `device.plant` 对象（那是非空字段、详情页多处直接读，改空安全风险大于收益），界面统一用 `plantMissing()` 判断；② 引导窗不做二次确认——新契约里「确认」只是回写设备自己报的 id，不像旧的 162=2 会让设备换植物。
+- 测试（未运行）：`home_plant_confirm_test.dart` 整份改写为新交互 5 例（弹窗内容、确认回写 116 且不写 162、选择植物跳转、162=0 不弹、116=-1 的无植物界面）；`device_list_page_test.dart` 把「没植物跳选择页」改成「直接进详情页」；`state_backend_integration_test.dart` 补「116 报 -1 就是没有植物」。
+- 验证缺口：**本机没有 Flutter/Dart SDK**，analyze / test 未跑；只做了静态自检（括号配平、无残留旧枚举与 `answerPlantConfirm` 引用、清掉两处失效 import）。真机需验证 162=1 弹窗、确认后固件是否改 0 并回报、拔植物是否报 -1。
+- **依赖后端/后台**：管理后台植物管理的「涂鸦标识 ID」要改成与固件一致的数字，并**新建 涂鸦标识 ID = 0 的通用植物**（需求第 3、4 条）。在这之前 App 用数字 id 匹配不到目录项，引导窗只能显示「已检测到新植物」。
+- 文档：`AI_CONTEXT.md` 设备详情段落按新契约重写，新增 `docs/history/2026-09/2026-09-09-plant-dp-contract-v2.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆 APP 续接代码审核（CODE_REVIEW_HANDOFF）
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，拉到 work 端的 `27bbbd9`）。
