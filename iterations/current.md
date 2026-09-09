@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 定制动画「提示」卡背景图被裁
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `e355274`）。
+- 需求：定制动画页提示盒子右下角的背景图，盒子高度改短后显示不完整，修复。
+- 交付：**flowerpot-app `559ba84`（已推送）**，只动 `animations_page.dart` 的 `_AnimationTipsCard`。
+- 定位：不是缩放坏了，是**被裁**。图用 `Positioned(right: -14, bottom: -18)` 顶到 `SizedBox(height: 126)` 之外，而 `Stack` 的 `clipBehavior` 默认是 `Clip.hardEdge`，顶出去的 18px / 14px 根本不画——卡片本身留着 14px 内边距，位置是有的。盒子压到 126 后被切掉的正好是文件夹下沿和右边的叶子。
+- 顺带核对缩放：素材 `animation_upload_illustration.png` 是 670×304 宽图，`BoxFit.cover` + `alignment: centerRight` 裁到 118 见方时取的是源图右侧 304px 那一窗，文件夹与叶子整个在窗内，所以 cover 不是问题，未动。
+- 改法：卡片 `padding: EdgeInsets.zero`，内边距挪到文案那层 `Padding`，`SizedBox` 高度由 126 改成 154（126+28）保持卡片外形不变；图改 `Positioned(right: 0, bottom: 14)`——按设计稿 `docs/UI/定制动画.png` 的摆法右边贴边、底部与文案齐平，整块在卡片内，也不会被 16px 圆角削到叶子尖。没有用 `Clip.none` 让它继续出血，就是为了避开圆角。
+- 测试（未运行）：新增用例断言图 118×118、右缘与卡片对齐、底边距卡片底缘 14px、四边都在卡片矩形内；旧写法下底边会落到卡片外 4px，能挡住回归。
+- 验证缺口：**本机没有 Flutter/Dart SDK，`flutter analyze` 与 `flutter test` 都没跑**，也未在真机/模拟器上看过效果，需要在有 SDK 的机器复跑。
+- 文档：新增 `docs/history/2026-09/2026-09-09-animation-tips-illustration-clip.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆后台「原价」核查 + 花盆 APP 植物数据链路确认（两问，均无功能改动）
 
 - 环境：ssh；flowerpot-admin（`main`）与 flowerpot-app（`main`）改前均 `git pull --ff-only` = Already up to date。
