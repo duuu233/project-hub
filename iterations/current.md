@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-09：花盆后台侧栏菜单修复，并把「完成后默认 pull + push」写进约定
+
+- 环境：ssh；路径见 `environments/ssh/projects.local.yaml`。
+- 需求：① 排查花盆后台取 `getLeftMenus?parentMenuId=2` 后报 `No match for {"name":"config"}`、左侧菜单整块不显示；② 前端先过滤掉后端返回的失效菜单；③ 把「每次完成任务，没有特殊要求就给对应项目和 Hub 先 pull 再 push」写进文档并执行。
+- 定位结论：`690a70b` 下线「系统配置」时删了本地路由 `name: 'config'`，后端菜单表里 `appUrl=config` 那行还在（同步脚本只增不删，当时已记为待人工清理）。`Sidebar.vue` 把 `menuUrl` 直接交给 `RouterLink`，vue-router 解析不存在的命名路由在渲染期抛错，`v-for` 整体中断，所以整块菜单消失。
+- 交付：
+  - **flowerpot-admin**：`Sidebar.vue` 渲染前用 `router.hasRoute` 过滤失效菜单，屏蔽列表逻辑收进 `visibleMenus` computed，空分组不再留标题，dev 环境每个失效 `menuUrl` warn 一次；补 `docs/history/2026-09/2026-09-09-sidebar-route-filter.md`，同步 `AI_CONTEXT.md` 与 `docs/dynamic-menu-sync.md` 常见问题。提交 `61f8e76`，已推送，`vite build` 通过（35.36s）。
+  - **Hub**：`AGENTS.md` 新增「任务完成后的默认动作：再 pull 一次，然后 push」，替换原「commit 和 push 均由用户决定」；`README.md`、6 份项目 Context 与 `context/_template.md` 同步新口径。
+- 本轮流程自查：改 `Sidebar.vue` 前**漏了对 flowerpot-admin 执行 pull**，违反 `AGENTS.md` 最高优先级规则；发现后补做 stash → `git pull --ff-only`（Already up to date）→ pop，未造成分叉。两个仓库 push 前均再次 pull 确认为最新。
+- 未完成项：后台「菜单列表」里已下线模块的菜单行（基础信息配置 / 用户产品图片 / 产品版本 / 用户产品列表）仍需人工清理或置 `isNav=0`；前端改动**未在浏览器实机验证**，等用户实测。
+
+---
+
 ## 2026-09-08：家里环境接入与批量拉取
 
 - 环境：home；各项目路径见 `environments/home/projects.local.yaml`。

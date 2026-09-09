@@ -6,6 +6,17 @@
 
 ## 操作流水（最新在最前）
 
+### 2026-09-09：工作约定改为「完成并验证后默认 pull + push」
+- **环境**：ssh（SSH 开发机）
+- **分支**：main
+- **操作类型**：工作规则维护
+- **背景**：用户指出「每次完成任务，没有特殊要求的情况下，给对应的项目、包括 Hub 自身，先 pull 再 push」这条约定文档里没有，而且本轮 flowerpot-admin 的改动确实既没先 pull、也没提交推送。核对确认原文档写的是相反口径（`AGENTS.md` 原第 17 行「commit 和 push 均由用户决定」）。
+- **实施**：`AGENTS.md` 用新章节「任务完成后的默认动作：再 pull 一次，然后 push」替换原约定，保留四条边界——验证未过或半成品不提交、push 前 pull 出现分叉冲突即停不自动 merge/rebase/强推、无 upstream 时先问、PR / 合并 / 发布 / 部署仍需单独指令，并要求逐仓库报告提交号；`README.md` 首段口径、文件用途表与「提交迭代需求」说明同步；6 份项目 Context 与 `context/_template.md` 的「commit 和 push 均等待用户明确指令」全部改写，minerals-admin 保留功能分支无 upstream 时用显式 `<remote> <branch>` 的例外。
+- **验证范围**：`grep` 复查仓内不再残留旧口径；Hub 与 flowerpot-admin 均在 push 前 `git pull --ff-only` 确认最新。
+- **交付状态**：本条规则变更与 flowerpot-admin `61f8e76` 同批推送，详见 `iterations/current.md` 本轮记录。
+
+---
+
 ### 2026-09-08：家里环境项目映射与当前分支同步
 - **环境**：home（家里电脑）
 - **分支**：main
