@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 家庭按账号固定 + 配网前置确认
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b9f7dba`）。
+- 需求：① 家庭 id 要固定传给涂鸦——它属于涂鸦账号，不依赖设备也不依赖后端；② 手机连着设备热点没网时会误判，配网前加 loading 等这一步确认完再走后续；③ 先提升客户端健壮性，后端是否返回了不同账号本轮不查。
+- 交付：**flowerpot-app `d0ab4d0`（已推送）**
+  - **家庭固定**：新增桥接方法 `setHomeId` 与 `TuyaRepository.useHome`；`FlowerpotState` 按**涂鸦 uid** 把家庭记进 `SharedPreferences`（`tuyaHome:<uid>`），新增 `_startSession()` 把「会话换代 → 钉家庭 → 拉设备列表」串成一处，登录 / 注册 / 恢复会话 / 会话自检四个入口统一走它（顺序不能反，否则等于又让原生自己挑一次）；每次成功读到列表后把实际用上的家庭写回本地。原生的挑选规则保留为「本地还没记过」时的第一次解析。
+  - **配网前置 + loading**：新增 `prepareForPairing()`——先 `currentHomeId()` 确认并记住家庭，再取令牌，两步都在手机还连着路由器时完成；配网页点「开始配网」先跑它并盖一层 `AppLoading` 遮罩（`AbsorbPointer` 防误触），失败弹错误、**根本不去碰设备热点**。旧原生包没有该方法（`sdk_unavailable`）时不拦路。
+  - **空家庭列表不再随手建家**：Android `withHome` 拆出 `queryHome(retry:)`——进程绑着设备热点时直接报 `home_offline` 绝不建家；否则先重查一次挡掉瞬时空返回；两次都空且在正常网络上才建。iOS 同样先重查一次，并补上**此前根本没实现的 `currentHomeId`** 分支。
+- 测试（未运行）：`state_pairing_test.dart` 新增四例——会话开始把 `tuyaHome:mock-user` 钉给涂鸦、准备阶段查不到家庭时不取令牌也不连热点、确认家庭后才取令牌且有效期内不重取、旧原生包缺方法时不拦路。
+- 验证缺口：**本机没有 Flutter/Dart SDK、Android SDK、Xcode**，analyze / test 未跑，两端桥接**未编译**。真机需走一次完整配网，确认遮罩出现即消失、日志里 `home pinned to …` 与 `home picked …` 对得上。
+- 已知边界：已经被写进第二个空家庭的老设备不会自动搬家，本轮只保证今后固定用同一个家庭；首次解析若挑错，设备列表底部的诊断行会显示家庭 id，可据此在涂鸦后台核对。
+- 文档：`AI_CONTEXT.md` 家庭那段改写，新增 `docs/history/2026-09/2026-09-09-home-pinned-and-pairing-preflight.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆 APP OTA 弹窗两个版本号都不对
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b7b6ad6`）。
