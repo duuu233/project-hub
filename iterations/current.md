@@ -12,6 +12,11 @@
 - 验证缺口：**本机没有 Flutter/Dart SDK、Android SDK、Xcode**，analyze / test 未跑，两端桥接**未编译**。真机需走一次完整配网，确认遮罩出现即消失、日志里 `home pinned to …` 与 `home picked …` 对得上。
 - 已知边界：已经被写进第二个空家庭的老设备不会自动搬家，本轮只保证今后固定用同一个家庭；首次解析若挑错，设备列表底部的诊断行会显示家庭 id，可据此在涂鸦后台核对。
 - 文档：`AI_CONTEXT.md` 家庭那段改写，新增 `docs/history/2026-09/2026-09-09-home-pinned-and-pairing-preflight.md`，两个索引同步。
+- **追加（同轮，用户确认「家庭 id 就用涂鸦给的，后端按账户存、在登录接口返回」）**：交付 **`1763f74`（已推送）**
+  - `BackendAuthAccount` 新增 `tuyaHomeId`，从登录 / 注册响应解析，字段名以 **`tuYaHomeId`** 为准（与 `tuYaPwd`、`tuYaRemark` 同一套写法），兼容 `tuyaHomeId` / `homeId`；拿到就 `useHome` 钉给涂鸦并写本地缓存，`_pinKnownHome` 不再覆盖。**优先级：后端 > 本地缓存 > 涂鸦家庭列表现挑。**
+  - **自愈**：用钉住的家庭读设备却拿到 0 台，就作废缓存（`useHome('')` + 删本地记录）并立刻重读一次——缓存只是缓存，以涂鸦返回的为准。iOS 的 `setHomeId` 收到空值改为清掉 `currentHome`，否则这条路径在 iOS 上无效。
+  - 家庭 id 的性质已核实并写进文档：**由涂鸦云端分配**，App 只能查（`queryHomeList` → `getHomeId`）或建（`createHome` 回调里返回云端分配的 id），我们唯一自定的是家庭名「我的花园」；Home SDK 下设备按家庭组织（`getHomeDetail().getDeviceList()`），配网令牌也按家庭取（`getActivatorToken(homeId)`），所以账号必须有家庭。
+- **待后端配合（已写进项目历史记录）**：① 登录 / 注册响应 `UserInfoDetailApiOut` 增加 `tuYaHomeId`（当前 Swagger 里只有 `userToken`/`userNo`/`tuYaPwd`/`countryCode`/`nickName`/`avatar`/`userMobile`/`userEmail`）；② 提供保存接口（建议 `POST /Client/User/setTuyaHomeId`，入参 `{userToken, tuYaHomeId}`），让 App 把第一次解析 / 创建到的家庭回写——否则后端手里永远不会有值。接口定下来前 App 侧用「本地缓存 + 自愈」顶着，换手机 / 重装后重新解析一次。
 
 ---
 
