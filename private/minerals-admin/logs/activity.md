@@ -6,6 +6,21 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-09：码头直提按采购类型控制客户项并回传采购单字段
+- **环境**：ssh
+- **工作分支**：`feature-v1.8.3`（改前 `git pull --ff-only origin feature-v1.8.3` = Already up to date）
+- **提交记录**：`a909a1a`（已推送）
+- **需求与实现**（`views/sales-pickup/list/pier-add.vue`）：
+  - `getWaitDeliveryPurchaseList` 后端新增 `purchaseType`（0 代理采购 / 1 自营采购）、`customerId`、`customerName`、`agentOrderNo`，`state.purchaseList` 映射时一并保留。
+  - 表单把「进口采购单号」调到「客户」前面；客户项 `:required="!isSelfOperated"`，自营（`purchaseType === 1`）时禁用并清空，未选采购单时也禁用；`rules` 由普通对象改成 `computed`，配合 `:validate-on-rule-change="false"`，否则必填是 setup 时的快照、自营仍会被拦。
+  - 代理采购按所选采购单的 `customerId` 回显客户（`customerOptions` 会把采购单带的客户补进下拉，避免客户列表里没有该客户时回显不出来），仍支持手动改选，`form.customerOrgName` 跟随选中项同步。
+  - 保存 `createWharfDeliveryOrder` 新增 `purchaseType`、`agentOrderNo`（取自所选采购单）与 `customerId`/`customerName`（取自最终选中的客户，自营为空）；顺带修掉原来 `state.customerList.find(...).label` 在客户不在列表时会抛错的写法。
+  - 集装箱取数条件改为 `canFetchGoods`：已选采购单，且代理采购下已选客户；自营没有客户，只按采购单号查（原条件写死要 `customerOrgId`，自营会永远查不出列表）。切换采购单清空已选集装箱与弹框列表。
+- **口径待确认**：`customerId`/`customerName` 传的是**最终选中的客户**（因为客户支持手动改）；若后端要的是采购单原始委托客户，需要改成取 `selectedPurchaseOrder` 的值。
+- **验证**：生产构建（1024MB 堆 / 2 线程）29.7s 通过；`codegraph sync` 已刷新。**未做浏览器实机验证**，自营 / 代理两种采购单的实际数据也没跑过。
+
+---
+
 ### 2026-09-09：出库附件必填标识 + 码头直提集装箱弹框打开即查询
 - **环境**：ssh
 - **工作分支**：`feature-v1.8.3`（改前 `git pull --ff-only origin feature-v1.8.3` = Already up to date）

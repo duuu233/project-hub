@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-09：正矿码头直提按采购类型控制客户项
+
+- 环境：ssh；minerals-admin，工作分支 `feature-v1.8.3`（改前 pull = Already up to date；Hub 同步 = Already up to date）。
+- 需求：码头直提新增页，`getWaitDeliveryPurchaseList` 后端多返回 `purchaseType`（0 代理采购 / 1 自营采购）、`customerId`、`customerName`、`agentOrderNo`；采购单号与客户项换位置；自营禁用客户项，代理按采购单的 `customerId` 回显客户并允许手改；这四个字段一并传给保存接口。
+- 交付：**minerals-admin `a909a1a`（已推送，生产构建 1024MB 堆 / 2 线程 29.7s 通过）**，改动集中在 `src/views/sales-pickup/list/pier-add.vue`。
+  - 关键点是 `rules` 必须从普通对象改成 `computed`：原写法 `required: true` 是 setup 时的快照，只在 form-item 上写 `:required="!isSelfOperated"` 不足以放开——el-form-item 的 `required` 与表单 rules 是叠加关系，自营模式仍会被那条 required 拦住提交。同时给 `el-form` 加 `:validate-on-rule-change="false"`，避免规则变化时立刻弹红字。做法与堆场 `yard-add.vue` 一致。
+  - `customerOptions` 把采购单带回的客户补进下拉，防止该客户不在 `getWaitDeliveryCustomerList` 里时回显不出来；同时修掉原提交里 `state.customerList.find(...).label` 客户不在列表就抛错的写法。
+  - 集装箱取数条件从「客户 + 采购单都有」改成 `canFetchGoods`（已选采购单，代理采购下还需客户），否则自营模式永远查不到集装箱；切换采购单清空已选集装箱，避免跨单混入。
+- 待确认口径：保存时 `customerId`/`customerName` 传的是**最终选中的客户**（因为需求明确客户可手改）。若后端要的是采购单原始委托客户，改成取 `selectedPurchaseOrder` 的值即可。
+- 未完成：**未做浏览器实机验证**，自营 / 代理两类采购单的真实数据没跑过；全量 `vue-tsc` 仍因本机 1GB 堆 OOM 未跑，沿用生产构建当门禁。
+
+---
+
 ## 2026-09-09：正矿出库附件必填标识与码头直提集装箱弹框
 
 - 环境：ssh；minerals-admin，工作分支 `feature-v1.8.3`（改前 `git pull --ff-only origin feature-v1.8.3` = Already up to date；Hub 同步 = Already up to date）。
