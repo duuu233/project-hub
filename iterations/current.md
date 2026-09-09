@@ -11,6 +11,11 @@
 - 测试（未运行）：`device_list_page_test.dart` 新增一例——`getDevices` 抛错后 `deviceLoadError` 带错误码、页面显示错误态与「重试」而不是「暂无设备」，仓库恢复后点重试回到正常列表。
 - 验证缺口：**本机没有 Flutter/Dart SDK，也没有 Android SDK 和 Xcode** —— `flutter analyze`、`flutter test` 未跑，两端桥接改动**没有编译过**，需在有环境的机器上先编译再测。
 - 文档：`AI_CONTEXT.md` 补设备清单链路与家庭选择口径，新增 `docs/history/2026-09/2026-09-09-relogin-device-list-empty.md`，两个索引同步。
+- **追加（同一轮，用户反馈已基本不用联调页）**：把定位所需的现场信息搬进真实页面，交付 **`b7b6ad6`（已推送）**
+  - `FlowerpotState` 记 `lastHomeId`（每次成功读设备后从原生 `currentHomeId` 读回，此时原生已缓存，不会再触发云端查询），并给出 `sessionDiagnostics` = `uid … · 家庭 … · 设备 N 台 · 失败原因`。
+  - 设备列表的**错误态和「暂无设备」空态**底部各画一行可长按复制的小字（`Key('device-list-diagnostics')`）——「一台都没有」时最需要的就是这两项。
+  - 每次读设备列表打一行 `[devices] …` 日志（`debugPrint`，不按 debug 模式过滤，`adb logcat -s flutter` / Xcode 控制台可见）；iOS 补 `home picked <id> of <n> homes` 与 Android 对齐。
+- **回答「家庭 id 从哪来、会不会因为 Wi-Fi 不同」**：家庭属于涂鸦账号、存在云端，由 `queryHomeList` / `getHomeList` 按当前 uid 拉取，桥接缓存在 `homeId` / `currentHome`（退登清空）。手机连哪个 Wi-Fi **不参与选家庭**。但网络会间接影响两条路径：① AP 配网期间手机挂在设备热点上没有外网，若家庭尚未缓存，`withHome` 在无网下查家庭可能失败、或拿到空的本地缓存进而**自动建家**——这正是账号多出一个空家庭的来路；② 配网时用的是哪个家庭，设备就绑进哪个家庭。所以因果是「多个家庭 + 选择不稳定」，Wi-Fi 只是制造第二个家庭的诱因。
 
 ---
 
