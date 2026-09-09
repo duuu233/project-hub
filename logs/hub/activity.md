@@ -6,6 +6,21 @@
 
 ## 操作流水（最新在最前）
 
+### 2026-09-09：ssh 安装 CodeGraph CLI，索引库改为本机生成不再进 Git
+- **环境**：ssh（SSH 开发机）
+- **分支**：main
+- **操作类型**：工具链 + 版本控制策略调整
+- **背景**：ssh 补建挂载后 `.codegraph/` 软链接已存在，但本机没有 `codegraph` 命令，后续 session 会按规则去调 `codegraph explore` 然后失败。排查发现这台机器 2026-07-29 装过 1.5.0（`~/.codegraph/telemetry.json`、`daemons/*.json` 记录 root 为已废弃的 `/home/pg/dh/photo-album`），随 node 版本更替丢失（现只剩 v24.16.0，全局包只有 corepack + npm）。
+- **实施**：
+  - 安装 `npm i -g @colbymchenry/codegraph`（1.6.0，self-contained，bin 为 `codegraph`）。
+  - `git rm --cached private/minerals-admin/.codegraph/codegraph.db`，并在 `private/minerals-admin/.codegraph/.gitignore` 增加 `codegraph.db`：索引库改为每台机器本地生成，Hub 在该目录下只跟踪人工维护的 `task-cache/`。理由是两台机器都 sync 会在 33MB 二进制上产生不可合并冲突，且每次提交都往 Hub 里再压一份（`.git` 目前 11MB）；其余 5 个项目的 `.gitignore` 本来就整体忽略 `.codegraph/`，本次是拉齐口径。
+  - `codegraph sync` 在本机重建索引：608 个文件重解析，16.2s，10,121 节点 / 32,214 边，DB 32.5MB。
+  - 口径同步进 `README.md`、`docs/configuration.md`（补 CLI 安装命令与索引库策略）、正矿 `instructions/AGENTS.md`（第 1、3 节：索引库不提交、CLI 每机各装一次、没装就退回源码检索）。
+- **验证**：`codegraph --version` = 1.6.0；`codegraph status` 读到 629 文件；`codegraph explore` 实测可用（正确列出 `stockInfoList` 的 14 个调用方）；sync 后 Hub `git status` 不再出现 DB 改动。
+- **顺带核实**：正矿团队仓库自己的 `.gitignore`（`db6b7cc`，2026-07-30）第 26、29~31 行已忽略 `.codegraph/`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/docs/`，脚本写入 `.git/info/exclude` 的条目属双保险，真正只靠 exclude 的是 `logs/`。
+
+---
+
 ### 2026-09-09：ssh 环境补建正矿私有挂载，补写各环境挂载状态与冲突处理
 - **环境**：ssh（SSH 开发机）
 - **分支**：main

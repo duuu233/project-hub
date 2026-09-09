@@ -1,5 +1,8 @@
-# Private Hub tracks the checkpointed database and maintained task files.
+# Private Hub tracks only the maintained task files here.
+# The index database is a derived artifact: each machine builds its own with
+# `codegraph sync` (same as every other project, whose .gitignore drops .codegraph/).
 # Runtime state belongs to the current machine only.
+codegraph.db
 *-wal
 *-shm
 *.pid

@@ -110,7 +110,7 @@ Agent 会解析当前环境位置，加载上下文，先同步各目标仓库�
 
 **默认不用这套机制。** 所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（花盆 APP / 花盆后台、相册 APP / 后台 / 小程序）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 就提交在各自仓库里，`.codegraph/` 由各自 `.gitignore` 忽略、每台机器本地生成，Hub 不接管、不复制。
 
-**只有正矿（`minerals-admin`）走私有化。** 它是企业团队仓库，私人文档、AI 规则、私有日志和 CodeGraph 索引都不能提交进去，所以这几样的真实文件迁到 Hub 的 `private/minerals-admin/` 统一维护和同步，业务仓库里只留软链接。三台机器（work / home / ssh）的正矿仓库物理路径不同，各自在 `environments/<env>/projects.local.yaml` 里配置自己的路径，`projects.yaml` 的 `private_mounts` 定义三端共用——因此在哪台机器上打开正矿，`docs/`、`logs/`、`AGENTS.md`、`AI_CONTEXT.md`、`.codegraph/` 指向的都是 Hub 里的同一份。新机器（或漏建链接的机器）执行下面的命令补齐即可。
+**只有正矿（`minerals-admin`）走私有化。** 它是企业团队仓库，私人文档、AI 规则、私有日志和 CodeGraph 索引都不能提交进去，所以这几样的真实文件迁到 Hub 的 `private/minerals-admin/` 统一维护和同步，业务仓库里只留软链接。三台机器（work / home / ssh）的正矿仓库物理路径不同，各自在 `environments/<env>/projects.local.yaml` 里配置自己的路径，`projects.yaml` 的 `private_mounts` 定义三端共用——因此在哪台机器上打开正矿，`docs/`、`logs/`、`AGENTS.md`、`AI_CONTEXT.md`、`.codegraph/` 指向的都是 Hub 里的同一份。唯一不进版本控制的是 CodeGraph 索引库 `codegraph.db`——它是可再生成的派生物，每台机器装好 CLI（`npm i -g @colbymchenry/codegraph`）后本地 `codegraph sync` 自建，避免多机提交同一个 33MB 二进制。新机器（或漏建链接的机器）执行下面的命令补齐链接即可。
 
 在新电脑初始化或需要一键恢复软链接时，执行：
 

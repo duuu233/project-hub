@@ -104,7 +104,15 @@ projects:
 
 冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。2026-09-09 在 ssh 环境遇到的 `docs/build-opt/`（2026-08-25 打包优化留下的原始日志、指标与脚本，24 个文件 / 601894 字节）即按此并入 `private/minerals-admin/docs/build-opt/`，挂载后在仓库内仍是原来的 `docs/build-opt/` 路径。
 
-挂载完成后按本机情况确认 CodeGraph：`.codegraph/` 只是把 Hub 里的索引库链过去，索引内容仍是上次执行 sync 那台机器的快照。ssh 开发机当前**没有安装 `codegraph` CLI**，无法在本机 `codegraph sync`，该环境下定位代码仍用源码检索。
+挂载完成后确认 CodeGraph。CLI 每台机器各装一次（自带运行时，装完提供 `codegraph` 命令）：
+
+```bash
+npm i -g @colbymchenry/codegraph   # 2026-09-09 在 ssh 装的是 1.6.0
+```
+
+**索引库 `codegraph.db` 不进版本控制**，与其余项目一致（它们的 `.gitignore` 都忽略整个 `.codegraph/`），已在 `private/minerals-admin/.codegraph/.gitignore` 里忽略；Hub 只跟踪同目录下人工维护的 `task-cache/`。索引是可再生成的派生物：每台机器拉到新代码后自己跑 `codegraph sync` 即可（正矿 629 个文件全量重解析约 16 秒）。这样避免两台机器同时提交 33MB 二进制造成不可合并的冲突，也不让 Hub 仓库被历次快照撑大。
+
+`.codegraph/` 仍然保留挂载，是为了让索引和 `task-cache/` 跟其它私有资料放在同一处统一维护；顺带说明，正矿团队仓库自己的 `.gitignore` 第 26、29~31 行本来就忽略了 `.codegraph/`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/docs/`，脚本写进 `.git/info/exclude` 的那几条是双保险，真正只靠 exclude 兜底的是 `logs/`。
 
 ## Attach（接入）
 

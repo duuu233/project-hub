@@ -6,6 +6,15 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-09：ssh 装上 CodeGraph CLI，索引库改本机生成
+- **环境**：ssh
+- **实施**：`npm i -g @colbymchenry/codegraph`（1.6.0）；`codegraph sync` 重建本机索引（608 文件 / 16.2s / 10,121 节点 / 32,214 边）。
+- **策略调整**：`codegraph.db` 从 Hub 版本控制移除并加入 `.codegraph/.gitignore`，改为每台机器本地生成；Hub 只留 `task-cache/` 与文档、规则、日志。避免 work / ssh 两处 sync 在 33MB 二进制上冲突。
+- **实测**：原 work 那份索引在本机可直接读（源码路径是相对路径），但依赖侧存的是 `D:/new-project/minerals-frontend/node_modules/...` 这类绝对路径，连 work 现路径都对不上，跨机器共享价值有限——这也是改成本机自建的依据之一。
+- **规则同步**：`AGENTS.md` 第 1、3 节改写（索引库不提交、CLI 每机各装一次、未装则退回源码检索）。
+
+---
+
 ### 2026-09-09：ssh 环境补建私有挂载（5 个链接）
 - **环境**：ssh
 - **工作分支**：`feature-v1.8.3`（不产生团队仓库提交）
