@@ -15,6 +15,7 @@
   - 用 `scripts/setup-links.mjs --env ssh --project minerals-admin` 建立 5 个软链接并写入 `.git/info/exclude`；冲突的 `docs/build-opt/`（2026-08-25 打包优化原始产物，24 文件 / 601894 字节）先 `cp -a` 并入 `private/minerals-admin/docs/build-opt/`、`diff -r` 校验一致后再删除仓库内原件。
   - `docs/configuration.md` 私有挂载章节新增「各环境挂载状态与冲突处理」：三端挂载状态表（work 2026-09-08 已挂载 / ssh 2026-09-09 已挂载 / home 未映射）、`Real source exists` 的正确处理顺序（`--migrate` 只适用于私有目标不存在的首次迁移）、以及挂载后 CodeGraph 索引仍是上次 sync 机器快照的提醒。
   - 修正正矿 `instructions/AGENTS.md` 里指向不存在的 `docs/private-mounts.md` 的引用，改为 `docs/configuration.md` 的私有挂载章节。
+  - 按用户澄清补写「归属口径」：所有项目都是文档 + CodeGraph 长期维护，但 5 个个人自有仓库的 `AGENTS.md`/`AI_CONTEXT.md`/`docs/` 就提交在各自仓库、`.codegraph/` 各自 `.gitignore` 忽略并本机生成，一律不进 Hub；只有正矿因为是企业团队仓库不能放私人内容才做私有化，三端各自配路径、共用同一份挂载定义指向 Hub 同一份资料。写入 `README.md` 私有目录章节与 `docs/configuration.md`。核实依据：5 个仓库均实有 `AGENTS.md`/`AI_CONTEXT.md`/`docs/`（`git ls-files` 计数 22~132 个文件）且 `.gitignore` 均含 `.codegraph/`。
 - **验证范围**：`--dry-run` 先行；挂载后 5 个链接 `readlink -f` 指向正确并可读，`git check-ignore -v` 全部命中，`minerals-frontend` 的 `git status` 干净。
 - **交付状态**：与本轮正矿代码提交分开，Hub 单独提交推送；`private/minerals-admin/logs/2026-09-09-ssh私有挂载补建.md` 留详细记录。
 

@@ -94,7 +94,7 @@ projects:
 
 ### 各环境挂载状态与冲突处理
 
-`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。目前只有 `minerals-admin`（正矿）有私有文档与 CodeGraph 的需求并配置了 `private_mounts`，其余项目不挂载。
+`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。归属口径：所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（`flowerpot-app`、`flowerpot-admin`、`album-app`、`album-admin`、`album-miniapp`）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 都提交在各自仓库里，`.codegraph/` 写在各自 `.gitignore` 中、每台机器本地生成，一律不进 Hub、不配 `private_mounts`。只有 `minerals-admin`（正矿）是企业团队仓库，私人内容不能提交进去，才把这几样迁到 `private/minerals-admin/` 并用软链接挂回业务仓库。各环境正矿仓库的物理路径不同，分别写在自己的 `environments/<env>/projects.local.yaml` 里，挂载定义共用同一份，三端最终指向 Hub 的同一份文档与索引。
 
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
