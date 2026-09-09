@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 家庭标记改用 userId + 「一小时掉登录」排查
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（起始 `669b89b`）。
+- 交付一：**家庭名标记（`ffbefb6`）** —— 后端不想加 `tuYaHomeId` 字段并提出「`userNo` 转 long 当家庭 id」，**该方案不可行**（家庭 id 是涂鸦云端家庭表主键、由它分配，`createHome` 不接受指定 id；自造 Long 要么查不到家庭，要么撞上别人的）。改为让账号标识承载归属但**不当 id**：新增 `useHomeTag`（桥接 `setHomeTag`），两端建家时用 `YS-<账号键>` 当家庭名，认领时名字优先、其次带设备、最后 `homeId` 最小。
+- 交付二：**账号键改用后端 `userId`（`c612166`）** —— 后端同意登录响应多返回 `userId`。解析 `userId`（兼容 `id`），登录时记下并按涂鸦 uid 存一份，会话恢复时读回；家庭名标记与本地缓存键都用它，缺省退回涂鸦 uid（`userNo`）。**标记跟账号走不跟手机走**：同一手机反复登录、换手机登同一账号，认到的都是同一个家庭。
+- 交付三：**「一小时掉登录」（`38c71f0`）** —— 排查结论：APP 后端 token 没有客户端 TTL（`ApiSession` 持久化、不过期），App 里也没有一小时量级的定时器，所以掉登录只能来自某次请求回 401/406（该后端 `retCode 406` 就是「请重新登录！」）。真正的放大器在 `_run`：`if (error.isAuthError) _clearLocalSession()` 把**整个**本地会话清掉，包括涂鸦会话、设备列表与各种缓存 —— 而设备、DP、配网、固件全走涂鸦，与后端 token 无关。改为 `_handleBackendSessionExpired`：只清后端会话、记下失效原因（进设备列表页诊断行「后端会话：…」），并在 `ApiClient` 判死会话前打一行 `[session] 后端会话失效：<METHOD> <path> → HTTP/retCode`（只记路径不记 token）。
+- **根因仍在后端**：一小时像是后端会话/redis 有效期，而他们查的是 token 表。请用新版本复现一次，把那行日志发给后端即可定位是哪个接口开始 406；若确认 token 就是一小时有效期，需要后端给刷新接口或延长有效期——设备侧不受影响，只有图库、植物目录这些依赖后端的功能会提示重新登录。
+- 测试（未运行）：`state_pairing_test.dart` 补家庭标记断言；`state_backend_integration_test.dart` 新增「后端会话失效只清后端」用例（`updateProfile` 失败但 `authenticated` 仍为 true、诊断行含「后端会话」）。
+- 验证缺口：**本机没有 Flutter/Dart SDK、Android SDK、Xcode**，analyze / test 未跑，两端桥接未编译。
+- 文档：新增 `docs/history/2026-09/2026-09-09-backend-session-expiry.md`；`docs/BACKEND_TUYA_HOME_ID.md` 增「当前落地方案」一节说明 `userId` 的用法与为何不能当 id；`AI_CONTEXT.md` 补会话与家庭两条口径。
+
+---
+
 ## 2026-09-09：花盆 APP 发验证码前校验手机号格式
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `2fa56d0`）。
