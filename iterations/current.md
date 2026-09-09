@@ -1,5 +1,23 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP OTA 弹窗两个版本号都不对
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b7b6ad6`）。
+- 需求：OTA 升级里「当前版本」和「检测到的新版本」都读错了，怀疑是上次加进度条改坏的。
+- **先给结论：不是进度弹层改的。** `992b8f8` 对这条路径只动了一处——升级发起成功后把一条 toast 换成 `showOtaProgressDialog`，取版本、比版本、弹「检查更新」框的代码一行未动（`git show 992b8f8 -- device_other_settings_page.dart` 可复核）。真正的两条根因都更早：
+  1. **Android `deviceMap` 取错字段**：`"firmwareVersion" to (getPv() ?: getVersion())`，而 `DeviceBean.getPv()` 是**通信协议版本**（`2.2` 这种）不是固件版本，固件在 `verSw` 上。这行 2026-08-12 `b0c773f` 就在了，所以弹窗第一行一直显示协议号；iOS 的 `deviceMap` 连这个键都没有，只能退回 DP 148 或 `--`。
+  2. **两行版本号来源不同**：「当前版本」来自设备列表字段，「新版本」来自 `getOtaInfo` 里 `upgradeStatus == 1` 那条的 `version`——那是**某个可升级组件**（MCU / Wi-Fi 模块）的版本，设备有多个组件时两行必然对不上。弹窗本身从 2026-07-20 `bdd9c29` 起就是这个读法，进度弹层只是让用户更常打开它。
+- 交付：**flowerpot-app `b9f7dba`（已推送）**
+  - Android `deviceMap` 改取 `getVerSw()`（退回 `getVersion()`），不再用 `getPv()`；iOS `deviceMap` 补 `"firmwareVersion": device.verSw`。
+  - 两端 `checkFirmware` 从回一个字符串改为回 `{version, currentVersion}`，两个版本号取自**同一条 OTA 记录**。
+  - Dart 新增 `FirmwareUpdate{version, currentVersion}`；`TuyaRepository` 解码兼容旧原生只回字符串；`_availableFirmware` 改存模型，`_rememberFirmwareUpdate` 的比较基准优先用 OTA 记录里的当前版本；其他设置页弹窗「当前版本」优先用它、取不到才退回设备字段，「已是最新」判断同步。
+  - 连带修正：设备信息页「固件版本」那行原来同样显示协议号，改 `verSw` 后一并变正确。
+- 测试（未运行）：`state_ota_test.dart` 增两例（SDK 报的当前版本压过设备列表字段 / SDK 原样回当前版本不算新版本）并改用 `FirmwareUpdate`；`device_other_settings_page_test.dart` 增一例断言弹窗两行来自同一条 OTA 记录。
+- 验证缺口：**本机没有 Flutter/Dart SDK、Android SDK、Xcode**，analyze / test 未跑，两端桥接**未编译**；**iOS `ThingSmartFirmwareUpgradeModel.currentVersion` 的字段名需在能编译的机器上确认**，若该版本 SDK 没有，去掉那一项即可（Dart 侧已兜底）。真机需用一台确有新固件的设备验证两行版本与升级后的回写。
+- 文档：`AI_CONTEXT.md` 新增 OTA 一条，新增 `docs/history/2026-09/2026-09-09-ota-version-pair.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆 APP 重新登录读不到已绑定设备
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b162068`）。
