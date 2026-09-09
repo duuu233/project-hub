@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-09：正矿 ssh 环境提交作者名改为 dh
+
+- 环境：ssh；minerals-admin。**本机 Git 配置调整，无代码改动、无新提交进团队仓库**（工作区仍干净，分支 `feature-v1.8.3`）。
+- 需求：正矿在当前环境提交到远程分支的 commit 作者名由 `pg-dh` 改为 `dh`。
+- 执行：`git -C /pgdata/pg/dh/minerals-frontend config --local user.name dh`。选仓库级而不是全局：用户只点名正矿，同机的花盆、花盆后台、Hub 仍是 `pg-dh`（已逐个核对）。验证 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 一并生效。
+- 未做的两件，需用户决定：
+  - **邮箱没改**，还是全局的 `xxxxx.com`（需求只说名称）。
+  - **历史提交没重写**：本机此前推上去的 `08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 以及 2026-09-01 那批作者仍是 `pg-dh`。`feature-v1.8.3` 是与 zhengmaoru 等人共用的团队分支，改作者要重写历史并强推，按约定不自动做。
+- 口径记录：`.git/config` 不随 Git 同步，**work / home 需各自再配一次**；已写入 `private/minerals-admin/docs/development.md` 新增的「11. 提交身份」，原「11. 跨机器协作」顺延为 12。
+
+---
+
 ## 2026-09-09：花盆 APP 已绑定设备首页改用后台配置的植物图片
 
 - 环境：ssh；flowerpot-app，工作分支 `main`。本轮开始时 pull 到用户自己推的 `5644162 更新植物图片`（替换了 `smart_planter_with_plant.png` / `smart_planter_device.png` 两张本地静态图）与合并提交 `2342d70`，本次改动落在其上。
