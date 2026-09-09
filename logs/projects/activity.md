@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **植物资料删四条建议字段**：新增/编辑/详情共用弹窗里删除光照、需水、空气温度、湿度建议的初始值、校验、提交字段与表单项，植物分类保留并改 `span 12`。核对 Swagger 确认整份契约从未有过这四个字段，属空转输入，故不保留回传。 | `4b8bd13`（已推送，vite build 通过；未实机验证） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **首页注册趋势改柱状图**：手写条形列表换成 ECharts 柱状图，新增 `echarts@^6.1.0` 并按需引入（core + BarChart + Grid/Tooltip/DataZoom），`manualChunks` 单独拆包；抽出 `RegistrationTrendChart.vue`，颜色取 CSS 变量、日期标签兼容日/月/周期串、>40 点自动 dataZoom、resize 与 dispose 齐全。 | `c140b26`（已推送，vite build 通过；未实机验证，锁文件未动，其他环境需重装依赖） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **侧栏失效菜单过滤**：后端残留已下线模块菜单行（`appUrl=config`），`RouterLink` 解析不存在的路由名在渲染期抛 `No match`，整块左侧菜单不显示。`Sidebar.vue` 渲染前用 `router.hasRoute` 过滤，屏蔽逻辑收进 `visibleMenus`，空分组不留标题，dev 每个失效 `menuUrl` warn 一次。 | `61f8e76`（已推送，vite build 通过；未实机验证，后台菜单行待人工清理） |
 | **2026-09-08** | **flowerpot-app (花盆APP)** | ssh / `main` | **设置/我的/关于十项**：分享入口隐藏、帮助中心搬到设备设置、OTA 进度弹层、App 强制/提示升级链路（按 swagger 修正字段）、昵称刷新与头像加载失败回退、列表行高与下划线、养护建议改本地中英文案；161 未下发定位为后台分类未配置。 | `992b8f8`（已推送；本机无 Flutter SDK，未跑 analyze/test） |
