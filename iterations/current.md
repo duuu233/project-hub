@@ -5,8 +5,8 @@
 - 环境：ssh；minerals-admin。**本机 Git 配置调整，无代码改动、无新提交进团队仓库**（工作区仍干净，分支 `feature-v1.8.3`）。
 - 需求：正矿在当前环境提交到远程分支的 commit 作者名由 `pg-dh` 改为 `dh`。
 - 执行：`git -C /pgdata/pg/dh/minerals-frontend config --local user.name dh`。选仓库级而不是全局：用户只点名正矿，同机的花盆、花盆后台、Hub 仍是 `pg-dh`（已逐个核对）。验证 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 一并生效。
-- 未做的两件，需用户决定：
-  - **邮箱没改**，还是全局的 `xxxxx.com`（需求只说名称）。
+- 追加：邮箱也按用户要求改成 `duun235@163.com`（同样仓库级）。用户先问「能不能留空」，在临时仓库实测：Git 允许空邮箱，提交对象记为 `author dh <>`；但托管平台是按邮箱把提交归属到账号的，空邮箱在 Codeup 上认不到人、还可能被推送校验拦下，所以用了用户给的备选邮箱。现在 `git var GIT_AUTHOR_IDENT` = `dh <duun235@163.com>`，花盆 / 花盆后台 / Hub 仍是 `pg-dh <xxxxx.com>`。
+- 未做，需用户决定：
   - **历史提交没重写**：本机此前推上去的 `08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 以及 2026-09-01 那批作者仍是 `pg-dh`。`feature-v1.8.3` 是与 zhengmaoru 等人共用的团队分支，改作者要重写历史并强推，按约定不自动做。
 - 口径记录：`.git/config` 不随 Git 同步，**work / home 需各自再配一次**；已写入 `private/minerals-admin/docs/development.md` 新增的「11. 提交身份」，原「11. 跨机器协作」顺延为 12。
 

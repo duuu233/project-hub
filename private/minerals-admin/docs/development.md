@@ -216,14 +216,17 @@ src/views/<domain>/<feature>/
 
 ## 11. 提交身份
 
-本仓库的提交作者名用 `dh`，配置在**仓库级**（`.git/config`），不动全局配置——同一台机器上的花盆、相册等仓库仍用各自的全局身份。
+本仓库的提交身份是 `dh <duun235@163.com>`，配置在**仓库级**（`.git/config`），不动全局配置——同一台机器上的花盆、相册等仓库仍用各自的全局身份（`pg-dh <xxxxx.com>`）。
 
 ```bash
 git -C <正矿仓库> config --local user.name dh
-git -C <正矿仓库> var GIT_AUTHOR_IDENT   # 核对
+git -C <正矿仓库> config --local user.email duun235@163.com
+git -C <正矿仓库> var GIT_AUTHOR_IDENT   # 核对，应为 dh <duun235@163.com>
 ```
 
-`.git/config` 不随 Git 同步，**每台机器各配一次**。2026-09-09 已在 ssh 开发机配好；work / home 未确认。邮箱沿用全局值，本次没有改。
+`.git/config` 不随 Git 同步，**每台机器各配一次**。2026-09-09 已在 ssh 开发机配好；work / home 未确认。
+
+邮箱为什么不留空：Git 本身允许（实测把 `user.email` 设成空串照样能提交，对象里记的是 `author dh <>`），但托管平台按邮箱把提交归属到账号，空邮箱在 Codeup 上认不到人，还可能撞上推送校验规则，所以用真实邮箱。
 
 此前从本机推上去的提交（`08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 以及 2026-09-01 那批）作者仍是 `pg-dh`：`feature-v1.8.3` 是与团队共用的分支，改写这些提交要重写历史并强推，未做。
 
