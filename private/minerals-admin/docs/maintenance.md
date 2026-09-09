@@ -211,6 +211,17 @@ res.total
 
 如果浏览器和编辑器正常，只是命令行显示异常，不要转码源码。转码前必须备份并确认差异范围。
 
+### 附件必填星号不显示或必填校验落空
+
+历史页面的附件 `el-form-item` 存在复制粘贴残留：`prop` 写成别的业务字段（常见 `purchaseOrderFileList`），而 `FileUpload` 的 `v-model` 绑的是本页真实字段。`prop` 与 model 字段对不上时，`el-form-item` 找不到值，必填校验作用在不存在的路径上，`class="is-required"` 这种手写样式也只是画个星号、并不产生校验。
+
+正确写法是 `prop` 指向真实字段并用 `required` 属性（由 `el-form-item` 自动生成必填规则），不要用 `class="is-required"`：
+
+- 入库单 `views/enter-warehouse/enter-warehouse-list/template/handleDetail.vue`：`prop="stockInFileList" required`（2026-09-08 `b56b251` 修正）。
+- 出库单 `views/out-warehouse/out-warehouse-list/template/handleDetail.vue`：`prop="stockOutFileList" required`（2026-09-09 修正）；同页只读的「提货单附件」`prop` 一并改回 `fileList`。
+
+改动会同时带来提交拦截：没有附件时 `validate` 不通过。编辑历史单据时详情接口把 `commonFiles` 回填到该字段，老数据若没有附件需要先补传。
+
 ### 构建内存或速度问题
 
 - 标准构建已配置 `NODE_OPTIONS=--max-old-space-size=4096`。
@@ -254,7 +265,7 @@ test mode 与 `.env.staging` 不对应。调整需要同时考虑 npm scripts、
 
 ### 本地文档不可跨机同步
 
-这是当前明确配置，而不是文档系统缺陷。跨机器时 Git 只同步代码；本地知识必须重新核对。若未来需要团队共享，应由维护者明确决定哪些文档改为受 Git 跟踪，并调整 `.gitignore`。
+（2026-09-08 起已不适用）本项目的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/` 真实文件已迁到私人 Project Hub 的 `private/minerals-admin/`，随 Hub 的 Git 跨机器同步，业务仓库里只是软链接。仍然不跨机同步的只有 CodeGraph 索引库 `codegraph.db`：它是派生物，不进任何版本控制，每台机器装好 CLI（`npm i -g @colbymchenry/codegraph`）后自己 `codegraph sync` 生成。
 
 ## 5. 文档更新触发器
 

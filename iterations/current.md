@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-09：正矿出库附件必填标识与码头直提集装箱弹框
+
+- 环境：ssh；minerals-admin，工作分支 `feature-v1.8.3`（改前 `git pull --ff-only origin feature-v1.8.3` = Already up to date；Hub 同步 = Already up to date）。
+- 需求：① 出库单新增/编辑页「出库附件」补必填标识；② 码头直提新增页「请选择集装箱」弹框改为打开即调列表接口（和昨天堆场那个同类问题）。
+- 交付：**minerals-admin `ad31f92`（已推送，生产构建 1024MB 堆 / 2 线程 30.7s 通过）**
+  - `out-warehouse/out-warehouse-list/template/handleDetail.vue`：`prop="purchaseOrderFileList"` → `prop="stockOutFileList" required`。原 prop 是复制粘贴残留，和 `FileUpload` 绑定的 `form.stockOutFileList` 对不上，所以既没有星号、必填也校验不到东西；写法对齐入库单 `b56b251`。同页只读的「提货单附件」prop 一并改回 `fileList`（同样是残留，改动本身无行为影响）。
+  - `sales-pickup/list/pier-add.vue`：`openAddGoodsDialog` 改为 `async` 并在打开后 `await fetchGoodsList()`；客户或进口采购单号任一为空时只开弹框不发请求（两者都是表单必填，缺任一查询无意义），弹框内「查询」按钮逻辑未动。列表页「新增码头直提」按 `deliveryType=1` 进的就是这个页面，该页只负责新增，没有 edit 包装。
+  - 本轮改用 CodeGraph 定位（本机 CLI 今天刚装好），改完 `codegraph sync` 增量刷新 2 文件 / 474ms。
+- 需实机确认的副作用：`required` 会同时拦提交——出库单不传附件将保存不了；编辑老单据时详情把 `commonFiles` 回填该字段，历史数据没附件的要先补传。若只想要星号不想要拦提交，说一声改成纯样式。
+- 文档：`docs/maintenance.md` 加「附件必填星号不显示或必填校验落空」条目（含 `prop` 与 model 字段必须一致、不要用 `class="is-required"`），并修正已过期的「本地文档不可跨机同步」；`docs/domain-map.md` 补码头直提弹框口径。
+- 未完成：**未做浏览器实机验证**；全量 `vue-tsc` 仍因本机 1GB 堆 OOM 未跑（沿用构建作为门禁）。
+
+---
+
 ## 2026-09-09：正矿堆场提货「补充信息」批次号取值修复
 
 - 环境：ssh；项目 minerals-admin（正矿），工作分支 `feature-v1.8.3`（无 upstream，用显式 `origin feature-v1.8.3` 同步与推送；改前 `08dfce1` → `1a516bd`）。
