@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 已绑定设备首页改用后台配置的植物图片
+
+- 环境：ssh；flowerpot-app，工作分支 `main`。本轮开始时 pull 到用户自己推的 `5644162 更新植物图片`（替换了 `smart_planter_with_plant.png` / `smart_planter_device.png` 两张本地静态图）与合并提交 `2342d70`，本次改动落在其上。
+- 需求：已绑定设备首页和植物详情页的植物图片都取植物列表接口返回的那张（后台管理系统给该植物配的），没有数据才用本地静态图，以接口为准。
+- 交付：**flowerpot-app `b162068`（已推送）**
+  - `HomeDashboardModel` 新增 `plantImageUrl`，`fromDevice` 取 `device?.plant?.imageUrl`——即 `Client/Product/getProductPlantList` 行里的 `plantImg`。
+  - `HomePlantOverview` 正中那张 132×170 改由新的 `_PlantHeroImage` 渲染：有值走 `Image.network`，为空或 `errorBuilder` 触发才回落 `AppAssets.smartPlanterWithPlant`；尺寸、`BoxFit.contain`、`filterQuality` 均未变。
+  - **植物详情页不用改**：`_PlantDetailArtwork` 本来就是「`plant.imageUrl` 优先 → 失败回落 `AppAssets.plantImage(plant.id)` → 未知 id 再退通用图标」，核对后原样保留。
+  - 未动设备列表页 `_DeviceListCard` 里 48×62 的缩略图（仍是静态图）——需求指的是「首页-已绑定设备页面」，列表行是另一屏，要不要一起改由用户决定。
+- 测试（未运行）：新增 `test/features/home/home_plant_overview_test.dart` 两例——配了图片时控件树上是带该 URL 的 `NetworkImage`；没配时画本地静态图且树上无 `NetworkImage`。第一例只断言控件树、且不额外 pump：测试环境里 `Image.network` 必然加载失败，多一帧就走 `errorBuilder` 换成本地图。
+- 验证缺口：**本机没有 Flutter/Dart SDK，analyze 与 test 都没跑**；也未在真机确认后台图片放进 132×170 容器后的观感（素材比例与静态图不同可能偏扁或偏小），弱网下没有加载占位（与详情页保持一致）。
+- 文档：`AI_CONTEXT.md` 补首页这条链路，新增 `docs/history/2026-09/2026-09-09-home-plant-image-from-backend.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆 APP 定制动画「提示」卡背景图被裁
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `e355274`）。

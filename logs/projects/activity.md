@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **已绑定设备首页改用后台配置的植物图片**：`HomeDashboardModel` 增加 `plantImageUrl`（取 `device.plant.imageUrl`，即 `getProductPlantList` 的 `plantImg`），首页正中 132×170 的图改由 `_PlantHeroImage` 渲染，有配置走网络图、为空或加载失败才回落本地 `smart_planter_with_plant`；植物详情页 `_PlantDetailArtwork` 核对后本就是同一口径，未改；设备列表行缩略图不在范围内。 | `b162068`（已推送；本机无 Flutter SDK，analyze/test 未执行） |
 | **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **定制动画提示卡背景图被裁**：图用 `Positioned(right: -14, bottom: -18)` 顶到 `SizedBox` 外，而 `Stack` 默认 `Clip.hardEdge` 不画顶出去的部分，盒子高度压到 126 后切掉的正好是文件夹下沿与右侧叶子。改为卡片零内边距 + 文案自带 padding、`SizedBox` 高度补 28 保持外形，图按设计稿右边贴边、底部与文案齐平；素材 670×304 经 cover+centerRight 裁到 118 见方本身完整，未动缩放。 | `559ba84`（已推送；本机无 Flutter SDK，analyze/test 未执行） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **商品「原价」核查（仅文档）**：实测 yikaltd 后端已无 `Goods`/`Order`/`ProductImg`/`AiConfig`/`ProductVersion` 五组接口，`Goods` 路径返回与乱编路径一致的裸 500；`marketAmount` 四字段只在相册后端 boltfox 契约里。判定不是漏做，不加空转输入框，改 `docs/interface-list.md` 的自相矛盾记录。 | `e7b051e`（已推送，无代码改动） |
 | **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **植物数据链路确认（仅文档）**：列表图片确为接口字段 `plantImg`；详情内容不是从涂鸦读——DP 116 只上报「哪一株」的标识符，内容由 `getProductPlantList` 目录按标识符匹配，实时数值才来自 DP。口径写进 `AI_CONTEXT.md`。 | `e355274`（已推送，无代码改动） |
