@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-09** | **minerals-admin (正矿)** | ssh / `feature-v1.8.3` | **堆场提货补充信息批次号取值修复**：货物信息表「批次号」列由 `batchNo` 改取 `goodsList` 元素的 `stockBatchNo`，`objectSpanMethod` 合并列同步替换。提货单详情返回的 `goodsList` 只带 `stockBatchNo`，走该来源时原来整列为空且合并错位；库存接口原始行的 `batchNo` 排序逻辑保持不动。 | `6b7d0ae`（已推送，生产构建 1024MB 堆 30.8s 通过；未实机验证） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **植物资料删养护建议**：删表单项与必填校验（此前不填无法保存），`defaultForm` 与 `buildPayload` 保留 `careInstructions` 原样回传——该字段后端契约真实存在且可能有存量数据，编辑不清空、新增空值被过滤。APP 已改本地文案不再读它。 | `6051546`（已推送，vite build 通过；未实机验证） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **植物资料删四条建议字段**：新增/编辑/详情共用弹窗里删除光照、需水、空气温度、湿度建议的初始值、校验、提交字段与表单项，植物分类保留并改 `span 12`。核对 Swagger 确认整份契约从未有过这四个字段，属空转输入，故不保留回传。 | `4b8bd13`（已推送，vite build 通过；未实机验证） |
 | **2026-09-09** | **flowerpot-admin (花盆后台)** | ssh / `main` | **首页注册趋势改柱状图**：手写条形列表换成 ECharts 柱状图，新增 `echarts@^6.1.0` 并按需引入（core + BarChart + Grid/Tooltip/DataZoom），`manualChunks` 单独拆包；抽出 `RegistrationTrendChart.vue`，颜色取 CSS 变量、日期标签兼容日/月/周期串、>40 点自动 dataZoom、resize 与 dispose 齐全。 | `c140b26`（已推送，vite build 通过；未实机验证，锁文件未动，其他环境需重装依赖） |

@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-09：正矿堆场提货「补充信息」批次号取值修复
+
+- 环境：ssh；项目 minerals-admin（正矿），工作分支 `feature-v1.8.3`（无 upstream，用显式 `origin feature-v1.8.3` 同步与推送；改前 `08dfce1` → `1a516bd`）。
+- 需求：堆场提货 —— 补充信息页，货物信息列表的批次号取 `goodsList` 数组里的 `stockBatchNo` 字段。
+- 交付：**minerals-admin `6b7d0ae`（已推送，生产构建 1024MB 堆 / 2 线程 30.8s 通过）**
+  - `src/views/sales-pickup/list/yard-replenish.vue` 两处：批次号列 `prop="batchNo"` → `prop="stockBatchNo"`；`objectSpanMethod` 的 `mergeCols` 里 `'batchNo'` → `'stockBatchNo'`，保住该列跨行合并。
+  - 根因：`form.goodsList` 两个来源不同名——走库存接口 `stockInfoList`（「重新导入」及详情里有 `agentOrderNo` + `applyGoodsList` 时）会映射 `stockBatchNo: item.batchNo`；不走这条时直接用提货单详情返回的 `goodsList`，那批数据只有 `stockBatchNo`，原绑定下整列为空，合并列还因取到 `undefined` 把同一 `skuCode` 的行错误并成一行。详情页 `yard-detail.vue`、新增页 `yard-add.vue` 一直用 `stockBatchNo`，本次是补齐口径。
+  - 未动：排序用的 `compareFields = ['batchNo', ...]` 作用于库存原始行；`pier-replenish.vue`（码头）没有批次号列。
+- 文档：`private/minerals-admin/docs/domain-map.md` 补堆场三页批次号字段口径；私有流水 `logs/activity.md` 与详细记录 `logs/2026-09-09-堆场提货补充信息批次号.md`；Hub `logs/projects/activity.md` 追加看板行。
+- 验证缺口：全量 `vue-tsc --noEmit` 在本机 1024MB 堆下 **OOM 未跑完**（按本机内存约定不上调堆，未改用其它机器），仅以生产构建通过为准；**未做浏览器实机验证**。
+- 环境遗留：本机（ssh）正矿仓库里 `AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/`、`.codegraph/` 的 private_mounts 软链接**并不存在**（仓库里的 `docs/` 是本地未跟踪的 `build-opt` 目录，`.git/info/exclude` 也没有对应忽略行），本轮直接读写 Hub 的 `private/minerals-admin/` 原文件完成，没有动挂载和 CodeGraph；是否在本机补建链接待用户决定。
+
+---
+
 ## 2026-09-09：花盆后台植物资料删除四条建议字段与养护建议
 
 - 环境：ssh；工作分支 `main`（改前 `git pull --ff-only` = Already up to date）。

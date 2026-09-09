@@ -58,7 +58,7 @@
 | `views/sales-pickup/` | 销售提货 | 交易/运输接口 |
 | `views/sales-receipt/` | 销售收货 | 交易/仓储接口 |
 
-堆场提货新增页 `views/sales-pickup/list/yard-add.vue` 先选择进口采购订单，再选择客户。采购订单列表保留 `customerId/customerName` 用于回填；任一字段缺失或为空（含纯空格）时按自营模式展示，客户清空、禁用且不做必填校验。非自营模式允许手动更换客户，提交使用最终选中的客户信息。堆场货物弹框每次打开时请求列表，必须先选择进口采购订单；库存列表查询和新增保存均传所选订单返回的 `purchaseNo`。切换采购订单时清空已选货物、关闭弹框，并丢弃旧请求响应，避免跨订单混入货物。堆场新增、补充和详情的货物信息表不展示成分列。
+堆场提货新增页 `views/sales-pickup/list/yard-add.vue` 先选择进口采购订单，再选择客户。采购订单列表保留 `customerId/customerName` 用于回填；任一字段缺失或为空（含纯空格）时按自营模式展示，客户清空、禁用且不做必填校验。非自营模式允许手动更换客户，提交使用最终选中的客户信息。堆场货物弹框每次打开时请求列表，必须先选择进口采购订单；库存列表查询和新增保存均传所选订单返回的 `purchaseNo`。切换采购订单时清空已选货物、关闭弹框，并丢弃旧请求响应，避免跨订单混入货物。堆场新增、补充和详情的货物信息表不展示成分列。三个页面的货物信息表「批次号」列统一取 `goodsList` 元素的 `stockBatchNo`：库存接口 `stockInfoList` 返回的是 `batchNo`，新增与补充页在写入 `form.goodsList` 时已映射为 `stockBatchNo`，提货单详情接口返回的 `goodsList` 本身只带 `stockBatchNo`，因此列绑定和补充页 `objectSpanMethod` 的合并列都用 `stockBatchNo`，不要再读 `batchNo`。
 
 ### 计费、结算与台账
 
