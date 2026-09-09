@@ -1,0 +1,60 @@
+== 总量 ==
+dist 原始部署文件: 29.44 MiB
+.gz 预压缩副本:    2.13 MiB
+dist 磁盘总量:     31.57 MiB
+
+== 类型分布(原始, MiB) ==
+gif          8.29
+js           7.49
+webm         6.85
+png          5.54
+css          0.60
+json         0.39
+jpg          0.15
+ico          0.07
+svg          0.05
+txt          0.00
+(none)       0.00
+html         0.00
+
+== index.html 直接加载的资源 ==
+     53.89 KiB  gz    10.48 KiB  /assets/index-BDp2rlQj.css
+    447.02 KiB  gz   152.11 KiB  /assets/index-RC-SL9tP.js
+    908.63 KiB  gz   264.73 KiB  /assets/vendor-D9iXWu1D.js
+      4.18 KiB  gz     0.00 KiB  /assets/vendor-DAIax6p0.css
+    789.84 KiB  gz   274.61 KiB  /assets/vendor-editor-Co1DeMar.js
+     14.46 KiB  gz     2.76 KiB  /assets/vendor-editor-CpCzGeOH.css
+    352.63 KiB  gz    46.56 KiB  /assets/vendor-element-5_QS-GLn.css
+    948.76 KiB  gz   293.54 KiB  /assets/vendor-element-CWb_CWmJ.js
+    125.49 KiB  gz    46.10 KiB  /assets/vendor-utils-Bw2lpJKG.js
+     93.96 KiB  gz    37.24 KiB  /assets/vendor-vue-DSno0Rau.js
+(gz 为 0 表示该文件小于 10KiB 压缩阈值,未生成预压缩副本)
+首屏 raw 合计: 3.65 MiB / 预压缩 gz 合计: 1.10 MiB
+
+== 最大的 20 个 JS/CSS chunk ==
+   1003.45 KiB  dist/assets/vendor-echarts-BDA31Hqk.js
+    948.76 KiB  dist/assets/vendor-element-CWb_CWmJ.js
+    908.63 KiB  dist/assets/vendor-D9iXWu1D.js
+    808.13 KiB  dist/assets/vendor-l7-C0m8VT8Y.js
+    789.84 KiB  dist/assets/vendor-editor-Co1DeMar.js
+    447.02 KiB  dist/assets/index-RC-SL9tP.js
+    352.63 KiB  dist/assets/vendor-element-5_QS-GLn.css
+    173.26 KiB  dist/assets/404-DRSVqf_X.js
+    125.49 KiB  dist/assets/vendor-utils-Bw2lpJKG.js
+     93.96 KiB  dist/assets/vendor-vue-DSno0Rau.js
+     66.09 KiB  dist/assets/handleDetail-64H-sO1B.js
+     61.29 KiB  dist/assets/overViewDrawer-CRVCHPmD.js
+     53.89 KiB  dist/assets/index-BDp2rlQj.css
+     50.68 KiB  dist/assets/index-DqEN_IAZ.js
+     48.49 KiB  dist/assets/steps03-iTwJlKtO.js
+     47.02 KiB  dist/assets/index-KVapLXqC.js
+     46.42 KiB  dist/assets/handleDetail-B2iD4607.js
+     44.05 KiB  dist/assets/index.vue_vue_type_script_setup_true_lang-B6lhVROd.js
+     35.69 KiB  dist/assets/handleDetail-CCJpJex3.js
+     34.94 KiB  dist/assets/ContainerDynamicDialog-DG2nd9-W.js
+
+== 构建告警 ==
+✓ 4686 modules transformed.
+Circular chunk: vendor-element -> vendor-utils -> vendor-element. Please adjust the manual chunk logic for these chunks.
+Circular chunk: vendor-element -> vendor -> vendor-element. Please adjust the manual chunk logic for these chunks.
+✓ built in 2m 30s

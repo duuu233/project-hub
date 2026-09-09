@@ -92,6 +92,20 @@ projects:
    ```
    仅解除业务项目内的软链接，绝对不删除 Hub 内的真实文件，不影响业务项目源码与 Git 历史。
 
+### 各环境挂载状态与冲突处理
+
+`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。目前只有 `minerals-admin`（正矿）有私有文档与 CodeGraph 的需求并配置了 `private_mounts`，其余项目不挂载。
+
+| 环境 | 正矿仓库位置 | 挂载状态 |
+| --- | --- | --- |
+| work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
+| ssh | `/pgdata/pg/dh/minerals-frontend` | 2026-09-09 已挂载（标准软链接，5 个挂载点全部建立） |
+| home | 未映射 | 该机器没有正矿仓库；日后 clone 后先在 `environments/home/projects.local.yaml` 补映射，再执行 `node scripts/setup-links.mjs --env home --project minerals-admin` |
+
+冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。2026-09-09 在 ssh 环境遇到的 `docs/build-opt/`（2026-08-25 打包优化留下的原始日志、指标与脚本，24 个文件 / 601894 字节）即按此并入 `private/minerals-admin/docs/build-opt/`，挂载后在仓库内仍是原来的 `docs/build-opt/` 路径。
+
+挂载完成后按本机情况确认 CodeGraph：`.codegraph/` 只是把 Hub 里的索引库链过去，索引内容仍是上次执行 sync 那台机器的快照。ssh 开发机当前**没有安装 `codegraph` CLI**，无法在本机 `codegraph sync`，该环境下定位代码仍用源码检索。
+
 ## Attach（接入）
 
 1. 修改 Hub 受控配置前，按 AGENTS.md 完成 Hub 的默认分支 pull。

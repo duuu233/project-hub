@@ -1,0 +1,57 @@
+== 总量 ==
+dist 原始部署文件: 29.36 MiB
+.gz 预压缩副本:    2.12 MiB
+dist 磁盘总量:     31.48 MiB
+
+== 类型分布(原始, MiB) ==
+gif          8.29
+js           7.42
+webm         6.85
+png          5.54
+css          0.60
+json         0.39
+jpg          0.15
+ico          0.07
+svg          0.05
+txt          0.00
+(none)       0.00
+html         0.00
+
+== index.html 直接加载的资源 ==
+     53.84 KiB  gz    10.46 KiB  /assets/index-D-BkZjmS.css
+    444.62 KiB  gz   151.59 KiB  /assets/index-ljdmCWHu.js
+    240.82 KiB  gz    81.93 KiB  /assets/vendor-BdED6Mvt.js
+      1.07 KiB  gz     0.00 KiB  /assets/vendor-BUMXTAWU.css
+      0.23 KiB  gz     0.00 KiB  /assets/vendor-cjs-Cpj98o6Y.js
+    352.63 KiB  gz    46.56 KiB  /assets/vendor-element-5_QS-GLn.css
+    948.58 KiB  gz   293.44 KiB  /assets/vendor-element-DQmp6d6K.js
+    125.48 KiB  gz    46.10 KiB  /assets/vendor-utils-C5PQWXVC.js
+     95.21 KiB  gz    37.79 KiB  /assets/vendor-vue-CUR0wl5P.js
+(gz 为 0 表示该文件小于 10KiB 压缩阈值,未生成预压缩副本)
+首屏 raw 合计: 2.21 MiB / 预压缩 gz 合计: 0.65 MiB
+
+== 最大的 20 个 JS/CSS chunk ==
+   1003.45 KiB  dist/assets/vendor-echarts-BDA31Hqk.js
+    948.58 KiB  dist/assets/vendor-element-DQmp6d6K.js
+    808.12 KiB  dist/assets/vendor-l7-2CDz6251.js
+    789.84 KiB  dist/assets/vendor-editor-DUYUbp4U.js
+    444.62 KiB  dist/assets/index-ljdmCWHu.js
+    352.63 KiB  dist/assets/vendor-element-5_QS-GLn.css
+    306.94 KiB  dist/assets/vendor-lottie-fG8rzEuh.js
+    240.82 KiB  dist/assets/vendor-BdED6Mvt.js
+    191.83 KiB  dist/assets/vendor-flow-C20nJaIZ.js
+    173.29 KiB  dist/assets/404-otVHknA3.js
+    125.48 KiB  dist/assets/vendor-utils-C5PQWXVC.js
+     95.21 KiB  dist/assets/vendor-vue-CUR0wl5P.js
+     66.13 KiB  dist/assets/handleDetail-DXrmLAme.js
+     61.29 KiB  dist/assets/overViewDrawer-CO2s6tEE.js
+     53.84 KiB  dist/assets/index-D-BkZjmS.css
+     50.69 KiB  dist/assets/index-CpN1d9Nv.js
+     48.49 KiB  dist/assets/steps03-iTwJlKtO.js
+     47.02 KiB  dist/assets/index-tAPv7ujm.js
+     46.45 KiB  dist/assets/handleDetail-CBCVlhc7.js
+     44.06 KiB  dist/assets/index.vue_vue_type_script_setup_true_lang-ClhGcP8I.js
+
+== 构建告警 ==
+✓ 4686 modules transformed.
+✓ built in 2m 25s

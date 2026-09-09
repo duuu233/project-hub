@@ -1,0 +1,4 @@
+label=stage4
+exit=0
+duration_s=150
+peak_rss_MiB=3038

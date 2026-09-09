@@ -1,0 +1,58 @@
+== 总量 ==
+dist 原始部署文件: 29.35 MiB
+.gz 预压缩副本:    2.12 MiB
+dist 磁盘总量:     31.46 MiB
+
+== 类型分布(原始, MiB) ==
+gif          8.29
+js           7.40
+webm         6.85
+png          5.54
+css          0.60
+json         0.39
+jpg          0.15
+ico          0.07
+svg          0.05
+txt          0.00
+(none)       0.00
+html         0.00
+
+== index.html 直接加载的资源 ==
+    443.39 KiB  gz   151.55 KiB  /assets/index-CsbBwbL4.js
+     53.84 KiB  gz    10.46 KiB  /assets/index-D-BkZjmS.css
+      1.07 KiB  gz     0.00 KiB  /assets/vendor-BUMXTAWU.css
+    352.63 KiB  gz    46.56 KiB  /assets/vendor-element-5_QS-GLn.css
+    948.75 KiB  gz   293.53 KiB  /assets/vendor-element-kazS7Nzc.js
+    240.82 KiB  gz    81.93 KiB  /assets/vendor-Pwqm2qVg.js
+    125.49 KiB  gz    46.10 KiB  /assets/vendor-utils-C0JV0Y88.js
+     95.21 KiB  gz    37.79 KiB  /assets/vendor-vue-CUR0wl5P.js
+(gz 为 0 表示该文件小于 10KiB 压缩阈值,未生成预压缩副本)
+首屏 raw 合计: 2.21 MiB / 预压缩 gz 合计: 0.65 MiB
+
+== 最大的 20 个 JS/CSS chunk ==
+   1003.45 KiB  dist/assets/vendor-echarts-BDA31Hqk.js
+    948.75 KiB  dist/assets/vendor-element-kazS7Nzc.js
+    808.13 KiB  dist/assets/vendor-l7-BvUHhbUL.js
+    789.84 KiB  dist/assets/vendor-editor-DUYUbp4U.js
+    443.39 KiB  dist/assets/index-CsbBwbL4.js
+    352.63 KiB  dist/assets/vendor-element-5_QS-GLn.css
+    306.94 KiB  dist/assets/vendor-lottie-D1gNR1_d.js
+    240.82 KiB  dist/assets/vendor-Pwqm2qVg.js
+    191.84 KiB  dist/assets/vendor-flow-D73ZFRun.js
+    173.26 KiB  dist/assets/404-D1lblsXG.js
+    125.49 KiB  dist/assets/vendor-utils-C0JV0Y88.js
+     95.21 KiB  dist/assets/vendor-vue-CUR0wl5P.js
+     66.09 KiB  dist/assets/handleDetail-ucm95xYc.js
+     61.26 KiB  dist/assets/overViewDrawer-CqZv57Tw.js
+     53.84 KiB  dist/assets/index-D-BkZjmS.css
+     50.65 KiB  dist/assets/index-ARqC-77N.js
+     48.49 KiB  dist/assets/steps03-iTwJlKtO.js
+     46.99 KiB  dist/assets/index-D3nNhpye.js
+     46.42 KiB  dist/assets/handleDetail-BuYhFn88.js
+     44.06 KiB  dist/assets/index.vue_vue_type_script_setup_true_lang-ULkJJEdH.js
+
+== 构建告警 ==
+✓ 4686 modules transformed.
+Circular chunk: vendor-element -> vendor-utils -> vendor-element. Please adjust the manual chunk logic for these chunks.
+Circular chunk: vendor-element -> vendor -> vendor-element. Please adjust the manual chunk logic for these chunks.
+✓ built in 2m 24s

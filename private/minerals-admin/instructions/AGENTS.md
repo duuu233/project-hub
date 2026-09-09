@@ -11,7 +11,7 @@
 - 公司 work、家里 home、服务器 ssh 复用同一 project_id 与私人目录，各自读取 Hub 的 `environments/<env>/projects.local.yaml`。不要将当前机器绝对路径写入共享规则。
 - 每轮需求先检查并 pull Hub 和团队仓库各自当前分支，再执行挂载检查和 CodeGraph sync；用户明确说明已手动 pull 时按本轮说明执行。已有未提交内容先保留，不自动 stash 或覆盖。
 - 每次修改代码都必须核对并同步维护这份共享文档：更新受影响的业务规则、接口字段、验证方法和上下文；没有文档变化时在任务结果注明已核对。通过业务目录的链接编辑就是修改 Hub 的同一份资料，不另存副本。
-- 同步 Hub 中的数据库前停止本项目 CodeGraph daemon，checkpoint 后再提交；切换机器/分支后以本机源码执行 sync，必要时重建既有索引。运行锁、PID、日志和 SQLite WAL/SHM 不跨机器提交，数据库二进制冲突不可文本合并。完整步骤见 Hub `docs/private-mounts.md`。
+- 同步 Hub 中的数据库前停止本项目 CodeGraph daemon，checkpoint 后再提交；切换机器/分支后以本机源码执行 sync，必要时重建既有索引。运行锁、PID、日志和 SQLite WAL/SHM 不跨机器提交，数据库二进制冲突不可文本合并。完整步骤见 Hub `docs/configuration.md` 的「私有挂载（private_mounts）」章节。
 - 保留用户已有的未提交改动。开始工作先运行 `git status --short`，不要覆盖、回滚或格式化无关文件。
 
 ## 2. 事实来源优先级

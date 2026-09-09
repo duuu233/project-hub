@@ -1,0 +1,58 @@
+== 总量 ==
+dist 原始部署文件: 29.42 MiB
+.gz 预压缩副本:    2.13 MiB
+dist 磁盘总量:     31.55 MiB
+
+== 类型分布(原始, MiB) ==
+gif          8.29
+js           7.48
+webm         6.85
+png          5.54
+css          0.60
+json         0.39
+jpg          0.15
+ico          0.07
+svg          0.05
+txt          0.00
+(none)       0.00
+html         0.00
+
+== index.html 直接加载的资源 ==
+    443.06 KiB  gz   151.41 KiB  /assets/index-B0BrQn-J.js
+     53.84 KiB  gz    10.46 KiB  /assets/index-D-BkZjmS.css
+    908.63 KiB  gz   264.73 KiB  /assets/vendor-CwLtkrll.js
+      4.18 KiB  gz     0.00 KiB  /assets/vendor-DAIax6p0.css
+    352.63 KiB  gz    46.56 KiB  /assets/vendor-element-5_QS-GLn.css
+    948.76 KiB  gz   293.54 KiB  /assets/vendor-element-BW1QuHhm.js
+    125.49 KiB  gz    46.10 KiB  /assets/vendor-utils-DYwUIANU.js
+     95.20 KiB  gz    37.79 KiB  /assets/vendor-vue-BeUdHNbo.js
+(gz 为 0 表示该文件小于 10KiB 压缩阈值,未生成预压缩副本)
+首屏 raw 合计: 2.86 MiB / 预压缩 gz 合计: 0.83 MiB
+
+== 最大的 20 个 JS/CSS chunk ==
+   1003.45 KiB  dist/assets/vendor-echarts-BDA31Hqk.js
+    948.76 KiB  dist/assets/vendor-element-BW1QuHhm.js
+    908.63 KiB  dist/assets/vendor-CwLtkrll.js
+    808.13 KiB  dist/assets/vendor-l7-D5dWXbY0.js
+    789.84 KiB  dist/assets/vendor-editor-gQVXUCXr.js
+    443.06 KiB  dist/assets/index-B0BrQn-J.js
+    352.63 KiB  dist/assets/vendor-element-5_QS-GLn.css
+    173.22 KiB  dist/assets/404-C3LX9YBd.js
+    125.49 KiB  dist/assets/vendor-utils-DYwUIANU.js
+     95.20 KiB  dist/assets/vendor-vue-BeUdHNbo.js
+     66.06 KiB  dist/assets/handleDetail-V7nK3RXE.js
+     61.25 KiB  dist/assets/overViewDrawer-DJsZBbns.js
+     53.84 KiB  dist/assets/index-D-BkZjmS.css
+     50.64 KiB  dist/assets/index-Drt80Czd.js
+     48.49 KiB  dist/assets/steps03-iTwJlKtO.js
+     46.98 KiB  dist/assets/index-MgG8Kx42.js
+     46.38 KiB  dist/assets/handleDetail-Bj9kY9FK.js
+     44.05 KiB  dist/assets/index.vue_vue_type_script_setup_true_lang-Cx-CXFXb.js
+     35.66 KiB  dist/assets/handleDetail-BnchZKEk.js
+     34.91 KiB  dist/assets/ContainerDynamicDialog-BYvBhnLb.js
+
+== 构建告警 ==
+✓ 4686 modules transformed.
+Circular chunk: vendor-element -> vendor-utils -> vendor-element. Please adjust the manual chunk logic for these chunks.
+Circular chunk: vendor-element -> vendor -> vendor-element. Please adjust the manual chunk logic for these chunks.
+✓ built in 2m 27s

@@ -1,0 +1,10 @@
+
+> ruoyi@3.6.4 type-check
+> cross-env NODE_OPTIONS=--max-old-space-size=3072 vue-tsc --noEmit
+
+src/api/workbench/dashboard.ts(2,15): error TS2724: '"./vessel-tracking"' has no exported member named 'shipDynamicsWarning'. Did you mean 'getShipDynamicsWarning'?
+src/views/deomestic-purchasing/components/DomesticOrderList.vue(173,44): error TS2339: Property 'domesticPurchaseNo' does not exist on type 'DomesticOrderListItem'.
+src/views/domestic-sales/composables/useDomesticSaleGoods.ts(19,9): error TS2322: Type 'number' is not assignable to type 'string'.
+src/views/information/market-data/components/import-data-dialog.vue(557,14): error TS2339: Property 'marketType' does not exist on type '{ priceRegion: string; priceDate: string | number; series: string; product: string; place: string; averagePrice?: number; type: string; ingredientList: { id: number; value1?: number; sign1: OperatorValue; ... 6 more ...; specifications: string; }[]; }'.
+src/views/order/agency-order/components/overViewDrawer.vue(185,230): error TS2339: Property 'index' does not exist on type '{ $: ComponentInternalInstance; $data: {}; $props: Partial<{}> & Omit<{} & VNodeProps & AllowedComponentProps & ComponentCustomProps & Readonly<...>, never>; ... 10 more ...; $watch<T extends string | ((...args: any) => any)>(source: T, cb: T extends (...args: any) => infer R ? (args_0: R, args_1: R) => any : (...ar...'.
+src/views/order/agency-order/components/overViewDrawer.vue(306,228): error TS2339: Property 'index' does not exist on type '{ $: ComponentInternalInstance; $data: {}; $props: Partial<{}> & Omit<{} & VNodeProps & AllowedComponentProps & ComponentCustomProps & Readonly<...>, never>; ... 10 more ...; $watch<T extends string | ((...args: any) => any)>(source: T, cb: T extends (...args: any) => infer R ? (args_0: R, args_1: R) => any : (...ar...'.

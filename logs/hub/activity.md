@@ -6,6 +6,20 @@
 
 ## 操作流水（最新在最前）
 
+### 2026-09-09：ssh 环境补建正矿私有挂载，补写各环境挂载状态与冲突处理
+- **环境**：ssh（SSH 开发机）
+- **分支**：main
+- **操作类型**：环境挂载 + 文档维护
+- **背景**：本轮正矿任务发现 ssh 机器上 `minerals-frontend` 根本没有 private_mounts 软链接（`docs/` 还是本机遗留实体目录，`.git/info/exclude` 无忽略行），任务只能直接读写 Hub 原文件。用户确认：私有文档与 CodeGraph 只有正矿有这个需求，三端软链接都指向 Hub 里的同一份，统一在 Hub 维护，缺的补上。
+- **实施**：
+  - 用 `scripts/setup-links.mjs --env ssh --project minerals-admin` 建立 5 个软链接并写入 `.git/info/exclude`；冲突的 `docs/build-opt/`（2026-08-25 打包优化原始产物，24 文件 / 601894 字节）先 `cp -a` 并入 `private/minerals-admin/docs/build-opt/`、`diff -r` 校验一致后再删除仓库内原件。
+  - `docs/configuration.md` 私有挂载章节新增「各环境挂载状态与冲突处理」：三端挂载状态表（work 2026-09-08 已挂载 / ssh 2026-09-09 已挂载 / home 未映射）、`Real source exists` 的正确处理顺序（`--migrate` 只适用于私有目标不存在的首次迁移）、以及挂载后 CodeGraph 索引仍是上次 sync 机器快照的提醒。
+  - 修正正矿 `instructions/AGENTS.md` 里指向不存在的 `docs/private-mounts.md` 的引用，改为 `docs/configuration.md` 的私有挂载章节。
+- **验证范围**：`--dry-run` 先行；挂载后 5 个链接 `readlink -f` 指向正确并可读，`git check-ignore -v` 全部命中，`minerals-frontend` 的 `git status` 干净。
+- **交付状态**：与本轮正矿代码提交分开，Hub 单独提交推送；`private/minerals-admin/logs/2026-09-09-ssh私有挂载补建.md` 留详细记录。
+
+---
+
 ### 2026-09-09：工作约定改为「完成并验证后默认 pull + push」
 - **环境**：ssh（SSH 开发机）
 - **分支**：main
