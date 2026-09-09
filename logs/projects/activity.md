@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **配网页 Wi-Fi 名称刷新 + 休眠模式改页内展开**：连接Wi-Fi 页原来只在首帧填一次、还复用搜索页留下的扫描缓存，用户换网络后显示的名称与实际连接不符；改为进页面强制重扫 + 回到前台再刷新，并用 `_autoFilledSsid` 保证不覆盖用户输入（2026-09-08 的样式改动不是原因）。休眠模式（DP 151/152）由入口 + 二级页面改为「行为」页第三张卡，版式交互照午休 / 夜间，删除 `standby_settings_page.dart` 与路由。 | `b493dbd`（已推送；本机无 Flutter SDK，analyze/test 未执行，需在有 SDK 的机器复跑） |
 | **2026-09-09** | **minerals-admin (正矿)** | ssh / `feature-v1.8.3` | **码头直提按采购类型控制客户项**：采购单接口新增 `purchaseType`/`customerId`/`customerName`/`agentOrderNo`；表单采购单号调到客户前面，自营采购禁用并清空客户、必填随之关闭（`rules` 改 computed），代理采购按采购单回显客户且可手改；保存回传上述四个字段；集装箱取数条件改为自营只按采购单号查，切换采购单清空已选。 | `a909a1a`（已推送，生产构建 1024MB 堆 29.7s 通过；未实机验证，`customerId` 取最终选中客户的口径待确认） |
 | **2026-09-09** | **minerals-admin (正矿)** | ssh / `feature-v1.8.3` | **出库附件必填标识 + 码头直提弹框打开即查询**：出库单「出库附件」的 `prop` 是残留的 `purchaseOrderFileList`，与 `v-model` 的 `stockOutFileList` 对不上，星号和必填校验都是空转，改为正确 `prop` + `required`（与入库单 `b56b251` 一致）；码头直提新增页「请选择集装箱」弹框由「点查询才请求」改为打开即请求，客户/采购单为空时不发请求。 | `ad31f92`（已推送，生产构建 1024MB 堆 30.7s 通过；未实机验证，required 会同时拦提交） |
 | **2026-09-09** | **minerals-admin (正矿)** | ssh / `feature-v1.8.3` | **堆场提货补充信息批次号取值修复**：货物信息表「批次号」列由 `batchNo` 改取 `goodsList` 元素的 `stockBatchNo`，`objectSpanMethod` 合并列同步替换。提货单详情返回的 `goodsList` 只带 `stockBatchNo`，走该来源时原来整列为空且合并错位；库存接口原始行的 `batchNo` 排序逻辑保持不动。 | `6b7d0ae`（已推送，生产构建 1024MB 堆 30.8s 通过；未实机验证） |

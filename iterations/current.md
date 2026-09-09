@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 配网页 Wi-Fi 名称刷新与休眠模式页内展开
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `992b8f8`）。
+- 需求：① 连接Wi-Fi 页反馈「Wi-Fi 名称和实际连接的名称不一致」，先查是不是昨天的样式改动引起，再修；② 昨天加的休眠模式不要做成入口，直接在「行为」页展开，模仿同页上面的样式与交互。
+- 交付：**flowerpot-app `b493dbd`（已推送）**
+  - 排查结论：**不是 `85854f6` 那次样式改动**。那次只是把 Wi-Fi 名称 / 密码两格抽成 `_CredentialInput`，控制器和取值来源没动。真正原因在 `pairing_page.dart`：首帧 `_loadNetworks()` 复用 `FlowerpotState.wifiScan` 缓存（通常是搜索页几分钟前扫的），而且只在输入框为空时才填，此后再不更新——用户去系统设置换了 Wi-Fi 回来，页面还留着进页面那一刻的名字。
+  - 修复：进页面强制重扫（`force: true`）；页面实现 `WidgetsBindingObserver`，`resumed` 时再刷新一次（配网进行中不刷新，那时手机是故意挂在设备热点上）；新增 `_autoFilledSsid`，只有输入框为空或内容仍等于上次自动填入值才覆盖，用户输入 / 「切换」选过的 / 重试带入的名称一律不动。5 GHz 与设备热点的原有过滤不变。
+  - 休眠模式：新增 `widgets/standby_settings_card.dart`（`StandbySettingsCard` 复用 `BehaviorScheduleCard` 版式 + `BehaviorTimeRow` 可点行，`showStandbyDelayDialog` 照 `showScheduleSlotDialog` 外壳做滚轮弹窗），行为页删入口换卡片，开关 DP 151 即时下发、延迟时间弹窗保存才写 DP 152 且取值没变不发；删除 `standby_settings_page.dart` 与 `AppRoutes.standbySettings`。
+  - 文档：`AI_CONTEXT.md` 两处口径更新，新增 `docs/history/2026-09/2026-09-09-pairing-ssid-and-standby-inline.md`，`docs/README.md` 与 `docs/history/README.md` 索引同步。
+- 验证缺口：**本机没有 Flutter/Dart SDK，`flutter analyze` 和 `flutter test` 都没跑**。测试已写但未运行——配网页新增 3 例（缓存过期重扫、回前台刷新、用户输入不被覆盖），休眠从 `standby_settings_page_test.dart` 改写为 `standby_settings_card_test.dart` 6 例。需要在有 SDK 的机器复跑；生命周期用例与滚轮拖动用例是最可能需要微调的两处。
+- 顺带：本机 CodeGraph CLI 虽已装好，但花盆仓库没有 `.codegraph/` 索引，按工具提示「索引与否是用户的决定」没有自行 `codegraph init`，本轮用源码检索完成。要在这台机器用 CodeGraph 的话，在花盆仓库跑一次 `codegraph init` 即可（索引本机生成、`.gitignore` 已忽略）。
+
+---
+
 ## 2026-09-09：正矿码头直提按采购类型控制客户项
 
 - 环境：ssh；minerals-admin，工作分支 `feature-v1.8.3`（改前 pull = Already up to date；Hub 同步 = Already up to date）。
