@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-09：花盆后台首页注册趋势改 ECharts 柱状图
+
+- 环境：ssh；工作分支 `main`（改前 `git pull --ff-only` = Already up to date）。
+- 需求：首页「用户注册增长趋势」改用柱状图，不要原来那种手写条形列表，必要时引入 ECharts。
+- 交付：**flowerpot-admin `c140b26`（已推送，`vite build` 通过 44.13s）**
+  - 新增 `echarts@^6.1.0`，按需引入 `core + BarChart + Grid/Tooltip/DataZoom + CanvasRenderer`；`vite.config.js` 的 `manualChunks` 单独拆出 `echarts` chunk（523.94 kB / gzip 178.09 kB），不并进 1.1MB 的 vendor。
+  - 新增 `src/views/home/RegistrationTrendChart.vue`：只接 `list` prop，不自己发请求；品牌色竖向渐变柱、颜色从 CSS 变量读；`queryDate` 兼容 `YYYY-MM-DD` / `YYYY-MM` / 自定义周期串；Y 轴 `minInterval: 1`；>40 个数据点自动加 dataZoom；`setOption(option, true)` 整份替换，`ResizeObserver` 跟随容器，卸载 `dispose()`。
+  - 首页删掉 `maxRegistrationCount`、`getBarWidth` 和六段旧进度条样式，空态仍走 `el-empty`，周期切换与 `v-loading` 不变。
+  - 补 `docs/history/2026-09/2026-09-09-home-registration-bar-chart.md`，`AI_CONTEXT.md` 技术栈与依赖安装口径同步。
+- 外部操作：只读拉取 `https://api.yikaltd.com/v2/api-docs` 核对 `getStatisticsUser` 契约（`queryDate` = 日期或周期，`userCount` = 注册数量）。
+- 依赖安装口径：`npm install echarts --save --no-package-lock`，只改 `package.json`，`yarn.lock` / `pnpm-lock.yaml` 未动，也没新增 `package-lock.json`（主包管理器仍未确认）。**其他环境拉到 `c140b26` 后必须重新安装依赖**，否则构建找不到 echarts。
+- 未完成项：图表**未在浏览器实机验证**；近一年的实际数据粒度没有实测样本，若后端返回「第 N 周」这类中文串，`formatAxisLabel` 需要按实际返回再调。
+
+---
+
 ## 2026-09-09：花盆后台侧栏菜单修复，并把「完成后默认 pull + push」写进约定
 
 - 环境：ssh；路径见 `environments/ssh/projects.local.yaml`。
