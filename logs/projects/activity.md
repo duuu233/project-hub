@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **续接 `docs/CODE_REVIEW_HANDOFF.md`**：work 端 `27bbbd9` 已删除调试台 / 体验模式、关闭 S1 明文回落、写请求不重试、加 `ApiSession.revision` 防迟到、搜索页销毁保护；ssh 端做静态自检（测试声明位置、38 个测试的 mock import、产品代码残留引用、我方功能是否幸存）全部通过，并按当前源码改写 `AI_CONTEXT.md` 的调试台 / 临时地址 / 评审结论条目，补历史记录并更新 handoff。 | `fa54740`（已推送；本机无 Flutter SDK / Android SDK / Xcode，analyze、test 与编译未执行——这是 handoff 唯一剩余待办） |
 | **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **「一小时掉登录」**：后端 token 无客户端 TTL、也无定时器，掉登录只能来自 401/406；而 `_run` 里 `isAuthError → _clearLocalSession()` 把涂鸦会话与设备列表一起清了。改为只清后端会话并记失效原因（进设备列表诊断行），`ApiClient` 加 `[session] 后端会话失效：<METHOD> <path> → HTTP/retCode` 日志（不记 token）。根因仍需后端核对。 | `38c71f0`（已推送；本机无 Flutter SDK，analyze/test 未执行） |
 | **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **家庭归属改用后端 `userId` 作账号键**：后端同意登录响应多返回 `userId`（不加 `tuYaHomeId`）。`userId` 不是家庭 id、也当不了；用作家庭名标记 `YS-<userId>` 与本地缓存键，缺省退回涂鸦 uid（`userNo`）；登录时记下并按 uid 存一份，会话恢复时读回保证键稳定。 | `c612166`（已推送；同上未验证） |
 | **2026-09-09** | **flowerpot-app (花盆APP)** | ssh / `main` | **发验证码前校验手机号格式**：`state.sendCode` 本来就会拦，缺的是界面这层——手机号框只有 `keyboardType` 没有输入过滤，按钮也只在 busy/倒计时禁用。`AuthValidator` 新增 `isValidAccount`；登录页与注册页加 `digitsOnly` + 11 位限制、按格式禁用「获取验证码」并补发送前兜底；找回密码页（可能是邮箱）不加数字过滤，按区域校验后决定按钮可用。 | `669b89b`（已推送；本机无 Flutter SDK，analyze/test 未执行） |

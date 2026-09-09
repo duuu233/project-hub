@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 续接代码审核（CODE_REVIEW_HANDOFF）
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，拉到 work 端的 `27bbbd9`）。
+- 起点：`docs/CODE_REVIEW_HANDOFF.md`（work 端写的续接单）。代码改动已由 work 端作为 **`27bbbd9`（74 文件 / +926 / −2167）** 提交推送：移除涂鸦 SDK 调试台（998 行）、体验模式与静态预览开关，`MockTuyaRepository` 从产品代码搬到 `test/support/`；关闭 S1 明文回落（`ApiConfig` 只收 HTTPS、默认 `https://api.yikaltd.com`，Android network-security-config 与 iOS ATS 例外删除）；`postJson` 默认不再重试；`ApiSession.revision` + `ApiClient._ensureSession` 挡旧会话迟到响应；设备搜索页改 `Timer` 截止并全程 `mounted` 保护。
+- 本轮（ssh）交付 **`fa54740`（已推送）**，只有静态检查与文档：
+  - **静态自检全部通过**：没有「测试声明写在 `main()` 之外」（handoff 提到的语法错误已不存在）；38 个引用 `MockTuyaRepository` 的测试都已 import `test/support/mock_tuya_repository.dart`，`PlantCatalog` / `FixtureBackend` 也没漏；产品代码里 `MockTuyaRepository` / `StaticPreviewConfig` / `DebugToolsConfig` / `enterDemo` / `_temporaryBaseUrl` 均无残留；**同日早些时候在 ssh 完成的功能在 `27bbbd9` 之后全部仍在**（家庭固定 `useHome`/`useHomeTag`、OTA `FirmwareUpdate`、`deviceLoadError`、`prepareForPairing`、`sessionDiagnostics`、`_handleBackendSessionExpired`、`isValidAccount`）。
+  - **Active 文档口径修复**：`AI_CONTEXT.md` 的启动开关与源站、`ActionResult.code`、目录表、设备列表段落、第 117 行「联调工具」、第 3/4/5 条约定、2026-09-03 临时地址条目、2026-09-05 评审结论条目，全部按当前源码改写（原文还在写「联调页」「体验模式」「回落临时 HTTP」）。
+  - 新增 `docs/history/2026-09/2026-09-09-code-review-cleanup.md`，更新两个索引；`CODE_REVIEW_HANDOFF.md` 改写为「只剩跑 analyze/test」并列出 S2/S3 待办与环境边界。
+- **handoff 唯一剩余待办**：在有 Flutter SDK 的机器上跑 `flutter analyze` + `flutter test`——`27bbbd9` 删除范围大、测试基建整体搬家，基线必须重新确认；ssh 端**没有 Flutter/Dart SDK、Android SDK、Xcode**，做不了。
+- 仍未关闭（已写进 handoff 与历史记录）：**S2** 安全组件 `.aar` 仍被 Git 跟踪（移出跟踪影响所有克隆，需用户决定）；**S3** `/Client/` 请求仍把 `userToken` 放进 URL 查询、令牌仍存 `SharedPreferences`（去查询参数属跨端契约变更，要先和后端确认只认鉴权头）；release 包 Manifest / Info.plist 与抓包核对。
+
+---
+
 ## 2026-09-09：花盆 APP 家庭标记改用 userId + 「一小时掉登录」排查
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（起始 `669b89b`）。
