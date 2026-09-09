@@ -1,5 +1,24 @@
 # 当前迭代
 
+## 2026-09-09：花盆后台「原价」核查 + 花盆 APP 植物数据链路确认（两问，均无功能改动）
+
+- 环境：ssh；flowerpot-admin（`main`）与 flowerpot-app（`main`）改前均 `git pull --ff-only` = Already up to date。
+- 问题①：花盆后台商品新增/编辑/详情是不是漏了原价（划线价）四字段（`marketAmount` / `marketAmountEnglish` / `marketAmountFan` / `marketAmountJapanese`）。
+  - **结论：不是漏做，是花盆后端根本没有商品模块。** 实测依据：
+    - `https://api.yikaltd.com/v2/api-docs` 当前 111 条路径、71 条 `/ZoneAdmin/*`，只有 AppVersion / Common / Jurisdiction / Passport / Product / ProductPlant / User 七组；`Goods`、`Order`、`ProductImg`、`AiConfig`、`ProductVersion` 都已不在文档里。
+    - 只读探测：`/ZoneAdmin/Goods/getGoodsList` 返回容器原始 HTTP 500，和乱编的 `/ZoneAdmin/Nope/nope` 一模一样；而真实存在的 `/ZoneAdmin/Product/getProductList` 返回 200 + `{"retCode":406,"retMsg":"请重新登录！"}`。
+    - 同一路径在相册后端 `https://api.boltfox.cn` 返回业务信封（模块在那边）；`marketAmount` 四字段只出现在 boltfox 的 `GoodsAddApiIn` / `GoodsApiOut` / `GoodsDetailApiOut`（以及 `ClientGoodsApiOut.marketAmount`）。
+    - 花盆后台 `AI_CONTEXT.md` 第 109 / 152 行本来就写着商品等是复制项目遗留、不在 yikaltd Swagger 范围内，与实测一致。
+  - 处理：只修文档，不加输入框——加了就是 2026-09-09 上午刚删掉的那种空转字段。`docs/interface-list.md` 补 2026-09-09 复核结论并改写 Goods 行（原写「Done」与文首「goods 不在范围内」自相矛盾）。交付 **flowerpot-admin `e7b051e`（已推送）**。
+  - 待用户决定：花盆商品/订单等遗留页面是留着等后端补模块，还是按之前的模块下线方式清掉。
+- 问题②：花盆 APP 植物列表图片是否取接口字段、植物详情是否按设备上报的植物 ID 经 DP 与涂鸦交互获取。
+  - **列表图片：是。** 后端 `Client/Product/getProductPlantList` 行里的 `plantImg` → `PlantProfile.imageUrl`（`app_backend_repository.dart:1114`），选择页与详情页都用它。
+  - **详情：一半对。** 涂鸦只回答「哪一株」——设备用 DP 116 `plant_variety` 上报后台配的标识符（`tuYaRemark` 字符串，不是数字 ID），App 选植物也是写回 116（分类另写 161）；**详情内容不是从涂鸦读的**，是拿 116 的标识符去后端目录匹配（`_plantForIdentifier` / `ensurePlantProfile`），图片、别名、简介、最适温湿度、四条建议、养护难度、`categoryType` 全部是后端字段；匹配不上补拉一次目录，仍失败回落本地目录且不打断详情页。详情页的实时数值（107/108/113/115 等）才是设备 DP 上报。
+  - 处理：`AI_CONTEXT.md` 把这条分工写清楚，交付 **flowerpot-app `e355274`（已推送）**。
+- 验证：本轮无代码改动，只有文档；接口结论来自实际 HTTP 探测与两份 Swagger 的机器可读契约。
+
+---
+
 ## 2026-09-09：花盆 APP 配网页 Wi-Fi 名称刷新与休眠模式页内展开
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `992b8f8`）。
