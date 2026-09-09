@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 发验证码前校验手机号格式
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `2fa56d0`）。
+- 需求：登录界面发送手机验证码要校验手机号格式。
+- 排查：`FlowerpotState.sendCode` 本来就走 `_normalizeAccount` → `AuthValidator.account`，格式不对会以 `APP-invalid_input 手机号格式不正确` 失败，短信不会真发。**缺的是界面这层**——手机号框只设了 `keyboardType: TextInputType.phone`（那套键盘上还有 `+ - ( ) *`，粘贴还能带进字母空格，位数也不限），「获取验证码」按钮只在 `busy` 或倒计时期间禁用，号码不合法照样可点、点完才吃一个带前缀的红色提示。
+- 交付：**flowerpot-app `669b89b`（已推送）**
+  - `AuthValidator` 新增 `isValidAccount(value, region)`：只判断格式不抛异常，与 `account()` 共用同一组正则，避免界面放行、提交却被拦。
+  - 登录页、注册页：手机号框加 `FilteringTextInputFormatter.digitsOnly` + `LengthLimitingTextInputFormatter(11)`；`accountController` 加监听让按钮跟着可用性变；`_sendCode` 补兜底校验，提示改为「请输入正确的 11 位手机号」。
+  - 找回密码页：账号可能是手机也可能是邮箱，**不加数字过滤**，但按当前区域校验后再决定按钮是否可点，并补兜底提示。
+- 测试（未运行）：`auth_page_test.dart` 增两例——位数不够时「获取验证码」的 `onPressed` 为 null、补齐 11 位后可点；输入 `138-0013 8000abc9` 后框里只剩 `13800138000`。
+- 验证缺口：**本机没有 Flutter/Dart SDK**，analyze / test 未跑；真机需确认第三方输入法粘贴同样被过滤。
+- 文档：新增 `docs/history/2026-09/2026-09-09-verification-code-phone-format.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：花盆 APP 家庭按账号固定 + 配网前置确认
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b9f7dba`）。
