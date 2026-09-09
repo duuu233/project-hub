@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-09：花盆 APP 重新登录读不到已绑定设备
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `b162068`）。
+- 需求：重新登录后读不到已绑定的设备，严重 bug，修复。
+- 交付：**flowerpot-app `c08fbb8`（已推送）**。链路只有一条：`_refreshDevicesForSession` → `getDevices` → 原生 `withHome` 查家庭 → `getHomeDetail`；列表页直接画 `state.devices`，不与后端交叉过滤。顺着读出两处**确定缺陷**并修掉：
+  1. **失败被吞成「暂无设备」**：登录、注册、恢复会话都走 `ignoreErrors: true` 的 `catch (_) {}`，任何失败都表现为空列表，与账号真没设备完全一样；下拉刷新原来接 `state.refreshDevices`，异常抛回 `RefreshIndicator` 只进日志，用户拉半天没反馈。→ 新增 `FlowerpotState.deviceLoadError`（带来源与错误码，失败**不清空**已有列表），列表为空且有错误时画 `AppErrorView` + 「重试」；`probeDevices()` 改名 `reloadDevices()`，成为下拉刷新 / 重试 / 联调页共用入口，失败以 `ActionResult` 返回并弹提示条。
+  2. **家庭选择不稳定**：Android `homes.firstOrNull()`、iOS `homes?.first`，而 `queryHomeList` / `getHomeList` 的顺序在两次登录之间不保证一致；账号名下只要有两个家庭就会这次读到 A 家、下次读到 B 家的 0 台。第二个家庭恰恰是这套代码自己会造的——家庭列表瞬时返回空时会自动建「我的花园」。→ Android 新增 `pickHome`（先挑带设备的家庭，同样带设备时取 `homeId` 最小，并记日志），iOS 按 `homeId` 升序后取第一个。自动建家逻辑保留（新账号需要），但选择规则钉稳后不再摆动。
+- **根因未确认**：需要在复现的手机上用联调页「拉取设备列表」，它会回报「共 N 台（家庭 X）」，与配网成功那次的家庭 id 对比——不同 → 就是第 2 条；相同但 0 台 → 设备不在这个家庭里（配网落到别处或云端已解绑）；直接报错 → 现在错误码会显示出来。另外涂鸦 uid 来自 APP 后端的 `userNo`，若同一手机号在后端换过 `userNo`，重新登录等于登进另一个涂鸦账号，这条只能在后端核对。
+- 测试（未运行）：`device_list_page_test.dart` 新增一例——`getDevices` 抛错后 `deviceLoadError` 带错误码、页面显示错误态与「重试」而不是「暂无设备」，仓库恢复后点重试回到正常列表。
+- 验证缺口：**本机没有 Flutter/Dart SDK，也没有 Android SDK 和 Xcode** —— `flutter analyze`、`flutter test` 未跑，两端桥接改动**没有编译过**，需在有环境的机器上先编译再测。
+- 文档：`AI_CONTEXT.md` 补设备清单链路与家庭选择口径，新增 `docs/history/2026-09/2026-09-09-relogin-device-list-empty.md`，两个索引同步。
+
+---
+
 ## 2026-09-09：正矿 ssh 环境提交作者名改为 dh
 
 - 环境：ssh；minerals-admin。**本机 Git 配置调整，无代码改动、无新提交进团队仓库**（工作区仍干净，分支 `feature-v1.8.3`）。
