@@ -603,3 +603,22 @@
   往没外网的热点上连（违反 §1.4.1）。
 - 文档：`PRODUCT_RULES` §4.0 整节重写；§5.1 新增「外部 SDK API 先拆包核实」。
 - 交付状态：已推送（`461748f`、`747d871`）。**未验证**（本机无工具链）。
+
+## 2026-09-11 花盆（结案）：涂鸦官方确认「零系统框」在 Android 10+ 不可行
+
+- 涂鸦书面回复四条：① 第三方 App 无法用 `WifiManager#connect()` 静默连接（需
+  `NETWORK_SETTINGS`，不可申请）；② **`WifiNetworkSpecifier + requestNetwork()` 是唯一可行
+  路径，系统授权框无绕过方案**；③「SDK 自动连热点」只适用于 TuyaOS ≥3.6.1 固件 + 智能生活
+  App（预置/白名单应用）；④ 文档里「SDK 会在指定时间内自动连接」指**设备端行为**，不是手机侧
+  静默连接。
+- **第 4 条就是 `223bdae` 返工的根因**——当时把它读成"手机侧 SDK 会自己连"，删掉了连热点这
+  一步，之后全是 `207220` 超时，来回折腾好几天。第 3 条解释了为什么照抄智能生活不成立。
+- 代码：删掉 `WifiNetworkSuggestion` 整条路（前提已被官方否掉，留着只在配网关键路径上白等
+  十秒，而设备静置会退出配网模式，直接降低成功率）；`joinDeviceHotspot` 直接走
+  `joinViaSpecifier`，涂鸦四条原文抄在调用点上方防止后人再"优化掉"这一步。
+- 回复末尾两处 artifact 归属不准，已拆包核对记下：`thingsmart-activator-core-kit` 里**没有**
+  `IThingOptimizedActivator` / `ThingApActivatorBuilder`（在 Home SDK 里）；7.5.1 只有
+  `THING_*` 没有任何 `TY_*`。
+- 文档：`PRODUCT_RULES` §4.0 整节重写并置顶官方原文；提问稿
+  `docs/reference/tuya-question-ap-hotspot-join.md` 补回复全文。
+- 交付状态：已推送（`5e17c4f`、`f7928ec`、`b2e87d8`）。**未验证**（本机无工具链）。
