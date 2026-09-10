@@ -235,3 +235,21 @@
   不需要 4G/蜂窝路径** —— 已核查代码 `mode` 写死 `'ap'`，`THING_4G_GATEWAY` 只出现在注释
   的能力清单里、无任何调用路径。
 - 交付状态：已推送。本次只改文档。
+
+## 2026-09-10（晚，续8）花盆APP 连热点改回「自动选中 + 一次确认」
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `39d29d6`。
+- 产品指出：搜索页已经搜到设备，不该让用户去 Wi-Fi 面板再挑一遍。上一版（`da5a054`）
+  为了彻底消掉系统框走了那条路，确实多余。
+- 写死的事实（避免再来回）：**「搜到」≠「能连上」** —— `getScanResults` 只能看见热点名，
+  要真连上 Android 10+ 只有 `WifiNetworkSpecifier` 一条公开 API、必然弹一次确认框；涂鸦
+  SDK 同样没特权（实测 `queryDeviceConfigState` 跑满 45 秒报 207220、全程无框、手机始终在
+  路由器上）。⇒ 零确认做不到，自动选中做得到，两者只差一次点击。
+- iOS 实测对照印证动线：用户选的是**路由器 Wi-Fi 不是设备**，连设备热点由 App 自己做
+  （`NEHotspotConfiguration(ssidPrefix:)`，系统也只弹一次）。我们本来就是这样。
+- 改动：`pairViaDeviceHotspot` 恢复三步（连热点 → 建通道查状态 → 下发凭据）；失败收尾
+  两样都放（`apStopPairing` + `leaveDeviceHotspot`）；配网页撤掉引导态；测试回到含连热点
+  那一版（`_RefusedHotspotRepository` 重新有意义）。
+- 文档：`PRODUCT_RULES.md` 1.2 整节重写；`AI_CONTEXT.md` 动线第 3 步改准并写明三步各由
+  哪次实测证明不能少。`openWifiPanel` 保留但不在主流程上。
+- 交付状态：已推送。**未验证**（本机无工具链）。需真机复测三步序列——这是①②③第一次同时到位。
