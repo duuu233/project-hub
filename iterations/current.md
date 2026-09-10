@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP toast 去掉来源前缀（`c7f765d`，已推送）
+
+- 环境：ssh；flowerpot-app，`main`（起始 `863b02b`）。
+- 需求：toast 里去掉 `接口-` / `APP-`（同源的还有 `涂鸦-`）前缀，直接输出内容。
+- 这些前缀由 `FlowerpotState._tagged` 统一拼在失败文案前面，本意是「一眼看出是谁拒绝了这次请求」。对排查有用、对用户没用——「接口-406 请重新登录！」里有信息量的只有后半句。
+- 改法：`_tagged` **改名 `_diagnostic`，只服务诊断行**；`_run` 的四条出口（`AuthValidationException` / `TuyaException` / `ApiException` / 兜底未预期异常）全部改为直接给原文；两处写死的前缀（`APP-wifi_scanning`、`APP-busy`）一并去掉。
+- **诊断行保留标签**：`sessionDiagnostics`（设备列表页底部那行可长按复制的 `uid · 家庭 · 设备 N 台 · 失败原因`）与 `_backendSessionError` 仍走 `_diagnostic`——那两处本来就是给排查看的，去掉来源反而查不动。
+- **来源信息没丢**：`ActionResult.code` 一直带着原始错误码，页面需要就自己拼；配网失败页就是这么做的（认得的码补在括号里）。分步耗时后缀（`｜令牌 812ms · 连热点…`）未动，本次只要求去前缀。
+- 验证：**本机无 Flutter/Dart SDK**，analyze / test 未执行，只做静态自检；全仓检索确认 `lib/` 与 `test/` 里已无用户可见的三种前缀。用例已同步（`'涂鸦-pair_failed 配网失败'` → `'配网失败'` 等）。**真机未验。**
+- 文档：新增 `docs/history/2026-09/2026-09-10-toast-drop-source-prefix.md`，`AI_CONTEXT.md` 与历史索引同步。
+
+---
+
 ## 2026-09-10：花盆 APP 配网切到涂鸦「热点配网新流程」（`f105bd0` 查证 + `223bdae` 实现，已推送）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `b371412`）。

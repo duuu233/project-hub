@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **toast 去掉来源前缀**：`接口-` / `涂鸦-` / `APP-` 不再进用户可见文案，`_tagged` 改名 `_diagnostic` 只服务诊断行（`sessionDiagnostics`、后端会话失效原因）；来源信息仍在 `ActionResult.code` 里，页面要展示自己拼。 | `c7f765d`（已推送；本机无 Flutter SDK，analyze/test 未执行，真机未验） |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **配网切到涂鸦「热点配网新流程」**：官方文档明确「SDK 会自动去连接 AP 热点」，故 App 不再用 `WifiNetworkSpecifier`，系统入网授权框消失。桥接新增 `apQueryDeviceWifi`/`apStartPairing`/`apStopPairing`，「切换 Wi-Fi」改列**设备自己扫到的**网络；手动连热点引导整套删除。相关接口经解 AAR 核实 7.5.1 已具备，无需升级 SDK。 | `f105bd0`（查证）+ `223bdae`（实现），均已推送；⚠️ 本机无 Flutter/Android SDK，analyze/test/编译均未执行，**真机未验**；⚠️ 硬前提：设备固件 TuyaOS ≥ 3.6.1，且反射签名无编译期保护 |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **「配网为什么要授权」续查（仅文档+工具）**：测试证据逐条排除了「必然弹框」与「官方 App 送用户去系统设置」两个推断；定位到唯一能解释的机制——**Android 的 Wi-Fi 限制按应用 `targetSdkVersion` 生效**，`targetSdk ≤ 28` 仍可用 `addNetwork/enableNetwork` 静默连网，我们跟 Flutter 走的现代 targetSdk 只能用 `WifiNetworkSpecifier` 故必然弹框。新增 `tool/apk_target_sdk.py` 离线读任意 APK 的 targetSdk 与 Wi-Fi 权限。 | `c3b0b29`/`935d595`/`df9c561`（已推送，**无业务代码改动**）；⚠️ targetSdk 这条仍是推断，待一条 adb 命令确认 |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **配网模式查证（仅文档）**：设备开发确认设备只支持涂鸦标准 AP 热点配网、不支持 EZ/SmartConfig，桥接里的 EZ 分支确认为死代码；由此推出「AP 必须连热点 ⇒ Android 10 起只能走 `WifiNetworkSpecifier` ⇒ App 发起连接时必然弹一次系统授权框」，唯一无框情形是手机已连在该热点上。热点名白名单对 `smartlife_xxx`/`tuya_mdev_xxx` 均命中。附给测试的五条排查清单。 | `136176a`（已推送，**无代码改动**）；⚠️ 「系统记住授权」那条未经真机验证 |
