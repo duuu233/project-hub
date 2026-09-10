@@ -1,5 +1,25 @@
 # 当前迭代
 
+## 2026-09-10：相册两端换法务 20260909 协议全文 + AI 协议违规阶梯改口径
+
+- 环境：ssh；album-miniapp（`/pgdata/pg/dh/photo-album`）与 album-app（`/pgdata/pg/dh/flutter`），工作分支均为 `main`，改前两个仓 `git pull --ff-only` 都是 Already up to date（起始 `487869b` / `be2d80f`）。
+- 来源：Hub `docs/相册协议/` 下四份法务 docx（文件名 20260909，正文页首的更新日期是 **2026 年 8 月 28 日**）：中文两份、名字带 `(EN)` 的英文两份。口径：**小程序固定简中、App 固定英文**。
+- 交付一：**album-miniapp `d3eb1e8`（已推送）**
+  - `privacy-content.js` 整份换新版简中（14 章 / 56 条列表 / 4 张表）；新增 `agreement-content.js`（15 章 / 60 条列表 / 1 张表），`agreement.wxml` 由写死的三节旧短文（2026-5-13）改为与 `privacy.wxml` 同一套通用渲染，`agreement.js` 从数据取数。
+  - `ai-agreement.wxml` 第 4 节违规表按产品新口径改：原「第1次/第2次/第3次 各封 24 小时」三行 → 一行「第1-3次｜AI功能提示违禁」，其余两行不变。
+  - 新增 `tests/user-agreement-content.test.js`；`tests/privacy-policy-content.test.js` 断言跟到新版日期并新增「页面不许写死旧版日期」。
+- 交付二：**album-app `6bcaecf`（已推送）**
+  - `privacy_policy_page.dart` 正文换新版英文；`user_agreement_page.dart` **整页重写**——由 `l10n.pick` 的中英日三节短文改成编译期常量 `userAgreementSections`（15 章）并**固定英文**（与隐私政策同口径，页面标题仍随语种）。
+  - `ai_service_agreement_page.dart` 第 4 节违规阶梯**中英日三份都改**（只改英文会让日文用户看到作废阶梯）。
+  - 新增 `test/user_agreement_content_test.dart`；`AI_CONTEXT.md` 补一段说明「用户协议/隐私政策固定英文、AI 服务协议仍随语种」。
+- 做法：四份 docx 用一次性脚本逐块转换（按样式名 `heading 2/3` 与 `numPr` 分区块），脚本未入仓，沿用 2026-08-13 换 v3.0 那轮的约定；**转换后逐块校验过拼接结果与原文逐字相同**。两端的**目录（TOC）都没有转换进来**——都没有锚点跳转能力，照抄只是多一屏点不动的条目；正文一字未改。
+- **⚠️ 需要法务/产品回话的四件事**（端上一律照抄，没有自行修改）：① 生效日期在四份原文里就是占位符（简中「待填写」/「[待填写：生效日期]」，英文 `To be completed`），**发版前必须补**；② 隐私政策版本号写作 `VI.0`（用户协议是 `V1.0`），疑为笔误；③ 英文版有断词/断句缺口共 16 处（句号后少空格 6 处如 `bold.By`、`app.If`；标点前多空格 10 处如 `Permission: Bluetooth . Used`），源于粗体 run 边界，两端都不渲染粗体所以更显眼；④ 英文隐私政策第 13 节公司名 `Qihe Ming (Shenzhen)…` 与页首页尾的 `BoltStar (Shenzhen)…` 不一致。
+- **⚠️ 一处口径矛盾**：法务用户协议第九章的违规表仍是「第 1/2/3 次各封 24 小时」，原文还写明「与应用内《BoltStar AI 服务协议》一致」；而本轮按产品口径把 AI 服务协议改成了「第 1-3 次只提示违禁」。**两份文档现在互相矛盾**，端上没有替法务改用户协议正文，需产品与法务确认以哪份为准（若以新口径为准，要法务重出第九章那张表、端上再转换一次）。
+- 验证：小程序 `node --test "tests/*.test.js"` **57/58 通过**；唯一失败的 `tests/token-page-layout.test.js` 与本轮无关——它断言 `subpackages/token/index/index.wxss` 里的 `.package-card--active .package-gift`，那条规则在 2026-09-08 的 `487869b` 就被去掉了，本轮一个字没动 `subpackages/token/`。App 侧**本机无 Flutter SDK**，`dart format`/`flutter analyze`/`flutter test` 均未执行，只做静态自检（括号配平、字符串拼回原文一致、正文无中文字符）。两端**真机均未验**。
+- 文档：小程序 `docs/changes/2026-09-10-用户协议与隐私政策换法务20260909全文.md`、App `docs/history/2026-09/2026-09-10-协议换法务20260909全文.md`，两边 `docs/README.md` 索引同步。
+
+---
+
 ## 2026-09-10：花盆后台用户列表——下线星币三列与行级账户日志按钮
 
 - 环境：ssh；flowerpot-admin，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `e7b051e`）。
