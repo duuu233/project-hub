@@ -221,3 +221,17 @@
   repository；`a refused hotspot join` 整条改写（它覆写 `joinDeviceHotspot`，而新流程不调它，
   从 `b3d0d09` 起已测不到东西）。
 - 交付状态：已推送。**未验证**（本机无工具链）。
+
+## 2026-09-10（晚，续7）花盆APP 新增产品口径文档 PRODUCT_RULES.md
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `8d00c29`。
+- 起因：产品要求「将我说的慢慢总结归纳到 .md 中，不要我反复强调」。
+- 新增 `docs/PRODUCT_RULES.md` 作为**产品口径与硬性要求的唯一出处**，六块：配网 /
+  搜索设备页 / 连接 Wi-Fi 页 / 通用 UI / 实现底线 / 协作方式。每条带日期。
+- 明确三者分工：**口径** → `PRODUCT_RULES.md`；**技术事实** → `AI_CONTEXT.md`；
+  **试错过程** → `docs/history/`。不重复。已在 `docs/README.md` 登记并在 AI_CONTEXT
+  顶部加指针。
+- 同时澄清两条口径：智能生活只作参考、不照抄（页面展示内容保持现状）；**只做 Wi-Fi 配网，
+  不需要 4G/蜂窝路径** —— 已核查代码 `mode` 写死 `'ap'`，`THING_4G_GATEWAY` 只出现在注释
+  的能力清单里、无任何调用路径。
+- 交付状态：已推送。本次只改文档。
