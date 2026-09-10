@@ -202,3 +202,22 @@
 - 交付状态：已推送。**未验证**。这是第一次完整跑官方序列，需真机复测；若仍超时，下一步
   **不是**把 `WifiNetworkSpecifier` 加回来，而是看失败消息的耗时行、查 `207201`，必要时走
   涂鸦工单确认 `queryDeviceConfigState` 内部如何连 AP。
+
+## 2026-09-10（晚，续6）花盆APP 用户在系统 Wi-Fi 面板连热点 + 配网进度接真实 onStep
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `da5a054`、`3ea5ea5`。
+- 产品决定：**不要入网授权框**，改由用户在系统 Wi-Fi 面板点一下连设备热点。原生新增
+  `openWifiPanel`（Android 10+ 用 `Settings.Panel.ACTION_INTERNET_CONNECTIVITY`，浮在 App
+  之上的底部面板）；配网页不在热点上就进引导态、拉面板、每秒轮询（读缓存不占配额），
+  连上后自动续跑配网。顺带修掉「从面板回来时 `resumed` 会把用户填好的路由器名清空」。
+  旁证：智能生活 AP 流程里本来就有「去连接」跳系统 Wi-Fi 这一步，这解释了它为何不弹框。
+- 测试提供的智能生活进度串（设备连接建立成功 / Wi-Fi配置已下发 / 设备连接路由器成功 /
+  设备激活中 / 设备即将上线）正是涂鸦 `onStep` 回调的 UI 映射 ⇒ SDK 会报真实进度，而我们
+  第三步「连接云端」一直是装的。现在把 `onStep` 接出来驱动进度（**页面文案一行没动**），
+  失败消息带上最后到过的那一步；原生每收到一条都打 `pairing step: …` 日志，真机跑一次
+  就能确认常量名。
+- 测试改动：`MockTuyaRepository` 加可变 `currentSsid` / `wifiPanelOpens` / `pairingSteps`；
+  4 处点「开始配网」的用例插入 `_connectDeviceHotspot()`；`widget_test._pumpApp` 改为返回
+  repository；`a refused hotspot join` 整条改写（它覆写 `joinDeviceHotspot`，而新流程不调它，
+  从 `b3d0d09` 起已测不到东西）。
+- 交付状态：已推送。**未验证**（本机无工具链）。
