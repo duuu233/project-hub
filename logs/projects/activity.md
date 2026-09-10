@@ -477,3 +477,21 @@
 - 交付状态：已推送。**未验证**（本机无工具链）。
 - ⚠️ **复测必须用刚断电重启过的设备** —— 此前三次 45 秒超时（`207220`）都可能撞上设备已退出
   配网模式。请带回：有无系统弹框 / 进度停在哪一步 / 失败消息整行 / logcat 的 `pairing step: …`。
+
+## 2026-09-11（续7）花盆APP 新流程全程嫁接给 SDK：清掉会误伤它的门禁与死 UI
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `7ea483b`。
+- 产品澄清：新流程**也包括把「连设备」整件事嫁接给涂鸦 SDK，不用弹框授权设备**。
+- 核对当前动线：App 侧已经一次都不调 `WifiNetworkSpecifier`。但发现两处残留会碍事：
+  1. `pairViaDeviceHotspot` 开头那道硬门禁（不在设备热点上就抛 `not_on_device_hotspot`）
+     是为「没有任何东西连热点」的旧形态写的；新流程由 SDK 连，而该判断依赖
+     `connectionInfo.ssid`——没有定位权限时读成 `<unknown ssid>`，**会把新流程直接拦死**。
+     已降级为**纯诊断**（只写进失败消息末尾的「手机在「xxx」」）。
+  2. 随之永远触发不到的「打开系统 Wi-Fi 列表」引导 UI，连同 `_needHotspotHint` /
+     `_openWifiPanel` / `notOnHotspotCode` / 失败页那条映射一并删除，底部按钮回到单层。
+- **自检结论**：UI 只调 `connectDeviceForPairing` / `pairViaDeviceHotspot` / `probeWifi` /
+  `stopDevicePairing` / `cancelPairing` / `prepareForPairing` / `releaseDeviceHotspot`，
+  **七个都不触达 `_joinHotspotForPairing`**；`pairViaHotspot` / `connectDeviceHotspot` 仅作
+  AP 回退路径保留，两处调用点注释写了怎么切。
+- 文档：`PRODUCT_RULES` 1.2 按定稿口径重写，并列出「当前动线上唯一允许调的 state 方法」。
+- 交付状态：已推送。**未验证**（本机无工具链）。
