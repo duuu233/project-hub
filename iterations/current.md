@@ -1,5 +1,21 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 配网动线七项（`b951d61`，已推送）
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（起始 `bef2ca0`）。
+- ① **键盘避让**：登录/注册/找回密码/连接Wi-Fi 四页统一 `resizeToAvoidBottomInset: false` + 滚动区底部让出 `MediaQuery.viewInsetsOf(context).bottom`。⚠️ 只靠 Scaffold 默认 resize 不够——内容本来放得下一屏时**不会产生可滚动区间**，光标「滚进可视区」无处可滚，输入框照样被盖住，这正是现象成因。
+- ② **配网期弹框收敛**：新增 `PairingStage.hint`，三步各一句、只在「进行中」那步显示；删掉「正在确认账号与家庭」全屏遮罩（准备阶段并进进度页第一步，`_preparing` 去掉）与「请先到系统设置连接热点」toast。**关键一条**：不再用通配前缀请求 `WifiNetworkSpecifier`——`setSsidPattern` 走的正是产品截到的「查找设备…／没有找到任何设备。请确保要连接的设备已打开并准备好进行连接。」那个系统搜索框；现在只用确切 SSID，拿不到名字就以 `hotspot_unknown` 让用户回搜索页选。⚠️ 系统那个「连接到 xxx?」确认框**删不掉**（Android 10+ 应用不能自己连任意 Wi-Fi，必弹一次）。
+- ③ **第三步「连接云端」**：目前没有接任何实际业务（activator 返回时设备其实已注册到云端），`_pairInternal` 给它 1–2 秒随机停留后直接按成功处理，否则第二步刚亮起就跳走。接上真实回执后换成真等待。
+- ④ **配网失败页版式**：根因是写死的绝对定位——副标题 `top:362`、小提示卡 `top:400`，只有 38px 空档而副标题两行是 42px，必然重叠；`SizedBox(height: max(690, 屏高))` 又撑出多余滚动条。改成 `ConstrainedBox(minHeight) + IntrinsicHeight + Column`，副标题不再 `maxLines: 2` 截断。
+- ⑤ **搜索页改「监听器」**：扫到的热点直接列在下面，点哪台带哪台 SSID 进配网，不再跳页；**`device_selection_page.dart` 与 `AppRoutes.deviceSelection` 一并删除**（那页唯一职责已被搜索页接管），失败页按钮改「返回搜索设备」。
+- ⑥ **去掉「设备已在配网状态，继续」**。⚠️ **有代价、需产品复核**：iOS 不枚举附近网络，搜索页在 iOS 上**永远列不出设备**，这个按钮是 iOS 唯一能进下一步的入口——删掉后 **iOS 走不到配网**；Android 被限流或热点名在白名单外时同样没有出路。
+- ⑦ **启动页先只留背景图**：logo/字标/标语整块不画，代码留在 `_buildBranding()`，`_showBranding` 改回 true 即恢复。
+- **关于「配网又不行了」（产品第 5 条）**：昨天动到配网的是 `d0ab4d0`（配网前 `prepareForPairing`）与 `1763f74`/`ffbefb6`/`c612166`（家庭 id 与账号键）。最可疑的是 `prepareForPairing` 里那道新门禁 `if (home == '0') throw home_unresolved`——它把「查不到家庭」当成「不能配网」，而 `currentHomeId` 返回 0 只表示此刻还没解析出来，activator 自己会在配网时解析；且这一步跑在**还连着路由器**时，根本不存在 `d0ab4d0` 要防的「在热点上查家庭 → 空列表 → 建空家庭」。门禁一触发「开始配网」直接失败、配网根本没开始 = 「昨天还能配，今天点了没反应」。本轮降级为诊断（文案「准备就绪（家庭待解析）」）。⚠️ **这是基于代码的推断、不是实测**；若真机上仍配不了，下一个查 `setHomeId` 钉住的家庭是否过期/不属于当前账号，看设备列表页底部 `sessionDiagnostics` 与 `[pair]` 日志。
+- 验证：**本机无 Flutter/Dart SDK，也无 Android SDK**，analyze / test / Kotlin 编译**均未执行**，只做静态自检（括号配平、逐行通读）。用例已按新行为改写（搜索页内联列表与点击跳转、失败页路由与文案、启动页断言品牌内容不出现，选择页用例随页面删除），**一条都没跑过**。**真机全部未验**。
+- 文档：`AI_CONTEXT.md` 配网段落改写，新增 `docs/history/2026-09/2026-09-10-pairing-flow-batch.md`，历史索引同步。
+
+---
+
 ## 2026-09-10：花盆 APP 两件——手机号校验补反馈 + 搜索不到设备
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `ef11017`）。
