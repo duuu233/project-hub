@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 配网切到涂鸦「热点配网新流程」（`f105bd0` 查证 + `223bdae` 实现，已推送）
+
+- 环境：ssh；flowerpot-app，`main`（起始 `b371412`）。
+- **推翻了我此前「系统授权框无法避免」的结论。** 官方 Android 文档「Wi-Fi 热点模式」里有一节**「热点配网新流程」**，原话：「在配网过程中，**SDK 会在指定时间内自动去连接 AP 热点**」。官方 App 走的就是这条，我们走的是同篇文档的「原流程」（开头就写着「用户需要手动切换手机的 Wi-Fi 设置」）。文档匿名可读：`developer.tuya.com/cn/docs/app-development/hotspot-mode?id=Kaixk6wxla1oy`，已存档到 `docs/reference/`。
+- **实测核对 SDK**：从官方 Maven 下 7.5.1 各模块解 AAR，`ThingApActivatorBuilder` / `IThingOptimizedActivator` / `ApActivatorBuilder` / `ApQueryBuilder` / `ApHandlerBean` / `IThingSmartActivatorListener` **全部存在**（`thingsmart-hardware(-business)-api`），`newOptimizedActivator` / `queryDeviceConfigState` / `getDeviceSecurityConfigs` / `resumeAPConfigWifi` 也在实现模块里 ⇒ **无需升级 SDK**。
+- 顺带纠正了涂鸦官方 AI 的多处编造：`ThingSmartHotspotCredentialKit` 在两个 Maven 仓库 × 4 groupId × 3 命名下**全部 404**，它给的两篇「文档」一篇是《使用智能生活 App》用户手册、一篇是《H5 商城 UI 业务包》，两篇里那个类名出现 **0 次**；它最后自己承认无法访问文档/Maven/SDK。**该渠道不可作为技术依据。**
+- **实现（`223bdae`）**：桥接新增 `apQueryDeviceWifi`（SDK 连热点 + 回读**设备扫到的** Wi-Fi 列表）、`apStartPairing`、`apStopPairing`，沿用反射风格（SDK 未链接时工程仍要能编过）；Dart 新增 `DeviceWifiNetwork`（含按 `sec` 推出的 `needsPassword` / `minimumPasswordLength`）、仓库三方法、`connectDeviceForPairing` / `pairViaDeviceHotspot` / `stopDevicePairing`；搜索页扫到设备后由 **SDK** 连热点再进下一页；连接 Wi-Fi 页直接下发凭据，`hotspot_manual_required` 引导路径整套删除；「切换 Wi-Fi」改列**设备扫到的**网络。
+- **有意保留**：原流程（`pairViaHotspot` / `joinDeviceHotspot` / `prepareForPairing`）代码还在、只是不再被 UI 调用——新流程只对新固件有效，真机不通时回退只需换调用点。
+- ⚠️ **陷阱记一笔**：新流程 `setTimeout` 单位是**毫秒**，原流程 `setTimeOut` 是**秒**，名字只差一个大小写。
+- 验证：**本机无 Flutter/Dart SDK 与 Android SDK**，analyze / test / Kotlin 编译**均未执行**，只做静态自检（括号配平、逐行通读）。用例已改（state 层新增新流程一条，删掉已下线的手动热点用例与 `_ManualHotspotRepository`，令牌断言改口）。**真机全部未验。**
+- **两条硬风险**：① 反射调用的方法名/参数类型**没有编译期保护**，签名对不上会 `NoSuchMethodException`；② **固件必须 TuyaOS ≥ 3.6.1**（产品已确认按此处理，但尚未拿到设备侧确认），低于此版本预期报 `207206` 或超时。另：文档没写 SDK 在 Android 10+ 用什么机制连热点，**是否仍弹一次框必须真机验证**。
+- 文档：新增 `docs/history/2026-09/2026-09-10-tuya-ap-new-flow-found.md`（查证）与 `2026-09-10-ap-new-flow-implemented.md`（实现），官方文档三篇存档到 `docs/reference/`，`AI_CONTEXT.md` 与历史索引同步。
+
+---
+
 ## 2026-09-10：花盆 APP「配网为什么要授权」续查（`c3b0b29` / `935d595` / `df9c561`，均仅文档+工具）
 
 - 环境：ssh；flowerpot-app，`main`。**没有改任何业务代码。**
