@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 键盘避让改回框架默认 + 系统入网确认框说明（`60dd74b`，已推送）
+
+- 环境：ssh；flowerpot-app，`main`（起始 `9a00ac0`）。
+- **键盘避让：上一版是我自己写错了。** 那版把四页改成 `resizeToAvoidBottomInset: false` + 滚动区底部加 `viewInsets.bottom` 的 padding。这套写法放在 **Scaffold body 里错两次**：① 关掉 resize 后 body 高度不再按键盘缩 ⇒ **滚动视口不变矮** ⇒ Flutter 的光标自动滚动（`ensureVisible`）认为整屏都可见、**根本不会滚**；② Scaffold 开着 resize 时 body 里读到的 `viewInsets.bottom` **本来就是 0**（已被 Scaffold 消费），那段 padding 连值都取不到。现在四页（登录/注册/找回密码/连接Wi-Fi）**全部去掉覆写与手写 padding**，回到框架默认：body 缩高 → 视口变矮 → 内容溢出变可滚 → 光标滚进变矮的视口 → 输入框停在键盘上方。连接 Wi-Fi 页保留 `bottom: 92`，那是给浮在滚动区外的「开始配网」按钮让的位，与键盘无关。
+- 其余带输入框的页面核对过，都是默认行为且本身可滚，无需改动：设备信息、纪念日编辑、选择植物、个人资料、登录密码、修改密码；`AppDialog` 走 Material 的 `Dialog`，它自己把 `viewInsets` 加进 `insetPadding`。
+- **配网 1/2/3 步骤里的「要连接至设备吗?」——那是系统的，关不掉。** Android 10（API 29）起应用不能再自己 `enableNetwork` 任意网络，唯一途径是 `WifiNetworkSpecifier` + `requestNetwork`，而它**必然弹一次系统授权框**，没有任何 API 能抑制它或替用户点确认（能被应用绕过就失去意义了）。替代方案都更糟：`enableNetwork` 在 10+ 对第三方失效；`WifiNetworkSuggestion` 首次仍要批准且**由系统决定何时连**，配网这种即时场景用不了；引导用户去系统设置更差；Device Owner 普通应用拿不到。
+  - **能做的都做了**：App 自己的弹框这三步里**一个都没有**（早些时候已删掉全屏遮罩与 toast，必要文案改成 `PairingStage.hint` 写在步骤里）；只用确切 SSID 请求以避开更啰嗦的「查找设备…」搜索变体；**本次再补一条——已经连在目标热点上（上次尝试留下的或用户自己连的）就跳过 `requestNetwork`，省掉一次框**。
+- 验证：**本机无 Flutter/Dart SDK 与 Android SDK**，analyze / test / Kotlin 编译**均未执行**，只做静态自检。**真机未验**——键盘那条尤其需要真机逐页走一遍。
+- 文档：`AI_CONTEXT.md` 写进「键盘避让一律用框架默认，不要再写关 resize 那一套」与系统框的结论，`docs/history/2026-09/2026-09-10-pairing-flow-batch.md` 追加一节。
+
+---
+
 ## 2026-09-10：花盆 APP 连接Wi-Fi 页精简 + 主动扫描配额 front-load（`9a00ac0`，已推送）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `ae1de0a`）。
