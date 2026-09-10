@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 配网模式查证——设备只支持 AP，系统授权框去不掉（`136176a`，仅文档）
+
+- 环境：ssh；flowerpot-app，`main`（起始 `e2a479e`）。**本轮没有改任何代码。**
+- **设备开发口径（新增确定事实）**：设备采用**涂鸦标准 AP 热点配网（AP-cfg），没使用 EZ/SmartConfig**；未激活设备开机自动开热点（`smartlife_xxx` / `tuya_mdev_xxx`），手机连上该热点后由 App 下发路由器 SSID/密码。
+- **EZ 假设就此排除**。本仓库桥接层确实实现了 EZ（Android `EZ_MODE_NAMES`/`DUAL_MODE_NAMES`、iOS `ThingActivatorModeEZ`，注释还写着「EZ 默认，AP 兜底」），Dart 侧 2026-08-30 的 `a55a9ad` 把 `mode` 写死 `'ap'`——**那不是退化而是对的**，设备本来就不支持 EZ。桥接里的 EZ 分支从此按死代码看待，不要再试图切过去。
+- **由此推出一条绕不开的限制**：AP 必须连设备热点 ⇒ Android 10（API 29）起第三方应用不能静默连任意 Wi-Fi，只能走 `WifiNetworkSpecifier` + `requestNetwork` ⇒ **由 App 发起连接时必然弹一次系统授权框**。唯一没有框的情形是**手机已经连在该热点上**（那时走手动路径、App 不发起连接）——设备开发描述的「手机连接该热点 → 打开 App」正是这一种，很可能就是「昨天的包不需要授权」的真实原因。
+- 热点名白名单核对：`isDeviceHotspotName` 对 `smartlife_xxx` 与 `tuya_mdev_xxx`（含大小写、下划线、连字符变体）**全部命中**，不是问题来源。
+- 给测试的排查清单（写进记录）：① 点「开始配网」那一刻手机连的是路由器还是设备热点；② 「昨天的包」是哪个提交；③ 测试机 Android 版本（9 及以下走完全不同的路径、本来就没有系统框）；④ 该热点此前是否授权过（较新 Android 会记住同一应用对同一网络的授权，**这条未经真机验证**）；⑤ 对比的是我们的包还是涂鸦官方 App。
+- 文档：`AI_CONTEXT.md` 写进 AP-only 与系统框的结论，新增 `docs/history/2026-09/2026-09-10-ap-only-and-system-consent-checklist.md`，历史索引同步。
+
+---
+
 ## 2026-09-10：花盆 APP 配网只剩「输密码」一步（`2ff0dd9` + `e2a479e`，均已推送）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `60dd74b`）。
