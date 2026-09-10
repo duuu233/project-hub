@@ -588,3 +588,18 @@
   API 的台账、`strings -n 2` 的坑）；新增
   `docs/history/2026-09/2026-09-11-activator-core-kit.md`。
 - 交付状态：已推送（`1b77118`、`61da15c`）。**未验证**（本机无 Flutter/Dart/Kotlin 工具链）。
+
+## 2026-09-11 花盆（续）：静默连接判死，改走 WifiNetworkSuggestion → WifiNetworkSpecifier
+
+- 真机两次跑完，`WifiManager#connect()` 这条路**判死**：方法存在、反射调用不抛异常、但
+  注册进去的 `ActionListener` **一个回调都没来**，且 `addNetwork()` 返回 **-1**。
+  ⇒ 本应用没有 `NETWORK_SETTINGS` 特权，涂鸦「智能生活用 `WifiManager#connect()` 静默连接」
+  对第三方应用不成立。探针代码已删（结论已拿到，留着是死代码）。
+- 按产品指定接入 `WifiNetworkSuggestion`（「我是安卓 10 就用这种」）：状态码翻成人话打到
+  页面，等 20 秒、每秒打一行当前 SSID；连上就零系统框，没连上撤掉建议让位给
+  `WifiNetworkSpecifier`（Android 10+ 唯一能按需连"没有外网的指定热点"的公开 API，系统框
+  按 §1.2 收在「连接」按钮上、只出现一次）。
+- 建议是进程外状态，退出时必须 `removeNetworkSuggestions`，否则用户退出 App 后系统还会继续
+  往没外网的热点上连（违反 §1.4.1）。
+- 文档：`PRODUCT_RULES` §4.0 整节重写；§5.1 新增「外部 SDK API 先拆包核实」。
+- 交付状态：已推送（`461748f`、`747d871`）。**未验证**（本机无工具链）。
