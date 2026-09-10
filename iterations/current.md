@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 连接Wi-Fi 页精简 + 主动扫描配额 front-load（`9a00ac0`，已推送）
+
+- 环境：ssh；flowerpot-app，`main`（起始 `ae1de0a`）。
+- **连接 Wi-Fi 页**：删掉底部「点『开始配网』后，系统会弹框询问是否连接…不必到系统设置里手动连」那张卡（`pairing-hotspot-step`）——系统弹框来了用户自然看得见，提前解释一遍只占掉半屏。**手动路径那张卡保留**（`pairing-hotspot-manual`）：它不是解释，是平台不让 App 连热点时用户必须照做的一步，且只在需要时出现。间距收紧让内容进首屏：顶部 88→**56**、插图后 27→20、段间 12→10、底部提示前 38→18、页尾 24→16。
+- **「30 秒是哪来的规则、能不能更快」**：规则是 **Android 9（API 28）起的 Wi-Fi 扫描节流——前台每 2 分钟 4 次 `startScan`**（后台每 30 分钟 1 次），超额时 `startScan` 返回 false 且不再广播，`scanResults` 给旧缓存。见官方文档「Wi-Fi scanning restrictions」；开发者选项里能关掉「Wi-Fi 扫描节流」（Android 10+），所以开发机常测不出来；iOS 不适用。
+  - **能更快**：4 次/2 分钟是**滑动窗口**约束，不等于必须均匀 30 秒一次。时间表由 `0/30/60/90s` 改成 **`0/6/46/86/126s`**——任意 2 分钟窗口仍不超 4 次，而最常见的「打开页面时设备早就开着」第二次真扫从 30 秒提前到 **6 秒**。空档仍由 2 秒一次的读缓存补上（不占配额）。
+  - **还能更快但本轮没做**：Android 13（API 33）起有 `WifiManager.registerScanResultsCallback`，**任何**扫描出结果时推一次回调，可把 2 秒的轮询延迟降到接近 0；只对 API 33+ 有效，需要新增一条事件通道。
+- 验证：**本机无 Flutter/Dart SDK 与 Android SDK**，analyze / test / Kotlin 编译**均未执行**，只做静态自检。`pairing_page_test.dart` 已同步（断言那张解释卡不再出现、手动卡仍在）。**真机未验**。
+- 文档：`AI_CONTEXT.md` 扫描节奏口径更新，`docs/history/2026-09/2026-09-10-pairing-flow-batch.md` 追加两节。
+
+---
+
 ## 2026-09-10：花盆 APP 搜索提速 + Wi-Fi 名带出规则 + 两处样式（`ae1de0a`，已推送）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `504e205`）。

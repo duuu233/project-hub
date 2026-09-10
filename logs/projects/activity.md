@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **连接Wi-Fi 页精简 + 扫描配额 front-load**：删掉底部「系统会弹框询问是否连接…」那张解释卡（手动路径那张保留，它是必须照做的一步），间距整体收紧让内容进首屏；主动扫描时间表由均匀 `0/30/60/90s` 改成 **`0/6/46/86s`**——Android「前台 2 分钟 4 次 `startScan`」是滑动窗口约束而非均匀间隔，front-load 后第二次真扫从 30 秒提前到 6 秒且仍合规。 | `9a00ac0`（已推送；本机无 Flutter/Android SDK，analyze、test 与编译均未执行，真机未验）；💡 后续可上 Android 13 的 `registerScanResultsCallback` 把 2 秒轮询降到接近 0 |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **搜索提速 + Wi-Fi 名带出规则**：受 Android 配额限制的只有 `startScan`，读 `scanResults` 不受限——`scanWifi` 加 `refresh` 参数，搜索页改成「30 秒一次真扫 + 2 秒一次读缓存」两条线并行（改前两次真扫之间那 30 秒完全瞎着，就是「搜了一分钟」的成因）；「连接 Wi-Fi」页填 SSID 改走只读缓存（名字来自 `connectionInfo`，根本不用扫描），并收敛为「连着就带出来、没连就留空」；「发现 N 台设备」字号 28/24→20/18。 | `ae1de0a`（已推送；本机无 Flutter/Android SDK，analyze、test 与 Kotlin 编译均未执行，真机未验） |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **搜索页「重新扫描」只在搜索为空时显示**：Android 改为「搜完一轮且一台都没有」才画（搜索中点它只是白烧系统配额，已搜到时用户要点的是那台设备）；iOS 的「下一步」全程都在（唯一入口）。`_SearchActions` 收敛成一颗按钮。 | `504e205`（已推送；本机无 Flutter SDK，analyze/test 未执行） |
 | **2026-09-10** | **flowerpot-app (花盆APP)** | ssh / `main` | **登录页只留 toast + toast 宽度修折行**：登录页去掉输入框下面那行常驻校验提示（校验本身没松，发送前照常挡下不合法号码）；toast `maxWidth` 由写死 300 改成 `(屏宽-32).clamp(260,380)`、内边距 18→16、图标间距 9→8——原来留给文字只有 236 而「请先阅读并同意用户协议与隐私政策」要 224，只差 12px 必折。 | `d875cff`（已推送；本机无 Flutter SDK，analyze/test 未执行，真机未验）；⚠️ 注册页与找回密码页仍保留行内提示，是否一起去掉待产品 |
