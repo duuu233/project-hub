@@ -1,5 +1,22 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP 定制动画——操作按钮改底部悬浮
+
+- 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `4eabac5`）。
+- 需求：先核对定制动画页是否已按 `docs/UI/v2/智能花盆ysplanter/定制动画-已上传图片（图库管理）.png` 调整，再在此基础上——上传按钮悬浮固定在底部；有上传的图片时才显示下面那排操作按钮；其余照 UI 图；顶部「仅支持屏幕录制或本地文件」那个模块不需要。
+- **核对结论**：v2 那张图库卡（三列缩略图 + 勾选圈 + `N/10` + 一排三个圆按钮 + 长按置顶）2026-09-04 已落地；顶部权限提示条与右上角「文件同步」按钮 2026-09-08 已按产品口径整体下线（本轮要求与之一致，无需再动），提示卡首条同期改为「支持本地图片文件上传」。**唯一和 UI 图对不上的**：虚线「上传文件」位一直常驻，有图时还压在图库卡上面，而 v2 那一屏没有这块。
+- 交付：**flowerpot-app `ef11017`（已推送）**
+  - 新增 `_GalleryActionBar`：页面 body 由单个 `CustomScrollView` 改 `Stack` + 底部 `Positioned`，上传按钮常驻，`hasFiles` 为真才追加「删除选中」「取消选择」；三颗按钮的可用性判断（busy / 上限 10 张 / 有没有选中）上移到页面。
+  - `_UploadedFilesCard` 去掉卡内那排圆按钮与 `busy`/`onUpload`/`onDeleteSelected`/`onClearSelection` 四个入参，只剩网格；虚线上传位 `_UploadCard` 改为**只在图库为空时**画（空态仍按 `docs/UI/定制动画.png`）。
+  - 滚动内容底部内边距由写死 40 改为 `_GalleryActionBar.height + AppSpacing.xxl`（56 + 12×2 + 24 = 104），滚到底最后一行缩略图不会钻到按钮下面；`_GalleryAction` 提出 `diameter = 56` 并在可用时加 `elevation: 4`。
+- 取舍：① 虚线上传位**保留为空态**——`docs/UI/定制动画.png` 画的就是 `0/10` 这一屏，删了空态只剩一张提示卡；有图时按 v2 让位，上传入口由悬浮按钮承担。② 悬浮条走 `Stack`+`Positioned` 而不是 `bottomNavigationBar`：`AppBottomActionBar` 是不透明白底给整宽主按钮用的（仓库里无调用方），这里要的是圆按钮浮在渐变背景上；`AppPageScaffold` 已把 body 包在 `SafeArea` 里，`bottom: 0` 正好落在 Home Indicator 之上。③ 条子底色用透明→`canvas` 渐变而非实底，`DecoratedBox` 不参与命中测试，空白处仍可滚动。
+- 测试（未运行）：空态补「只有上传按钮」断言；新增「有图时虚线位让位」「有图才画删除与取消」「悬浮固定 + 滚到底不被压住」（9 张图 / 320×568）；删除 `uploaded files appear and can be deleted with a long press`——它断言 `find.text('demo.gif')` 与长按即删，而 2026-09-04 换成网格后格子不画文件名、长按已改成置顶（DP 157），这条从那时起就与实现对不上。
+- 验证缺口：**本机没有 Flutter/Dart SDK**，`dart format` / `flutter analyze` / `flutter test` 均未执行；只做了静态自检（两个改动文件的 Dart 感知括号配平、删除入参无残留调用方、逐行通读）。需在有工具链的机器补跑并在真机看两态版式与安全区。
+- 遗留待产品确认：提示卡第二条照 UI 图写「长按文件可删除已选文件」，而实现里长按是**置顶**（DP 157），同屏图库卡副标题写的是「长按可置顶」——两句话互相打架，本轮未动。
+- 文档：`AI_CONTEXT.md` 内容与维护段落补两态版式口径与「下线的模块不要按老设计稿加回来」，新增 `docs/history/2026-09/2026-09-10-animations-floating-action-bar.md` 并更新历史索引。
+
+---
+
 ## 2026-09-09：花盆 APP 植物 DP 契约改版（116 / 162）
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 pull = Already up to date，起始 `fa54740`）。
