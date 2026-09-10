@@ -562,3 +562,29 @@
   `NEARBY_WIFI_DEVICES` **都已声明**，失败不会是权限缺失。
 - 文档：`PRODUCT_RULES` 新增 4.0「连热点：只走静默连接，不兜底」。
 - 交付状态：已推送。**未验证**（本机无工具链）。
+
+## 2026-09-11 花盆：接入扩展 SDK 的 ThingActivatorCoreKit，并修掉「失败回调根本没接上」
+
+- 涂鸦两条回复拆包核实，**一真一假**：
+  - ✅ 「Flutter 场景下必须用 `ThingActivatorCoreKit`」——真。`ThingActivatorCoreKit` /
+    `IThingActiveManager.startActive` / `ThingDeviceActiveBuilder` /
+    `ThingDeviceActiveModeEnum`（含 `AP`、`EZ`）全部从 AAR 实拆确认；而且
+    `thingsmart-activator-core-kit` 本来就是 `thingsmart-expansion-sdk:7.8.0` 的传递依赖，
+    不用加任何东西。已接成第三套配网路径 `pairViaActivatorKit`。
+  - ❌ `IThingOptimizedActivator.startAPConfig(...)` + `WifiManager#connectSta()`——编造。
+    官方文档里该接口只有 `queryDeviceConfigState` / `startActivator` /
+    `resumeAPConfigWifi` / `stopActivator` / `onDestroy`；`ApHandlerBean` 是
+    `resumeAPConfigWifi` 的参数；Android 没有 `connectSta`。
+- **修掉一个会吞错误的 bug**：扩展 SDK 的失败回调叫 `onActiveError`，而通用回调代理只认
+  `onError` / `onFailure`，所以失败时原生什么都不报，Dart 侧只能等自己的超时——页面上就是
+  一条没有成因的「超时」。已补 `onActiveError` / `onActiveLimited` / `onFind` / `onBind`，
+  并让代理同时实现 `IThingDeviceStatePauseActiveListener`，把「密码错 / 连不上路由器」的
+  暂停状态也原文报出来。
+- 查到了关键一句官方口径：**只有「新流程 + 新设备固件」这条路上 SDK 才会自己连热点**
+  （`docs/reference/tuya-ap-mode-android.md:216`），经典 AP 流程文档开头写的是
+  「用户需要手动切换手机的 Wi-Fi 设置」，iOS 时序图写的是「App 引导用户连接到设备热点」。
+  下次问涂鸦只问一句：我们这台设备的固件，`queryDeviceConfigState` 会不会自己连热点。
+- 文档：`PRODUCT_RULES` 新增 5.1「外部给的 SDK API 先拆包核实再写代码」（含 4 次不存在
+  API 的台账、`strings -n 2` 的坑）；新增
+  `docs/history/2026-09/2026-09-11-activator-core-kit.md`。
+- 交付状态：已推送（`1b77118`、`61da15c`）。**未验证**（本机无 Flutter/Dart/Kotlin 工具链）。
