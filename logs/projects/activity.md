@@ -544,3 +544,21 @@
   `_PairingLogBox`（等宽、左对齐、**长按复制**），可直接截图。
 - 失败文案改为「事实在前、猜测在后」。`PRODUCT_RULES` 1.2 重写为「以涂鸦官方步骤为准」。
 - 交付状态：已推送。**未验证**（本机无工具链）。
+
+## 2026-09-11（续11）花盆APP 连热点只走静默连接、不兜底；日志直接上屏
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `ec6a7f0`、`e861aff`。
+- 涂鸦回复称智能生活用 `WifiManager#connect()` 静默连接、系统不弹框。**我的判断仍是它属
+  `@SystemApi`（需 `NETWORK_SETTINGS`，signature|privileged），普通应用拿不到**——这与上次
+  `ThingSmartHotspotCredentialKit`（经查系编造）是同一类。但与其争论，不如在真机上跑一次。
+- 产品口径「不要退回、不要给兜底」：`joinDeviceHotspot` **删掉整段 `WifiNetworkSpecifier`
+  路径**，失败不再偷偷退回（那会弹出产品不要的框，还会掩盖结论）。
+- `silentConnect()` 失败时返回**原因原文**：拿不到 WifiManager / Wi-Fi 没开 / 反射找不到方法
+  （并列出该类上**所有 connect 重载**）/ 调用抛异常（类名+message）/ 调用成功但 2.5 秒内没关联。
+  等待上限 2.5 秒，远低于 ANR 阈值。
+- **日志直接打到页面**（产品：不看 logcat）：原生 `trace()` 同时 `Log.i` 与推给 Dart；
+  `state.pairingLog` 收集；搜索页失败时画 `_PairingLogBox`（等宽、长按复制），可直接截图。
+- 已核实清单里 `CHANGE_WIFI_STATE` / `ACCESS_WIFI_STATE` / `ACCESS_FINE_LOCATION` /
+  `NEARBY_WIFI_DEVICES` **都已声明**，失败不会是权限缺失。
+- 文档：`PRODUCT_RULES` 新增 4.0「连热点：只走静默连接，不兜底」。
+- 交付状态：已推送。**未验证**（本机无工具链）。
