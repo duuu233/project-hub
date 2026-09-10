@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-10：花盆 APP「配网为什么要授权」续查（`c3b0b29` / `935d595` / `df9c561`，均仅文档+工具）
+
+- 环境：ssh；flowerpot-app，`main`。**没有改任何业务代码。**
+- 测试两次补充证据，逐条排除了我先前的推断：
+  1. 「同一台手机、同一台设备，用智能生活 App 不弹框」⇒ 排除「Android 必然弹框、无法避免」这个**过于绝对**的结论（智能生活也是普通第三方应用，没有系统签名）。
+  2. 「智能生活也没有退出 App 去系统设置，直接就连上了」⇒ 排除「官方 App 把用户送去系统设置手动连」这个最像的猜测。
+- **目前唯一能解释的机制：Android 的 Wi-Fi 限制按「应用的 `targetSdkVersion`」生效，不是按设备系统版本。** `WifiManager.addNetwork()` / `enableNetwork()` 的官方兼容性说明写明：`targetSdk >= 29` 的应用调用「always fail」；反过来 **`targetSdk <= 28` 的应用在 Android 10~13 上仍可静默连自己加的网络、不弹任何框**。国内 App 常年停在低 targetSdk 正是为了保住这类能力（Google Play 的 targetSdk 下限对国内商店不适用）。本项目 `targetSdk = flutter.targetSdkVersion`（现代版本）⇒ 落在 always fail 一侧 ⇒ 只能用 `WifiNetworkSpecifier` ⇒ 必然弹框。**差异根源是 targetSdk，不是权限。**
+- 对齐的三条路与代价（写进记录，均需产品决定、均未实测）：降 targetSdk 到 28（Google Play 会拒绝更新、放弃十年平台安全改进、Flutter 与三方库要重测）／改用 `WifiNetworkSuggestion`（首次通知授权一次、之后系统自动连，但连接时机由系统决定）／维持现状。
+- **交付一个排查工具**：`tool/apk_target_sdk.py`（`df9c561`）——纯标准库解析二进制 `AndroidManifest.xml`，离线读出任意 APK 的 `min/targetSdkVersion` 与 Wi-Fi 相关权限并给结论，不依赖 Android SDK / aapt，只读不改写。用手工构造的最小 AXML 自测通过（正确读出 target 28 / min 24 与权限），**未在真实 APK 上跑过**。记录里另给了两条不用脚本的查法：`adb shell dumpsys package <包名> | grep targetSdk`；手机上装「应用信息」类工具看 target SDK。
+- 文档：`AI_CONTEXT.md` 两次修正口径（先把「无法绕开」改准确，再写进 targetSdk 这条机制与验证方法），`docs/history/2026-09/2026-09-10-ap-only-and-system-consent-checklist.md` 追加三节。
+- **仍待确认**：智能生活的实际 targetSdk（一条 adb 命令即可）。确认之前，targetSdk 这条只是**推断**。
+
+---
+
 ## 2026-09-10：花盆 APP 配网模式查证——设备只支持 AP，系统授权框去不掉（`136176a`，仅文档）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `e2a479e`）。**本轮没有改任何代码。**
