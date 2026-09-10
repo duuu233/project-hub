@@ -183,3 +183,22 @@
   `test/support/`，仅被单元测试构造。产品路径唯一的非真实行为是配网第三步「连接云端」的
   1–2 秒随机停留，那是 2026-09-10 产品明确要求的（该步没有实际业务接入）。
 - 交付状态：已推送。**未验证**（本机无工具链）。
+
+## 2026-09-10（晚，定稿）花盆APP 配网新流程全程不用 WifiNetworkSpecifier
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `b3d0d09`。
+- 用户口径：不要弹框；新流程的意义就是绕开 Android 10+ 必弹的入网授权框。另要求
+  **文档不要来回乱改**。
+- 纠错：我此前把 `_joinHotspotForPairing`（`WifiNetworkSpecifier`）加回配网的依据不成立。
+  那次「只调 startActivator 失败」的对照**已经把 `queryDeviceConfigState` 删掉了**，而新流程
+  里建立与设备通道的正是它；更早那次又缺 `getDeviceSecurityConfigs`。完整序列从未被完整
+  试过一次。
+- 改动：`pairViaDeviceHotspot` 收敛为两步 —— `apQueryDeviceWifi`（SDK 自己连热点并查设备
+  状态）→ `apStartPairing`；App 侧不再碰任何连 Wi-Fi 的系统 API。`queryTimeout` 25s→45s；
+  失败收尾改 `apStopPairing`（连接挂在 SDK 配网器上，不能用 `leaveDeviceHotspot`）。
+- 文档：`AI_CONTEXT.md` 那段已堆成自相矛盾的过程记录（同一问题来回三遍），按它自己的规则
+  （current facts 快照、不是时间日志）**一次性收拢成定稿块**，删掉两处矛盾旧句；过程细节只
+  留在 `docs/history/`，以后不在 AI_CONTEXT 来回改。
+- 交付状态：已推送。**未验证**。这是第一次完整跑官方序列，需真机复测；若仍超时，下一步
+  **不是**把 `WifiNetworkSpecifier` 加回来，而是看失败消息的耗时行、查 `207201`，必要时走
+  涂鸦工单确认 `queryDeviceConfigState` 内部如何连 AP。
