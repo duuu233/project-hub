@@ -636,3 +636,16 @@
 - 遗留（与本轮无关，早前就记着）：`test/widget_test.dart` 仍断言已删除的「选择设备」页
   （`请选择需要连接的设备` / `connect-device-0` / `pairing-hotspot-step`），跑测试必红；
   设备详情页的 DP 162 探针按钮测完要删。
+
+## 2026-09-11 花盆：OTA 升级弹框改为贴底
+
+- 产品：「OTA升级的弹框底部定位就行不要在中间」。
+- 改了动线上**两个**弹框：「检查更新」（`firmware-update-dialog`）+ 升级进度
+  （`ota-progress-dialog`）。只改后者会让点完「立即更新」从居中跳到底部，更难看。
+- 只改位置、不动样式：各加 `alignment: Alignment.bottomCenter` 与 `insetPadding`，底边取
+  `viewPadding.bottom + 16`（全屏手势机型底部有 home indicator，贴着会被压住）；左右留边、
+  圆角、`maxWidth: 327`、所有 key 都保留。
+- 自己踩的弯路：第一版把进度层改成了 `showModalBottomSheet`——那会拉成满宽、顶部切成直角，
+  等于重做视觉，不是"换个位置"。已回退，并写进 `PRODUCT_RULES` §4.2 禁止。
+- 未动：APP 版本更新弹框（不是固件 OTA）、设置项选择表单（本来就贴底）。
+- 交付状态：已推送（`2d99c5a`）。**未验证**（本机无工具链）。
