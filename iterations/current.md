@@ -1,5 +1,19 @@
 # 当前迭代
 
+## 2026-09-10：花盆后台用户列表——下线星币三列与行级账户日志按钮
+
+- 环境：ssh；flowerpot-admin，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `e7b051e`）。
+- 需求：用户列表去掉「总计星币」「可用星币」「消耗星币」三列和「账户日志」按钮。
+- 交付：**flowerpot-admin `dbc46ff`（已推送）**
+  - `src/views/sms/userList/index.vue`：删 `totalToken` / `consumeToken` 两列与承载 `UserAccountEditor` 的「可用星币」列；删行操作里的「账户日志」按钮，操作列宽 250 → 170（只剩编辑、详情，和植物管理列表同宽）；连带删 `handleAccountUpdated` 与组件引入，`handleAccountLogs` 只剩工具栏调用故简化为无参。
+  - 删除 `src/views/sms/userList/components/UserAccountEditor.vue`（可用星币行内编辑弹层，全仓库唯一调用方就是那一列）与 `src/api/userList.js` 的 `setUserAccount` 封装（唯一调用方就是该组件），`components/` 目录随之删空。
+- 取舍：① **工具栏「账户操作日志」按钮保留**——产品说的是行级那个「账户日志」，工具栏那个标签不同、进的是全量日志页，属列表级入口；`accountLogs.vue` 与 `userAccountLogs` 路由不动，其页内「用户ID」筛选仍可缩到单个用户。② 只服务于被删列的组件与接口封装一并删除，与 2026-09-08 下线四个模块的处理一致；要恢复可用星币编辑直接 revert 本次提交。③ **不动后端菜单与权限节点**——`scripts/sync-admin-menu.mjs` 里 `Post_User_SetUserAccount`、`Get_User_GetOperatUserAccountLog` 的声明保持原样，删节点属后台数据变更需单独指令。④ 接口本身不动：`getUserList` 响应仍带三个星币字段，只是前端不展示。
+- 验证：`NODE_OPTIONS=--max-old-space-size=1024 npm run build` **通过**（vite，45.58s，无报错无新警告，`accountLogs` 仍单独分包）；全仓检索确认 `UserAccountEditor` / `setUserAccount` / `availableToken` / `totalToken` / `consumeToken` 在 `src/` 下已无残留（只剩商品模块自己的 `totalTokenCount`，不相关）。项目没有 test / lint / type-check 脚本；**未在浏览器实机验证**列表渲染与操作列宽度。
+- 遗留：后台菜单里「编辑用户账户」权限节点仍在但前端已无对应按钮，要不要摘掉由产品决定。
+- 文档：`AI_CONTEXT.md` 补本次下线记录，`docs/project-structure.md`、`docs/interface-list.md`（三行）、`docs/dynamic-menu-sync.md` 同步口径，新增 `docs/history/2026-09/2026-09-10-userlist-remove-token-columns.md` 并更新历史索引。
+
+---
+
 ## 2026-09-10：花盆 APP 定制动画——操作按钮改底部悬浮
 
 - 环境：ssh；flowerpot-app，工作分支 `main`（改前 `git pull --ff-only` = Already up to date，起始 `4eabac5`）。
