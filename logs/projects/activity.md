@@ -418,3 +418,22 @@
 - 临时办法：让用户在系统设置里手动连一次该热点，系统保存后设备一开机自动重连，我们检测到
   「已在目标热点上」全程跳过 ⇒ 此后零框。这也最可能是"以前都不弹框"的真相。
 - 文档：`PRODUCT_RULES` 1.2 增补「真正的零弹框只有两条路」与「已排除的（不要再试）」。
+
+## 2026-09-11（续4）花盆APP 加入 EZ 快连配网，与 AP 页面可切换
+
+- 项目：花盆APP，环境 home，分支 `main`，提交 `bf5878f`。
+- 产品要求「改一个 EZ 配网模式我测试一下，原来的也备份下，不行就切回 AP」。
+- 顺带回答「智能生活用什么模式」：两种都支持，但对 Wi-Fi 设备**默认先走 EZ（快连）**。产品自己
+  在 iOS 上的观察正是 EZ —— 「选了一下 WIFI（不是设备），输密码就去配网」，不选设备、不连热点、
+  直接广播凭据，这就是"从始至终没有系统框"的原因。
+- 改动：新增 `lib/src/tuya/pairing_mode.dart`（`enum PairingMode {ez, ap}` + 运行时开关，
+  **默认 ez**，做成运行时开关是为了同一个包里两种都能测）；state 新增 `pairViaEz`
+  （取令牌 → `_pairInternal(mode:'ez')`，**全程不调 `_joinHotspotForPairing`** ⇒ 零系统 UI）；
+  「连接 Wi-Fi」页加测试开关 `_PairingModeSelector`；搜索页 EZ 模式跳过连热点。
+  **原生无需改动** —— `pairWifi`/`activatorFactory` 早有 EZ 分支（`newEZWifiConfigDevActivator`）。
+- 测试：mock 加 `hotspotJoins` 计数；`pairing_page_test` 用 setUp/tearDown 钉成 AP（该文件用例都是
+  按 AP 写的）；新增 EZ 用例断言 `hotspotJoins == 0` / `tokenCalls == 1` / `pairCalls == 1`。
+- 文档：`PRODUCT_RULES` 1.1 重写为双模式，并**修正旧口径**——「永远不考虑 EZ，设备不支持」源自
+  设备开发的「**没使用** EZ」，「没使用」≠「不能用」。
+- 交付状态：已推送。**未验证**（本机无工具链）。测试前请确认手机连的是要配给设备的那个
+  **2.4GHz** Wi-Fi；EZ 失败最可能两个原因：手机不在目标网络上、或固件没开 EZ（需设备团队确认）。
