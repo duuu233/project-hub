@@ -22,6 +22,14 @@
 - ⚠️ 但**iOS 入口的缺口仍在**：iOS 不枚举附近网络，搜索页在 iOS 上永远列不出设备，删掉那个按钮后 iOS 没有任何路径进入配网。「开机即可配网」这条事实反而说明 iOS 可以直接给一个无条件的「下一步」——是否要补，待产品定。
 - `AI_CONTEXT.md` 把这条产品事实记进配网段落，历史记录 `2026-09-10-pairing-flow-batch.md` 追加一节。
 
+### 追加：iOS 入口补回（`c437953`，已推送）
+
+- **查证结论**：iOS **列不出附近设备，而且没有替代方案**——系统没有任何公开 API 能枚举附近热点（`NEHotspotHelper` 要 Apple 特批的 entitlement，基本只发给运营商；`CNCopyCurrentNetworkInfo` 只回答「此刻连着哪个」）。这是平台限制，不是搜不到。
+- **但配网本身不需要先列出来**：本仓库 iOS 侧 (`AppDelegate.swift`) 早就用 `NEHotspotConfiguration(ssidPrefix:)`，**按前缀**直接连设备热点、不需要确切 SSID。加上「设备开机即可配网」，iOS 上没有任何要用户确认的东西 ⇒ 给一个**无条件的「下一步」**即可（与被删掉的「设备已在配网状态，继续」不是一回事：那个要用户确认一件永远为真的事）。
+- 改动：搜索页新增 `_canListNetworks`（`defaultTargetPlatform != iOS`），iOS 上按钮换成「下一步」→ 直接进「连接 Wi-Fi」且**不带热点名**，标题/说明改成「本机无法列出附近设备 / iOS 不提供附近 Wi-Fi 列表…设备开机即可配网，直接下一步即可」；Android 仍是「重新扫描」。
+- **修回一个自己引入的回归**：上一版在 Dart 侧直接拒绝「没有确切 SSID」的请求（`hotspot_unknown`），而 **iOS 的 target 永远是 null**——那等于把 iOS 唯一的通路也砍了。现在恢复前缀路径，把「拒绝通配」下放到 **Android 原生**（`joinDeviceHotspot` 收到空 ssid 回 `hotspot_ssid_required`，`setSsidPattern` 与 `PatternMatcher` import 一并删除）。这样 Android 永不触发系统那个「查找设备…／没有找到任何设备」搜索框，iOS 照常走前缀。失败页补 `hotspot_ssid_required` 的提示。
+- ⚠️ **iOS 这条路一次都没验过**：没有 Mac、Xcode、设备。`NEHotspotConfiguration` 需要 `com.apple.developer.networking.HotspotConfiguration` entitlement（Xcode Capabilities 可自助开、不需 Apple 审批），签名配置是否已带上它需要在有 Xcode 的机器上确认。
+
 ---
 
 ## 2026-09-10：花盆 APP 两件——手机号校验补反馈 + 搜索不到设备
