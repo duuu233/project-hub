@@ -1,5 +1,66 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 修「输完密码卡住」+ 配网按官方四步梳理 + **配网改走蓝牙双模**（未提交）
+
+- 环境：ssh；flowerpot，`main`（起始 `2b0a4b8`）。
+- **① 卡住的根因找到了，是回归。** `aef6ccd`（「只剩一条路，净删 1388 行」）把 `_pair()` 里的
+  `_pairingState = state;` 与 `setState(() => _pairing = true);` **连同上面那段注释一起删掉了**，
+  替换进来的新注释没把它们带回来。`build` 靠 `_pairing` 切进度页 ⇒ 它恒为 false ⇒ 点下「开始配网」
+  后页面还停在输密码那屏、只有按钮里转个圈，而 `pairViaHotspot` 最长要跑满 150 秒才回来。
+  连带三处：「取消配网」够不到（`_pairingState` 为 null）、退出本页走 `releaseDeviceHotspot()` 而不是
+  `cancelPairing()`、**切后台会把正在下发凭据的热点通道掐断**（最后这条会让配网真的失败，不只是看着卡）。
+  按 `223bdae^` 原样恢复。**现有用例本来能挡住它**（`leaving the page during pairing cancels it` 在当前
+  代码上必然失败），只是那轮没跑测试——本机没有 Flutter 工具链。
+- **② 配网对着官方四步过了一遍**，唯一的差异是有意的：**取 Token 必须排在连热点之前**（连上热点就没外网了），
+  这条已经写死在注释与 `AI_CONTEXT`。顺带删掉多余代码：`FlowerpotState.pairDevice`（全仓零调用）、
+  `PairingRequest.mode`/`isAp` 与通道里的 `'mode'`（只剩一个取值；iOS 拿它在已删的 EZ 与 AP 之间挑，
+  改成写死 AP）、`PairingArguments.deviceName`（一直在传、没人读）、孤儿类 `_PairingHintCard`、
+  三段被删除脚本留在原地的悬空文档注释。
+- **③④ 配网主路径换成蓝牙双模**（固件方已确认支持蓝牙配网；AP 那条完整保留作回落）。原生走已集成的
+  `thingsmart 7.5.1` 自带蓝牙模块，**没加任何 gradle 依赖**：`getBleOperator().startLeScan(LeScanSetting,
+  ThingBleScanResponse)` 逐台推给 Dart、`stopLeScan()`、`isBleSupported/isBluetoothOpened`；
+  `CombosFlagCapability.SCAN_WIFI` 位判 `supportWifiList`（固件 TuyaOS ≥ 3.6.1），为真时
+  `IMultiModeActivator.queryDeviceConfigState(MultiModeQueryBuilder)` **建本地蓝牙连接**问设备要它自己扫到的
+  Wi-Fi 列表——这就是绕开 Android「2 分钟 4 次 `startScan`」配额的那条路，也是「搜索不及时」的解；配网本身走
+  `IMultiModeActivator.startActivator(MultiModeActivatorBean{ssid,pwd,token,homeId,scanDeviceBean})`，凭据经蓝牙
+  下发，**全程没有系统入网授权框、手机也从没离开路由器**。
+- **接的是真实动线，不是调试面板。** 中途我先做成了一张诊断卡（列可用性/flag/uuid + 一颗「查Wi-Fi」），
+  被指出「就在真实场景，不要搞什么测试」后整张删掉：BLE 扫到的设备现在直接进搜索页的「已发现设备」列表
+  （**扫到 BLE 就只列 BLE**——两条通道没有可靠的共同标识，混列就是同一台花盆出现两行），点「连接」直接查列表
+  并进输密码页，「切换」弹层列的就是**设备自己扫到的**网络。
+- **又证伪了一批编造的 API。** 过程中拿到的示例代码写着 `ActivatorService.activator(ActivatorMode.BLE)` /
+  `ActivatorService.discovery(DiscoveryMode.BLE)` / `BLEActivator` / `IDiscovery`——把 7.5.1 能下到的模块全扫了一遍，
+  **五个名字 0 命中**。那套命名属于**设备固件侧的 TuyaOS（TKL）**，不是 Android App SDK（同一段话里「适配 TuyaOS
+  Kernel Layer」也印证了）。App 侧 BLE 配网只有两个入口：`IBleActivator`（纯蓝牙，`BleActivatorBean` 没有 ssid/pwd）
+  与 `IMultiModeActivator`（双模，`MultiModeActivatorBean` 带 ssid/pwd/token）——花盆要连路由器，是后者。
+- **反射目标全部解包核对过，没采信任何口头说法**——这个项目被涂鸦官方 AI 编造的 API 坑过一次。为此新写了
+  `tools/aar_class_dump.py`：纯标准库解析 `.class` 常量池与方法表，**不依赖 JDK**（本机连 JRE 都没有），
+  从官方 Maven 拉 7.5.1 的蓝牙 AAR 逐个确认，上面提到的类与方法**全部存在**。AAR 核对完已删除、未入库。
+- 验证：**本机无 Flutter / Dart / Android / Kotlin / JDK 工具链**，analyze / test / 编译 / 真机**全部未执行**。
+  静态自检：括号配平按「与改前相比有无新增不配平」比对，9 个文件全部持平；`tools/kt_dangling_refs.py` 通过；
+  被删符号全仓零残留；悬空/重复 DartDoc 扫描 `lib/` 零命中。用例已同步（配网页补三条进度页回归断言、
+  state 层新增两条 BLE 用例、mock 补四个方法与断言钩子）。
+- 文档：新增 `docs/history/2026-09/2026-09-11-pairing-stuck-fix-and-ble-discovery.md`，
+  `AI_CONTEXT.md` 配网整段重写（原文描述的是已删掉的 `pairViaDeviceHotspot` 新流程）+ 补 BLE 口径，
+  历史索引同步。
+- **堵掉一条「优先走蓝牙」的缝**：两条通道并行开，但 **Wi-Fi 会先答**——进页面读一次系统扫描缓存不占配额、
+  几乎不耗时，而缓存里往往已经有设备热点了。那一瞬间列表先画出 AP 那行，用户一点就掉进更差的路。补了一个
+  **4 秒抢答窗口**：BLE 还在扫且窗口没过时先不画热点；蓝牙用不了时一秒都不压；窗口到点由定时器主动重画
+  （否则两条都没新结果时没人触发重建、热点会被一直压着）。**Wi-Fi 扫描节奏没动**——它现在是回落路径，但
+  蓝牙关着时就是唯一的路，为省一次配额推迟首扫只会在真正需要它那次多等几十秒（09-10 踩过）。
+- **「自动优选」补到失败之后**：双模的承诺是「自动优选最佳方式、提升配网成功率」，而第一版的优选只发生在
+  发现阶段，蓝牙真没成时一条退路都没有。补两处——① 失败页的「重新配网」带上 `bleUuid`/`hotspotSsid`/
+  `deviceNetworks` **照原样重走刚才那条**（原来只带 request，走蓝牙失败的那次重试会掉进 AP 分支、又没有热点名，
+  得到的是另一个失败）；② 蓝牙失败时另给一颗「改用热点方式配网」，回搜索页带 `preferHotspot: true`，那一轮不开
+  BLE、直接走 AP。**不做自动回落**：要再等一轮超时，而且 AP 必然弹系统框，在用户以为结束时冒出来更糟。
+  EZ 不进优选池（真机实测设备不支持、整条已删），所以本产品的自动优选是 BLE ⇄ AP 两选一。
+- **待真机**：① 配网那两行是本轮唯一确定的线上修复，要回归；② 双模整条全部未验，三条硬风险——反射参数装箱
+  没有编译期保护、`queryDeviceConfigState` 的回调泛型是推的（已把每项 `toString()` 原样带回 `raw` 字段，真机
+  一眼能看出是什么 bean）、`MultiModeActivatorBean` 是公有裸字段靠 `Field.set` 写（字段名写错不编译报错、
+  只在运行时 `NoSuchFieldException`）。③ 真机不通时回滚只要一行：`_foundDevices` 永远返回 Wi-Fi 热点那份。
+
+---
+
 ## 2026-09-10：花盆 APP toast 去掉来源前缀（`c7f765d`，已推送）
 
 - 环境：ssh；flowerpot-app，`main`（起始 `863b02b`）。
