@@ -1,5 +1,24 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 撤掉系统原生 BLE 扫描，只走涂鸦 SDK；扫到的按信号列前 50（`5cd8c2d`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `e6e84d6`）。
+- 产品口径（两次确认）：**能用涂鸦 SDK 实现的，就不要自己实现**；搜索设备只走涂鸦 SDK 的
+  `startLeScan`，不用系统原生 `BluetoothLeScanner`。
+- `be52069` 里加的那条原生扫描当初只是**对照用的诊断**、从不参与配网，但口径明确就整个删掉：
+  原生桥接、`RawBleDevice` 模型、仓库、状态、页面、mock、用例，净删 219 行，`RawBle*` 全仓零残留。
+  `openAppSettings` 留下——它是权限被永久拒绝后的出口，和原生扫描无关。
+- 按产品要求「把搜到的按信号强弱列前 50 台我看看有没有」：`bleDevices` 按 rssi 截前 50
+  （`bleListLimit`），`bleTotal` 另报总数；状态行写清「一共 N 台，按信号列最强的 M 台」；
+  每行小字加 **mac / uuid**（广播里常常没名字，只能靠这两样和设备方对），`maxLines` 放宽到 3。
+- **没有采用**产品贴来的 `ActivatorService` / `ActivatorMode.BLE` / `BLEActivator` / `IDiscovery` /
+  `DiscoveryMode` 示例——7.5.1 全模块 0 命中（前一轮已核对），其链接指向**设备固件侧**的 TuyaOS
+  BLE 芯片 SDK 指南。`ACCESS_BACKGROUND_LOCATION` / 前台服务只在后台扫描时才要，本项目前台扫，不加。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+- 文档：history 那条线补「当日撤回」一节；`PRODUCT_RULES` §6 归纳这条口径。
+
+---
+
 ## 2026-09-11：花盆 APP 首次进搜索页误报「缺定位权限」（`e6e84d6`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `be52069`）。测试机 **Android 10**。
