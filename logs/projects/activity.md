@@ -718,3 +718,16 @@
   `true` 会走 `int.tryParse('true')` → null → 归 `hidden`，**引导窗永远不弹且不报错**。改成
   先认 `bool`，再保留数值/字符串兜底（两种固件会并存一段时间）。`dpValue` 随之 `int` → `bool`。
 - 交付：flowerpot `e3d3ae0`。**未验证**（本机无工具链）——打包请先 pull。
+
+## 2026-09-11 相册小程序（追加）：调试台入口改为只放行开发版，体验版一并屏蔽
+
+- 产品追加口径：「只要开发版可以看到就行，体验版也屏蔽入口，包括正式版。」
+- 判定从「拦正式版」改成「只认开发版」：`isReleaseEnv()` → `isDevEnv()`，
+  `envVersion === 'develop'` 才放行，`trial` 与 `release` 一律拦；**取不到环境信息返回 false**
+  （按"不是开发版"处理）。`isReleaseEnv` 随之删除（只有这三处用过，留着是死代码）。
+- 理由写进文档：体验版是要发给外部人试用的，调试台能 `0x12` 删图、能覆盖全局传输参数，
+  发出去一样是事故。开发版含微信开发者工具，日常联调不受影响。
+- 三处调用点同步（`bind.js` 的 `showDebugEntry` 与 `openDebug()` 守卫、`debug.js` 二次拦截）。
+- 验证：`node --check` 过；`node --test` 57/58（唯一失败仍是既有的 `token-page-layout`）。
+  ⚠️ 自检清单改成三档表格，**体验版那档必须真发一个体验版才能验证 `envVersion === 'trial'`**。
+- 交付：photo-album `6cf4170`。
