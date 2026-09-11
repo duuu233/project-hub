@@ -780,3 +780,19 @@
   解析器的人用。样式那半是纯查表，没转写。
 - 交付：flowerpot `8256827`（已 push）。`flutter analyze` / `flutter test` **未跑**，
   **未真机验证**；新增 10 个 Dart 单测待有工具链的环境执行。
+
+## 2026-09-12 | flowerpot | SSH 开发机 | main | 打包失败的 4 个编译错误 + Dart 跨类引用检查器
+
+- Windows 侧 `assembleRelease` 报 4 处，都是本机没工具链没拦住的：
+  1. `getProductPlantDetail` 里 `json['retData']` —— `ApiClient.getJson` **已经拆过信封**
+     （retCode 非 200 直接抛，成功时 `return body['retData']`），多取了一层；而且它的静态
+     类型是 `Object?`，`[]` 根本没定义。**通用教训：先看清楚 client 到底返回信封还是净荷。**
+  2. 调试行留在了 StatelessWidget 里，却读 State 的 `_loading` / `_detail`。
+  3. 可空的 `id` 同时喂给 `plantMissing(String?)` 和 `deviceById(String)` 两个签名不同的方法。
+- **新增 `tools/dart_dangling_refs.py`**，思路同 `kt_dangling_refs.py`：Dart 的 `_foo` 是库
+  私有，类体里光秃秃的 `_foo` 只能解析到本类 / 同文件父类的成员、局部变量或库级声明，所以
+  「它是**别的类**的成员而本类和库级都没有」必错。只报这一种，力求零误报。自测方式也一样
+  ——拿改动前的坏文件跑，**报出的行号与编译器完全一致**，全库 281 文件零误报。
+- **仍然查不出类型错误**：括号配平、字符串闭合、跨类引用三个脚本加起来也只是词法/作用域层面。
+  上面第 1、3 条只能靠人看签名，已一并写进 `docs/PRODUCT_RULES.md`，提醒动手前先 grep 签名。
+- 交付：flowerpot `c6189bc`（已 push）。仍未编译验证，请重新打包。
