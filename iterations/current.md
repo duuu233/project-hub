@@ -1,5 +1,28 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP **蓝牙双模配网真机跑通** + 收口（`51e2f86`，已推送）
+
+- 环境：ssh；flowerpot，`main`。真机 Android 10（API 29）。**配网成功。**
+- **跑通的关键**：配网必须用 **`IMultiModeParallelActivator`** —— `config(ssid/pwd/token/gid=homeId/timeout)`
+  → **`appendDevice(ScanDeviceBean)`** → `addMultiModeParallelListener` → `startConfigWifi()`。
+  另一条 `IMultiModeActivator.startActivator(MultiModeActivatorBean, …)` 要**手工拼整个 bean**
+  （二十多个字段），拼漏一项就在 SDK 内部 NPE，而混淆栈帧（`pqppqpd.bdpdqbp:21`）看不出漏了哪一项。
+  并行这条把 `ScanDeviceBean` **整个交回给 SDK**，没有"拼"这一步。
+- **完整路径与一路踩过的坑**都写进 `docs/history/2026-09/2026-09-11-蓝牙双模配网跑通.md`：
+  `neverForLocation` 会让 12+ 静默过滤广播、探测抢在授权框之前、系统定位总开关、仓库层静默丢掉
+  无 uuid 的设备、配网失败后没断 BLE 链路导致"之后再也搜不到"、`mac` 空而地址在 `address`、
+  混淆栈帧只报类名。每条都有症状与处置。
+- **本次收口，逻辑与流程不变**：① `showUnfilteredBleScan` 置 false，列表回到**只列本产品且未绑定的**；
+  ② **认设备以后台 `/Client/Product/getProductList` 的 `broadcastId` 为准**（产品口径「根据后台的接口
+  配对一下」），进搜索页拉一次、尽力而为不拦路，本地 `TuyaConfig` 常量兜底——**后台新增产品，App
+  不用改代码、不用发版就能认出来**；③ 页面回到 UI 图，行上只留「信号 −xx dBm」，设备标识 / 能力位 /
+  SDK 原样输出 / 常驻状态行 / 原生日志框**全部收进排查态**（翻回 true 整套就回来，不是删掉）。
+- ⚠️ AP 仍屏蔽中（`apEnabled = false`），是否恢复作回落由产品决定，代码原样保留。
+- 验证：**真机配网成功**（本轮唯一被真实验证的结论）。本机无工具链，analyze / test / 编译未执行；
+  静态自检全绿。**收口后的样式与过滤未再上真机**，需回归：只列本产品、行上只有信号、配网照常成功。
+
+---
+
 ## 2026-09-11：花盆 APP 配网改走并行配网器（`appendDevice`）（flowerpot 已推送）
 
 - 环境：ssh；flowerpot，`main`。
