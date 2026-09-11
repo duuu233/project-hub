@@ -1,5 +1,27 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 配网 NPE 定位——配网前要先同步家庭详情（`flowerpot` 已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `918d260`）。
+- **真机新报错**（带上栈帧了，我加的隔离也起作用）：
+  `NullPointerException @ pqppqpd.bdpdqbp:21 (ble_start_failed)`。混淆后的类名 ⇒ **炸在涂鸦 SDK 内部**、
+  就在调 `startActivator` 的那一瞬间，**不是我们组 bean 炸的**。
+- **根因**：`withHome` 只负责**拿到 homeId**（Dart 会话开始时 `setHomeId` 钉进来的），**全程没调过
+  `getHomeDetail`**；而 SDK 的配网器要从**家庭缓存**里取东西。App 重启后直接进搜索页配网，那份缓存
+  还是空的，一解引用就 NPE。涂鸦排查建议第三条「App 重启后未先调用 homedetail 同步网关数据」命中。
+- **以前 AP 配网为什么没暴露**：走 AP 的用户通常**先进过设备列表**（`getDevices` 会调 `getHomeDetail`），
+  缓存顺带就热了；蓝牙这条动线可以完全不经过设备列表。
+- 改法：新增 `withHomeDetail(homeId)`——每个家庭每进程只拉一次，拉完再 `startActivator`；
+  `loadHomeDevices` 成功时也记账免得重复拉。**失败不拦路**（让真正的配网错误来说话）。
+- **涂鸦另外两条未采纳**：`appendDevice` 是 mesh 子设备那条链路的，双模 BLE-WiFi 用不上；
+  「Android 17+ 需 `ACCESS_LOCAL_NETWORK`」——**没有 Android 17 这个版本**。
+- 另：Windows 侧 `minifyReleaseWithR8` 报 `FileSystemException ... classes.dex 被占用`，是**环境问题**
+  （Gradle daemon 未退 / 杀毒实时扫描锁文件），已给出 `gradlew --stop` + `flutter clean` + 杀 java 进程
+  + 把项目目录加进杀毒排除的处置，并建议赶时间时先打 debug 包（不走 R8）。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+
+---
+
 ## 2026-09-11：花盆 APP 按真机 raw 加固配网 bean（`918d260`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `aed8a0f`）。
