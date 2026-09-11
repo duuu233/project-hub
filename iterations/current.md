@@ -1,5 +1,29 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP「之前搜得到、现在搜不到」——退出时断开 BLE 链路（`6e5f768`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `cd2a3a8`）。
+- 现象：`ehbx83xdh9jkmxvz` 那台之前搜得到，配网失败之后就搜不到了。
+- **根因之一在我们这边**：**BLE 外设在连接状态下会停止广播**。配网连上设备、中途失败，而
+  `stopMultiModeActivator` 只调了 `stopActivator`、**从来没断开那条链路**；NPE 又发生在 listener
+  之外，连那点清理都没跑到。设备于是一直挂在连接上、不再发广播。
+- 改法：`stopMultiModeActivator` 现在 `stopActivator` + `disconnectBleDevice` 两件事都做；新增
+  `disconnectBleDevice(uuid)`（空 uuid = 全断，优先 `disconnectAllBleDevices()`）；`releasePairing`
+  兜底全断；Dart 侧 `stopBleDiscovery` 停扫后一并断开——每次「重新扫描」「退出页面」都会断干净。
+  扫不到时的文案把两个原因说清楚：①设备静置会退出配网状态（**只能断电重启**）；②上次连接没断干净
+  （已自动处理）。
+- **另一半原因仍在设备侧**：设备静置会退出配网状态，那之后不广播，只能断电重启——这条与 T5-E1
+  规格书里「蓝牙配网 / 热点模式配网是两个独立工作状态」互为印证。
+- **又查了一次那套 API**：产品再次贴来 `ActivatorService` / `IDiscovery` / `DiscoveryMode.BLE_WIFI` /
+  `IDiscoveryListener` / `IBluetoothDevice`。这次连**最新版 7.8.6** 也下下来查了（我们在 7.5.1）——
+  **依旧 0 命中**，所以不是「升级就有」。识别特征已记进 `PRODUCT_RULES`：那段里的 `didDiscover` 是
+  **Objective-C/Swift 的委托命名**，把 iOS 风格套进了 Java 语法。它想做的事我们已经在做，只是类名不同，
+  一一对应关系也写进规则了。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。新增断言：
+  停扫必须连 BLE 链路一起断。
+
+---
+
 ## 2026-09-11：花盆后台产品表单恢复「广播ID」必填（`4e7f2e1`，已推送）
 
 - 环境：ssh；flowerpot-admin（`/pgdata/pg/dh/flowerpot-web`），`main`（起始 `dbc46ff`）。
