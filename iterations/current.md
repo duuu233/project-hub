@@ -1,5 +1,28 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 蓝牙扫到设备了；修双模配网 NPE + 澄清 broadcastId（`b809fcd`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `17fba0a`）。
+- **真机进展：蓝牙扫到设备了**（-32dBm，uuid `23119e1d4a2b66fc`，`固件不支持读 Wi-Fi 列表`）。
+  发现这条通了；卡在配网：6757ms 后 `native_error` / `NullPointerException｜令牌(复用) 0ms · 失败`。
+- **① NPE 根因：activator bean 用错了构造函数。** 原先用 `MultiModeActivatorBean` 的**无参构造**、
+  只手填 8 个字段，而这个 bean 还有 `address` / `mac` / `productId` / `deviceType` / `flag` 全留在
+  null/0 上——SDK 要拿 `address` 去连那条 BLE 链路，一解引用就炸。改用 SDK 给的正道
+  **`MultiModeActivatorBean(ScanDeviceBean)`**（扫到的那台是什么它自己全抄），老版本没有该构造时
+  退回无参 + 逐字段搬。
+- **② `broadcastId` ≠ `productId`，不是"对不上"。** 产品澄清：后台返回 `broadcastId = ehbx83xdh9jkmxvz`，
+  涂鸦平台产品 ID = `yciq4kssu1fv8umn`，**两个不同字段**。**云端（配网/绑定/DP）一律以 `productId` 为准**；
+  `broadcastId` 只是设备**广播包里**的标识，而 BLE 扫到的 `ScanDeviceBean.getProductId()` 拿到的正是它。
+  ⚠️ 所以「扫到 -32dBm 的花盆却没标成本产品」**不是设备的问题，是我只比了一个 id**——我上一条
+  「请与设备方核对固件烧录的 PID」是错的结论，已撤回。`TuyaConfig` 新增 `broadcastId`，认设备时两个都比。
+- **③ 报错不再只给一个光秃秃的异常类名**：`describe()` 带上第一帧属于 `com.thingclips` / `com.common`
+  的栈（类名.方法:行号）。NPE 的 `message` 往往是 null，退回类名之后说不出是哪一行。另在
+  `startActivator` 之前把真正交给 SDK 的 uuid/address/mac/pid/deviceType 打一行日志。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+- **下一步真机**：这版应当能过 NPE 那一关；若仍失败，看新加的那行日志（哪一项空着）与带栈帧的报错。
+
+---
+
 ## 2026-09-11：花盆 APP 读 T5-E1 规格书定位卡点 + 按 pid 认花盆（`17fba0a`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `1bf3551`）。
