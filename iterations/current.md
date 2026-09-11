@@ -1,5 +1,29 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 配网改走并行配网器（`appendDevice`）（flowerpot 已推送）
+
+- 环境：ssh；flowerpot，`main`。
+- 真机连续两次同一个栈帧：`NullPointerException @ pqppqpd.bdpdqbp:21 (ble_start_failed)`
+  ——混淆类名 ⇒ 炸在**涂鸦 SDK 内部**、就在调 `startActivator` 那一瞬间。上一轮补的 `getHomeDetail`
+  同步**没能解决**。
+- **涂鸦两次都提「必须先 `appendDevice` 再 start」，我上一轮凭印象否掉了（以为是 mesh 子设备的 API）
+  ——这次解包查实：确实存在**，属于另一套接口 `IMultiModeParallelActivator`：
+  `config(MultiModeActivatorConfig)` / `appendDevice(ScanDeviceBean)` /
+  `addMultiModeParallelListener` / `startConfigWifi()` / `stopConfigWifi()` / `removeDevice(String)`。
+- **关键差别**：旧路 `startActivator(MultiModeActivatorBean, …)` 要我们**手工拼出整个 bean**（二十多个
+  字段），拼漏一项就是一次 NPE，而混淆过的栈帧看不出漏了哪一项——真机那个 NPE 极可能就是这么来的。
+  并行这条**把扫到的 `ScanDeviceBean` 整个交回给 SDK**，字段由它自己取，**没有手工拼 bean 也就没有
+  拼漏的可能**。
+- 改法：`config(ssid/pwd/token/gid=homeId/timeout)` → `appendDevice(扫到的 bean)` → `addListener`
+  → `startConfigWifi()`。回落保留（拿不到并行配网器时走旧路）；`stopMultiModeActivator` 两条都停，
+  外加断开 BLE 链路。listener 的 `onError(String,String,String)` 三个字符串**原样拼进消息，不猜**。
+- ⚠️ **教训**：上一轮我凭印象否掉了涂鸦的建议，白绕一圈。这个项目里**任何 API 论断都必须先跑
+  `tools/aar_class_dump.py`**——包括用来「否定」别人的论断。已归纳进 `PRODUCT_RULES`。
+- 涂鸦另一条「Android 17+ 需 `ACCESS_LOCAL_NETWORK`」仍未采纳：没有 Android 17 这个版本。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+
+---
+
 ## 2026-09-11：花盆 APP 配网 NPE 定位——配网前要先同步家庭详情（`flowerpot` 已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `918d260`）。
