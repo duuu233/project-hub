@@ -1,5 +1,34 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 读 T5-E1 规格书定位卡点 + 按 pid 认花盆（`17fba0a`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `1bf3551`）。
+- **规格书读出两条硬事实**（本机无 `pdftoppm`，纯标准库解 PDF 的 ToUnicode CMap 解码，脚本用完即删）：
+  1. T5-E1 **确实是 Wi-Fi(b/g/n/ax) + 蓝牙 LE 双模**，支持 **BLE 5.4**、1Mbps 与 125Kbps 远距离模式
+     ⇒ **硬件支持蓝牙配网，这条不用再问设备方**。
+  2. ⚠️ **功耗表把「蓝牙配网」与「热点模式配网」列为两个独立工作状态**（各有电流与指示灯）。
+     **这很可能就是真机扫不到的原因**：设备上电后进的是热点配网状态（它确实在拉 `SmartLife-xxxx`
+     热点、我们一直扫得到），而那个状态下**未必同时广播 BLE**。
+     ⇒ 要问设备方的变成两条具体问题：**上电默认进哪个状态？怎么切到蓝牙配网状态？**两种状态的
+     指示灯分别什么样（好让测试肉眼确认）。这是本轮最有价值的产出。
+- **按 pid 认花盆**（产品 pid `yciq4kssu1fv8umn`，已在 `TuyaConfig.productId`）：匹配的**置顶**、
+  行上标「★ 本产品」，状态行单独一句「本产品（pid）：扫到 N 台，已置顶／未扫到」——这一行就是
+  「到底有没有搜到花盆」的答案。pid 与固件烧录的 PID 严格一致，是唯一可靠判据（广播名常常为空、
+  mac 每台不同）。
+- **云端补产品名**：`IThingDeviceActivator.getActivatorDeviceInfo(productId, uuid, mac, …)`
+  ——产品给的思路，解包核对**确实存在**。是云端往返，所以按信号**只查前 20 台**、**每台只查一次**
+  （查空也占位，否则每条扫描回调都重试同一台）、并发用 in-flight 集合挡住。
+- **同一批里没有采用的**：`ActivatorService` / `ActivatorMode.BLE` / `BLEActivator` / `IDiscovery` /
+  `DiscoveryMode` / `IDiscoveryListener` / `startConfigBLEWifiDeviceWithUUID` / `ThingBLEAdvModel`
+  ——7.5.1 全模块 **0 命中**：前者是**设备固件侧 TuyaOS(TKL)** 命名，后两个是 **iOS** 写法。
+  `ACCESS_BACKGROUND_LOCATION` 与前台服务只在**后台扫描**时才要，本项目前台扫，不加。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。新增用例：
+  本产品置顶（信号更弱也排前）、云端产品名补上、每台只查一次。
+- 文档：新增 `docs/history/2026-09/2026-09-11-T5E1规格书与云端产品名.md`。
+- 小事：`docs/` 下那份 PDF 有一个「- 副本」重复文件，建议删其一（本轮未动，避免误删产品资料）。
+
+---
+
 ## 2026-09-11：花盆 APP 撤掉系统原生 BLE 扫描，只走涂鸦 SDK；扫到的按信号列前 50（`5cd8c2d`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `e6e84d6`）。
