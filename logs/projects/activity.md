@@ -749,3 +749,34 @@
 - 检查器已自验：坏版本报出全部 3 处、零误报；当前版本与 `FlowerpotApplication.kt` 均 OK。
   写进 `PRODUCT_RULES` §6：改完 Kotlin 必须跑一遍。
 - 交付：flowerpot `2b0a4b8`。**仍未编译**（本机无 Kotlin 工具链）——请 pull 后重新打包。
+
+## 2026-09-12 | flowerpot | SSH 开发机 | main | 离线门禁 + 全局联调日志 + 帮助中心富文本
+
+- **先修一个会炸的回归**：`FlowerpotState._publishDps` 在调自己而不是 `_repository.publishDps`。
+  上一轮把各调用点的 `_repository.publishDps(` 批量改成 `_publishDps(` 时，**方法体内那一行也
+  被改掉了**，于是任何一次 DP 下发都无限递归——开关、校准、选植物、动画全废。教训同上一条：
+  批量替换要把「定义自身」排除掉，替换后回看定义处。
+- **设备在线门禁（产品新需求）**：判断收口到 `FlowerpotState.isDeviceOnline` 一处；
+  `_publishDps` 拦「认识且确实离线」的设备（刚配网完还没进列表的查不到，那种照常发，否则会
+  把配网收尾的写操作一起拦掉），抛 `device_offline`；页面侧 `device_online_guard.dart` 的
+  `ensureDeviceOnline` / `showDeviceActionResult` 统一提示「设备已离线」并 `popUntil(isFirst)`
+  退回列表页（列表页就是 shell 首页，不另 push `/devices/list`，免得栈里两个列表）。
+  19 处手写的 `showAppMessage(context, result.message, …)` 统一换成 helper——**页面漏加门禁时
+  指令也发不出去、提示也不会漏**。
+- **通用做法：逐页插控件插不动就往上挂一层**。联调日志框要「所有内容多的页面都有」，逐页往
+  `children` 里插试过一轮，十个候选页里三个结构对不上、还容易落进嵌套列表。改成挂在
+  `MaterialApp.builder` 的浮层 + `navigatorObservers` 的路由观察者：**一处改动覆盖全部页面，
+  不动任何页面布局**，新增页面只加一行路由映射。注意 `Stack` 要 `fit: StackFit.expand`，
+  否则 Navigator 拿 loose 约束会塌；`didPush` 里不能直接 `notifyListeners`，要推到
+  `addPostFrameCallback`。
+- **后台富文本进 App 要按标签渲染**：帮助中心正文是 wangEditor v5 存的 HTML，原来直接
+  `Text()` 就把 `<p>` 显示给用户了。没引第三方库——wangEditor 的输出标签集合很小且固定，
+  自己写了 `AppRichHtml`（段落/标题/粗斜体下划线删除线/行内 style 颜色字号/对齐/有序无序
+  列表含嵌套/引用/分割线/链接/图片/pre code/表格行/HTML 实体），认不出的标签当透明容器。
+  同批把 `HelpCenterPageModel.figma` 的静态兜底删了，没配就空态。
+- **没有 Dart 工具链时怎么验解析器**：本机与 nas 都没有 Flutter/Dart。新增
+  `tools/html_blocks_sim.py`，把解析器的控制流（标签栈、列表符号传递、空块裁剪）按同样算法
+  转写成 Python，拿真实 wangEditor 输出跑 9 组样例——这比「看着像对」实在得多，也留给后面改
+  解析器的人用。样式那半是纯查表，没转写。
+- 交付：flowerpot `8256827`（已 push）。`flutter analyze` / `flutter test` **未跑**，
+  **未真机验证**；新增 10 个 Dart 单测待有工具链的环境执行。
