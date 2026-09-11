@@ -731,3 +731,21 @@
 - 验证：`node --check` 过；`node --test` 57/58（唯一失败仍是既有的 `token-page-layout`）。
   ⚠️ 自检清单改成三档表格，**体验版那档必须真发一个体验版才能验证 `envVersion === 'trial'`**。
 - 交付：photo-album `6cf4170`。
+
+## 2026-09-11 花盆：第二轮打包失败修复 + 加 Kotlin 悬空引用检查器
+
+- 同一批删除的另外两处漏网：
+  - `currentSsidForLog` 夹在 `[optimizedActivator KDoc, startActivator)` 这一刀区间里被一起
+    删掉，连热点那条路还有两处在用。已恢复。
+  - `requested` 随「只留 AP 模式」的 `when` 分支删掉，但 `startActivator` 后面两处在用。
+    **没把变量加回来**，而是顺着 AP-only 改干净：诊断串写死 `ap`；绑定改无条件——原来那句
+    `if (requested == "ap")` 恒真，且万一 Dart 漏传 mode 会**静默跳过绑定**（凭据发不到设备
+    还不报错），留着是陷阱。
+- **根因是自检项不够，不是手滑**：三次失败（`//**`、`currentSsidForLog`、`requested`）都在
+  同一轮大删除之后，而括号配平 + 被删符号 grep + 枚举引用检查**三次全部放过**。
+- 新增 `tools/kt_dangling_refs.py`：① 块注释配平 / `//**`；② **按函数作用域**找「用了但在可见
+  范围内没声明」的标识符。作用域这点是踩出来的——第一版全文件比对，`requested` 在别的函数里
+  声明过就被漏掉，改成「统计文件级声明时先挖掉所有成员函数体」才抓到。
+- 检查器已自验：坏版本报出全部 3 处、零误报；当前版本与 `FlowerpotApplication.kt` 均 OK。
+  写进 `PRODUCT_RULES` §6：改完 Kotlin 必须跑一遍。
+- 交付：flowerpot `2b0a4b8`。**仍未编译**（本机无 Kotlin 工具链）——请 pull 后重新打包。
