@@ -1,5 +1,35 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 真机扫不到设备——去掉 `neverForLocation` 并补齐每一道门（`be52069`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `95fcfc6`）。
+- 现象：只走蓝牙那版真机**一台都搜不到**。产品转述涂鸦口径：≤API29 需定位权限 + 传统蓝牙权限；
+  ≥API31 可只用 `BLUETOOTH_SCAN`（带 `neverForLocation`）、无需定位，**除非需扫描 iBeacon 类广播**。
+- **根因（最可能）**：清单里 `BLUETOOTH_SCAN` 带着 `neverForLocation`。那标志能在 12+ 免掉定位权限，
+  代价是**系统会过滤扫描结果**——可能用于推断位置的广播（iBeacon 这类厂商自定义数据）被剔掉，应用
+  根本收不到。涂鸦那句「除非需扫描 iBeacon 类广播」说的正是它，而待配网设备广播的恰恰是这类数据。
+  于是**不报错、不回调、静默为空**，跟「设备没开机」完全分不开。
+- 按版本口径重排权限：清单去掉 `neverForLocation`；≥API31 申请 `BLUETOOTH_SCAN + BLUETOOTH_CONNECT +
+  ACCESS_FINE_LOCATION`（去掉标志后定位成为必需），API23–30 申请 FINE（另请求 COARSE）。
+- **第二条同源的坑**：**系统定位服务开关**（不是权限），Android 6～11 强制要求，关着时扫描同样静默
+  返回空。申请不来、只能检测。`bleProbe` 现在回 `locationOn` / `scanPermission` / `locationPermission`，
+  `BleAvailability.usable` **六项全开才为真**；搜索页分出「缺权限／定位没开／蓝牙没开」三条独立结论。
+  ⚠️ 少判任何一条，都会把「我们这边没配好」显示成「附近没有设备」——方向正好反。
+- **新增系统原生 BLE 扫描作对照**（`BluetoothLeScanner`，无过滤，只对照不配网）：涂鸦只认它自己的协议
+  广播，扫不到时「设备没广播」和「广播格式不对」看起来一模一样。页面上两个数目并排，并直接给结论——
+  原生>0 而涂鸦=0 ⇒ 手机这边是通的、问题在广播内容（把页面截图给设备方）；两边都 0 ⇒ 设备多半没在广播。
+  每条广播带 mac / 名字 / rssi / **厂商 id / service uuid**。这正是这轮要交付的：给设备方一个能照着改的
+  结论，而不是「搜不到」。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿（`dart_string_check`
+  274 文件、`kt_dangling_refs`、括号配平）。新增 `test/ble_availability_gates_test.dart`（六道门逐条验、
+  老桥接缺字段按"没问题"处理、桥接明确回 false 要认出来）。
+- **真机判据**：装上这版后 ① 授权框里应当多出「定位」；② 状态行逐项显示每道门；③ 原生扫描那一行的
+  数目就是分水岭。
+- ⚠️ 去掉 `neverForLocation` 后上架 Google Play 需说明定位用途（「用于蓝牙配网扫描附近设备」），国内商店不受影响。
+- 文档：新增 `docs/history/2026-09/2026-09-11-BLE扫不到设备的权限修复.md`。
+
+---
+
 ## 2026-09-11：花盆 APP 打包失败修复（`95fcfc6`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `c36b0d0`）。
