@@ -1,5 +1,29 @@
 # 当前迭代
 
+## 2026-09-11：花盆后台产品表单恢复「广播ID」必填（`4e7f2e1`，已推送）
+
+- 环境：ssh；flowerpot-admin（`/pgdata/pg/dh/flowerpot-web`），`main`（起始 `dbc46ff`）。
+- 需求：产品**新增 / 编辑 / 详情**三页各加一个 `broadcastId` 表单项、**必填**。
+- 三页共用 `template/DetailForm.vue`（`pageType` 1/2/3），**只改一处即三处生效**：默认值、必填规则、
+  详情回填（`?? ''` 不能省——后端返 null 时 `Object.assign` 会把默认值覆盖成 null，`el-input` 告警且
+  必填校验判不出"没填"）、模板插在产品名称与产品图片之间，`:disabled="pageType === 3"` 详情页只读。
+- **这其实是把 2026-09-08 精简表单时撤掉的字段恢复回来**。那一轮记录里就留过风险提示「广播ID 是后台
+  产品与涂鸦 PID 的映射来源，界面上去掉后新建产品不会再提交，若后端当必填则新增会失败」——这条风险
+  就此关闭。
+- **为什么它重要**（App 侧同日查清）：`broadcastId` 与涂鸦平台的 `productId` 是**两个不同字段**。
+  `productId`（`yciq4kssu1fv8umn`）是平台产品 ID，云端配网/绑定/DP **以它为准**；
+  `broadcastId`（`ehbx83xdh9jkmxvz`）是设备**广播时放进 BLE 包里**的标识。花盆 APP 做蓝牙配网时，
+  BLE 扫到的 `ScanDeviceBean.getProductId()` 拿回来的正是广播里那个——后台这字段缺了，App 就认不出
+  扫到的是不是本产品。
+- 验证：本仓库**没有 lint / test 脚本**（`package.json` 只有 dev/build/preview 与菜单同步），
+  `node_modules` 里也没有 eslint/prettier，**无可跑的静态门禁**；按本机内存约定未跑 `vite build`。
+  自检：SFC 标签配平、字段四处（默认值/规则/回填/模板）齐全、详情页只读与同页一致。**浏览器未验。**
+- 未做：**列表页没有加这一列**（产品只要求三个页面）；后端对 `broadcastId` 的长度/格式约束未知，
+  前端目前只做必填，没有 maxlength 或格式校验。
+- 文档：新增 `docs/history/2026-09/2026-09-11-产品表单恢复广播ID.md`。
+
+---
+
 ## 2026-09-11：花盆 APP 蓝牙扫到设备了；修双模配网 NPE + 澄清 broadcastId（`b809fcd`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `17fba0a`）。
