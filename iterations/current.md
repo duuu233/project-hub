@@ -1,5 +1,33 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 产品反馈五条（`8666d59`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `51e2f86`）。
+- **① 详情页按 116 判断无植物场景 —— 逻辑已存在**：`FlowerpotState.plantMissing()` 读 DP 116
+  （`PlantVariety.isMissing`），驱动 `HomeDashboardModel.plantMissing` → 提示条与植物图。无需改。
+- **② 切换有无植物没弹窗 —— 已修**。根因：引导窗只在 `didChangeDependencies` 里由 `_entryChecked`
+  检查**一次**，进页面查完就不再查；而用户是在页面上按固件按钮切换的，DP 162 实时变了却没人再触发。
+  抽出 `_maybeShowPlantGuide`，build 之后（post-frame）补检查，`_guideShowing` 防叠窗。
+  ⚠️ **DP 162 的解析本身是对的**：`PlantConfirmState.fromDp` 先认 bool（true/false）、再兼容旧固件
+  的 0/1 与字符串，不用改。
+- **③ 无植物提示条高度 —— 已修**。`HomeCareBanner` 提示那一支让文字自己撑高，正常那支固定两行
+  （`_messageHeight=36`），所以切换时卡片高度变一次、页面跳一次。现在提示那支同样固定两行、
+  内边距也对齐（12→10）。
+- **④ 报表电池数据为空 —— 是产品功能点限制，已把提示改准**。设备只导出 9 个历史 DP（131–139）：
+  水位 / 土壤湿度 / 光照各三个周期，**电池、温度、湿度、PPFD、DLI 根本没有历史 DP**，再等也不会有。
+  原来一律显示「设备还没有上报 XX 历史数据」会让人一直等；现在按 `hasHistorySource` 分开说。
+  ⚠️ **要真的有电池历史曲线，需要设备侧新增历史 DP**，App 这边改不出来。
+- **⑤ 定制动画没下发给固件 —— 根本没实现（不是 DP 长度问题）**。原生 `uploadAnimation` 直接
+  `result.error("product_protocol_required", "图片同步需要设备 PID 对应的文件传输协议")`——**一个字节
+  都没发**。DP 表里**点位是有的**：`dl_url`(142, raw, write only) / `dl_show`(143, string) /
+  `dl_cancel`(144, bool)，但全仓没有任何地方写它们。⚠️ **未实现**：`dl_url` 是 **raw** 类型（字节流、
+  非字符串），下发格式需要设备方给协议；raw DP 有长度上限，长 URL 可能放不下——需要先确认协议
+  与上限再动手，**不能靠猜**（猜错会把设备显示写坏）。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。真机需回归
+  ②③④。
+
+---
+
 ## 2026-09-11：花盆 APP **蓝牙双模配网真机跑通** + 收口（`51e2f86`，已推送）
 
 - 环境：ssh；flowerpot，`main`。真机 Android 10（API 29）。**配网成功。**
