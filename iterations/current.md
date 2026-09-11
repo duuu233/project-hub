@@ -1,5 +1,30 @@
 # 当前迭代
 
+## 2026-09-11：花盆 APP 按真机 raw 加固配网 bean（`918d260`，已推送）
+
+- 环境：ssh；flowerpot，`main`（起始 `aed8a0f`）。
+- **真机拿到了完整 raw**（上一版的全字段打印起作用了）：
+  `ScanDeviceBean{id='uuid23119e1d4a2b66fc', name='', providerName='SingleBleProvider',`
+  `data='null', configType='config_type_wifi', productId='ehbx83xdh9jkmxvz',`
+  `uuid='uuid23119e1d4a2b66fc', mac='', address='D8:FC:92:F4:89:88', deviceType='404',`
+  `isbind=false, flag=776, rssi='-38'}`
+- **三条规律**：
+  1. ⚠️ **`mac` 是空的，真正的蓝牙地址在 `address` 上** —— 涂鸦不少代码路径拿的是 `mac`，
+     空着就可能一路走到 NPE。**这大概率就是配网 NPE 的来源。** 现在两边互相补齐。
+  2. `uuid` 带字面前缀 `uuid`（`uuid23119e1d4a2b66fc`），不是拼错，SDK 原样如此。
+  3. `deviceType=404` / `configType=config_type_wifi` / `providerName=SingleBleProvider`，
+     `flag=776`（bit 3/8/9），SCAN_WIFI 位未置 ⇒ `supportWifiList=false`，与页面显示一致。
+- 加固：`productId` / `deviceType` / `flag` 没抄到就从 `ScanDeviceBean` 补；String 字段
+  （`countryISOCode`/`devId`/`ip`/`dns`/`gateway`/`subnetMask`）**不留 null**——裸 null 的 String
+  是最典型的 NPE 来源。
+- 诊断：把真正交给 SDK 的 bean **整个 `toString` 打出来**；`startActivator` 单独 `runCatching`
+  包起来，失败回 `ble_start_failed` + 异常类名 + **出事的栈帧**——这样能分清 NPE 是**我们组 bean**
+  炸的还是 **SDK 内部**炸的。
+- ⚠️ 带栈帧的报错是 `b809fcd` 加的，真机那条 6757ms 还是**旧包**；换新包重试就能看到具体位置。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+
+---
+
 ## 2026-09-11：花盆 APP 扫描结果一条都不丢 + 全字段打印（`aed8a0f`，已推送）
 
 - 环境：ssh；flowerpot，`main`（起始 `6e5f768`）。
