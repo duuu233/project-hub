@@ -1,5 +1,38 @@
 # 当前迭代
 
+## 2026-09-12：花盆 APP 产品七条 + 新 DP 表 + 接口文档对接（`e972dd9`→`18ac0d5`，已推送）
+
+- 环境：ssh；flowerpot，`main`。
+- **⑦ 点任何下发按钮都弹「发现新植物」—— 修我自己的回归**（`e972dd9`）。上一版写成「只要
+  pending 就弹」，而 DP 162 在用户处置前**一直是 true**，于是本页每重建一次就重弹一次。
+  改为**按跳变触发**（false→true 才弹），进页面那次由 `_runEntryChecks` 负责、基线置 true 防撞车。
+- **① 搜索页文案回设计稿**（`docs/UI/搜索附近设备.png`）：「搜索附近设备...」+「请保持手机蓝牙和
+  Wi-Fi已开启，并让设备处于配网状态」。原来那段「已屏蔽热点配网…不做任何过滤」是排查期自述。
+- **④ 未选中的圆圈看不见**：改前**未选中根本不画**，白底上就是"有个白圈看不见"。现在两态都画，
+  未选中是**主题色描边的空心圈**。
+- **⑤ 确认下发加 loading**：`confirmDetectedPlant` 要走云端往返，加不可点穿的进度圈。核对过弹窗
+  标题/内容/按钮/两条提示与两个按钮的逻辑**本来就符合**要求；植物名走 `reportedPlantName` → 后端目录。
+- **②⑥ 联调日志框**：`interactionLog` 记**下发**与**上报**两类；关键做法是**所有写 DP 统一走
+  `_publishDps`**（7 处已改），否则新增一处下发就少记一条。页面最底部可折叠面板。⚠️ **临时设施**。
+- **③ 「页面数据都是错的」根因找到并清除**（`df34668`）：`_PlantDetailData.fromProfile` 里有一整套
+  **本地写死的兜底**（`_byId` 六种植物 + `_generic` 按阈值现编），任何字段后端为空就顶上 ⇒ 页面显示
+  一份**看起来有、实际是编的**资料。连同 7 条静态植物整段删除（净删 3.4k 字符），改为**缺就留空**。
+- **第 6 条根因按 swagger 彻底确认**（`8058dd9`）：产品给了 `https://api.yikaltd.com/swagger-ui.html`，
+  拉 `/v2/api-docs` 核对——**列表接口 `ClientProductPlantApiOut` 只有 5 个字段**
+  （id/名称/图片/涂鸦标识/分类），**没有学名、没有别名**；全套在
+  `/Client/UserProduct/getUserProductPlantDetail`（id 传 productPlantId）的
+  `ClientProductPlantDetailApiOut` 里。详情页改成 StatefulWidget，进页面单独拉一次详情补齐；
+  **拉不到保持空白，不拿本地数据顶替**。⚠️ 图片 `plantImg` **列表里是有的**，所以「列表读不到图片」
+  不是字段缺失，另查。
+- **新 DP 表核对**（`18ac0d5`）：`09_12` vs `09_07` 逐条比对（63 vs 62），实质变化两条——
+  **162 改名** `plant_confirm`→`plant_present`（**DP 号与 bool 类型都没变**，行为不受影响）；
+  **163 平台已正式导出**，标识符是 `plant_confirm_switch`（此前本地占位猜成 `plant_detect_switch`）。
+  两个名字都留着（下发按 DP 号走）。**二次核实：电池仍然没有历史 DP**，报表曲线永远为空是产品功能点
+  决定的，已归纳进 `PRODUCT_RULES`。
+- 验证：**本机无工具链**，analyze / test / 编译 / 真机**全部未执行**。静态自检全绿。
+
+---
+
 ## 2026-09-12：花盆 APP 植物字段——光照画成「1」已修，详情页取数机制查清（flowerpot 已推送）
 
 - 环境：ssh；flowerpot，`main`。产品给出真实返回体（`tuYaRemark: "17"` 那条）。
