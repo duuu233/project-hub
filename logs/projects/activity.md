@@ -839,3 +839,21 @@
   true」和「这次报文带了它」，前者会被无关重建放大。** 计数必须在状态合并之后再加，否则页面
   会拿旧状态判定「不用弹」把上报吃掉。两条新测试分别守住①和③。
 - 交付：flowerpot `7ddcc2f`（已 push）。未编译、未跑测试、未真机验证。
+
+## 2026-09-12 | flowerpot | SSH 开发机 | main | 在线状态不及时、去静态兜底、OTA 弹层
+
+- **「关机了 App 还显示在线」先查是不是自己改坏的**：`git diff e49c03b..HEAD -- lib/src/tuya/ android/`
+  证明本轮只给 `DeviceUpdate` 加了 `changedDps`，`online` 解析和 Android 侧一行未动。
+  **通用做法：被问「是不是你改出问题了」，先用 diff 划清范围再谈原因，不要急着认也不要急着否。**
+- 真因：涂鸦 SDK 确实有 MQTT 心跳，App 也挂在 `IDevListener.onStatusChanged` 上，但
+  **切后台 / MQTT 重连期间漏掉的状态不会补发**，而此前 App 没有任何主动刷新（只有下拉刷新）。
+  → 加 `deviceOnlineStates` 原生方法读 `DeviceBean.getIsOnline`（**纯本地缓存、不发网络**，
+  bean 由心跳维护所以准），前台每 8 秒对一次；根 widget 挂 `WidgetsBindingObserver`，回前台
+  立刻补一次并整体刷清单，进后台停轮询。**推送为主 + 轮询兜底**这个组合可复用到任何 MQTT 场景。
+- 继续清静态假数据：设备列表缩略图此前**无条件**画一张「带植物的花盆」，首页主图在后端没配图
+  时也回落到同一张——都改成读后端、没有就留空位。只保留「116 报 -1 画空花盆」，那是事实不是编的。
+- OTA 两个弹框按新口径各归各位：决策框（检查更新）居中，进度层做成满宽底部弹层
+  （`insetPadding` 归零 + `bottomCenter` + 顶部圆角 + 显式黑色 42% 遮罩）。没用
+  `showModalBottomSheet`——进度层要跑完才允许关，bottom sheet 的下拉关闭那套还得一个个关掉。
+  **推翻了 09-11 的口径，两处注释都写了沿革**，免得下次又改回去。
+- 交付：flowerpot `dce4732`（已 push）。未编译、未跑测试、未真机验证。
