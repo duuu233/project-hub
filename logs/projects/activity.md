@@ -804,3 +804,18 @@
 - 轮播间隔 5 秒 → 8 秒。注意这和上一轮的「滚动速率慢一点」（切换动画 420ms → 900ms）是
   **两件不同的事**，代码注释里已经写明，免得下次又改错那一个。
 - 轮播用例同步改成 8 秒。交付：flowerpot `2e49473`（已 push）。未编译验证。
+
+## 2026-09-12 | flowerpot-web | SSH 开发机 | main | 产品表单「广播ID」改名「涂鸦产品ID」
+
+- 新增 / 编辑 / 详情三个页面共用 `template/DetailForm.vue`，改一处三处都变：label、placeholder、
+  必填提示统一改成「涂鸦产品ID」，输入框下加一行备注说明沿用旧的 `broadcastId` 字段。
+- **只改文案不改字段**：`prop` / `v-model` / 提交字段仍是 `broadcastId`，后端与 App 都没改。
+  模板和 `getData()` 两处注释都写明了，防止后面有人「顺手统一一下字段名」。
+- **没有 lint 脚本时的轻量校验**：这个仓库 `package.json` 里只有 `vite build`（太重）。改用仓库
+  现成依赖——`@vue/compiler-sfc` 的 `parse` + `compileTemplate` + `compileScript` 跑改动的 SFC，
+  `sass.compileString` 编译 scoped 样式块，两项都过。可复用到任何 Vue SFC 改动上。
+- ⚠️ **留了一条跨项目风险**（未改代码）：App 侧 BLE 扫到的 `getProductId()` 是**广播 ID**
+  （实测 `ehbx83xdh9jkmxvz`），不是涂鸦平台产品 ID（`yciq4kssu1fv8umn`）。当前这款靠本地常量
+  兜底不受影响，但**以后新增产品若按新文案填平台产品 ID，App 搜索页会配不上那台设备**。
+  要么继续填广播 ID，要么后端加字段、App 两个都比——待产品拍板。
+- 交付：flowerpot-web `c0891e9`（已 push）。未起开发服务器、未在浏览器确认效果。
