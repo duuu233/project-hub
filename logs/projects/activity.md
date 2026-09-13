@@ -1003,3 +1003,18 @@
   `hex 99字节/96点` 后编码认没认对一眼可见。
 - 顺带：水位曲线纵轴沿用默认 100，量程其实是 0–200 mL；光照历史在智能生活里也是 0，属固件/传感器侧。
 - 交付：flowerpot `c618212`（已 push）。未跑 flutter analyze/test（本机与 nas 无工具链），未真机验证。
+
+## 2026-09-13 | flowerpot | SSH 开发机 | main | 需水状态指标行对齐 + 纪念日输入框白底胶囊
+
+- **「灰框里有个白胶囊」是主题漏进来的，不是框画错了**：量稿发现灰框的高度、圆角、内边距和代码
+  完全一致，稿子里根本没有白色内框。全局 `inputDecorationTheme` 是 `filled` 白底 + 圆角 999 的
+  `enabledBorder`/`focusedBorder`，`TextField` 只写了 `border: InputBorder.none`——`InputDecoration`
+  里没写的项会从主题补回来，`border` 管不到 `enabledBorder`/`focusedBorder`。
+  **通用教训：在自画底框里放输入框，`filled` 和四种状态的边框要写全，只关 `border` 等于没关。**
+- **「竖线和右边内容重叠」是主题尺寸**：`VerticalDivider` 不写 `width` 时取 `dividerTheme.space`，
+  本项目设成 1，于是线两边 0 留白；两组又在半边里居中、标签字号比稿子大 2 号，右组图标贴线。
+  改为等分靠左、竖线显式留白 9。**同类坑：主题里改过 `space` 的项目，`Divider`/`VerticalDivider`
+  的默认留白都不是 Material 文档里写的 16。**
+- 量稿沿用手写 PNG 解码取像素（375 @3x），两条结论都先量稿再下手，避免对着截图猜。
+- 顺带发现未改：`AppDialogTextField` 同一种写法，也会漏白胶囊；土壤湿度图标切图圆底色与稿子不一致。
+- 交付：flowerpot `116a213`（已 push）。未跑 flutter analyze/test（本机与 nas 无工具链），未真机核对。
