@@ -1067,3 +1067,13 @@
   静态函数，测试配置统一置零，避免叠加 Mock 的固定延时后用例时好时坏。
   **通用教训：产品要的「流程感」延时不是技术债，删之前先问；删过又加回来的，注释和口径文档里写明别再删。**
 - 交付：flowerpot `583e215`（已 push）。未跑 flutter analyze/test（本机无工具链），未真机。
+
+## 2026-09-14 | flowerpot | SSH 开发机 | main | 记录后端「产品ID」口径
+
+- 产品明确：接口入参「产品 ID」＝ 产品列表返回的 `broadcastId`（当产品 ID 用，存涂鸦平台产品 ID）。
+  写进 PRODUCT_RULES §4.4 与 AI_CONTEXT，并区分同名的 `TuyaConfig.broadcastId`（BLE 广播标识）
+  和 `ProductApiOut.productId`（自增主键）。
+  **通用教训：后端字段名与含义脱节（叫 broadcastId、存产品 ID）时，第一时间把口径写进项目文档，
+  否则每轮都要重新猜。**
+- 顺带发现：App 仍在调的 `/Client/Product/getProductList` 已不在 swagger，未改代码。
+- 交付：flowerpot `766ff95`（仅文档，已 push）。
