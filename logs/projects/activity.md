@@ -1123,3 +1123,12 @@
   令牌打码；开关 `_showApiTrace`。
   **通用教训：「后台有数据、App 不显示」这类问题，与其来回猜，不如第一时间把原始请求和返回打到真机页面上。**
 - 交付：flowerpot `db5a2fd`（已 push）。未跑 flutter test（本机无工具链），未真机。
+
+## 2026-09-14 | flowerpot | SSH 开发机 | main | 帮助中心无数据根因：产品ID取了设备值
+
+- 页面调试信息一打出来就看到：请求带的是 `broadcastId=ehbx83xdh9jkmxvz`。`faqBroadcastId` 优先取设备的
+  `productId`，而涂鸦 `DeviceBean.getProductId()` 对这台花盆报的是 BLE 广播标识；后台产品列表维护的是
+  `yciq4kssu1fv8umn`。改为取后台产品列表的 broadcastId、兜底本地常量，不再用设备值。
+  **通用教训：我上一轮「查过后台数据、App 传的值一致」的结论，是按代码意图推的（以为设备报的就是平台 PID），
+  没有看到真机实际传了什么——结论要以真机上的原始请求为准，这正是打印原始请求的价值。**
+- 交付：flowerpot `2e54c82`（已 push）。未跑 flutter test（本机无工具链），未真机。
