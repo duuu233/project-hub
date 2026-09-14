@@ -1052,3 +1052,8 @@
 - 交付：flowerpot（提交号见下行）已 push。未跑 flutter analyze/test（本机无工具链），未真机验证；
   固件对 URL 长度 / https / 文件名的实际限制未知。
   - flowerpot 提交：893a8e2
+
+## 2026-09-14 | flowerpot | SSH 开发机 | main | 定制动画上传区文案定稿
+
+- 「点击文件到这里上传」→「点击此处上传文件」（产品定稿），PRODUCT_RULES §4.3 同步。
+- 交付：flowerpot `ecbea31`（已 push）。未跑 flutter test，未真机。
