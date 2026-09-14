@@ -1140,3 +1140,9 @@
   另外 App 一直在调的 `/Client/Product/getProductList` 线上不存在（与乱写路径同样 500）。
   **通用教训：「拿不到就用本地常量兜底」会把接口不通的问题整个藏起来——上一轮我正是这么做的，产品一句「不要写死」才逼出真实数据源。**
 - 交付：flowerpot `5e52aea`（已 push）。未跑 flutter test（本机无工具链），未真机。
+
+## 2026-09-14 | flowerpot | SSH 开发机 | main | 帮助中心调试信息下线、删除不存在的产品列表接口
+
+- 帮助中心已有数据。页面下方调试块、ApiClient 请求记录按加入前原样还原；取 `getBasicData.deviceIdList[0]` 的修复保留。
+- `/Client/Product/getProductList` 整条删掉（搜索页调用、状态层缓存、仓库方法与解析）。
+- 交付：flowerpot `b50791d`（已 push）。未跑 flutter test（本机无工具链），未真机。
