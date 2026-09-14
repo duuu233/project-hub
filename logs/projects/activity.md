@@ -1132,3 +1132,11 @@
   **通用教训：我上一轮「查过后台数据、App 传的值一致」的结论，是按代码意图推的（以为设备报的就是平台 PID），
   没有看到真机实际传了什么——结论要以真机上的原始请求为准，这正是打印原始请求的价值。**
 - 交付：flowerpot `2e54c82`（已 push）。未跑 flutter test（本机无工具链），未真机。
+
+## 2026-09-14 | flowerpot | SSH 开发机 | main | 帮助中心产品ID改取 getBasicData.deviceIdList，去掉写死兜底
+
+- 产品：不要写死数据；broadcastId 取 `/Client/Basic/getBasicData` 的 `deviceIdList` 第一个。
+- 顺带发现：App 解析 getBasicData 时把返回体拍平成标量键值对，**字符串数组整个被丢**，这个字段从来没拿到过；
+  另外 App 一直在调的 `/Client/Product/getProductList` 线上不存在（与乱写路径同样 500）。
+  **通用教训：「拿不到就用本地常量兜底」会把接口不通的问题整个藏起来——上一轮我正是这么做的，产品一句「不要写死」才逼出真实数据源。**
+- 交付：flowerpot `5e52aea`（已 push）。未跑 flutter test（本机无工具链），未真机。
