@@ -1146,3 +1146,10 @@
 - 帮助中心已有数据。页面下方调试块、ApiClient 请求记录按加入前原样还原；取 `getBasicData.deviceIdList[0]` 的修复保留。
 - `/Client/Product/getProductList` 整条删掉（搜索页调用、状态层缓存、仓库方法与解析）。
 - 交付：flowerpot `b50791d`（已 push）。未跑 flutter test（本机无工具链），未真机。
+
+## 2026-09-15 | flowerpot | SSH 开发机 | main | 四个状态子页按 DP 读取核对、光照历史改读 137–139
+
+- 需水 / 光照 / 空气温度 / 相对湿度按 `09_12` 功能点表逐条核：实时与状态 DP（105–115、146）解析都对。
+- 光照历史图一直读 `SensorMetric.dli`，137–139 却解在 `light` 名下，真机永远空态；改读 137–139 按 lux 画（纵轴不再写死 0–1）。温度、湿度功能点表无历史 DP。
+- 四页进页面都在联调日志记本页 DP 号 + 设备原始上报值（`logStatusDps`），需水 / 光照页只打本页那组历史 DP。
+- 交付：flowerpot `9f7d444`（已 push）。未跑 flutter test（本机无工具链），未真机。
