@@ -1171,3 +1171,9 @@
 - `3691d35` 打包报 `state.dart:2033 Expected ':' before this`：`chartSeries` 在三元分支里写了 `map[a]?[b]`，被解析成嵌套三元。改为先取局部变量判空。
 - 新增 `tools/dart_ternary_null_index_check.py`（对坏版本报出同一行，全库零误报），写进 PRODUCT_RULES 自检清单。
 - 交付：flowerpot `9e0b85c`（已 push）。本机仍无工具链，需重新打包确认。
+
+## 2026-09-15 | flowerpot | SSH 开发机 | main | 设置页 LED 字重与其他设置行高
+
+- 设置页「LED设置」显粗：没打包字体，Android 上英文走 Roboto（w500 画成中粗）、中文走思源黑体（w500 仍常规）。功能设置列表标题统一改 w400。
+- 其他设置页 7 行行高 42 → 56，375×812 仍一屏。
+- 交付：flowerpot `168d843`（已 push）。未跑 flutter test（本机无工具链），未真机。
