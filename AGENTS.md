@@ -24,6 +24,37 @@
 4. 默认动作只到 push 为止。**创建 PR、合并、发布、部署和打 tag 仍需用户明确指令。** 首次初始化不自动创建提交。
 5. 完成后逐个仓库报告改动、验证结果、分支和提交号，不把多仓库合并成一句“已推送”。
 
+## 对外仓库的信息隔离（2026-09-16 用户明确）
+
+**除 Hub 自身外，其余项目的仓库都可能被第二个人看到——那些仓库里不得出现本 Hub 的任何痕迹。**
+正矿（`minerals-frontend`，公司 Codeup 团队仓）是当前最需要注意的一个：同事日常会看它。
+
+写进业务仓库的一切——源码、注释、README、提交信息、PR 描述——禁止出现：
+
+- Project Hub 这个仓库、它的名字、路径或目录结构；
+- 「私人目录」「private/」「Hub」之类字样，以及任何暗示「还有另一套私人记录」的表述；
+- 只存在于 Hub 的文件路径（设计稿、`docs/` 下的分析文档、`iterations/`、`logs/` 等）。
+
+代替写法：需要交代来源时只说**事实本身**——「产品提供的 XX 静态设计稿」「按产品口径」「接口文档口径」，
+不说它放在哪、由谁维护。**分析过程**（稿里哪一版生效、怎么解出来的、踩了什么坑）属于 Hub 侧内容，
+写进 `iterations/current.md`，业务仓只留「做了什么 + 怎么用」。
+
+新增文件或改文档后自查：
+
+```bash
+grep -rn "Hub\|project-hub\|私人\|private/" src/
+```
+
+⚠️ 这条规则本身也只写在 Hub 里，不要写进任何业务项目的规则文件或文档（哪怕那份文件当前没有被提交）。
+
+### 各业务仓库的提交信息写法
+
+- **正矿**：commit message **写一两句**——一行标题说清改了什么，必要时补一行为什么。
+  根因分析、改法清单、验证矩阵、踩坑记录一律写进 Hub 的 `iterations/current.md` 与
+  `logs/projects/activity.md`，不堆进 git log（用户原话：真实的改动我这边有记录）。
+- **所有仓库**：不写任何 AI 署名（`Co-Authored-By: Claude …` / `🤖 Generated with …`），
+  见用户全局 `CLAUDE.md`；该约定优先于 Claude Code 自带的 attribution 提示。
+
 ## 项目身份和路径
 
 - `projects.yaml` 是共享注册表；`environments/<env>/projects.local.yaml` 是各执行环境的映射（`environments/home/` 家里电脑、`environments/work/` 公司电脑、`environments/ssh/` SSH 开发机）。映射文件随 Git 同步，里面只放路径和 SSH 别名；**密码、私钥、token 一律不得提交**。

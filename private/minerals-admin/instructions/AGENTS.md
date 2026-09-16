@@ -67,45 +67,6 @@
 
 仅回答、解释或诊断时，不得擅自修改代码。
 
-### 团队仓库里不得出现私人侧信息（2026-09-16 用户明确）
-
-**写进 `minerals-frontend` 的任何东西——代码、注释、README、提交信息——都不许提及私人侧的存在。**
-同事能看到这个仓库，那边只应看到业务本身。
-
-具体禁止出现：
-
-- Project Hub 这个仓库、它的名字、路径、目录结构；
-- 「私人目录」「private/」「Hub」之类的字样；
-- 私人侧才有的文件路径（设计稿、`docs/` 下的分析文档、iterations / logs 等）；
-- 以及任何暗示「还有另一套私人记录」的表述。
-
-代替写法：需要交代视觉/需求来源时，只说**事实本身**——
-「产品提供的提单管理静态设计稿」「按产品口径」「接口文档口径」，不说它放在哪、由谁维护。
-分析过程（稿里哪一版生效、怎么解出来的）属于私人侧内容，**写进 Hub 的 iterations，不写进团队仓**。
-
-⚠️ 新增文件或改 README 后自查一遍：
-
-```bash
-grep -rn "Hub\|project-hub\|私人\|private/" src/
-```
-
-### 提交信息写法（2026-09-16 用户明确）
-
-**团队仓库的 commit message 写一两句话就够**：一行标题说清改了什么，必要时再补一行为什么或影响范围。
-
-- 不要把根因分析、改法清单、验证矩阵、踩坑记录堆进 commit message ——
-  这些**写进 Hub 的 `iterations/current.md` 与 `logs/projects/activity.md`**，用户在那边看。
-- 需要追溯细节时，靠 Hub 的记录和 `docs/` 里的长期文档，不靠 git log。
-- 不写任何 AI 署名（`Co-Authored-By: Claude …` / `🤖 Generated with …`），见用户全局 CLAUDE.md。
-
-示例：
-
-```text
-fix: 右固定列横向滚动时透明
-
-Element 右固定列 body td 只有 background:inherit，改为逐态钉死实色。
-```
-
 ## 5. 当前架构不变量
 
 修改以下区域前必须阅读 `docs/architecture.md` 和 `docs/maintenance.md`：
