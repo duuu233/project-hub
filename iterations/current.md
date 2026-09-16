@@ -1,5 +1,32 @@
 # 当前迭代
 
+## 2026-09-16：正矿 列表页新版搜索卡 + 列表卡组件，提单列表先行接入（`a361f37`，已推送）
+
+- 环境：ssh；minerals-frontend，`feature-v1.8.4`（本轮先在 `feature-v1.8.3` ff 7 个提交到 `c73d645`，再基于它新建
+  1.8.4 并 pull——远端 1.8.3 / 1.8.4 / 1.8.5 当时指向同一提交，无分叉；分支未配 upstream，同步与推送用显式
+  `origin feature-v1.8.4`）。
+- 需求：按 `private/minerals-admin/docs/正矿后台重构8.21版.html` 的「关键词搜索」卡与「提单业务列表」卡重做列表页，
+  封装成可复用组件放 `src/components`，带用法与示例文件，先只接入 `views/bill-lading/bill-lading-list/index.vue`。
+- **静态稿是多版补丁叠出来的**（V5→V5.10 逐段 `function` 重定义 + CSS 后覆盖），按最后生效的版本取：
+  搜索卡 = `bol52SearchCard` + `.bol52Card/.bol52SearchGrid/.field/.btn`，列表卡 = `bol52ListTable` +
+  `.bol52ListHead:before{content:"提单业务列表"}` + `.bol52Table` 的 V5.3 体验优化版 + `.bol52Status` + `.pager`。
+  「关键词搜索」四个字在稿里并不存在，是产品对搜索卡的称呼。
+- **拆成两个组件而不是一个**：搜索与列表的数据契约、生命周期不同，合在一起会逼每个页面同时接受两套 API。
+  - `ListSearchCard`：options 结构沿用 `TableSearch`（66 个页面在用），迁移换标签即可；`opts` 收 ref/computed
+    解决字典异步到位的问题；重置回到挂载时的初始值；区间 `searchProps` 月末时间修正。
+  - `ListTableCard`：配置列 + `col-<prop>` 插槽 + 原生列混用 + 内置 status/dict/date/link/actions + 内置分页
+    （contract 与全局 `Pagination` 一致）；`$attrs` 透传 el-table；全局 `!important` 表头/斑马行规则在组件内以
+    更高优先级压掉，页面不必再写 `:deep`。
+  - 视觉令牌单点在 `src/assets/styles/list-card-tokens.scss`。
+- 验证：范围限定的 `vue-tsc --noEmit`（临时 tsconfig 只含本轮 9 个文件，跑完即删）**本轮文件 0 错误**；
+  同一输出里 3 处错误在 `aiIngredientMatch.ts` / `SimpleTrack.vue`，未被本轮改动，属基线。两组件 SCSS 用 sass
+  单独编译通过。⚠️ **完整 `npm run type-check` 未跑**（项目 vue-tsc 需 >2 GiB 堆，本机限 1 GiB）；**未起 dev、未在
+  浏览器看效果**——用户要「看看效果」，请在本地跑 `npm run dev` 打开提单列表页。
+- 文档：Hub `private/minerals-admin/docs/development.md` §7 新增「列表页新版组件」、§8 登记令牌文件；
+  `instructions/AI_CONTEXT.md` 核对日期、全局组件段与页面组织段同步。
+
+---
+
 ## 2026-09-16：花盆 APP 状态文案改版 + 温湿度日历史 164/165 + 光照默认日与折线 + 上传前压缩（`99e85bd`，已推送）
 
 - 环境：ssh；项目 flowerpot-app（`/pgdata/pg/dh/flowerpot`，`main`，起始 `9001197`）。

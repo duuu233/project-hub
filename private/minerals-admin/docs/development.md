@@ -170,12 +170,28 @@ src/views/<domain>/<feature>/
 
 不要把一次性页面状态放进全局 Store。进入 Store 后必须定义退出登录、切换身份、关闭 TagsView 时的清理策略。
 
+### 列表页新版组件（2026-09-16 起）
+
+产品按「正矿后台重构 8.21 版」静态稿（`docs/正矿后台重构8.21版.html`，只取其中的关键词搜索卡与提单业务列表卡）重做列表页视觉，封装为两个跨业务组件：
+
+| 组件 | 职责 | 文档 |
+| --- | --- | --- |
+| `src/components/ListSearchCard/` | 搜索卡：3 列字段 + 搜索/重置 + 展开/收起；options 结构与老 `TableSearch` 相同，迁移时换标签即可 | 同目录 `README.md`、`example.vue` |
+| `src/components/ListTableCard/` | 列表卡：标题 + 工具区插槽 + 配置驱动的 `el-table` + 内置分页；内置 status / dict / date / link / actions 渲染，列插槽 `col-<prop>`，原生 `<el-table-column>` 可混用，其余属性透传 el-table | 同目录 `README.md`、`example.vue` |
+
+- 两张卡共用的颜色、圆角、阴影、按钮与胶囊 mixin 在 `src/assets/styles/list-card-tokens.scss`，组件内用 `@use '@/assets/styles/list-card-tokens.scss' as lc` 引用；改视觉只动这一个文件。
+- 页面侧只需一个画布容器：`.list-page { display: grid; gap: 18px; padding: 18px; background: #f6f8fc }`（写在页面 scoped 样式里，示例见 `views/bill-lading/bill-lading-list/index.vue`）。
+- 表头、斑马行、操作列 link 按钮的样式在组件内以更高优先级覆盖了全局 `index.scss` / `ruoyi.scss` / `element-ui.scss` 的 `!important` 规则，页面不必再写 `:deep(.el-table …)`。
+- **迁移状态**：目前只有提单列表（`views/bill-lading/bill-lading-list/index.vue`）接入，作为效果样板；其余 65 个使用 `TableSearch` + `.table-list-index` 的列表页未动，等产品确认效果后再批量迁移。老组件 `TableSearch`、全局 `Pagination` 与 `.handle-box-index` 等公共类**保持不变**。
+- 分页 contract 与全局 `Pagination` 一致（`v-model:page` / `v-model:limit` / `@pagination`），页面的 `queryParams.pageNum/pageSize` 与 `getList` 不用改。
+
 ## 8. 样式与资源
 
 - 全局样式入口：`src/assets/styles/index.scss`。
 - Element Plus 覆盖：`src/assets/styles/element-ui.scss`。
 - 侧栏样式：`src/assets/styles/sidebar.scss`。
 - 主题变量：`src/assets/styles/variables.module.scss`。
+- 列表页新版卡片令牌：`src/assets/styles/list-card-tokens.scss`（只被 `ListSearchCard` / `ListTableCard` 引用）。
 - SVG 资源：`src/assets/icons/svg/`，由 Vite SVG 插件注册。
 - 页面专属图片放在对应语义目录下，避免继续堆到无分类根目录。
 

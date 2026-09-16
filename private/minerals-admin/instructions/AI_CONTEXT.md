@@ -1,6 +1,6 @@
 # Minerals Frontend AI Context
 
-> 最后核对：2026-08-06  
+> 最后核对：2026-09-16  
 > 作用：供 AI 和维护者快速进入项目。详细说明见 `docs/`。  
 > 存储：本文件、AGENTS.md、docs/ 和 .codegraph/ 的真实内容由私人 Hub 的 private/minerals-admin/ 管理，团队项目通过链接访问；公司、家里和 SSH 各自映射，通过 Hub Git 同步。每次改动都核对并维护这份文档；若与代码冲突，以当前工作树和已同步的 CodeGraph 为准。
 
@@ -60,6 +60,7 @@ TypeScript 当前是渐进式配置：`strict: false`、`allowJs: true`。不要
 - 全局插件、权限指令、TagsView 插件、表头插件。
 - SVG 图标。
 - `DictTag`、`Pagination`、`TreeSelect`、上传/预览、`RightToolbar`、`Editor` 等全局组件。
+- 列表页新版卡片 `ListSearchCard` / `ListTableCard`（`src/components/`，2026-09-16 起）**不是全局注册**，页面按需 import；用法见各自目录的 `README.md`。
 - `useDict`、下载上传、时间/表单/树/字典工具等全局属性。
 - `src/permission.ts` 中的路由守卫。
 
@@ -125,6 +126,11 @@ src/views/<domain>/<feature>/
 - `3`：详情
 
 API 按领域放在 `src/api/`。运行时菜单名称、路由名称、页面组件 `name` 和 TagsView 缓存存在耦合。
+
+列表页正在按「正矿后台重构 8.21 版」视觉换新（2026-09-16 起）：搜索区用 `ListSearchCard`、列表区用 `ListTableCard`，
+两张卡放在页面自己的 `.list-page` 画布里。目前只有提单列表 `views/bill-lading/bill-lading-list/index.vue` 接入作为样板，
+其余列表页仍是 `TableSearch` + `.handle-box-index` + `.table-list-index` + 全局 `Pagination` 的老结构，两套并存，
+老公共类与老组件都没有改动。迁移约定见 `docs/development.md` §7「列表页新版组件」。
 
 当前新增了两个国内贸易业务模块：
 
