@@ -1,5 +1,28 @@
 # 当前迭代
 
+## 2026-09-16（三）：正矿 固定列透明 / 列宽拖拽 / 主题色换稿色（`0dd0940`，已推送）
+
+- 环境：ssh；minerals-frontend，`feature-v1.8.4`。用户真机看到的三个问题，逐条修。
+- **① 固定列背景透明**：Element 给固定列的是 `position:sticky` + `background:inherit`，背景**从 tr 继承**。
+  上一版为了压掉全局 `element-ui.scss` 的斑马底色，把 `tr:nth-child(even)` 设成了 `transparent`，
+  固定列于是跟着透明。改为在 tr 的常态/hover/选中三态都给实色（`#fff` / `#f8fbff` / `#eef6ff`），
+  hover 与选中同时写到 td 上兜底。**教训：凡是有固定列的表格，行背景永远不能是 transparent。**
+- **② 列头不能拖宽**：Element Plus 只有 `border=true` 才挂拖拽手柄。新增 `resizable`（默认 true）开 border，
+  再用 CSS 去掉竖线与外框，保留稿里「只有行底线」的观感。
+  ⚠️ `&.el-table--border` **不能写成 `:deep(&…)`**——`&` 在 `:deep()` 里不会被解析成父选择器，
+  编译出来是无效选择器。本轮是靠核对 sass 编译产物发现的，光看源码看不出来。
+- **③ 主题色仍是旧版**：项目全局主色是若依 `#409EFF`，凡走 `--el-color-primary` 的（checkbox、loading、
+  分页、下拉选中）都还是旧蓝。tokens 新增 `@mixin el-theme`：主色 `#0c6fe4`（稿的页码选中底色 / 按钮渐变中值）
+  + 按 Element 规则算出的 light-3/5/7/8/9 与 dark-2，两个面板根节点各 include 一次。
+  ⚠️ **teleport 的坑**：`el-select`/`el-date-picker` 的下拉和 `el-dialog` 挂到 body 上，拿不到组件根节点的变量，
+  也打不到 scoped 样式——下拉统一 `popper-class="lc-popper"` 配非 scoped 样式块；`ColumnSetting` 因为
+  `append-to-body`，它的 scoped 样式**从一开始就没生效过**，一并改成非 scoped + 类名收敛并补齐弹窗尺寸。
+- 用户说后续会全站换主题：届时把 `el-theme` 提到全局 `:root`，组件里这些局部覆盖即可删除（已写进两处 README）。
+- 验证：范围限定 `vue-tsc` 本轮 0 错误；五个样式块 sass 编译通过，并**核对了编译产物**里固定列、
+  border 覆盖、主题变量三处选择器。⚠️ 完整 type-check 未跑；未起 dev 看效果。
+
+---
+
 ## 2026-09-16（二）：正矿 列表卡按**静态稿真正生效的版本**重做 + 列设置（`5468732`，已推送）
 
 - 环境：ssh；minerals-frontend，`feature-v1.8.4`。用户反馈上一版（`a361f37`）「样式差距很大、交互也有差异，
