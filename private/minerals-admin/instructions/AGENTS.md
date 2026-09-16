@@ -67,6 +67,23 @@
 
 仅回答、解释或诊断时，不得擅自修改代码。
 
+### 提交信息写法（2026-09-16 用户明确）
+
+**团队仓库的 commit message 写一两句话就够**：一行标题说清改了什么，必要时再补一行为什么或影响范围。
+
+- 不要把根因分析、改法清单、验证矩阵、踩坑记录堆进 commit message ——
+  这些**写进 Hub 的 `iterations/current.md` 与 `logs/projects/activity.md`**，用户在那边看。
+- 需要追溯细节时，靠 Hub 的记录和 `docs/` 里的长期文档，不靠 git log。
+- 不写任何 AI 署名（`Co-Authored-By: Claude …` / `🤖 Generated with …`），见用户全局 CLAUDE.md。
+
+示例：
+
+```text
+fix: 右固定列横向滚动时透明
+
+Element 右固定列 body td 只有 background:inherit，改为逐态钉死实色。
+```
+
 ## 5. 当前架构不变量
 
 修改以下区域前必须阅读 `docs/architecture.md` 和 `docs/maintenance.md`：
