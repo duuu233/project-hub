@@ -1,5 +1,27 @@
 # 当前迭代
 
+## 2026-09-16（八）：相册APP 启动页 slogan 改「呈现美好」并接入多语言（`14d50e4`+`73e169b`，已推送）
+
+- 需求：闪屏文案「把美好，留在一张纸上」→ 简中「呈现美好」、英文「Present Beauty」，繁体日语我补，按原有语言规则自适应。
+- 改前是**硬编码中文**，切到英文/日文也显示中文。现走 `AppL10n`：新增 `splashSlogan`，
+  `_pick('呈现美好', 'Present Beauty', '美しさを映す')`。
+- **繁中没单独写**：`_pick` 第四参缺省会走 `toTraditionalChinese`，字表 `chinese_script.dart:309`
+  有 `0x73B0: 0x73FE`（现→現），「呈美好」三字繁简同形 ⇒ 自动得到「呈現美好」，与项目里多数
+  `_pick` 只给三参的惯例一致。（我先查了字表才决定不写死，没凭感觉。）
+- 日文选「美しさを映す」：`映す` 兼有「映现/显示」义，贴合电子纸相框「把照片呈现出来」，长度也与中英两版匹配。
+- **闪屏能拿到语言**：`AppLocalizationsScope` 挂在 `MaterialApp.builder` 里包住 child，
+  而闪屏是 `home` 的一个分支，在 scope 之内 ⇒ 切语种会整页重译。接入后去掉了外层 `const`。
+- **原生冷启动图不用动**：Android `launch_background.xml`（含 -v21 副本）与 iOS `LaunchScreen.storyboard`
+  只有背景与 LOGO、**不含文案**（storyboard 的 label/text 节点数为 0），所以 Flutter 首帧是唯一显示点。
+  这一条特意查了——否则会出现「代码改了、冷启动那一瞬还是旧字」。
+- ⚠️ **注册页副标题 `accRegisterSubtitle` 仍含旧 slogan**（「注册BoltStar账号，把美好，留在一张纸上」，中英日三版）。
+  需求只说启动页，未动；要不要一并换口径待产品确认。
+- 🔶 小程序侧没有这句文案，无需同步。
+- 验证：⚠️ 本机无 Flutter SDK，analyze/test/编译/真机全未执行；静态自检（括号配对、全仓 grep 残留、
+  原生资源逐个确认）已过。⚠️ 真机请切语种各看一眼日文与繁中的视觉重量。
+
+---
+
 ## 2026-09-16（七）：正矿 列表页全量迁移到新组件（分支 `1.8.4-list`，`097fda6`，已推送）
 
 - 需求：以 `feature-v1.8.4` 为基础新建 `1.8.4-list`，把同层级的列表页全量改用 ListSearchCard + ListTableCard。
