@@ -1,5 +1,42 @@
 # 当前迭代
 
+## 2026-09-16（七）：正矿 列表页全量迁移到新组件（分支 `1.8.4-list`，`097fda6`，已推送）
+
+- 需求：以 `feature-v1.8.4` 为基础新建 `1.8.4-list`，把同层级的列表页全量改用 ListSearchCard + ListTableCard。
+- **盘点**：`src/views` 下 79 个页面含 el-table，其中**用 TableSearch 的 65 个**才是"这个层级"（与提单列表同一套模式）。
+  `system/monitor/tool` 里那些若依内置页用的是另一套 `el-form :inline` 查询表单，结构不同，本轮**没动**——
+  混改会出现"上面老表单、下面新卡片"的割裂。要一起改请说一声。
+- **做法：写了迁移脚本**（`scripts/migrate-list-page.mjs`，留在仓库里）而不是手工改 62 遍——
+  62 个页面手工改一致性无法保证。脚本只做结构搬运、不理解业务：
+  · 无 `<template>` 的列 → columns 配置项；
+  · **有 `<template>` 的列 → 仍生成配置项，渲染内容原样搬进 `#col-<prop>` 插槽**（`scope.row` → `row`），
+    所以 dict-tag、formatThousand、条件 el-tag 这些业务渲染一律保持原样，功能不变；
+  · label 含「操作」→ `type:'actions'` + `#actions` 插槽；`.handle-box-index` 里的新增按钮 → `#toolbar`。
+- **脚本迭代中踩的坑（都已修，值得记）**：
+  1. **非贪婪正则框 `.table-list-index` 整块会把页面改坏**——列渲染里常有 `<div>`，`[\s\S]*?\n</div>` 在那儿提前收尾，
+     后半段 el-table 被留在原地。改成 `matchTag` 精确配对，且**先摘壳后插卡片**（反过来摘壳的左移会把卡片带歪）。
+  2. `<pagination v-show="total > 0" …/>` 的**属性值里有 `>`**，`[^>]*` 截断 → 改非贪婪匹配到 `/>`。
+  3. el-table 上除 `:data`/`v-loading` 外的属性（树形表格的 `row-key`/`tree-props`、`span-method`、`v-if` 等）
+     **必须原样透传**，第一版全丢了。
+  4. 页面**本来就有 `columns`** 变量的（`system/user` 的若依列显隐）→ 生成的改名 `listColumns`。
+  5. 没有 `<pagination>` 的页面不能传 `:total="total"`（那些页面根本没有 total 变量）→ 改 `:show-pagination="false"`。
+  6. 原页面存在 `align="chargeType"` 这种**把 prop 误写成 align** 的既有 bug（4 处），脚本会忠实搬运，
+     已加白名单丢弃并告警。
+- **组件侧为兼容存量页面放宽了两处类型**（注释里写明了原因）：`ListSearchOption.type`/`opts` 加联合、
+  `ListSearchCardProps.options` 接受 `Record<string, any>`——存量 `searchOpt` 都是 `ref([...])`，
+  TS 联合推断会把 `searchProps`/`format`/`opts` 变成 `unknown`，不放宽就得逐页加标注（老 TableSearch 干脆是 `any[]`）。
+  组件内部用 `allOptions` 断言回强类型，逻辑不受影响。`ListTableCardProps.data` 改 `readonly any[]`。
+- 验证：**分 5 批跑 vue-tsc**（一次全上会 OOM，本机限 1 GB 堆）——组件与 62 个迁移页面**0 错误**；
+  剩余报错全部落在**未改动的基线文件**（console 模块、aiIngredientMatch、SimpleTrack、两个 overViewDrawer），
+  两个"改过"的文件其报错经 `git show HEAD` 核对也确认是原文件就有的。63 个文件的 scoped 样式 sass 编译全过。
+  ⚠️ **未起 dev、未逐页看效果**——这是用户接下来要做的检查。
+- ⚠️ **3 个没迁**：`goods-library/category`、`invoicing/invoicing-list`（页内多个 el-table，脚本不猜）、
+  `system/news`（压根没有 el-table）。
+- ⚠️ **卡片标题统一留空**：脚本不猜业务名（错的标题比没标题更糟），标题行目前只显示「共 N 条」+ 工具区，
+  需逐页补 `title`。这是检查时最该先过一遍的地方。
+
+---
+
 ## 2026-09-16（七）：相册APP 日文六宫格标题**二修**——量错了样式 + 省略号改成结构性消除（`06e1149`，已推送）
 
 - 环境：ssh；`album-app`，`main`。上一轮 `5d8f472` 推上去后产品反馈**「还是没展示完整」**，
