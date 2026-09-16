@@ -172,16 +172,32 @@ src/views/<domain>/<feature>/
 
 ### 列表页新版组件（2026-09-16 起）
 
-产品按「正矿后台重构 8.21 版」静态稿（`docs/正矿后台重构8.21版.html`，只取其中的关键词搜索卡与提单业务列表卡）重做列表页视觉，封装为两个跨业务组件：
+产品按「正矿后台重构 8.21 版」静态稿（`docs/正矿后台重构8.21版.html`）重做列表页视觉，封装为两个跨业务组件。
+
+⚠️ **对照的是稿里哪一版**：那个静态页最后用 `window.renderV5BOL` 把提单模块整个换成了一个 iframe，
+内容是文件末尾 `moduleBase64` 解码出来的**独立 HTML**（标题「正矿数科｜提单管理运营工作台」）。
+页面前半段那套 `.bol52*` 类是被绕过的历史版本（V5→V5.10 十几轮补丁叠加），**照它改会做出完全不同的东西**
+——2026-09-16 第一版就是这么错的。要再核对样式，先把 base64 解出来看 `.panel.filters` 与 `.panel.table-panel`：
+
+```bash
+python3 - <<'EOS'
+import re, base64
+src = open('docs/正矿后台重构8.21版.html', encoding='utf-8').read().split('\n')
+a = next(i for i,l in enumerate(src,1) if 'moduleBase64' in l)
+b = next(i for i,l in enumerate(src,1) if i>a and '`.replace(/\\s+/g' in l)
+open('/tmp/bol-module.html','w').write(base64.b64decode(re.sub(r'[^A-Za-z0-9+/=]','',''.join(src[a:b-1]))).decode())
+EOS
+```
 
 | 组件 | 职责 | 文档 |
 | --- | --- | --- |
-| `src/components/ListSearchCard/` | 搜索卡：3 列字段 + 搜索/重置 + 展开/收起；options 结构与老 `TableSearch` 相同，迁移时换标签即可 | 同目录 `README.md`、`example.vue` |
-| `src/components/ListTableCard/` | 列表卡：标题 + 工具区插槽 + 配置驱动的 `el-table` + 内置分页；内置 status / dict / date / link / actions 渲染，列插槽 `col-<prop>`，原生 `<el-table-column>` 可混用，其余属性透传 el-table | 同目录 `README.md`、`example.vue` |
+| `src/components/ListSearchCard/` | 搜索面板：关键词（宽 + 放大镜）+ 筛选 + 查询/重置，下方「已选条件」标签（自动从 query 派生，可逐个 ×），`advanced` 字段收进「更多筛选」折叠区 | 同目录 `README.md`、`example.vue` |
+| `src/components/ListTableCard/` | 列表面板：52px 标题行（标题 + 共 N 条 + 工具区）、批量操作条、配置驱动的 `el-table`、60px 分页；内置 **列设置**（弹窗 + `localStorage` 持久化）与 text/link/multi/badge/dict/progress/date/actions 八种单元格 | 同目录 `README.md`、`example.vue`；列设置子件 `ColumnSetting.vue` |
 
-- 两张卡共用的颜色、圆角、阴影、按钮与胶囊 mixin 在 `src/assets/styles/list-card-tokens.scss`，组件内用 `@use '@/assets/styles/list-card-tokens.scss' as lc` 引用；改视觉只动这一个文件。
-- 页面侧只需一个画布容器：`.list-page { display: grid; gap: 18px; padding: 18px; background: #f6f8fc }`（写在页面 scoped 样式里，示例见 `views/bill-lading/bill-lading-list/index.vue`）。
-- 表头、斑马行、操作列 link 按钮的样式在组件内以更高优先级覆盖了全局 `index.scss` / `ruoyi.scss` / `element-ui.scss` 的 `!important` 规则，页面不必再写 `:deep(.el-table …)`。
+- 共用视觉令牌在 `src/assets/styles/list-card-tokens.scss`（面板、控件、按钮、徽标的 mixin），组件内 `@use … as lc` 引用；改视觉只动这一处。
+- **没有引入 vxe-table**：稿里的列设置本身就是「一个集合 + 隐藏列」，用 el-table 实现不到百行；引入第二套表格体系要付出包体、双份样式覆盖与 66 个列表页的迁移成本，也与本文件 §10「不擅自引入/替换核心依赖」冲突。将来若需要虚拟滚动、可编辑单元格、百万行再单独评估。
+- **滚动条规则**：横向滚动只允许出现在表格内部。`ListTableCard` 是 `min-width: 0` + `overflow: hidden`（与稿的 `.table-panel` 一致），**页面容器也必须 `min-width: 0`**——grid/flex 子项默认 `min-width: auto`，宽表格会把 `.app-main` 撑出横向滚动条。
+- **页面不要再套 `.app-container`**：那条全局样式是白底 + `min-height`，会在灰底工作区里套出一块白板；外层 `.app-main` 已给 20px 内边距与 `#f6f8fc` 底色。页面只需一个 `.list-page { display: grid; gap: 14px; align-content: start; min-width: 0 }`。
 - **迁移状态**：目前只有提单列表（`views/bill-lading/bill-lading-list/index.vue`）接入，作为效果样板；其余 65 个使用 `TableSearch` + `.table-list-index` 的列表页未动，等产品确认效果后再批量迁移。老组件 `TableSearch`、全局 `Pagination` 与 `.handle-box-index` 等公共类**保持不变**。
 - 分页 contract 与全局 `Pagination` 一致（`v-model:page` / `v-model:limit` / `@pagination`），页面的 `queryParams.pageNum/pageSize` 与 `getList` 不用改。
 
