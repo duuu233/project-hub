@@ -1,5 +1,34 @@
 # 当前迭代
 
+## 2026-09-16（五）：相册APP 六宫格图标 48 → 45 + 图标与文字横向居中（`7fbf5b0`，已推送）
+
+- 环境：ssh；`album-app`（/pgdata/pg/dh/flutter），`main`。需求：「小程序缩小了图标尺寸、图标和文字居中，
+  同步一下相册APP」。**本轮只动 App**——小程序侧产品自己改。
+- ⚠️ **前提先说清**：开工时先查了 `album-miniapp`，`pages/home/home.wxss` 最后一次改动仍是我们上轮的
+  `804b82e`（`.entry-icon` 96rpx、没有 `align-items`），其它分支与 stash 也没有；用户确认「小程序已经改了，
+  好像是 96 改到 90」但**还没推到远端**。所以 App 这边按 90rpx 折算，**待小程序推上来后核对实际值**。
+- 改动全在 `_HomeEntryCard` 三处：`_iconSize` **48 → 45**、`CrossAxisAlignment.start` → **center**、
+  标题补 `textAlign: TextAlign.center`。折算口径沿用卡里其余尺寸的 **rpx 折半**（同卡 `border-radius: 28rpx` → 14、
+  `margin-bottom: 20rpx` → 10），所以 90rpx → 45。
+- **390dp 屏上实际动了多少**：纵向只是上下留白 19.7 → 21.2（缩掉的 3 由整组垂直居中自动摊回，
+  **卡高与 206/220 比例一个数没动**）；横向才是观感大头——图标左边距 0 → 21.5、标题 0 → 14，
+  且图标与标题**各自按自身宽度居中**，不会左对齐成一条竖线（与小程序 `align-items: center` 同）。
+- ⚠️ **居中不牵动标题字号**（这条最容易误判）：六宫格标题字号是 `_entryTitleFontSize` 按「六条里最长的
+  那条」算出来的共用值，输入是 `available = 卡宽 − titleHorizontalReserve`。`CrossAxisAlignment` 从 `start`
+  换到 `center` 时 **Column 给孩子的约束完全不变**（两者都属非 stretch，都是松约束 `0 ~ 内容宽`），
+  所以那套算式一行没改、日文「マイアップロード」照旧压在 ≈11.5、**省略号阈值一个像素没移**。
+  `textAlign` 平时也不产生位移（标题框按内容宽收缩），它只在标题真被截成省略号、文本框顶满卡宽那一刻
+  才起作用——没有它，那一刻文字会忽然变回左对齐，和旁边没截断的卡对不齐。
+- 验证：⚠️ **本机与内网 nas 均无 Flutter SDK**，analyze / test / 编译 / 真机**全部未执行**。
+  照上轮误删 `entryTitle` 之后定下的规矩做了四项静态自检：反向引用（`_HomeTextStyles.*` 引用但未定义为空）、
+  `git diff` 删除清单（只有 `_iconSize = 48` 一条定义被删且就地以 45 重定义，3 个引用点全有效）、
+  `_HomeEntryCard` 6 个命名参数与 **6 个调用点**比对（多传/缺 required 均为空）、括号配对（529/114/43 全平衡）。
+- 文档：App 仓新增 `docs/history/2026-09/2026-09-16-首页宫格图标缩小与居中.md`，`docs/README.md` 历史表补一行。
+- **待办**：① 用户在夜神模拟器上跑一次 debug，确认编译通过与观感；② 小程序推上来后核对 `.entry-icon` 实际是不是
+  90rpx、`.entry-card` 是不是加了 `align-items: center`——落在别的数只改 `_iconSize` **一个常量**。
+
+---
+
 ## 2026-09-16（四）：正矿 右固定列透明**二修**（`5be7b59`，已推送）
 
 - 上一轮（`0dd0940`）只在 `tr` 上给了实色，用户复测**右固定列滚动时仍然透明**。
