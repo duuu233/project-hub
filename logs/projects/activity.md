@@ -1364,3 +1364,12 @@
   按拟合结果改为卡片 `0 6px 18px rgba(16,51,91,.035)`、主按钮 `0 5px 12px rgba(15,105,229,.14)`，其余同比例换算。
 - DESIGN_SPEC 1.4 同时记标注值与实现值并写明原因；待统一新增「表单应为上下结构」。
 - 交付：minerals-frontend `24778bc`（已推送）。
+
+## 2026-09-17 | album-miniapp + album-app | SSH 开发机 | main | 圆屏产品预览裁成圆，导出仍是方的
+
+- 同日「形状类型=圆形」那次核对（两端都没消费 `shapeType`）用户给了结论：**预览裁成圆、导出还是方的**。设备屏幕是圆的、方框四角本来就显示不出来，预览裁圆才是所见即所得；帧数据仍按方形矩阵传（四角留白）。⚠️ 红线：**只在圆形时改，别动现有方形的逻辑和代码。**
+- 小程序（`a6cd435`）：只改 `preview.wxml` / `preview.wxss` 两个文件，给 `.photo-wrap` 与 `.edit-clip` 各加 `{{device.shapeType === 1 ? 'is-round' : ''}}` + 两条 `border-radius: 50%`。判据写模板里不进 `data`。`preview.js` 一行没改，导出画布照旧设备物理分辨率 + 白底、无 `ctx.clip/arc`。
+- APP（`be1268f`）：`DeviceItem` 加 `shapeType`（可选、默认 0=方形）+ `roundScreen`（**只认 1**，没见过的形状值退回方形）；`_deviceFromJson` 解析；新增 `_ScreenClip`（圆→`ClipOval`，方→原样 `ClipRRect` + 同半径），展示层与编辑层两处换成它；编辑层 `DecoratedBox` 按形状分两份写（`BoxDecoration` 不允许 `shape:circle` 与 `borderRadius` 同时给）。拖拽阴影抽常量共用，数值逐字节一致且仍只在拖拽时挂。
+- **刻意不动 `_deviceSize`**：它同时是取景比例②导出画布尺寸，还与 BLE 图传的 `screenCode` 绑定，改它就是改导出。代价：框比例来自 `FrameProtocol.screenTypes`（只有 480×720 / 680×960 两条竖向矩形），圆屏产品屏型进表前 `ClipOval` 裁出来是**椭圆**不是正圆 —— 屏型码与真实分辨率要设备侧给。⚠️ 别绕过去改 `_deviceSize`。
+- 验证：**小程序侧真跑通了** `node tests/projection-round-screen.test.js`（圆形态存在 + 方形 40rpx 未动 + 「50% 必须带 .is-round」防回归 + 导出无裁圆）。APP 侧仍未编译未跑测试未真机（无 Flutter 工具链），做了人工复核、括号配平、diff 逐行核对方形路径未变、grep 确认导出零改动；新增 `test/device_round_screen_test.dart` 未运行。
+- ⚠️ 顺带发现：小程序 `tests/token-page-layout.test.js` 是红的（找不到 `.package-card--active .package-gift`），**stash 复核确认本轮改动之前就红**，与本轮无关，未处理。
