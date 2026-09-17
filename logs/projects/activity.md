@@ -1415,3 +1415,11 @@
   宽度用透明边框 + background-clip 收窄到稿里的比例。
 - 顶部卡按导出图取色改白底（稿标 135deg 渐变，实际渲染基本是白）。
 - 交付：minerals-frontend `1bbbb84`（已推送）。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | 标签垂直居中 + Tab 样式误伤海运状态
+
+- 表单标签文字比控件高 10px：`font:` 简写把前面写的 `line-height:40px` 重置成 20，加上 label 是
+  `align-items:flex-start` 的 inline-flex，文字贴顶。改为 `align-items:center` + `line-height` 写在 `font` 之后。
+- 「海运状态」（海运基本信息右上角的 el-segmented）被 Tab 条样式误伤：裸 `.el-segmented` 选择器把它也改成了
+  下划线样式。收窄为 `.tab-box .el-segmented`，恢复原生药丸交互。
+- 交付：minerals-frontend `8099dc7`（已推送）。

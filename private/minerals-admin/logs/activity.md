@@ -286,3 +286,14 @@
   只在 `height` 上用一处 `!important`，宽度用「透明边框 + background-clip: content-box」收窄 ——
   这样既拿到 JS 驱动的滑动，又拿到稿里的窄下划线。
 - 顶部卡：又一次「Figma 标注 ≠ 渲染结果」。取色证明稿里那张卡基本是白的，标注的 135deg 渐变写成 CSS 会偏蓝。
+
+## 2026-09-17 | 两条自己埋的坑（`8099dc7`）
+
+- **`font:` 简写会重置 `line-height`**。`line-height: 40px; font: 500 13px/20px ...;` —— 后者赢，行高变 20。
+  配合 `.el-form-item__label` 本身是 `align-items: flex-start` 的 inline-flex，文字贴顶，比控件高 10px。
+  **量化的教训**：上一轮我量的是"标签盒中线 vs 控件盒中线"，两边都 40 高，差 0，于是以为修好了；
+  但用户看的是**文字**。这轮改用 `Range.getClientRects()` 量文字本身的位置才暴露出来。
+  以后验证对齐，量文字不量盒子。
+- **皮肤层的选择器不能裸写组件类名**。Tab 条样式我写成 `.el-segmented`，结果把 SeaInfo 里
+  「海运状态」那个分段控件（待启运/运输中/已抵港）也改成了 Tab 样子，药丸滑块变下划线，交互语义没了。
+  已收窄到 `.tab-box .el-segmented`。**页面皮肤层给 Element 组件写规则，一律限定容器**。
