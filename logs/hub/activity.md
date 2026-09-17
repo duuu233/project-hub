@@ -148,6 +148,13 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
   2. `AGENTS.md` 新增「可写边界：SSH 环境下只许动 `/pgdata/pg/dh`」一节，置于「信息隔离」之前。
      两条规矩区分清楚：信息隔离管**不把 Hub 痕迹写进别人能看到的仓库**，
      可写边界管**不去碰别人的文件**。
-- ⚠️ **自查出一处历史越界**：此前跑 Playwright 截图时引的是
-  `/pgdata/pg/work/zettlab-product-dev/zettlab-web/node_modules/playwright-core`（只读，未改动任何文件）。
-  按新规矩今后不再依赖它；要用就在 `dh` 下自己装一份（chromium 二进制在 `~/.cache/ms-playwright`，可共用）。
+- **边界的准确口径（同日用户补充）**：**读可以，写绝对不行**——允许只读借用别人目录里的插件 / 工具包 / 依赖
+  （此前跑 Playwright 截图引 `/pgdata/pg/work/.../node_modules/playwright-core` 属于合规借用，只 import 未改动），
+  但绝对不可在 `dh` 之外新增、修改、删除任何文件，产物一律写回 `dh` 下。
+
+- **figma MCP 端到端验证通过**（同日）：直接对 stdio 发 `initialize` / `tools/list` / `tools/call`，
+  拿到工具 `get_figma_data`、`download_figma_images`，并成功取回节点 `2-16209` 的结构数据。
+  ⚠️ 另查明该 token 属于 Figma 账号 `john125`（`john125@akademe.edu.pl`，**不是用户本人邮箱**），
+  对正矿设计文件是 `role: viewer` / `linkAccess: view`——即靠「链接可查看」拿到的权限，
+  不是被邀请进文件。所以**光有正确链接不够，文件还必须对该账号开放**；
+  权限收紧或该账号失效时会直接 403。
