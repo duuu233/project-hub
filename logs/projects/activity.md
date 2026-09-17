@@ -1331,3 +1331,20 @@
 
 - 补充（`2955d65`）：底部按钮与卡片左缘错开 16px —— 公共组件默认左右各留 18，稿里是贴边铺满。
   已在详情页作用域内改为贴边，实测按钮 258 / 卡片 260（稿里是 106 / 108），公共组件未动。
+
+## 2026-09-17 | album-admin / album-miniapp / album-app | SSH 开发机 | main | 核对「形状类型=圆形」两端预览 —— **只核对，无改动**
+
+- 用户问：后台产品配置选了「形状类型 = 圆形」，小程序和 APP 预览页的框是不是圆的。**答案：都不是，两端都没消费这个配置。** 用户指示「先放着记录一下」，三个仓一行没改。
+- 后台在下发：`shapeType` `0=方形 / 1=圆形`（`web-ui-v2` `src/views/sms/productList/template/DetailForm.vue:21`）。
+- 小程序：`shapeType` **全仓命中 0 处**。预览页只有 `subpackages/projection/preview/`，框固定圆角矩形（`.photo-wrap` / `.edit-clip` 都是 `border-radius: 40rpx`）。比例按后端 w/h 走（`preview.js:411`），所以 500×500 会得到 1:1 **正方形 + 40rpx 圆角**，不是圆。顺带发现 `preview.js:9` 那条「接口暂未返回该字段」是**过期注释**——`normalizeDevice` 是 `Object.assign({}, device, ...)`（`utils/api.js:184`），后端字段全量透传，`device.shapeType` 现在就拿得到。
+- APP：`shapeType` 只出现在一行注释（`lib/src/state.dart:3175`），`_deviceFromJson` 没解析 → `DeviceItem` 没这个字段。预览框 `_kClipRadius = 20` 圆角矩形。**连宽高比都不对**：`_deviceSize` 取 `FrameProtocol.screenTypes`（只有 480×720 / 680×960 / 7.3寸 0×0），`screenType` 又被 `_screenTypeFromSize` 归一化（只认那两个尺寸，其余回落 5.89寸）——500×500 的圆形产品在 APP 里是 2:3 竖向矩形。
+- ⚠️ **动手前必须先问掉**：圆屏的帧数据是不是仍按方形矩阵传、四角填白？不定就做，会造出「手机预览是圆、设备显示是方」。详见 Hub `iterations/current.md` 同日（六）。
+
+## 2026-09-17 | flowerpot-app | SSH 开发机 | main | 修 BUG：状态页日期能无限往前翻，且曲线不跟日期换
+
+- 用户实测：「日期时间 7 天限制有 BUG，历史数据日期可以无限调。」**是我上一轮做漏了位置**——上一轮在**报表页**新加日期条并限制了 7 天，而用户日常点的切换条在**四个状态页**顶部（需水/光照/空气温度/相对湿度，共用 `DateRangeNavigator`），那四处一行没改。
+- 两条根因：① `onPrevious` 是裸的 `periodOffset--`，无下限，一直点能翻到去年；② 更要紧的是 `chartSeries` 压根不接受日期、也不看 `periodOffset`，所以日期条一直只是**标签动、曲线不动**——上一轮「app 根据日期解析对应值渲染」在状态页一侧完全没落地。
+- 改法：新增 `features/devices/models/history_period.dart`，窗口规则**一处定义、五处共用**（日 6、周/月 0）；`chartSeries` 加可选 `date`（过去某天走 `daySeries` 且**不接实时点**，缓存 key 带日期）；四个状态页改走它并把日期传进去；报表页内联算式一并收敛。
+- 待产品：周/月「一格都不给往前翻」是按「设备只有当期一包」推的，没产品口径（现在箭头恒灰，也可以改成周/月不画这条）；翻到无数据那天的空态文案未区分「设备那天没报」。
+- 交付：flowerpot `5419907`（已 push）。⚠️ **未编译、未跑测试、未真机**（本机与 nas 都无 Flutter 工具链）。人工复核 + 括号配平 + grep 调用点；新增 `status_history_date_window_test`（4 条单测 + 2 条湿度页 widget 测试，含「到边再点标签不变」）未运行。
+- 教训：**「限制某个控件」的需求，先把那个控件在全仓找一遍再动手。** 我直接新建了一个日期条，限制了用户看不到的那个，真正在用的四个原地不动。
