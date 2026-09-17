@@ -157,3 +157,11 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
   该 token 属于 Figma 账号 `john125`——**用户确认是本人的另一个号**，不是外借凭据，无需另行处置。
   它对正矿设计文件是 `role: viewer` / `linkAccess: view`，即靠「链接可查看」拿到的权限，
   不是被邀请进文件。所以**光有正确链接不够，文件还必须对该账号开放**；稿子权限收紧时会 403。
+
+- **重启会话后在会话内实测可用**（同日，补上上一条的 ⚠️ 遗留）：重启 `claude` 后 `figma` 的两个工具
+  确实进了本会话工具集（`ToolSearch select:` 能取到 schema），不再需要绕 REST API。
+  两个工具都走通了：`get_figma_data`（`yIJCGLnUaNKIoQyWIHcnaz` 节点 `2-16209`，`depth=1` 拿到
+  文件名「正矿后台设计重构」与三层 GROUP 结构）、`download_figma_images`（节点 `2-16382` 导出
+  242×504 PNG）。图片落在 `IMAGE_DIR` = `.codex-tmp/figma-images/`，`git check-ignore` 确认被忽略，
+  smoke test 产物已删除、工作区干净。**结论：「加完 MCP 必须重启会话」这条已双向验证**——
+  重启前搜不到、重启后可用。
