@@ -1263,3 +1263,10 @@
 - ⚠️ 18MB blob 已在 `origin/1.8.4-list` 历史里（`092d68b` 已推送），本轮只删文件，历史仍在，clone 还是要付这 18MB；彻底清理需改写历史 + 强推共享分支，待用户决定。
 - ⚠️ `.mcp.json`（含 Figma token）原本未被忽略，`git add -A` 会把令牌带进团队仓——已加进 `.gitignore`。
 - 交付：minerals-frontend `ebaf6f1`。验证：Playwright 起 dev 实测，computed style 与设计稿逐项吻合、字体 200/loaded、可变字重实测有效（非伪粗）、页面零 error；改动文件 vue-tsc 0 错误（全量 1024MB 堆 OOM，按约定不加堆，改用只含改动文件的临时 tsconfig）。⚠️ 只验了组件自带 example.vue，未逐个业务页面看效果。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | 固定列左缘的投影改回 inset
+
+- 用户反馈固定列左边多一条与表格等高、几 px 宽的透明线条。根因：Element 的固定列投影是在列外侧放一条 **10px 宽、自身透明**的 `::before`，靠 **`inset`** 阴影在盒内画渐变；上一轮写成了外阴影，外阴影画在盒子外面，于是变成「左一道影 + 中间 10px 透明带（看得见底下滚动内容）+ 右一道影」。
+- 第二个毛病：我的选择器权重 (0,4,1) 压过了 Element 的 `.is-scrolling-none …::before` (0,3,2)，**表格没有横向溢出时也照画**。
+- 改为覆盖 Element 自己的 `--el-table-fixed-left/right-column` 变量（保留滚动态开关），并把贴边条加宽到 20px 让模糊铺得开。
+- 交付：minerals-frontend `c2e2b7a`（已推送）。验证：本机已无 node_modules，改用「下载 element-plus 官方 el-table.css + 手写同结构 DOM 的静态复现页 + Playwright 截图 + 纯 Python 解 PNG 做像素亮度剖面」——旧版有 2 个中间回亮点（透明缝）且无溢出时仍画，新版单调渐变、无溢出时全白。⚠️ 复现页是手写 DOM，未在真实业务页面里看过。

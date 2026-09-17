@@ -1,5 +1,40 @@
 # 当前迭代
 
+## 2026-09-17（四）：正矿 固定列左缘那条「透明竖线」——外阴影写成了 inset 才对（`c2e2b7a`，已推送）
+
+- 用户反馈：固定列左边多出一小段和列表等高、宽度几 px 的线条，背景看着是透明的；UI 给的是一道阴影
+  用来强调这是固定列。
+- **根因**（下载 element-plus@2.13.1 的 `theme-chalk/el-table.css` 核实）：Element 的固定列投影不是
+  打在单元格上的，而是在固定列外侧放一条 `::before`——**10px 宽、自身完全透明**、`pointer-events:none`、
+  `top:0;bottom:0`，压在滚动内容上面，再往它身上打一条 **`inset`** 阴影
+  （默认 `--el-table-fixed-right-column: inset -10px 0 10px -10px rgba(0,0,0,.15)`），
+  靠**内**阴影在这 10px 里画出渐变。开关挂在滚动态：`is-scrolling-none` 时 `box-shadow:none`。
+- 上一轮（09-17 三）我把它写成了**外阴影**（漏了 `inset`）。外阴影只画在盒子**外面**，
+  而这条贴边没有背景色 —— 于是渲染成「左边一道影 + 中间约 10px 的透明竖带（直接看见底下滚动的内容）
+  + 右边又一道影」，正是用户看到的那条线。**而且它绕过了滚动态开关**：我的选择器
+  `.lc-table__el[data-v] .el-table-fixed-column--right.is-first-column::before` 是 (0,4,1)，
+  压过 Element 的 `.el-table.is-scrolling-none …::before` (0,3,2)，所以表格根本没有横向溢出时也照画。
+- **改法**：不再直接打 `box-shadow`，改为覆盖 Element 自己的变量
+  `--el-table-fixed-right-column / --el-table-fixed-left-column`（都写成 `inset … -20px`），
+  滚动态开关原样保留；再把贴边条 `::before` 从 10px 加宽到 20px（`left/right: -20px; width: 20px`），
+  让 20px 的模糊铺得开——不加宽的话渐变被裁在 10px 内，比设计稿硬。
+- ⚠️ **验证方式变了**：本机 node_modules 已清空（09-17 磁盘清理），起不了 vite。改为
+  **下载 element-plus 官方 tarball 取 `el-table.css` + 手写同结构 DOM 的静态复现页**，
+  用 Playwright（chromium 在 `~/.cache`，playwright-core 借 zettlab 那份）截图，
+  再用纯 Python 解 PNG 做**像素亮度剖面**定量比对：
+  | 变体 | 最暗 | 非白像素范围 | 中间回亮点 |
+  |---|---|---|---|
+  | 旧·滚动中 | 234 | 39–216 | **2**（= 透明缝） |
+  | 旧·无溢出 | 234 | 39–216 | **2**（不该画却画了） |
+  | 新·滚动中 | 229 | 88–159 | 0（单调渐变） |
+  | 新·无溢出 | 255 | 全白 | 0（正确地不画） |
+  复现页留在 `.codex-tmp/fixedcol/`（已 gitignore），下次改固定列样式可直接复用。
+- ⚠️ 静态复现页是**手写 DOM**，不是真实 el-table 渲染结果；类名与层级按官方 CSS 选择器还原，
+  权重也对齐了真实编译产物 (0,4,1)，但仍**未在真实业务页面里看过**。请在本地拉 `c2e2b7a` 确认。
+
+---
+
+
 ## 2026-09-17（三）：正矿 ListTableCard 按 Figma 节点 100% 还原 + 接入思源黑体子集（分支 `1.8.4-list`，`ebaf6f1`）
 
 - 需求：按 Figma `yIJCGLnUaNKIoQyWIHcnaz` 节点 `2-16209`（「提单业务列表」）对 `src/components/ListTableCard`
