@@ -1405,3 +1405,13 @@
   才显得「底色不搭」。上一条改白底是治错了症，已还原稿里的浅蓝渐变。
 - `--zk-shadow-card` 改 `0 3px 3px rgba(16,51,91,.035)`。实测：边缘 alpha 8（稿 7.7），总量 24（稿 56）。
 - 交付：minerals-frontend `b3de9df`（已推送）。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | 表单控件高度/标签对齐/Tab 下划线动画
+
+- el-select 的 `.el-select__wrapper` 写死 `min-height:32px`、不跟 `--el-component-size`，补规则后与输入框同为 40；
+  表格内 36 的一档同时补 min-height，避免被 40 压过。
+- `.el-form-item__label` 的 32 高改为与控件同高，实测标签与控件中线差 0px。
+- Tab 下划线改回用 Element 自带指示器（自带 .3s 过渡）实现滑动，仅用一处 !important 压内联高度，
+  宽度用透明边框 + background-clip 收窄到稿里的比例。
+- 顶部卡按导出图取色改白底（稿标 135deg 渐变，实际渲染基本是白）。
+- 交付：minerals-frontend `1bbbb84`（已推送）。

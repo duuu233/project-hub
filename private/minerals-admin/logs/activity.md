@@ -271,3 +271,18 @@
 - **教训**：量化对比要挑对指标。以后比阴影，先看**边缘 alpha**，再看铺开范围，不要只看积分值。
 - 附带纠正：因为"治错了症"，我还一度把工作区底色从稿里的渐变改成白底，现在已还原。
   改视觉之前应该先把「是背景的问题还是前景的问题」分清楚。
+
+## 2026-09-17 | Element 控件高度的三套来源（`1bbbb84`）
+
+- **最值得记的一条**：Element 的控件高度**不是一个变量统管**。
+  `el-input` / `el-date-picker` / `el-input-number` → `--el-input-height` → `--el-component-size`；
+  **`el-select` 的 wrapper 是硬编码 `min-height:32px`**；
+  **`el-form-item__label` 的高度按 size 变体硬编码 32**。
+  只设 `--el-component-size: 40px` 会得到「输入框 40、下拉 32、标签 32」的参差 —— 正是用户报的问题。
+  以后调控件尺寸，这三处要一起给。
+- 表格内那档 36 用的是 `height`，而给 select 补的 40 是 `min-height` —— **min-height 会压过 height**，
+  所以表格内也要同时写 `min-height: 36px`。差点漏掉。
+- Tab 下划线：之前躲 `!important` 用 `::after` 画，代价是没有动画。改回用 Element 指示器后，
+  只在 `height` 上用一处 `!important`，宽度用「透明边框 + background-clip: content-box」收窄 ——
+  这样既拿到 JS 驱动的滑动，又拿到稿里的窄下划线。
+- 顶部卡：又一次「Figma 标注 ≠ 渲染结果」。取色证明稿里那张卡基本是白的，标注的 135deg 渐变写成 CSS 会偏蓝。
