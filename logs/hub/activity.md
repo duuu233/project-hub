@@ -86,3 +86,23 @@
 - **验证**：
 ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
 - **详见记录**：[2026-09-08-私有目录Symlink管理方案落地.md](2026-09-08-私有目录Symlink管理方案落地.md)
+
+---
+
+### 2026-09-17：SSH 开发机磁盘清理（仅 /pgdata/pg/dh）
+- **环境**：ssh（SSH 开发机）
+- **分支**：main
+- **操作类型**：执行环境维护（未改 Hub 代码与规则）
+- **背景**：`/pgdata`（20GB，独立盘）只剩 426MB，正矿本轮字体子集化差点没地方落盘。
+- **实施**（动手前逐仓确认工作区干净、无 stash）：
+  - 删 `dist/`：minerals-frontend 35M、flowerpot-web 4.5M、web-ui-v2 4.7M。
+  - 删全部 `node_modules`：minerals-frontend 555M、flowerpot-web 295M、web-ui-v2 295M，外加 `node_modules/.vite`。
+  - 7 个仓 `git gc`（普通模式，不 aggressive、不 prune=now）：回收 105M，flowerpot `.git` 141M→106M、photo-album 82M→50M。
+- **结果**：`/pgdata` 可用 426MB → **1.8GB**（98% → 91%）；`/pgdata/pg/dh` 合计 1.8G → **491M**。
+- ⚠️ **本机不再能跑 vite / vue-tsc / Playwright 验证**，改动效果只能靠用户本地拉代码看。
+  需要时先 `npm ci` 装回（正矿约 600MB）。用户口径：他在本地拉代码测试就行。
+- ⚠️ **`/pgdata` 占用的真正大头不在 dh**：`/pgdata/pg/work/zettlab-product-dev` 占 15GB
+  （其中 `.wt-batch0805` 1.9G、`.wt-pg907` 1.7G、`.wt-pg0915` 1.2G 三个 worktree 合计 4.8GB）。
+  **用户明确「只有 /dh 下面的问题就 其它的 不要动」，未做任何处理。**
+- ⚠️ 另一条易踩的：`/home/pg` 在 `/`（100GB，剩 27GB）上，不在 `/pgdata` 上——
+  `~/.cache`（9.9G，其中 go-build 8G）、`~/.npm`（4G）再大也不占 `/pgdata`，清了对这块没用。
