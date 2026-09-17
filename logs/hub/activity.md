@@ -134,3 +134,20 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
 - ⚠️ **新增 MCP 对正在运行的会话无效**：工具集在会话启动时固定，实测加完后本会话仍搜不到 figma 工具，
   必须重启 `claude` 才能用。
 - **遗留**：正矿仓那份坏掉的 `.mcp.json`（已 gitignore，含同一个 token）未动，待用户决定是修还是删。
+
+---
+
+### 2026-09-17：删掉正矿那份 figma MCP 配置；把「只动 /pgdata/pg/dh」写成硬规矩
+- **环境**：ssh（SSH 开发机）
+- **操作类型**：规则升级 + 执行环境配置
+- **实施**：
+  1. 删除 `minerals-frontend/.mcp.json`（本就未跟踪且已 gitignore，删除不影响仓库；
+     内容备份在 `.codex-tmp/minerals-mcp.json.bak`）。该文件的配置是坏的（缺 `--stdio`、
+     环境变量名错写成 `FIGMA_ACCESS_TOKEN`），从来没连上过，且里面存了一份 token。
+     删后正矿目录 `claude mcp list` 已无 figma 条目，仓库工作区干净。figma 只保留 Hub 的 local scope 那一份。
+  2. `AGENTS.md` 新增「可写边界：SSH 环境下只许动 `/pgdata/pg/dh`」一节，置于「信息隔离」之前。
+     两条规矩区分清楚：信息隔离管**不把 Hub 痕迹写进别人能看到的仓库**，
+     可写边界管**不去碰别人的文件**。
+- ⚠️ **自查出一处历史越界**：此前跑 Playwright 截图时引的是
+  `/pgdata/pg/work/zettlab-product-dev/zettlab-web/node_modules/playwright-core`（只读，未改动任何文件）。
+  按新规矩今后不再依赖它；要用就在 `dh` 下自己装一份（chromium 二进制在 `~/.cache/ms-playwright`，可共用）。
