@@ -1373,3 +1373,10 @@
 - **刻意不动 `_deviceSize`**：它同时是取景比例②导出画布尺寸，还与 BLE 图传的 `screenCode` 绑定，改它就是改导出。代价：框比例来自 `FrameProtocol.screenTypes`（只有 480×720 / 680×960 两条竖向矩形），圆屏产品屏型进表前 `ClipOval` 裁出来是**椭圆**不是正圆 —— 屏型码与真实分辨率要设备侧给。⚠️ 别绕过去改 `_deviceSize`。
 - 验证：**小程序侧真跑通了** `node tests/projection-round-screen.test.js`（圆形态存在 + 方形 40rpx 未动 + 「50% 必须带 .is-round」防回归 + 导出无裁圆）。APP 侧仍未编译未跑测试未真机（无 Flutter 工具链），做了人工复核、括号配平、diff 逐行核对方形路径未变、grep 确认导出零改动；新增 `test/device_round_screen_test.dart` 未运行。
 - ⚠️ 顺带发现：小程序 `tests/token-page-layout.test.js` 是红的（找不到 `.package-card--active .package-gift`），**stash 复核确认本轮改动之前就红**，与本轮无关，未处理。
+
+## 2026-09-17 | album-miniapp | SSH 开发机 | main | 修那条红了 9 天的 token 页布局用例
+
+- 上一条里顺带发现 `tests/token-page-layout.test.js` 是红的（`找不到规则 .package-card--active .package-gift`）。**测试过期，样式是对的**：`487869b`（2026-09-08「赠送角标固定为橙底白字，不随选中状态变化」）故意删掉了那条选中态规则，`position: absolute` 合并进 `.package-gift` 本身；那次只跑了 `tests/token-pay.test.js`，所以这条用例从那天起一直红着（9 天）。
+- 要守的判据一个字没变（**角标绝对定位 ⇒ 必须有等高占位行 `.package-gift-slot`**，否则默认选中的 500 Token 那张卡内容比左右两张高半格），只是把查询从已删除的选择器挪到 `.package-gift` 上，并把这段来历写进注释，免得下个人又以为是样式坏了。样式与页面**零改动**。
+- 交付：photo-album `8d28635`（已 push）。验证：该用例通过；**全量 `tests/*.test.js` 21 条全绿**（真跑）。
+- 教训：改样式时删掉了一条被用例引用的选择器，只跑了「相关的那一条」用例，没跑全量 —— 这仓的用例 `node tests/xxx.test.js` 就能跑，**以后动 wxss 后跑一遍全量**，成本只有几秒。
