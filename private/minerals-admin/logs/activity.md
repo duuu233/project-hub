@@ -225,3 +225,16 @@
   `BottomFixedBtnsBox` 的 `right:18px` + `width: calc(100vw - 276px)` 让按钮比卡片右移 16px。
   稿里底部栏贴左侧导航右缘铺到最右。在详情页作用域内覆盖 `right/width` 解决，没动公共组件。
   教训：用户说「样式有问题」时，先量**位置和对齐**，不要只盯着颜色圆角。
+
+## 2026-09-17 | 顶部固定信息卡（`0708899`，已推送）
+
+- 用户在四个选项里选了「只做顶部固定信息卡」。做成可复用组件而不是写死在提单页，理由是后面
+  入库/出库/代理订单详情都要用同一张卡，写死就得抄四遍。
+- **字段来源逐个核实过**（没有猜字段名）：`oceanDeliveryNo` / `status` / `financeFlag` / `shipCompanyId`
+  / `CargoInfo[].containerWeight` 累加 / `SeaInfo` 头程 `expecteArrivalDate` / `updateTime`；
+  异常预警确实没有字段，占位破折号 —— 列表页那一列也是同样处境，口径一致。
+- **新增一条验证手段**：`.codex-tmp/sfc-check` 里装 `@vue/compiler-sfc@3.3.9`（不进项目仓），
+  对改动过的 SFC 逐个 parse + compileScript + compileTemplate。本机跑不了 vite，这一步能兜住
+  `defineProps` 泛型、模板语法错误。以后改 .vue 都应该跑一遍。
+- **遗留**：右侧 310 栏 + 内容收窄 1454 + 表单宽度 280→440（用户本轮明确先不做）；
+  顶部卡的 AI 提示条与「AI 分析」按钮组件已支持（`notice` / `#actions`），但页面级 AI 分析还没有后端，暂未接。
