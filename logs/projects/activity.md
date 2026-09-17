@@ -1236,3 +1236,11 @@
 - DP165 代码无行为改动（09-16 按实时 DP 量程推的就是 2B×10），注释与文档改成「1.0.12 确认」；帧头仍按帧长自动判（导出那行还写着 4 字节头）。⚠️ <1.0.12 固件仍报 1B 点，湿度日曲线会错位，兜不了，需设备升级。
 - `tools/dart_nullable_await_check.py` 名单加 `UploadImage.prepare`；新增 `docs/更新说明-2026-09-17.md` 与历史记录。
 - 交付：flowerpot `e817468`（已 push）。⚠️ 本机无 Flutter 工具链：未 `pub get`（**pubspec.lock 仍未更新**）、未 analyze、未跑 flutter test、未编译、未真机；四个 Dart 静态自检全绿。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | 搜索卡固定宽度布局、纯列表页接入、补回上一轮丢掉的列渲染
+
+- 搜索卡从 grid+fr 改 flex+固定宽度（keyword 260 / 区间 320 / 其余 220），字段居左、查询与重置合成一块靠右；只有一个搜索框的 6 个页面不再把输入框拉满整行。
+- 补迁没有搜索区的纯列表页 4 个（site/list、store/list、system/currency、system/user-group），页面只挂 ListTableCard；脚本加 `--first-table` 后把 goods-library/category 也迁了。
+- 修上一轮迁移脚本三处静默丢渲染（只认 `#default="scope"`、`/操作/` 误判操作列、`</template\n >` 匹配不上）并重新生成受影响的 9 个页面；新增 `head-<prop>` 列头插槽找回 ledger-list、currency 的列头说明；market-data 的动态列手工改成 computed 列配置。
+- 交付：minerals-frontend `12b8974`（已 push，留在 1.8.4-list 待用户核实后再合并）。分 3 批 vue-tsc：17 个改动文件 0 错误，余下报错为基线问题；18 个 scoped 样式块 sass 编译全过；codegraph 已 sync。⚠️ 未起 dev、未逐页看效果。
+- 仍未迁：invoicing-list（展开行，需组件先支持）、system/news（无 el-table）、system/monitor/tool 下若依内置页（另一套查询表单，维持上一轮口径）。

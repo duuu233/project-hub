@@ -1,5 +1,50 @@
 # 当前迭代
 
+## 2026-09-17（一）：正矿 列表页二轮优化——搜索卡固定宽度 + 纯列表页接入 + 补回上一轮丢掉的列渲染（分支 `1.8.4-list`，`12b8974`，已推送）
+
+- 用户口径两条：①「没有搜索部分的列表为什么没有替代，搜索组件应该是动态的，支持只有纯列表的展示」；
+  ②「有些列表页只有一个搜索框的样式不对，搜索框给固定宽度就行、不要动态变化，字段居左、按钮居右」。
+  用户另说明：**本轮改动都留在 `1.8.4-list`，核实完再合到其它分支**。
+- **① 搜索卡布局**：`.lc-search__grid`（grid + fr 轨道）→ `.lc-search__row`（flex + 固定宽度）。
+  字段宽度改成常量：keyword 260 / 日期区间 320 / 其余 220（`option.width` 仍可覆盖，数字按 px）；
+  按钮块两个合成一个、`margin-left:auto` 顶到行尾。**根因**：fr 是按剩余空间分配的，
+  只有一个字段的页面（bank、role、warehouse-list、weapp-list、site-maintenance、all-system 六个）
+  那一个输入框会被拉满整行——不是样式没写，是布局方式本身跟「字段少」冲突。
+  顺带删掉按列数硬切的两条媒体查询（flex 换行天然退化），`.lc-field` 加 `max-width:100%` 防窄屏撑破面板。
+- **② 纯列表页**：上一轮只把「用 TableSearch 的 65 个」喂给了脚本，**没有搜索区的页面压根没进名单**——
+  这是漏做，不是组件做不到（脚本本来就有 `hasSearch` 分支，没有搜索就只 import 列表卡）。
+  本轮补迁 4 个：`site/list`、`store/list`、`system/currency`、`system/user-group`，页面只挂 ListTableCard。
+  外加 `goods-library/category`：它是「页内还有第二个 el-table（弹窗里的）」被脚本挡下的，
+  给脚本加了 `--first-table` 开关（确认过第一个就是主列表才用）后迁完。
+- **③ 上一轮埋的三个坑（本轮发现并修，影响 9 个页面）**——都是迁移脚本解析不到就**静默丢渲染**：
+  1. **插槽绑定只认 `#default="scope"`**：写成 `#default="{ row }"`（解构）或 `#default="scoped"`（自己起名）
+     的列，整段自定义渲染被当成「没有渲染」丢掉。受影响：两个 DomesticOrderList（金额/状态/整列操作按钮）、
+     approval-assignment（3 列字典）、approval-template（2 列字典）、system/menu（拖拽手柄列）、approval-log。
+  2. **`/操作/` 判操作列**：「操作人」「操作时间」「操作重量」「操作前可用总重量」也被判成操作列，
+     一个页面生成多个 `#actions` 插槽（重名，Vue 只留最后一个）。受影响：stock-logs（4 列）、approval-log（3 列）。
+     改成 `/^操作$/`（全仓核对过：54 处 `label="操作"`，其余 7 处都是数据列）。
+  3. **闭合标签写成 `</template\n >` 的匹配不上**（prettier 把 `>` 挪到了下一行）→ sales-pickup/list 的「提货重量」列丢渲染。
+  另外补了两处：**自定义列头**（`<template #header>`）此前被整个丢掉——ledger-list 的「差值」问号说明、
+  currency 的「汇率」说明，为此给 ListTableCard 加了 `head-<prop>` 插槽；**列 prop 兜底猜测**改成也认
+  `row.xxx`（解构写法），不再生成 `col3` 这种无意义 prop。
+- **④ market-data 单独手工迁**：它有 `v-for` 的**动态列**（矿种下每个产品一列），上一轮被脚本压成了
+  一列写死的 `label: 'key'`，均价列的表头也变成了字面量反引号字符串。改成 `computed` 列配置：
+  静态列 + `dynamicColumnKeys.map(...)`（用 `formatter` 取 `row.dynamicColumns[key]`）+ 跟着国内/国际切单位的均价列；
+  顺带把老 `TableSearch` 上的 `:disabledDate` 落到日期字段的 `disabledDate`（迁移时丢了，会导致能选未来日期）。
+  脚本也补上了「含 v-for 动态列 → 跳过交人工」的判断，不再默默压成死列。
+- 验证：**分 3 批跑 vue-tsc**（本机限 1 GB 堆），17 个改动文件 **0 错误**；报错只剩三处基线问题
+  （`aiIngredientMatch.ts`、`SimpleTrack.vue`、`import-data-dialog.vue`，均未改动），
+  其中 DomesticOrderList 的 `domesticPurchaseNo` 报错**已用 29fef24 原文件复跑确认是迁移前就有的**。
+  18 个 scoped 样式块 sass 编译全过。`codegraph sync` 已刷新（Added 1 / Modified 72）。
+  ⚠️ **未起 dev、未逐页看效果**——固定宽度的具体数值（260/320/220）最好在真实分辨率上看一眼。
+- ⚠️ **仍未迁的 2 个**：`invoicing/invoicing-list`（列表带 `type="expand"` 展开行，展开区里还套了一张表；
+  要迁得先给 ListTableCard 加展开行支持，本轮没动）、`system/news`（消息中心，压根没有 el-table，
+  只是还在用老 TableSearch）。另有 `system/monitor/tool` 下若依内置页仍是 `el-form :inline` 老查询表单，
+  与上一轮口径一致没动。
+- ⚠️ 卡片标题仍统一留空（脚本不猜业务名），逐页补 `title` 这件事还没做。
+
+---
+
 ## 2026-09-17（一）：花盆APP 上传图片改设备口径 + DP165 按 2 字节（`e817468`，已推送）
 
 - 需求：跟固件 **OTA 1.0.12** 同步两件事——①它新增「图片下载」，上传的图必须是
