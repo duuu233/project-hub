@@ -172,3 +172,22 @@
 - **遗留**：①Element 弹层（select/date 面板、dialog）teleport 到 body，不在作用域内，未按规范处理；
   ②AI 面板（AiMonitor/AiTracking）与物流轨迹图是自带设计、规范里没有对应板，保持原样，里面还留着 `#409eff`/`#1E65A5`；
   ③设计稿的顶部固定信息卡、右侧 310px 栏当前页面没有，按用户口径没加。
+
+## 2026-09-17 | Tab 药丸 bug、详情页皮肤升为全局层（`c72bba3`，已推送）
+
+- **复现页方案（可复用）**：`.codex-tmp/zk-preview/` —— vue/element-plus UMD + 官方 CSS 本地化，
+  `index.scss` 用 dart-sass 编译，公共组件与页面的 scoped 样式用脚本补 `[data-v-xxx]` 后**放在主题之后**加载
+  （既复现真实权重，又能验证「类名写两遍」是否真的压得住）；Playwright 截图 + `getComputedStyle` 量测。
+  这套比"手写静态 DOM"准得多，以后改样式都可以用。
+- **真因**：`el-segmented` 指示器的 `height:100%` 是 JS 写的内联样式。内联 > 任何选择器，
+  所以上一轮的 `height:3px` 无效。教训：**凡是 Element 用 JS 定位/量尺寸的元素（segmented 指示器、tabs 的 active-bar、
+  affix、fixed 列的贴边条），几何属性都可能是内联的，改它们要么换承载元素（::after），要么才考虑 !important。**
+- **按钮配色第二个坑**（上一轮埋的）：默认皮肤若用 `:not([class*='el-button--'])` 排除，会把 `el-button--small`
+  这种尺寸类也误排除；已改成逐个 type 排除。
+- **全局分层**（写进 DESIGN_SPEC 第 10 节）：① 令牌 `design-tokens.scss` ② 页面皮肤 `zk/*.scss`（开关类生效）
+  ③ 通用组件 ④ 模块私有。关键是②：全局下发但靠类名开关，于是可以按模块渐进迁移，不会一改全站抖。
+- **漏读设计稿的教训**：`get_figma_data` 加 `depth` 会静默丢掉叶子节点。大板要么分子节点取，要么落盘后分段读，
+  **不能**用一次 depth 截断的结果就当"读完了"。这次补回 6.1/6.5/6.6 三块。
+- **遗留**：①底部按钮用户说有问题，我这边复现页量测与稿一致，已回问具体现象；
+  ②稿里的顶部固定信息卡（8 格关键字段）当前页面没有，属新增功能，待用户决定要不要做；
+  ③Element 弹层、FileUpload 上传区仍未按稿处理。

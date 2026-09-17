@@ -1300,3 +1300,15 @@
 - 落地：Tab 条、区块卡、一/二级标题、表单控件、表格、按钮、状态标签、提示条、附件区、底部操作栏。
   顺带清掉 4 处 `#13ce66` 开关色、2 处 `#409eff` 按钮色，附件标题拆成「标题 + 12px 说明」。
 - 交付：minerals-frontend `6df564c`（已推送）。验证：sass 逐文件编译通过；本机无依赖，未起页面、未截图。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | Tab 药丸 bug + 详情页皮肤升为全局一层
+
+- 顶部 bug 真因：`el-segmented` 的选中指示器由 JS 写**内联** `height:100%`，CSS 的 `height:3px` 被压掉，
+  渲染成整块蓝药丸、选中文字看不清。改为指示器透明 + 下划线画在 `.is-selected::after`（不用 !important）。
+- 底部按钮复现页量测与稿一致（38/圆角 9/渐变），只把「返回」描边改成稿里的 `#CAD9EA`；
+  稿里的右侧「数据已自动保存」页面没有这块内容，未自行添加。
+- 全局规划：模块私有主题 → 页面皮肤层 `src/assets/styles/zk/detail-page.scss`，全局引入、开关类 `.zk-detail-page` 生效，
+  可按模块渐进迁移；DESIGN_SPEC 新增第 10 节样式重构路线图。
+- 补漏：上一轮读「详情页基本组件」按 depth 截断，漏了叶子内容；重读后补全 6.1 顶部固定卡 / 6.5 附件区 / 6.6 底部状态。
+- 验证手段升级：真组件复现页（本地 Vue+ElementPlus UMD + 仓库编译样式 + scoped 样式补 data-v）+ Playwright 截图与 computed style 量测。
+- 交付：minerals-frontend `c72bba3`（已推送）。⚠️ 仍未在真实业务页面里验证。
