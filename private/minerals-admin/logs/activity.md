@@ -151,3 +151,24 @@
 - **遗留**：①未验证（无 node_modules、磁盘 1.5G 可用），全局 `--el-font-size-base: 13px` 与主色影响全站；
   ②DESIGN_SPEC 里放了 Figma 文件链接，若该文件未对全组共享需要用户确认是否保留；
   ③三处品牌蓝、两套语义色待设计确认收敛。
+
+## 2026-09-17 | 提单详情页按设计规范换皮（`6df564c`，已推送）
+
+- 用户要求：按上一轮建的设计规范改 `src/views/bill-lading` 的样式，只改稿里出现过的内容，
+  「页面导航与框架」再次申明不归他负责、不要干预。
+- 现状盘点：列表页 `index.vue` 上一轮已用 ListSearchCard/ListTableCard 做过，本轮没动；
+  真正要改的是详情页——`template/handleDetail.vue` + 6 个 Tab 组件（基础信息/货物/海运/清报关/检测/结算）。
+- **决策：不动公共组件**。`Collapse` 79 个文件在用、`BottomFixedBtnsBox` 9 个，改了就是全站改版，
+  超出本轮范围。做法是模块级主题 `detail-theme.scss`，详情页根节点挂 `.zk-bill-detail`。
+- **权重坑**：公共组件 scoped 样式编译成 `[data-v-x]` 属性选择器，与「两个类」的权重打平，
+  覆盖与否取决于 CSS 打包顺序。把作用域类写两遍 `.zk-bill-detail.zk-bill-detail` 抬一档解决。
+- **按钮配色的坑**：一开始给 `.el-button` 直接写白底，会把 warning / info 这些没单独覆盖的类型一起吃成白底。
+  改成「形状对所有按钮生效、配色只覆盖稿里出现过的类型」，默认皮肤用 `:not(...)` 排除各 type 与 link/text；
+  注意不能用 `:not([class*='el-button--'])`，那会把 `el-button--small` 这种尺寸类也误排除。
+- ⚠️ **自己的失误**：批量改 4 个组件 `.switch-label` 时用了跨行惰性正则，在 BillBasicInfo 里越过块边界
+  把 `.upload-item` 整段删了。已重写该样式段并补 `.status-switch` 的 flex 居中（原对齐靠 `line-height:40px`）。
+- **验证**：`npx sass@1.103.1` 逐个编译 `detail-theme.scss`、`design-tokens.scss` 与 7 个改动文件的 style 块，
+  全部通过。没起页面（无 node_modules、磁盘 93%）。
+- **遗留**：①Element 弹层（select/date 面板、dialog）teleport 到 body，不在作用域内，未按规范处理；
+  ②AI 面板（AiMonitor/AiTracking）与物流轨迹图是自带设计、规范里没有对应板，保持原样，里面还留着 `#409eff`/`#1E65A5`；
+  ③设计稿的顶部固定信息卡、右侧 310px 栏当前页面没有，按用户口径没加。

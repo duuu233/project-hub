@@ -1,5 +1,32 @@
 # 当前迭代
 
+## 2026-09-17（四）：正矿 提单详情页按设计规范换皮（`6df564c`，已推送）
+
+- 范围：`src/views/bill-lading`。用户再次申明「页面导航与框架」不归他负责，不要干预；
+  列表页上一轮已按静态稿做过，本轮实际动的是详情页（新增 / 编辑 / 查看共用 `template/handleDetail.vue`）。
+- **关键判断：没有改公共组件。** `Collapse` 被 79 个文件用、`BottomFixedBtnsBox` 被 9 个用，
+  直接改等于全站改版。改为在模块内建 `detail-theme.scss`，规则全收在 `.zk-bill-detail` 下，
+  详情页根节点挂这个类；别的模块看到的公共组件原样不变。
+- **踩到的权重坑**：公共组件是 scoped 样式，编译后是 `.collapse-title-box[data-v-x]`，权重 (0,2,0)，
+  和我的 `.zk-bill-detail .collapse-title-box` 打平 —— 谁生效取决于打包顺序，不可控。
+  解法：作用域类写两遍 `.zk-bill-detail.zk-bill-detail`，抬一档权重，结果不再依赖顺序。
+- 落地项（对应 DESIGN_SPEC 各节）：Tab 条（把 `el-segmented` 的灰底药丸改造成白卡 + 3px 渐变下划线，
+  靠改 `--el-segmented-*` 变量 + 把指示器从整块挪到贴底）、区块卡（`.collapse-box` 变 radius 16 渐变卡）、
+  一级标题（54 高 + 3×18 渐变竖条）、二级标题（3×13 实色条 + 14/21）、表单（控件 40/圆角 9/禁用底 #F3F6FA）、
+  表格（表头 42 + #F5F8FC、行分隔 #E7EEF5、去掉全局斑马条）、按钮（主渐变 / 次按钮 / 小按钮 / 文字按钮 12 Bold）、
+  状态标签、提示条（el-alert 橙）、附件区、底部操作栏（66 高 + 上边框 + 反向投影）。
+- 顺手清掉的硬编码：4 处 `--el-switch-on-color: #13ce66`（开关开启色改按规范的品牌蓝）、
+  2 处按钮 `#409eff`、`.el-check-tag--primary` 的老蓝；3 处「附件（文件上传数量最多支持为5个…）」
+  标题按稿拆成「标题 + 12px 灰色说明」，用 Collapse 的 `leftExtra` 插槽。
+- ⚠️ **教训（自己的失误）**：批量改 4 个组件的 `.switch-label` 时用了惰性正则 `[\s\S]*?\n  \}`，
+  在 BillBasicInfo 里跨过了块边界，把 `.upload-item` 整段吃掉了。当场发现并重写了那段样式，
+  同时补了 `.status-switch{display:flex;align-items:center}`（原来的垂直对齐靠 `line-height:40px`，
+  换成 13/14px 字号后会掉）。以后改多文件样式块不要用跨行惰性正则匹配大括号。
+- **验证**：只做了 sass 编译校验 —— `npx sass@1.103.1` 把 `detail-theme.scss`、`design-tokens.scss`
+  和 7 个改动文件的 style 块逐个编译，全部通过（含 handleDetail 里的 `@import '../detail-theme.scss'`）。
+  本机仍无 node_modules、磁盘 93%，**没起页面、没截图**；Element 弹层（下拉/日期/对话框）teleport 到 body，
+  拿不到这个作用域，本轮不处理。设计稿里的顶部固定信息卡、右侧 310px 栏当前页面没有，按用户要求不加。
+
 ## 2026-09-17（五）：花盆APP 定制动画改单选 + 日报表按日期解 7 天日包（`e557046`，已推送）
 
 产品本轮四条，第 1 条已经是现状。
