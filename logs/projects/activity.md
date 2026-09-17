@@ -1244,3 +1244,4 @@
 - 修上一轮迁移脚本三处静默丢渲染（只认 `#default="scope"`、`/操作/` 误判操作列、`</template\n >` 匹配不上）并重新生成受影响的 9 个页面；新增 `head-<prop>` 列头插槽找回 ledger-list、currency 的列头说明；market-data 的动态列手工改成 computed 列配置。
 - 交付：minerals-frontend `12b8974`（已 push，留在 1.8.4-list 待用户核实后再合并）。分 3 批 vue-tsc：17 个改动文件 0 错误，余下报错为基线问题；18 个 scoped 样式块 sass 编译全过；codegraph 已 sync。⚠️ 未起 dev、未逐页看效果。
 - 仍未迁：invoicing-list（展开行，需组件先支持）、system/news（无 el-table）、system/monitor/tool 下若依内置页（另一套查询表单，维持上一轮口径）。
+- 追加 `a7d397e`：列表卡表格 `scrollbar-always-on`（超宽时滚动条常显）、标题行改 `min-height` + 换行，避免被面板 `overflow:hidden` 静默裁掉。溢出的具体页面待用户确认。
