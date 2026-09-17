@@ -1,5 +1,22 @@
 # 当前迭代
 
+## 2026-09-17（四）：正矿 对照提单详情整页稿逐盒核对（`798f1f0`，已推送）
+
+- 用户给了整页稿 node 1:2098，要求核对 `.app-main` 及以下所有盒子是否符合规范，并说明这个模块整体归他负责。
+- **查出两个真问题，都已修**：
+  1. **区块卡用错了皮肤**。我之前把「顶部固定信息卡」的渐变底 + `#DCE8F5` + 圆角 16 套到了页面里每一张区块卡上；
+     整页稿里区块卡（1:2257 / 1:2296 / 1:2378）是**纯白 + `#DFE9F4` + 圆角 14**，卡间距 12，内容 padding 18。
+     渐变那套只有顶部那一张卡用。
+  2. **双重内缩**。布局容器 `.app-main` 已经给了 20 的留白（稿里内容 x=108 = Rail 88 + 20），
+     我又在 `.tab-box` 上加了 `padding: 12px 20px`、在 `.collapse-box` 上加了 `margin: 0 20px`，
+     于是左右各比稿多缩 20，Tab 条和卡片跟页面其它元素对不齐 —— 很可能就是用户最早说的「顶部样式有问题」。
+- 顺带把页面底色改成稿里的工作区渐变 `linear-gradient(180deg,#F8FBFF,#EDF3FA)`（原来是平涂 `#F6F9FD`）。
+- **整页稿量出来的骨架**（已写进 DESIGN_SPEC 6.0）：工作区 1832 = 1920 − Rail 88；
+  顶部卡 1788×209 → Tab 条 1788×45 → 主内容 **1454** + 间距 **24** + 右侧栏 **310** → 底部栏 1832×66 贴底。
+- **仍缺的两块（结构性，不是换皮）**：顶部固定信息卡、右侧 310 栏。
+  用户这次说「这一个模块都是我负责的」，可以做，但要绑数据、定字段，等他点头。
+- 复现页这轮补上了 `.app-main`（padding 20 + 浅底），所以对齐问题能直接在截图里看出来。
+
 ## 2026-09-17（四）：正矿 设计稿逐块重读，补全规范并修正表格（`fb4ac2f`，已推送）
 
 - 用户把剩下的板子逐个给了链接（按钮 5:7451、图标 5:7543、AI助手 2:14473、右侧组件 6:7901、
@@ -81,6 +98,51 @@
   和 7 个改动文件的 style 块逐个编译，全部通过（含 handleDetail 里的 `@import '../detail-theme.scss'`）。
   本机仍无 node_modules、磁盘 93%，**没起页面、没截图**；Element 弹层（下拉/日期/对话框）teleport 到 body，
   拿不到这个作用域，本轮不处理。设计稿里的顶部固定信息卡、右侧 310px 栏当前页面没有，按用户要求不加。
+
+## 2026-09-17（六）：相册 产品「形状类型=圆形」两端预览都没实现 —— **只核对，未改动，挂起待固件口径**
+
+用户问：后台产品配置里选了「形状类型 = 圆形」，小程序和 APP 的预览页框是不是圆的。
+**答案：都不是。两端都没消费这个配置。** 本轮只核对源码，三个仓一行没改（用户：这个先放着）。
+
+**后台（web-ui-v2）确实在下发**：`shapeType`，`0=方形 / 1=圆形`，随 `addProduct` / `editProduct` 提交
+（`src/views/sms/productList/template/DetailForm.vue:21` 的 `shapeTypeOptions`；列表页
+`productList/index.vue:177` 展示 `shapeTypeMsg`）。
+
+**小程序（photo-album）**：
+- **`shapeType` 全仓命中 0 处**（`shape` 只有一个不相关的测试字符串）。
+- 预览页只有一个（`subpackages/projection/preview/`，全仓只有它有 `.edit-clip` / `.photo-wrap`），
+  框固定圆角矩形：`.photo-wrap` `border-radius: 40rpx`（`preview.wxss:118`）、
+  取景框 `.edit-clip` 同 40rpx（`preview.wxss:156`），**没有任何圆形分支**。
+- 比例是按后端走的：`getDeviceCropSize` 读 `device.width/height`（`preview.js:411`）。
+  所以 500×500 的圆形产品**会得到 1:1 正方形框**，但四角 40rpx 圆角 —— 是「小圆角方块」，不是圆。
+- ⚠️ 顺带发现一条**过期注释**：`preview.js:9` 写「接口暂未返回该字段」。实际 `normalizeDevice` 是
+  `Object.assign({}, device, {...})`（`utils/api.js:184`），后端字段**全量透传**，
+  `this.data.device.shapeType` 现在就拿得到，只是没人用。要改的话小程序侧数据是 0 改动。
+
+**APP（flutter）** —— 比小程序还差一层：
+- `shapeType` 全仓只出现在**一行注释**里（`lib/src/state.dart:3175`，列 swagger 出参用），
+  `_deviceFromJson` 没解析 → `DeviceItem` 里压根没这个字段，预览页拿不到。
+- 预览框：`_kClipRadius = 20`（`cast_preview_page.dart:286`），展示层与编辑层都是
+  `ClipRRect(borderRadius: circular(20))`（1510、1560 行）。
+- **连宽高比都不对**：`_deviceSize`（同文件 421 行）取的是
+  `FrameProtocol.screenTypes[screenType.code]`，那张表只有 3.7寸 480×720 / 5.89寸 680×960 /
+  7.3寸 0×0（`frame_protocol.dart:210`）；`screenType` 又由 `_screenTypeFromSize`
+  （`state.dart:3236`）归一化，**只认 480×720 和 680×960，其它一律回落 5.89寸**。
+  于是一台 500×500 的圆形产品在 APP 里被当成 680×960，框是 **2:3 竖向矩形**，连正方形都不是，
+  画面还按竖屏比例取景。
+
+**要动的话的改动量**：
+
+| | 小程序 | APP |
+| --- | --- | --- |
+| 拿到 shapeType | 已透传，0 改动 | `_deviceFromJson` + `DeviceItem` 加字段 |
+| 宽高比 | 已按后端 w/h，0 改动 | `_deviceSize` 要认后端原始 `screenWidth/Height`（现被归一化吃掉） |
+| 框形状 | `.edit-clip` / `.photo-wrap` 加圆形态 | 圆形时 `ClipRRect` → `ClipOval` |
+
+⚠️ **挂起的原因（动手前必须先问掉）**：**圆屏的帧数据是不是仍按方形矩阵传、四角填白？**
+设备是圆屏但帧字节大概率还是矩形矩阵。这条不定，预览裁成圆而导出还是方的，
+就又造一处「手机上好看、设备上不对」——和投屏那几轮踩过的坑同类。
+问清楚后再决定「预览裁圆 + 导出四角填白」还是别的口径。
 
 ## 2026-09-17（五）：花盆APP 定制动画改单选 + 日报表按日期解 7 天日包（`e557046`，已推送）
 
