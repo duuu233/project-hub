@@ -106,3 +106,31 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
   **用户明确「只有 /dh 下面的问题就 其它的 不要动」，未做任何处理。**
 - ⚠️ 另一条易踩的：`/home/pg` 在 `/`（100GB，剩 27GB）上，不在 `/pgdata` 上——
   `~/.cache`（9.9G，其中 go-build 8G）、`~/.npm`（4G）再大也不占 `/pgdata`，清了对这块没用。
+
+---
+
+### 2026-09-17：给 Hub 会话配上 figma MCP（local scope，不影响其它目录）
+- **环境**：ssh（SSH 开发机）
+- **操作类型**：执行环境配置（未改 Hub 代码与规则）
+- **起因**：本轮做正矿 Figma 还原时，`figma` MCP 在 Hub 会话里拿不到，只能改走 Figma REST API。
+- **两件事查清楚了**：
+  1. **scope 决定可见范围**：`claude mcp add -s <local|user|project>`。
+     `user` 写进 `~/.claude.json` 顶层，**所有目录可见**（现有 `mcp-clickhouse` 就是这种，所以到处都有）；
+     `local` 写进 `~/.claude.json` 的 `projects.<目录>.mcpServers`，只在该目录可见；
+     `project` 是仓库里的 `.mcp.json`，随 Git 走、首次需批准。
+     MCP 按**会话启动时的 cwd** 解析，与「我正在改哪个仓」无关——所以正矿仓里的 `.mcp.json`
+     在 Hub 会话里永远不会加载。
+  2. **用户那份正矿 `.mcp.json` 本身是坏的**，两处都不对，等于从来没连上过：
+     - 缺 `--stdio`：不带这个参数进程按 HTTP 模式跑，stdio 连接立刻关闭（`CONNECTION_CLOSED`）；
+     - 环境变量名写成 `FIGMA_ACCESS_TOKEN`，实际要 **`FIGMA_API_KEY`**
+       （实测报 "Either FIGMA_API_KEY or FIGMA_OAUTH_TOKEN is required"）。
+- **实施**：`claude mcp add -s local figma -e FIGMA_API_KEY=… -e FRAMELINK_TELEMETRY=off
+  -e DO_NOT_TRACK=1 -e IMAGE_DIR=…/.codex-tmp/figma-images -- npx -y figma-developer-mcp --stdio`。
+  按用户「不上传任何内容到外部服务」的口径关掉该包默认开启的 usage telemetry；
+  `npx -y` 首次下载会超过 30s 健康检查超时，先 `npx -y figma-developer-mcp --help` 预热。
+- **验证**：Hub 目录 `claude mcp list` → figma ✔ Connected；
+  逐个抽查 flowerpot / web-ui-v2 / photo-album / `~` → **0 个 figma 条目**，未受影响；
+  zettlab 仍是它自己那份官方 HTTP 版，未动。
+- ⚠️ **新增 MCP 对正在运行的会话无效**：工具集在会话启动时固定，实测加完后本会话仍搜不到 figma 工具，
+  必须重启 `claude` 才能用。
+- **遗留**：正矿仓那份坏掉的 `.mcp.json`（已 gitignore，含同一个 token）未动，待用户决定是修还是删。
