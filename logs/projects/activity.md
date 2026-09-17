@@ -1245,3 +1245,11 @@
 - 交付：minerals-frontend `12b8974`（已 push，留在 1.8.4-list 待用户核实后再合并）。分 3 批 vue-tsc：17 个改动文件 0 错误，余下报错为基线问题；18 个 scoped 样式块 sass 编译全过；codegraph 已 sync。⚠️ 未起 dev、未逐页看效果。
 - 仍未迁：invoicing-list（展开行，需组件先支持）、system/news（无 el-table）、system/monitor/tool 下若依内置页（另一套查询表单，维持上一轮口径）。
 - 追加 `a7d397e`：列表卡表格 `scrollbar-always-on`（超宽时滚动条常显）、标题行改 `min-height` + 换行，避免被面板 `overflow:hidden` 静默裁掉。溢出的具体页面待用户确认。
+
+## 2026-09-17 | flowerpot | SSH 开发机 | main | 升级进度 98% 起显示「固件安装中」+ 准备中那套动效
+
+- 产品：涂鸦进度到 98% 后要停一大段等设备写固件、重启，停在「固件升级中 98%」像卡死；到 98 就换成最开始「固件准备中」那套不定进度动效、文案「固件安装中」，完成仍走原来的「升级完成」。
+- **逻辑只改一行**：09-15 已有「安装中」档（入口是 100% 或涂鸦码 6），本轮把门槛降到 98——新增常量 `OtaProgress.installingPercent = 98`，`displayStage` 的 `value >= 100` 改成 `>= installingPercent`。动效、不写数字、功能行文案本来就按 `displayStage != upgrading` 走，成功 / 失败收尾未动；码 6 优先级不变。
+- ⚠️ 顺手修掉 `device_other_settings_page_test` 里 09-15 写的红断言：`find.text('固件准备中')` 会同时数到弹层标题和「其他设置」功能行（共用 `otaRunningLabel`，准备中 / 安装中都不带百分比），改成按 key 取标题比 `.data`。
+- 测试：档位表 97 升级中 / 98、99、100 安装中；流程用例插一步 98%，断言标题、空百分比行、进度条 `value == null`。
+- 交付：flowerpot `22084b7`（已 push）。⚠️ 本机无 Flutter 工具链：未 analyze、未跑 flutter test、未编译、未真机；四个 Dart 静态自检全绿。
