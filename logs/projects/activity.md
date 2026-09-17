@@ -1270,3 +1270,14 @@
 - 第二个毛病：我的选择器权重 (0,4,1) 压过了 Element 的 `.is-scrolling-none …::before` (0,3,2)，**表格没有横向溢出时也照画**。
 - 改为覆盖 Element 自己的 `--el-table-fixed-left/right-column` 变量（保留滚动态开关），并把贴边条加宽到 20px 让模糊铺得开。
 - 交付：minerals-frontend `c2e2b7a`（已推送）。验证：本机已无 node_modules，改用「下载 element-plus 官方 el-table.css + 手写同结构 DOM 的静态复现页 + Playwright 截图 + 纯 Python 解 PNG 做像素亮度剖面」——旧版有 2 个中间回亮点（透明缝）且无溢出时仍画，新版单调渐变、无溢出时全白。⚠️ 复现页是手写 DOM，未在真实业务页面里看过。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | 设计规范落库：DESIGN_SPEC.md + 全局设计令牌
+
+- 从 Figma《正矿后台设计重构》「设计规范」画布全量读取（菜单栏除外，导航不归用户负责），产出团队可见的
+  `DESIGN_SPEC.md`（仓库根目录，README 置顶链接）：色彩、字体 10 级、圆角尺寸、按钮与表单控件、
+  列表页、详情页、AI 助手、页面框架、代码用法、待统一、变更记录。
+- 接入 `src/assets/styles/design-tokens.scss`：`--zk-*` 单一来源 + Element Plus 主题全局映射
+  （主色 `#1771DC`、圆角 9、基础字号 13、文字/描边色）；`index.scss` 首位引入，`body` 换思源黑体。
+- `list-card-tokens.scss` 本轮不动（已验收视觉），只加注释指路，与 Figma 的色差记进「待统一」。
+- 交付：minerals-frontend `909341c`（已推送）。⚠️ 验证：无。本机无 node_modules、磁盘 93%，没装依赖、
+  没起 vite、没截图；全局 Element 映射影响全站，需在有依赖的机器上复核。
