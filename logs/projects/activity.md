@@ -1253,3 +1253,13 @@
 - ⚠️ 顺手修掉 `device_other_settings_page_test` 里 09-15 写的红断言：`find.text('固件准备中')` 会同时数到弹层标题和「其他设置」功能行（共用 `otaRunningLabel`，准备中 / 安装中都不带百分比），改成按 key 取标题比 `.data`。
 - 测试：档位表 97 升级中 / 98、99、100 安装中；流程用例插一步 98%，断言标题、空百分比行、进度条 `value == null`。
 - 交付：flowerpot `22084b7`（已 push）。⚠️ 本机无 Flutter 工具链：未 analyze、未跑 flutter test、未编译、未真机；四个 Dart 静态自检全绿。
+
+## 2026-09-17 | minerals-admin | SSH 开发机 | 1.8.4-list | ListTableCard 按 Figma 节点还原视觉 + 思源黑体子集
+
+- 按 Figma 节点 `2-16209`（提单业务列表）逐项对齐：标题 17/500 `#29415c`、**表头改成与正文同色 `#29415c` 的 400 常规字重**（原来是 800 浅灰蓝，差异最明显）、徽标去描边改主色 10% 底 + 500 字重、hover `#fafbfe`、选中 `#edf5ff`、链接与操作列 `#1771dc`、操作项间距 10、复制按钮 18×18 常显 72%、固定列投影 `-3px 0 19px rgba(16,51,91,.25)`、序号列 60% 透明度。
+- 日期副行拆成两态：默认弱化 11/400/60%（创建/更新时间的时分），给了 `subTone` 才是 13/700 彩色（预计到港的「剩余 N 天」）；bill-lading-list 的预计到港列补上 `subTone`。
+- ⚠️ 真 bug：`utils/ruoyi` 的 `parseTime(time, _pattern)` **根本没用 pattern**，列表卡的 `dateFormat` 一直无效、带时间的值把日期主行撑成两行。改为组件内自己做占位符替换（归一化沿用同一口径），**未动共用的 parseTime**。
+- 字体：设计稿指定思源黑体。官方 18MB `.otf` 用 pyftsubset 子集化为 **2.2MB woff2**（GB2312 全部 6763 字 + ASCII + 中文标点 + 扫描本仓源码得到的全部非 ASCII 字符 = 7198 字，保留 `wght 250–900` 可变轴）；只留一级字能到 1.3MB，但公司名/人名/地名大量落在二级字上，会掉字，故选全集。`.otf` 已删并 gitignore，生成方法写进 `public/fonts/README.md`。
+- ⚠️ 18MB blob 已在 `origin/1.8.4-list` 历史里（`092d68b` 已推送），本轮只删文件，历史仍在，clone 还是要付这 18MB；彻底清理需改写历史 + 强推共享分支，待用户决定。
+- ⚠️ `.mcp.json`（含 Figma token）原本未被忽略，`git add -A` 会把令牌带进团队仓——已加进 `.gitignore`。
+- 交付：minerals-frontend `ebaf6f1`。验证：Playwright 起 dev 实测，computed style 与设计稿逐项吻合、字体 200/loaded、可变字重实测有效（非伪粗）、页面零 error；改动文件 vue-tsc 0 错误（全量 1024MB 堆 OOM，按约定不加堆，改用只含改动文件的临时 tsconfig）。⚠️ 只验了组件自带 example.vue，未逐个业务页面看效果。

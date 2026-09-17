@@ -1,5 +1,50 @@
 # 当前迭代
 
+## 2026-09-17（三）：正矿 ListTableCard 按 Figma 节点 100% 还原 + 接入思源黑体子集（分支 `1.8.4-list`，`ebaf6f1`）
+
+- 需求：按 Figma `yIJCGLnUaNKIoQyWIHcnaz` 节点 `2-16209`（「提单业务列表」）对 `src/components/ListTableCard`
+  做 100% UI 还原。用户中途补充：UI 说字体用思源黑体；字体包太大要子集化。
+- ⚠️ **Figma MCP 在本会话拿不到**：`figma` 这个 server 配在 `minerals-frontend/.mcp.json`（stdio，
+  `npx figma-developer-mcp` + token），而本会话的 cwd 是 project-hub，项目级 `.mcp.json` 不会被加载；
+  `~/.claude.json` 里另有一份 http 版只挂在 `zettlab-product-dev` 名下。**改用 Figma REST API 直接取**
+  （token 从仓库 `.mcp.json` 现读，不落进命令行）：`/v1/files/<key>/nodes?ids=` 拿结构，
+  `/v1/images?ids=&scale=` 拿渲染图，等价于 MCP 做的事。设计稿数值全部来自节点 JSON 的实测值。
+- **解出来的设计口径**（与旧版「静态设计稿」口径的差异就是本轮改动）：
+  - 标题 17/500 `#29415c`（旧 800 `#0b1f35`）、「共 N 条」`rgba(41,65,92,.6)`（旧 `#6f849a`）
+  - **表头文字与正文同色 `#29415c` 且 400 常规字重**（旧 800 `#5b7087`）——视觉差异最大的一处
+  - 徽标 **无描边**、底色是主色 10% 透明度、字重 500（旧是 1px 描边 + 浅底 + 700）
+  - 行 hover `#fafbfe`（旧 `#f8fbff`）、选中 `#edf5ff`（旧 `#eef6ff`，稿里没有选中态，取稿内蓝色底 `#edf5ff`）
+  - 链接与操作列 `#1771dc`（旧 `$link #116ed9`）、操作项间距 10（旧 7）、危险项 `#e34855`
+  - 日期副行**分两种**：默认弱化态 11/400/60%（创建/更新时间的时分），给了 `subTone` 才是
+    13/700 彩色（预计到港的「剩余 N 天」）。旧版只有一种（12/700 蓝），更新时间那行时分是错的。
+  - 复制按钮 18×18 / radius 4.7 / 常显 72% 透明度（旧 19×19、hover 才出现）
+  - 固定列左缘投影 `-3px 0 19px rgba(16,51,91,.25)`（旧 `-6px 0 10px -6px …16`）
+  - 序号列 `rgba(41,65,92,.6)` 400；`className: 'lc-col-plain'` 工具类对应稿里 12/400 的次要文本列
+- ⚠️ **顺带修掉一个真 bug**：`utils/ruoyi` 的 `parseTime(time, _pattern)` **形参就没用**，
+  只在时分秒全 0 时给 `Y-m-d`、否则给 `Y-m-d H:i:s`——所以列表卡的 `dateFormat` 一直形同虚设，
+  带时间的值会把主行撑成两行，和稿里「主行只有日期、时分在下面小字」正好相反。
+  组件内自行实现占位符替换（归一化口径沿用 parseTime，保证解析结果一致），**没有动共用的 parseTime**。
+- **字体**：设计稿是 Source Han Sans CN VF。用户放了官方 18MB `.otf` 并已 commit + push（`092d68b`）。
+  用 `pyftsubset` 子集化成 **2.2MB woff2**：GB2312 全部 6763 汉字 + ASCII + 中文标点全角 + 扫描本仓源码
+  得到的全部非 ASCII 字符 = 7198 字，`wght 250–900` 可变轴完整保留。
+  只留一级字（3755）能压到 1.3MB，但这套系统满屏公司名/人名/地名，二级字正好落在这些词里，
+  掉字会同一个词里字形不一致，所以选 6763。`.otf` 已按用户授权删除并 gitignore。
+- ⚠️ **18MB 的 blob 已经在 `origin/1.8.4-list` 的历史里**（`092d68b` 已推送）。本轮只是把文件删掉，
+  历史里的 blob 还在，每次 clone 仍要付这 18MB。要彻底清掉得改写历史 + 强推共享分支，需用户决定。
+- ⚠️ `.mcp.json`（含 Figma token）本来是未忽略的未跟踪文件，一次 `git add -A` 就会进团队仓——已加进 `.gitignore`。
+- 验证：**Playwright 起 vite dev 实测**——`getComputedStyle` 逐项比对设计稿数值全部吻合；
+  字体请求 200、`document.fonts` 状态 loaded；可变字重实测有效（拉丁串宽度 361/384/391/401/414，
+  汉字墨量 305k→1213k 随 250/400/500/700/900 单调递增，不是浏览器伪粗）；`dateFormat` 修好后
+  主行「2026-07-05」副行「剩余 11 天」「14:32」，与稿一致；页面零 error。截图与 Figma 渲染图逐块对过。
+  类型检查：全量 `vue-tsc` 1024MB 堆 OOM（按约定不加堆），改用只含改动文件的临时 tsconfig 跑通——
+  **改动文件 0 错误**，另有 3 条既有基线报错在未改动的 `aiIngredientMatch.ts` / `SimpleTrack.vue`。
+- ⚠️ 未看真实业务页面（bill-lading-list 等）在浏览器里的效果，验证用的是组件自带 `example.vue`；
+  临时预览入口已删除、dev server 已停、仓库工作区干净。
+- ⚠️ 磁盘 `/pgdata` 已到 **99%（剩 378MB）**，后续 build 有风险。
+
+---
+
+
 ## 2026-09-17（二）：花盆APP 升级进度 98% 起显示「固件安装中」（`22084b7`，已推送）
 
 - 需求：OTA 到 98% 之后做个判断——UI 换成最开始「固件准备中」那套动效，文字改「固件安装中」；
