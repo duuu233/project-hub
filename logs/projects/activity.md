@@ -1226,3 +1226,13 @@
 - 定制动画与纪念日图片上传前压到总像素 ≤ 480,000（按总像素算，不套 800×600 的框）、≤ 1MB，输出仍是 JPEG；新增 `UploadImage`（`dart:ui` 解码缩放 + 新依赖 `package:image` 编 JPEG，跑在 `compute` 里），压缩失败原样传原图。
 - 额外产出用户要的简易说明 `docs/更新说明-2026-09-16.md`；顺手修好 `tuya_config_test` 里本轮之前就已经红的 DP 计数断言。
 - 交付：flowerpot `99e85bd`（已 push）。⚠️ 本机无 Flutter 工具链：未 `flutter pub get`（**pubspec.lock 未更新，下一台机器先 pub get**）、未 analyze、未跑 flutter test、未编译、未真机；只跑了项目自带四个 Dart 静态自检（全绿）。
+
+## 2026-09-17 | flowerpot | SSH 开发机 | main | 上传图片改设备口径（Baseline 4:2:0 / 320×240 / 500KB）、DP165 按 2 字节
+
+- 跟固件 OTA 1.0.12 同步：①新增的「图片下载」要求上传图为 **JPG Baseline（不能 Progressive）/ 4:2:0 / ≤320×240（任意宽高比、设备居中显示、小图不放大）/ ≤500KB**；②**DP165 湿度日历史点宽 1B 整数% → 2B×10 大端**（与 164 对称）。
+- 尺寸口径从 09-16 的「总像素 ≤480,000」换成**设备屏幕的框**：按总像素算出来的 240×320 竖图高度超出 240 的屏幕，居中显示会裁掉上下，所以按框等比缩、框内不放大。
+- `encodeJpg` 显式传 `chroma: yuv420`（默认 `yuv444`），Baseline 由 `package:image` 只写 `SOF0` 保证（下载 4.10.1 源码核实）；去掉「原图够小原样返回」的快路径；Skia 给大的尺寸在 isolate 里 `copyResize` 再收一次。
+- ⚠️ **推翻 09-16 的「压不动也要传原图」**：`prepare` 做不出合格的图返回 null，两处调用中止上传并提示。格式是设备解码器硬要求，传上去手机正常、花盆空白更难查。要回旧口径只需把三处 `return null` 换回 `return sourcePath`。
+- DP165 代码无行为改动（09-16 按实时 DP 量程推的就是 2B×10），注释与文档改成「1.0.12 确认」；帧头仍按帧长自动判（导出那行还写着 4 字节头）。⚠️ <1.0.12 固件仍报 1B 点，湿度日曲线会错位，兜不了，需设备升级。
+- `tools/dart_nullable_await_check.py` 名单加 `UploadImage.prepare`；新增 `docs/更新说明-2026-09-17.md` 与历史记录。
+- 交付：flowerpot `e817468`（已 push）。⚠️ 本机无 Flutter 工具链：未 `pub get`（**pubspec.lock 仍未更新**）、未 analyze、未跑 flutter test、未编译、未真机；四个 Dart 静态自检全绿。
