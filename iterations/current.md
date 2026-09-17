@@ -1,5 +1,25 @@
 # 当前迭代
 
+## 2026-09-17（四）：正矿 滚动条隐藏、工作区改白底，以及提交作者写错的更正（`976b4e6` / `7e66085` / `e3f3989`）
+
+- **滚动条**：详情页内容滚动容器是 `.flex-main`，滚动条落在卡片右缘与工作区留白之间，
+  既挡视线又吃掉 6px 内容宽度（全局 `::-webkit-scrollbar` 给的宽度）。按用户要求隐藏：
+  `scrollbar-width: none` + `::-webkit-scrollbar { width: 0 }`，滚轮/触控板/键盘照常。
+  ⚠️ headless Chromium 用的是 overlay 滚动条，测出来前后都是 0px，**这一条没能在复现页里验证**，
+  只能保证选择器权重压得过全局那条规则。
+- **工作区底色改白**：用户说盒子之间那层底色和最外层不搭，"直接把那个颜色去掉，只要各个盒子的阴影就行"。
+  照做：`.app-main` 从稿里的浅蓝渐变改成白底，盒子之间靠各自 1px 描边 + 阴影分隔。
+  令牌 `--zk-gradient-workspace` 保留，`AppMain.vue` 换一行能改回。DESIGN_SPEC 1.2 注明这是用户决定，
+  并把「整个工作区只允许一层背景」写成硬约束。
+  做决定前先扫过一遍 DOM：`.zk-detail-page` 子树里除卡片和表单控件外没有别的元素在画背景，
+  所以确实只剩工作区这一层可去。
+- ⚠️ **我自己的错：提交作者名写错了**。会话开头环境信息里的 "Git user: pg-dh" 是**全局** config
+  （email 还是占位的 `xxxxx.com`），我照着它在每次 `git commit` 上加了 `-c user.name=pg-dh -c user.email=...`，
+  把 minerals 仓本来配好的 `dh <duun235@163.com>` 覆盖掉了。用户发现后已更正：
+  不再覆盖身份，project-hub 也补上了同样的 local config。
+  **本轮之前推到 `1.8.4-list` 的 11 个提交作者仍是 pg-dh**——共享分支不改写历史，留在这里备查。
+  已写进记忆 `git-author-dh-no-override`。
+
 ## 2026-09-17（四）：正矿 底色接缝与阴影过重（`24778bc`，已推送）
 
 - 用户反馈 `.app-main` 的底色、各组件的 box-shadow、`.zk-detail-page` 的背景互相不搭，"有点割裂"；

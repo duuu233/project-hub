@@ -251,3 +251,13 @@
   用户上一轮已说「内容收窄 1454 + 表单 440 先不做」，故只记录。
 - 脚本留在 `.codex-tmp/zk-preview/`：`shadow-alpha.mjs`（量 alpha）、`shadow-fit.mjs` / `btn-fit.mjs`（拟合）、
   `seam.mjs`（量各层背景与接缝）。
+
+## 2026-09-17 | 滚动条与工作区底色（`976b4e6` / `7e66085` / `e3f3989`）
+
+- 用户口径：**盒子之间不要底色，只靠阴影分隔**。稿里工作区是浅蓝渐变，按用户决定改白底，
+  令牌保留、一行可回退，DESIGN_SPEC 1.2 已注明是谁定的、为什么。
+- 决定前先用脚本扫了 `.zk-detail-page` 子树里所有在画背景的元素，确认除卡片/控件外没有别的层，
+  避免又改错地方 —— 这个 `bgscan.mjs` 留在 `.codex-tmp/zk-preview/`。
+- **提交作者名的教训**：会话开头环境信息给的 "Git user" 是全局 config，不等于仓库实际身份。
+  仓库自己配了 `dh <duun235@163.com>`，我却在每次提交上显式覆盖成 pg-dh，11 个提交都推上去了。
+  以后**一律不带 `-c user.name/-c user.email`**，不确定就先 `git config user.name` 看一眼。
