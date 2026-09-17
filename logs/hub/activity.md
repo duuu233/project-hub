@@ -154,7 +154,6 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
 
 - **figma MCP 端到端验证通过**（同日）：直接对 stdio 发 `initialize` / `tools/list` / `tools/call`，
   拿到工具 `get_figma_data`、`download_figma_images`，并成功取回节点 `2-16209` 的结构数据。
-  ⚠️ 另查明该 token 属于 Figma 账号 `john125`（`john125@akademe.edu.pl`，**不是用户本人邮箱**），
-  对正矿设计文件是 `role: viewer` / `linkAccess: view`——即靠「链接可查看」拿到的权限，
-  不是被邀请进文件。所以**光有正确链接不够，文件还必须对该账号开放**；
-  权限收紧或该账号失效时会直接 403。
+  该 token 属于 Figma 账号 `john125`——**用户确认是本人的另一个号**，不是外借凭据，无需另行处置。
+  它对正矿设计文件是 `role: viewer` / `linkAccess: view`，即靠「链接可查看」拿到的权限，
+  不是被邀请进文件。所以**光有正确链接不够，文件还必须对该账号开放**；稿子权限收紧时会 403。
