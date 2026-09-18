@@ -1459,3 +1459,10 @@
 - 交付：photo-album `8440633`（已推送）。⚠️ 该提交作者落成了 pg-dh（仓无 local config），已补配置，历史未改写。
 - 实锤（`04dbc20`）：线上失败报文 `amount 79.99` vs `goodsPrice 7998`，少 1 分，推断成立；
   记录里补了服务端三种修法，并提醒改完要重算 paySig/signature。
+
+## 2026-09-18 | flowerpot-app | SSH 开发机 | main | 周/月不给翻页 + 固件 98% 先亮一拍
+
+- `DateRangeNavigator`：两个方向都翻不动时不画箭头（周/月本就一直传 null，箭头一直灰着），日视图不受影响。
+- OTA 弹层：收到进度 ≥98 的第一拍先按升级中显示 98%，900ms 后才切「固件安装中」；模型 displayStage 未动。
+- widget 用例按新节奏改写，原断言一条没删只是挪到一拍之后。
+- 交付：flowerpot `f7de1b3`（已推送）。⚠️ 本机无 Flutter 工具链，analyze/test 未跑，需真机复看。
