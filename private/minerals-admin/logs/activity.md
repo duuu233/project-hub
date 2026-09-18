@@ -297,3 +297,12 @@
 - **皮肤层的选择器不能裸写组件类名**。Tab 条样式我写成 `.el-segmented`，结果把 SeaInfo 里
   「海运状态」那个分段控件（待启运/运输中/已抵港）也改成了 Tab 样子，药丸滑块变下划线，交互语义没了。
   已收窄到 `.tab-box .el-segmented`。**页面皮肤层给 Element 组件写规则，一律限定容器**。
+
+## 2026-09-18 | 文本域高度（内联样式第三次咬人）
+
+- 用户要 textarea 高度 = 普通输入框 ×2。写在皮肤层统一兜底，模板不改 `rows`。
+- **Element 内联样式清单（本仓已遇到三处，改这类属性先想到它）**：
+  1. `el-segmented` 指示器的 `width/height/transform`（JS 定位）；
+  2. `el-textarea` 的 `min-height`（按 `rows` 算）；
+  3. `el-affix` 固定态的 `top/width`。
+  这些都得靠 `!important` 或换承载元素，纯选择器权重无效。

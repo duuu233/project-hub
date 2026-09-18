@@ -1423,3 +1423,8 @@
 - 「海运状态」（海运基本信息右上角的 el-segmented）被 Tab 条样式误伤：裸 `.el-segmented` 选择器把它也改成了
   下划线样式。收窄为 `.tab-box .el-segmented`，恢复原生药丸交互。
 - 交付：minerals-frontend `8099dc7`（已推送）。
+
+## 2026-09-18 | minerals-admin | SSH 开发机 | 1.8.4-list | 详情页文本域高度翻倍
+
+- `type="textarea"` 统一给 `min-height: calc(var(--zk-size-control) * 2)`（80，输入框的两倍），页面皮肤层兜底。
+- ⚠️ 必须带 `!important`：Element 按 `rows` 算出内联 `min-height`（rows=1 → 36px）压过选择器。实测 280×80，2.00 倍。
