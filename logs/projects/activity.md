@@ -1441,3 +1441,10 @@
 - 稿里折叠开关是 29×29、圆角 8、底 `#F5F8FC` 的方块按钮 + 15px 细线 chevron；当前是裸的 18px el-icon。
   在详情页皮肤层换皮，**未改 Collapse 组件**（79 个文件共用）。
 - 确认 `download_figma_images` 可导矢量节点的 SVG 原件（本轮取了数字步进、折叠 chevron 两个）。
+
+## 2026-09-18 | minerals-admin | SSH 开发机 | 1.8.4-list | 折叠开关提到通用组件层
+
+- 样式从详情页皮肤层移进 `src/components/Collapse` 自身，全站 79 个用到该组件的文件都会变成
+  29×29 圆角 8 底 `#F5F8FC` 的方块按钮（用户明确要求全站生效）。
+- 组件 scoped 样式里选 Element 图标的 svg 要用 `:deep(svg)`。
+- 交付：minerals-frontend `13f183d`（已推送）。
