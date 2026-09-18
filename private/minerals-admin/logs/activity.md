@@ -317,3 +317,14 @@
   那种场景只能像这次一样用 mask 替换。
 - ⚠️ 覆盖 Element 控件 padding 的教训：`.el-input__wrapper` 是 `padding: 1px 11px`，
   **上下那 1px 参与盒高**，清零就矮 2px。
+
+## 2026-09-18 | 折叠开关与 Figma 静态资源
+
+- 折叠开关：29×29 / 圆角 8 / `#F5F8FC` / 15px chevron `#667D94`。换皮写在 `.collapse-title-box .right-icon-box`，
+  **Collapse 组件没动**。`el-icon` 的 `:size` 是内联 font-size，尺寸直接定 `svg` 更稳。
+- **Figma 静态资源的取法**（用户问过）：`download_figma_images`
+  - 矢量节点 → SVG 原件（能看到 stroke 色值/宽度/端点，比肉眼估准）；
+  - 任意节点 → PNG（`pngScale` 控倍率），用于阴影 alpha、取色这类定量比对；
+  - 落盘目录 `.codex-tmp/figma-images/`（gitignore）。
+  - 进仓库走 `src/assets/icons/svg/` + `virtual:svg-icons`；Element 内部渲染的图标插不进去，
+    只能用 `mask` + `currentColor` 替换（数字步进就是这么做的）。

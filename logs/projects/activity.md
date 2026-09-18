@@ -1435,3 +1435,9 @@
   在皮肤层把两种变体统一，模板不改。
 - 箭头用 `download_figma_images` 导出的 SVG 原件做 mask + `currentColor` 上色，hover/disabled 只改 color。
 - ⚠️ 覆盖 `.el-input__wrapper` 的 padding 时把上下 1px 清零会让框矮 2px，和旁边下拉对不齐；已补回。
+
+## 2026-09-18 | minerals-admin | SSH 开发机 | 1.8.4-list | 折叠开关按稿换皮
+
+- 稿里折叠开关是 29×29、圆角 8、底 `#F5F8FC` 的方块按钮 + 15px 细线 chevron；当前是裸的 18px el-icon。
+  在详情页皮肤层换皮，**未改 Collapse 组件**（79 个文件共用）。
+- 确认 `download_figma_images` 可导矢量节点的 SVG 原件（本轮取了数字步进、折叠 chevron 两个）。
