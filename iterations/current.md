@@ -1,5 +1,43 @@
 # 当前迭代
 
+## 2026-09-18（五）：相册双端 圆形逻辑整体回滚（小程序 `bcaed45` / APP `7cd1f98`，均已推送）
+
+用户：旋转那边改了还是不对；**把两端关于圆形的代码都去掉，回滚到没加圆形之前，后面用上了再加再调试。**
+
+- **小程序（`photo-album`）**：反向应用 `a6cd435` 的 `preview.wxml` / `preview.wxss` 补丁
+  （`git apply -R`，不是手改 ⇒ 两个文件与 09-17 之前**逐字节一致**），删掉只服务它的
+  `tests/projection-round-screen.test.js`。全仓 `is-round` / `shapeType` 命中 0 处。
+  **`node tests/*.test.js` 全量 59 个全过**（真跑；顺带一提 09-16/09-17 记过的
+  `token-page-layout` 这次是绿的）。
+- **APP（`flutter`）**：反向应用 `be1268f` 在 `cast_preview_page.dart` 的补丁
+  （删 `_ScreenClip` / `_kPickupShadow`，展示层与编辑层取景框回到原来的 `ClipRRect`，
+  编辑层 `DecoratedBox` 回到单份写法），手工删掉 `DeviceItem.shapeType` / `roundScreen` /
+  `_deviceFromJson` 的解析，以及当天顺带加的「详情合并 shapeType」三行；删
+  `test/device_round_screen_test.dart`。
+  **核对方式是 `git diff be1268f^ -- <两个文件>`**：结果里只剩当天的旋转排查改动，
+  圆形一行不剩；全仓 `roundScreen` / `_ScreenClip` / `_kPickupShadow` 命中 0 处，
+  `shapeType` 只剩 `state.dart:3189` 那句列 swagger 出参的注释（09-17 之前就在，属原状）。
+
+### 保留的（与圆形无关）
+
+当天为旋转问题做的两件事**没撤**：① 排查日志（进预览页打设备字段 + 两个导出角，
+每张出图补 `导出角=…°`；原本一并打的「形状」随圆形去掉了）；② `refreshDeviceDetail`
+不再丢弃详情接口带回来的 `verticalRotation`。
+
+### ⚠️ 立场记清楚：撤它 ≠ 它是元凶
+
+当天已经逐 hunk 核过并写进两仓记录：`roundScreen` 的 3 个读取点全在预览**控件树**里，
+出图链路（`_bake` / `coverCropToSize` / 抖动接口 / BLE 图传）零引用，`shapeType != 1` 时
+控件树与改动前逐字节一致。**撤的理由是「用不上的代码不留在主路径上」**（用户明确说圆屏现在用不上），
+不是它改坏了投屏。旋转问题的落点仍在**竖向导出角**（后端 `verticalRotation`，缺省 0 = 不转），
+需要那行新日志或后台配置来定位——这一点没有因为回滚而解决。
+
+### 加回来时
+
+`a6cd435` / `be1268f` 都在历史里，`git show` 直接拿补丁；两仓 09-17 的文档都留档并在开头
+标注了「已于 2026-09-18 回滚」，里面记着完整口径和那条没解决的遗留（框的比例来自设备分辨率，
+圆屏产品得先有正方形屏型，否则裁出来是椭圆；⚠️ 不要为了让它圆去改 `_deviceSize`）。
+
 ## 2026-09-18（五）：相册 APP 投屏「预览是正的、设备上反了」——圆形改动已排除（`9eb9455`，已推送）
 
 用户报：iOS 端 370 的旋转没有正确应用，投屏到设备又反过来了；怀疑是昨天（09-17）的圆形改动。
