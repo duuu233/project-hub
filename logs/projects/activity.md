@@ -1457,3 +1457,5 @@
 - 客户端不产出 goodsPrice（只发 goodsId+payType），故未改价格，只加「订单 amount×100 vs 签进的 goodsPrice」
   自检告警 + 错误码文案。用例 `virtual-pay-amount-guard.test.js`，全量 60 个通过。⚠️ 真机未复验。
 - 交付：photo-album `8440633`（已推送）。⚠️ 该提交作者落成了 pg-dh（仓无 local config），已补配置，历史未改写。
+- 实锤（`04dbc20`）：线上失败报文 `amount 79.99` vs `goodsPrice 7998`，少 1 分，推断成立；
+  记录里补了服务端三种修法，并提醒改完要重算 paySig/signature。

@@ -25,6 +25,19 @@
   `dh` 下 7 个仓现在全部一致。**`8440633` 这个提交已推出去，作者仍是 pg-dh**，
   改它要改写已推送的历史，没自作主张动。
 
+### 实锤（`04dbc20`）
+
+用户贴回线上失败订单的下单报文：`amount: 79.99`，而 `signData.goodsPrice: 7998` —— **正好少 1 分**，
+推断成立。其余字段全部正常（`productId: "xb2"` 有值、`offerId: 1450611724`、`env: 0`、
+`currencyType: CNY`、`buyQuantity: 1`、`outTradeNo` 与 `orderNo` 一致），所以问题只有价格这一处。
+
+变更记录里补了报文和**给后端的三种修法**（按稳妥程度排序）：
+① 价格全程用整数分（商品表存 `price_cents`，只在展示时除 100）——一劳永逸；
+② `BigDecimal(String.valueOf(amount)).movePointRight(2).setScale(0, HALF_UP)` / PHP `(int) round($a*100)`；
+③ 至少换成 `Math.round`。
+并提醒：**goodsPrice 改了，`paySig` / `signature` 必须对新的 signData 重算**，
+否则从 -15013 变成 -15005/-15006，白折腾一轮。
+
 ## 2026-09-18（五）：正矿 折叠开关提到通用组件层（`13f183d`，已推送）
 
 - 用户决定：折叠开关全站生效。
