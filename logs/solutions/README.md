@@ -10,6 +10,7 @@
 
 | 方案名称 | 来源项目 | 解决痛点 | 适用场景 |
 | :--- | :--- | :--- | :--- |
+| [没有 poppler 也能抽 PDF 文字](pdf-text-extract-without-poppler.md) | album-app | SSH 机上没有 poppler/pdfminer，Read 工具也读不了 PDF | 要读规格书、通讯协议这类 PDF 时，借 `/pgdata/pg/work` 下现成的 `pdfjs-dist`（只读借用），⚠️ 必须按 y 归行再按 x 排序，否则表格出来是乱的 |
 | [private-symlink-scheme.md](private-symlink-scheme.md) | 正矿 (minerals-admin) | 团队 Git 仓库不能提交个人私有文件/目录，但本地 AI 和工具又需要使用 | 任何需要私有 Notes、本地指令规则、私有 CodeGraph 的协作项目 |
 | [uild-optimization.md](build-optimization.md) | 正矿 (minerals-admin) | Vite/Webpack 项目打包产物体积膨胀、首屏与构建缓慢 | Vue3 / Vite 大型前端项目的拆包策略与体积监控 |
 | iot-dp-sync.md (规划中) | 花盆 (lowerpot) | 后台业务字段通过 APP 稳定透传至硬件 DP 协议闭环 | 物联网设备管理与 APP 蓝牙/Wi-Fi 指令下发 |
