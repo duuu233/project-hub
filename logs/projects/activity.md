@@ -1466,3 +1466,12 @@
 - OTA 弹层：收到进度 ≥98 的第一拍先按升级中显示 98%，900ms 后才切「固件安装中」；模型 displayStage 未动。
 - widget 用例按新节奏改写，原断言一条没删只是挪到一拍之后。
 - 交付：flowerpot `f7de1b3`（已推送）。⚠️ 本机无 Flutter 工具链，analyze/test 未跑，需真机复看。
+
+## 2026-09-18 | album-app | SSH 开发机 | main | iOS 屏蔽星币管理 + 核查「新对话」语种问题
+
+- iOS 屏蔽星币管理：开关一处定义（`StarPayType.moduleHiddenOnThisApp`，用 defaultTargetPlatform），
+  三个生效点（我的页行 + 间距、AI 胶囊不可点且去 `>`、路由兜底空页），旧口径注释就地标注已被覆盖。
+- 「新对话」不跟语种变：**代码在 main 上已修**（`858ad7d` 2026-09-11 + `8666204` 09-14），
+  HEAD 上 8 处渲染路径逐条核过、全有护栏。给了「看启动页 slogan 判断包新旧」的办法
+  （新包 ≥9-16 显示「呈现美好」）。⚠️ 版本号常年 1.0.0+1，出包不递增，建议改流程。
+- 交付：flutter `dde5eb6`（已推送）。⚠️ 本机无 Flutter 工具链，analyze/test 未跑。
