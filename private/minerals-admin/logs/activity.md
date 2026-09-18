@@ -306,3 +306,14 @@
   2. `el-textarea` 的 `min-height`（按 `rows` 算）；
   3. `el-affix` 固定态的 `top/width`。
   这些都得靠 `!important` 或换承载元素，纯选择器权重无效。
+
+## 2026-09-18 | 图标可以直接取设计稿原件
+
+- `download_figma_images` 不只是导 PNG 截图，**矢量节点能直接导 SVG**。这次把「数字步进」图标
+  （node 4:4555）导出来，做成 data URI 放进令牌，用 `mask` + `background-color: currentColor` 上色。
+  好处：hover/disabled 只改 `color`，不用每个状态一张图；上下箭头共用一张图靠 `mask-position` 取半。
+- 图标默认落在 `.codex-tmp/figma-images/`（已 gitignore）。要进仓库的话，项目用的是 `virtual:svg-icons`，
+  目录 `src/assets/icons/svg/`，配 `SvgIcon` 组件 —— 但 Element 内部渲染的图标插不进去，
+  那种场景只能像这次一样用 mask 替换。
+- ⚠️ 覆盖 Element 控件 padding 的教训：`.el-input__wrapper` 是 `padding: 1px 11px`，
+  **上下那 1px 参与盒高**，清零就矮 2px。

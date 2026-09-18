@@ -1428,3 +1428,10 @@
 
 - `type="textarea"` 统一给 `min-height: calc(var(--zk-size-control) * 2)`（80，输入框的两倍），页面皮肤层兜底。
 - ⚠️ 必须带 `!important`：Element 按 `rows` 算出内联 `min-height`（rows=1 → 36px）压过选择器。实测 280×80，2.00 倍。
+
+## 2026-09-18 | minerals-admin | SSH 开发机 | 1.8.4-list | 数字输入框步进按钮按稿重做
+
+- 稿里是右侧 16×24 的细线步进图标、数值左对齐；Element 默认是两个 32 宽带底色的方块（还可能分列左右）。
+  在皮肤层把两种变体统一，模板不改。
+- 箭头用 `download_figma_images` 导出的 SVG 原件做 mask + `currentColor` 上色，hover/disabled 只改 color。
+- ⚠️ 覆盖 `.el-input__wrapper` 的 padding 时把上下 1px 清零会让框矮 2px，和旁边下拉对不齐；已补回。
