@@ -1485,3 +1485,15 @@
   HEAD 上 8 处渲染路径逐条核过、全有护栏。给了「看启动页 slogan 判断包新旧」的办法
   （新包 ≥9-16 显示「呈现美好」）。⚠️ 版本号常年 1.0.0+1，出包不递增，建议改流程。
 - 交付：flutter `dde5eb6`（已推送）。⚠️ 本机无 Flutter 工具链，analyze/test 未跑。
+
+## 2026-09-18 | flowerpot-admin | SSH 开发机 | main | 恢复系统配置菜单 + 去掉平台设备id
+
+- 把 09-08 下线的四个模块里的**系统配置**单独恢复：api/config.js、views/ums/config/index.vue、
+  `config` 路由、菜单脚本 checklist 的「基础信息配置」节点，按删除前版本原样还原；另外三个仍下线。
+- 「平台设备id」按**配置名称**识别（configContent/configKey 归一化后比对三种写法），
+  **展示与 setConfigDataEdit 负载同时排除**——只藏不排除会把隐藏字段原样写回。
+  不按 configType 过滤：Swagger 不公开枚举含义，按类型会误杀后端以后新增的同类型配置项。
+- 脚本节点没加 aliases：`findMatchingChild` 只对 appCode 为 `#` 的分组节点按名称查重。
+  ⚠️ 后台那条菜单若现叫「系统配置」，`--apply --update` 会把它改名成「基础信息配置」。
+- 交付：flowerpot-web `df9f74c`（已推送）。⚠️ 无 node_modules + 磁盘仅剩 ~1.3G，未跑 vite build，
+  未真机验证；被排除项不回传是否安全取决于后端更新语义，首次保存后要回查配置还在不在。
