@@ -1658,3 +1658,14 @@
 - 默认填 `6c2649322ed1365a00cadl`（后台监控列表里那条推送挂的设备），常量 `_defaultDeviceId`，
   置空即回到「已绑定的第一台」；输入框下面列出当前账号已绑定的设备 ID，便于先确认设备在不在账号里。
 - 交付：flowerpot `ac23857`（已推送）。
+
+## 2026-09-20（再追加 3）| flowerpot-app | SSH 开发机 | main | 更正：日志接口有，在 getRequestInstance 上
+
+- 用户贴的实例方法清单是**消息中心**的，里面没有日志；我先前据此说「Home SDK 没有设备日志接口」**是错的**。
+  重新解包：`ThingHomeSdk.getRequestInstance().queryDeviceOperateLogs(String,String,int,int,String,String,String,cb)`
+  （回调泛型 `String`，原样 JSON，**只覆盖 DP 上报**）；`IThingDevice#getDataPointStat` 是 DP 统计不是日志；
+  iOS 是 `queryDeviceOperateLogWithDpIds:offset:limit:startTime:endTime:isASC:`。
+- 全类型事件日志（1 上线 / 2 下线 / 3 激活 / 4 重置 / 5 指令下发 / 6 固件升级 / 7 DP 上报 /
+  8 信号量 / 9 重启 / 10 定时）只有**云端 API** `/v1.0/devices/{id}/logs` 有，要 AK/SK 签名 → 后端代理。
+- 新增桥接 `deviceOperateLogs` + Dart 三层 + 调试板「拉设备日志」按钮；四处文档的错话已更正。
+- 交付：flowerpot `7ac41fb`（已推送）。⚠️ 七参顺序未经真机校准。

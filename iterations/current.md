@@ -85,6 +85,32 @@
 只是调试板的默认填充，不参与业务逻辑，输入框照旧能改，**把常量置空**就回到原来的行为。
 同时在输入框下面列出**当前账号已绑定的设备 ID** —— 查不到消息时，先确认这台设备在不在这个账号里。
 
+### 二之五：⚠️ 更正「SDK 没有日志接口」+ 补上设备操作日志（`7ac41fb`）
+
+用户贴回实例方法清单说「好像没有日志」。那份清单是**消息中心**（`IThingMessage`）的，
+里面确实只有消息列表 / 删除 / 未读与最新时间 / 免打扰 / 隐私授权五类 ——
+但**我先前据此写的「Home SDK 里没有设备日志接口」是错的**，重新解包 `thingsmart-device-api` 7.5.1：
+
+| 要什么 | 入口 | 签名 |
+| --- | --- | --- |
+| **设备操作日志（DP 上报历史）** | `ThingHomeSdk.getRequestInstance()` → `IThingSmartRequest` | `queryDeviceOperateLogs(String, String, int, int, String, String, String, IThingDataCallback)`，实现里回调泛型 `String`（原样 JSON） |
+| DP 统计（聚合，不是日志） | `IThingDevice` | `getDataPointStat(DataPointTypeEnum, long, int, String, IGetDataPointStatCallback)` |
+| iOS 对应 | `ThingSmartDevice` | `queryDeviceOperateLogWithDpIds:offset:limit:startTime:endTime:isASC:` |
+
+**而且它只覆盖「DP 上报」这一类。** 用户最初问的「日志类型区别」其实在**云端 API**：
+`GET /v1.0/devices/{device_id}/logs`，`type` 逗号分隔多选 —— 1 上线 / 2 下线 / 3 激活 / 4 重置 /
+5 指令下发 / 6 固件升级 / 7 数据点上报 / 8 设备信号量 / 9 设备重启 / 10 定时信息
+（涂鸦文档 <https://developer.tuya.com/en/docs/cloud/0a30fc557f?id=Ka7kjybdo0jse>；要 AK/SK 签名，
+App 拿不到，得后端代理）。
+
+本轮补：桥接 `deviceOperateLogs`（拿 `getRequestInstance()` → 找 7 参重载 → **原样回 JSON**，
+诊断打实例方法清单和本次参数；**七参顺序官方没给，靠真机报文校准**）、Dart 三层 + Mock、
+调试板第二个按钮「拉设备日志（DP 上报历史）」。四处文档里那句错话已就地更正（能力核对新增 5.3.2、
+历史记录、历史索引、`AI_CONTEXT`）。
+
+**给产品的结论**：「日志」档 App 侧只能拿 DP 上报历史，要上线/下线/重置/升级这些得后端代理云端 `/logs`；
+「提醒 / 告警」走消息中心，但要先解决按 `msgSrcId` 查不到消息那一步。
+
 ### 三、验证与限制
 
 - 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；
