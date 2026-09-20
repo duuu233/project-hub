@@ -1,5 +1,67 @@
 # 当前迭代
 
+## 2026-09-20（日）正矿：底栏适配菜单收窄 + 详情页全量按提单标准铺开 + el-switch 误触发修复
+
+环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`（同步到 `99b3dab` 后开工）
+
+### 一、底部按钮没跟上菜单收窄——同一条规则被抄了五份
+
+菜单已经是 88 的 Rail，底栏宽度却还按旧菜单算，而且**五个地方各写了一份**：
+公共组件 `BottomFixedBtnsBox`（276 / 100）、详情页皮肤 `zk/detail-page.scss`（240 / 64）、
+质押页（284）、码头与堆场补录页（各 284）、融资页（`left:260` + `100vw-280`）。
+
+收法：框架用 CSS 变量下发，组件读变量，**全仓不再出现 `100vw` 减菜单宽度**。
+
+- `variables.module.scss` 新增 `$ai-panel-width: 420px`（原来 layout 和 GlobalAiChat 各写一遍）；
+- `sidebar.scss` 下发 `--zk-layout-sidebar` / `--zk-layout-ai-panel`，并处理菜单隐藏、窄屏、AI 抽屉展开三种情况；
+- `BottomFixedBtnsBox` 改成 `left: var(--zk-layout-sidebar); right: var(--zk-layout-ai-panel)`，
+  顺带解决了 AI 抽屉展开时底栏钻到抽屉底下、以及 `100vw` 含滚动条宽度两个老问题；
+- 「给底栏让位」的下边距也从四份（60 / 80 / 84 / 86）收成皮肤层一条 `.form-have-bottom-btn`
+  = `--zk-size-footer-bar + 20`；**写 60 的两页此前真的被压住 6px**（栏高已按规范抬到 66）。
+
+### 二、详情页按提单标准铺开：55 个页面
+
+就是 `DESIGN_SPEC` 10.2 的五步，没有新发明：根节点加 `zk-detail-page`（54 个 `handleDetail.vue`
++ 码头/堆场补录两页），删页面自画的卡片皮肤与背景层，88 处字面色值换令牌。
+
+- 皮肤层新增的只有一类：**`el-descriptions`**（18 个详情页的「系统信息 / 融资信息」都用它，
+  设计稿没单独画）。按 4.2 只读字段 + 6.4 表格容器取值，并把 Element 默认加粗的标签改回不加粗。
+- **只换皮肤**：没给每页补 6.1 顶部信息卡和 6.8 右侧栏 —— 那要按页定字段，属于新增内容，留在 10.3。
+- 规范同步：6.6 补底栏位置口径、10.2 补第 5 步、11 补两条待统一、变更记录加三行。
+
+### 三、顺手修掉的基线问题（**不是本轮引入**）
+
+`ledger/ledger-list`、`information/customs-data`、`car/car-list` 三个列表页在之前的列表页迁移里
+被 `scripts/migrate-list-page.mjs` **截断**：统计条/工具条的开标签被搬进 `#toolbar` 槽、尾巴留在原地，
+`vite build` 直接报 "Element is missing end tag"，**这条分支本来就构建不过**。按 git 历史补回。
+
+### 四、追加需求：进页面就弹框、还调了个「删除接口」
+
+咨询列表与帮助中心管理一进页面就弹「确认操作该项吗？」。真凶是 **Element Plus 的 `el-switch`
+在组件创建时的自纠**：绑定值只要不严格等于 `activeValue` / `inactiveValue`，
+它会同步 emit 一次 `change`（触发页面的确认框和接口）**并把 v-model 改写成 inactiveValue**。
+
+- 咨询列表：`status/topStatus/carouselStatus` 是可空 Integer，没设过的行是 `null`；
+- 帮助中心：原来的 `String(item.status ?? '0')` 只兜住 null/undefined。
+- 那个「删除接口」不是删数据：`/help/center/updateStatus` **后端就定义成 DELETE 方法**
+  （dev swagger 核对过），前端封装没写错。
+- 修法：入列表前归一 + 换数据那一帧的 `change` 一律丢弃（双保险）。
+- 全仓审了 28 处开关，另外修了应付采购 `settleFlag`（会弹警告并把值取反）、进口采购
+  `contractCompleted`、提单 `electStatus`、出库计划单/出库单的只读「客户派车」（一直显示成关）。
+
+### 验证
+
+- `node scripts/build.mjs --memory 1024 --concurrency 2` 通过（33.3s → 29.4s，1038 files / 34MB）；
+- 用 `@vue/compiler-sfc` 扫全仓 477 个 SFC，解析失败 0；
+- ⚠️ **`vue-tsc --noEmit` 在 1GB 堆下 OOM**，按用户约定不加堆；nas 上没有 node，本轮没跑全量类型检查，
+  只用 grep 核对删掉的符号（`useAppStore` / `sidebar` computed）没有残留引用；
+- ⚠️ 本机这个仓原本没有 `node_modules`（/pgdata 只剩 1.1G），依赖装在会话暂存盘并软链进项目，
+  会话结束前已删除软链；
+- ⚠️ 没有真机/浏览器验收：55 个详情页的视觉回归需要人工过一遍，尤其重样式的进口采购、代理订单、资讯编辑三页。
+
+---
+
+
 ## 2026-09-19（六）补：相册 Wi-Fi 版分析追加「上传页面能不能合并 / 单张删除」（`a0c5a7f`，已推送）
 
 用户在上一篇报告上追问三件事：**上传页面能不能合并**、切设备时**显示不同类型设备的图**、

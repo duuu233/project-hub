@@ -336,3 +336,70 @@
   而卡片外观、表单控件尺寸那些是「页面皮肤」层，仍然靠 `.zk-detail-page` 开关类。
 - 复现页的工具链修了个 bug：`:deep(x)` 不能简单换成 `:is(x)` 再补 `[data-v]`——
   vue 是把属性挂在 `:deep` 之前那一截、括号内不加。改对后复现页才反映真实的组件层样式。
+
+## 2026-09-20 | 底栏对不齐的真正原因：同一条规则被抄了五份
+
+- 用户报「底部按钮因为菜单宽度缩小没适配」。菜单现在是 88 的 Rail（`$base-sidebar-width`），
+  而底栏的宽度写的是**旧菜单**：公共组件 `calc(100vw - 276px)` / 收起态 100，详情页皮肤又抄了一份
+  240 / 64，质押页 284，码头与堆场补录页各 284，融资页 `left:260 + calc(100vw-280px)`。
+  **五份字面量，改了菜单没人跟着改** —— 和「限制控件前先找到真的那个」是同一类毛病。
+- 收法：框架用 CSS 变量下发（`sidebar.scss` 里 `--zk-layout-sidebar` / `--zk-layout-ai-panel`），
+  组件只写 `left: var(...); right: var(...)`，**不再出现 100vw 减法**。
+  用 left/right 两端锚定还顺手躲掉了 `100vw` 含滚动条宽度的老问题。
+- AI 抽屉展开时主内容 `margin-right: 420`，底栏以前会钻到抽屉底下；现在右缘读同一个变量。
+  420 这个值原来在 `layout/index.vue` 和 `GlobalAiChat` 各写一遍，也并成了 `$ai-panel-width`。
+- 「给底栏让位」的下边距同样是四份并存（60 / 80 / 84 / 86），其中 **60 的两页真的被压住 6px**
+  （栏高已按规范抬到 66）。统一成皮肤层的 `.form-have-bottom-btn`，值 = `--zk-size-footer-bar + 20`。
+
+## 2026-09-20 | 详情页铺开：55 个页面接同一套皮肤
+
+- 做法就是规范 10.2 那五步，**没有新写样式**：根节点加 `zk-detail-page`（54 个 handleDetail
+  + 码头/堆场补录两页），删页面自画的卡片皮肤，88 处字面色值换令牌。
+- 只换皮肤，**没有给每页补 6.1 顶部信息卡和 6.8 右侧栏** —— 那两块要按页定字段，属于新增内容。
+- 新补进皮肤层的只有一类：`el-descriptions`（18 个详情页的「系统信息 / 融资信息」都用它，
+  设计稿里没单独画）。取 4.2 只读字段的字号字色 + 6.4 表格容器的边框圆角，
+  顺手把 Element 默认的加粗标签改回不加粗。
+- 收掉的重复：国内采购与国内销售的 `styles.scss` 是**两份逐字相同的文件**，本轮同样改了两遍；
+  想彻底治要合成一份，本轮没动（跨模块搬文件，影响面另算）。
+- ⚠️ **基线本身是坏的，和本轮无关**：`ledger/ledger-list`、`information/customs-data`、
+  `car/car-list` 三个列表页在之前的列表页迁移里被 `migrate-list-page.mjs` **截断**了——
+  统计条/工具条的开标签被搬进 `#toolbar` 槽、尾巴留在原地，`vite build` 直接报
+  "Element is missing end tag"。按 git 历史补回后全仓 477 个 SFC 才解析通过。
+  **教训**：那个迁移脚本切标签不可靠，用它迁完必须跑一次构建，别只看页面长得对不对。
+- 本机门禁：`vite build` 通过（1024MB 堆）；**`vue-tsc --noEmit` 在 1GB 堆下 OOM**，
+  按用户约定不加堆；nas 上没有 node，所以全量类型检查这轮没跑，只用 grep 核对了删掉的符号没有残留引用。
+
+## 2026-09-20 | 「进页面就弹框 + 调了个删除接口」的真凶是 el-switch
+
+- 现象：咨询列表、帮助中心管理**一进页面**就弹「确认操作该项吗？」，网络面板里还有个 delete 请求。
+- 真凶在 Element Plus 的 switch 源码里（`switch.vue` setup 段，**组件创建时同步执行**）：
+
+  ```js
+  if (![props.activeValue, props.inactiveValue].includes(actualValue.value)) {
+    emit(UPDATE_MODEL_EVENT, props.inactiveValue)
+    emit(CHANGE_EVENT, props.inactiveValue)   // ← 页面的 @change 就是被这一下触发的
+  }
+  ```
+
+  绑定值**只要不严格等于** activeValue / inactiveValue 其中之一，开关就会「自纠」：
+  既 emit change（弹框、发接口），又把 v-model 写成 inactiveValue（**悄悄改数据**）。
+  用户说的「特定情况下」= 某些行的字段是 null / 类型不一致。
+- 两页的具体成因：
+  - 咨询列表：`status/topStatus/carouselStatus` 后端是**可空 Integer**（swagger 已核对），
+    从没设过置顶/轮播的行就是 `null`，而开关写的是 `:activeValue="1"`。
+  - 帮助中心：`String(item.status ?? '0')` 只兜住 null/undefined，后端给 `''` 或别的值照样漏。
+- 那个「删除接口」**不是删数据**：`/help/center/updateStatus` 后端就定义成 **DELETE 方法**
+  （dev swagger `/system-service/v3/api-docs` 里确认），前端封装没写错，看着像删除而已。
+  咨询列表那边对应的是 POST `/informationContent/updateStatus`。
+- 修法两层：① 入列表前把开关字段归一成 activeValue/inactiveValue 之一；
+  ② 换数据那一帧置 `hydrating` 标记，`nextTick` 后清掉，期间的 change 一律丢弃
+  （后端将来多返回一个取值也不会复发）。
+- **同类隐患全仓审了一遍**（11 处带 @change + 17 处不带）：
+  - 应付采购 `form.settleFlag`：详情整体覆盖 form 后变 undefined → 进页面弹「请先选择关联提单号！」
+    并把值取反；顺手把 `form.value.oceanShipIds.length` 改成可选链（那行本来就会 TypeError）。
+  - 进口采购 `contractCompleted`、提单基础信息 `electStatus`：回填时归一。
+  - 出库计划单/出库单的「客户派车」是 **disabled 只读开关**，后端 1/0 对上默认的 true/false ——
+    一直显示成「关」，改成 `:model-value` 单向展示（这个不弹框，属于显示错）。
+  - 用户管理、定时任务：`active-value="0"` 是字符串，后端 SysUser.status 也是字符串，对得上，没动。
+- **以后写开关记住**：`active-value` / `inactive-value` 的**类型**必须和后端字段严格一致，
+  可空字段一律先归一，否则「进页面自己发请求」这种鬼故事还会再来。
