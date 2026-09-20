@@ -42,12 +42,28 @@
 - 文档：`docs/TUYA_CAPABILITY_AUDIT.md` 新增第五节（完整签名 + 字段表 + iOS 方法名 + 两条坑）；
   `AI_CONTEXT.md` 加一行长期口径；`docs/history/2026-09/2026-09-20-消息中心按设备ID取.md` + 索引。
 
+### 二之二（同日追加）：类型取告警那一档 + 让「没有返回」能自证（`39648f2`）
+
+用户补充：「**MessageType 要设置为告警**；看日志好像没有返回；安卓应该能读出**全部告警类消息**，
+就是看结果里有没有返回消息等级。」
+
+- **把枚举值从字节码里读出来了**（`MessageType.<clinit>` + `MessageBean` 的 ConstantValue）：
+  `MSG_REPORT = 1`（**就是「告警」那一档**，桥接默认值本来就是它）、`MSG_FAMILY = 2`、`MSG_NOTIFY = 3`；
+  单条消息自己的 `MessageBean.msgType`：系统 0 / 新设备 1 / 新朋友 2 / **产品预警（告警）4**。
+- **`msgType: "ALL"`**：三档依次各取一次，结果里 `perType` 写明每一档返回几条（失败记 `-1`）；
+  一次点击就能看出是「告警档空」还是「哪一档都空」。
+- **三档都空时自动加探两个无参只读接口**：`getMessageMaxTime()` / `requestMessageNew()`，
+  用来区分「这台设备没有消息」与「整个消息中心就是空的（账号/家庭不对、推送没真发出去）」。
+- 诊断里记下**实际命中的重载**与本次查询条件；调试板多一颗「三档都试」chip，摘要与复制文本带 `perType`。
+- **仍然不退回聚合的 `getMessageList`。**
+
 ### 三、验证与限制
 
 - 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；
   跑了仓库自带四个 Dart 静态自检（328 文件全绿）、`tools/kt_dangling_refs.py`（`MainActivity.kt` 绿）、括号配平；
   SDK 签名是解包核对的（比文档可靠）。
-- **待真机确认**：后台配的「推送等级（轻微）」落在 `alarmType` / `msgCode` / `extendParams` 哪个字段 ——
+- **待真机确认**：①三档都空时到底是哪一种原因；②后台配的「推送等级（轻微）」落在
+  `alarmType` / `msgCode` / `extendParams` 哪个字段 ——
   这是把「日志 / 提醒 / 告警」三档做出来的最后一块拼图；三档现在仍是静态稿数据。
 - **iOS 未接**：方法名已记进代码注释与两份文档，留给 Mac 侧（本机编译不了 iOS）。
 

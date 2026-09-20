@@ -1633,3 +1633,11 @@
   调试板加设备 ID 输入框与类型三选一。
 - 交付：flowerpot `70188e4`（已推送）。⚠️ 无工具链，analyze/test/编译/真机未跑（四个 Dart 自检 +
   kt 自检绿）；「推送等级」落在哪个字段待真机确认；iOS 桥接未接。
+
+## 2026-09-20（追加）| flowerpot-app | SSH 开发机 | main | 告警档默认 + 空结果自证
+
+- 从字节码读出常量值：`MessageType.MSG_REPORT=1`（**告警**，默认取它）/ `MSG_FAMILY=2` / `MSG_NOTIFY=3`；
+  `MessageBean.MSG_TYPE_PRD_WARN=4`（产品预警＝告警类）。
+- 新增 `msgType:"ALL"`（三档依次各取一次，`perType` 写明每档几条）与**空结果时自动探**
+  `getMessageMaxTime()` / `requestMessageNew()`，用来区分「这台设备没有」与「整个消息中心就是空的」。
+- 交付：flowerpot `39648f2`（已推送）。⚠️ 仍未真机验证；「推送等级」落在哪个字段待确认。
