@@ -550,3 +550,53 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - **没在浏览器里看过**：藏掉滚动条后长列表的滚动手感、以及 14 个老页面改成 `min-height: 100%` 后的观感待复核。
 - 顺手把 Hub 的 SFC 检查脚本教会了两件事：模板里的 TS 表达式（`as string[]`）要开 `expressionPlugins`、
   空 `<script setup>` 不算错误 —— 之前这两种都会报假错。
+
+## 2026-09-20 | 顶部页签条按稿落地（node 6:10654）：选中样式一直没生效的原因是内联 style
+
+用户指「`#tags-view-container` 就是顶部导航 tab 栏，选中样式不对」，给了 Figma 链接（node 6:10654）。
+用 figma MCP 拉下来的就是规范 8 的「子系统切换行」，一字不差：
+
+- 行：高 **46**、padding `0 22`、间距 8、下边 1px `#DCE7F3`（稿里这行**没有阴影**，`fills` 也是空的）；
+- 页签（chip）：高 30、padding `0 12`、圆角 6、白底 + 1px `#DCE7F3`、字 12/18 Regular `#6B7D92`；
+- **选中**：底 `#EDF5FF` + `linear-gradient(90deg, rgba(11,102,195,.11), rgba(28,200,255,.1))`
+  + 1px `rgba(23,113,220,.35)` + 字 12/18 **Medium** `#1771DC`，尾部 `×` 是 11/19.5 Medium 同色。
+
+### 选中样式为什么「不对」——**内联 style 压过了 CSS**
+
+模板上挂着 `:style="activeStyle(tag)"`，`activeStyle()` 给选中项返回
+`{ 'background-color': '#F1F2FF', 'border-color': '#F1F2FF' }` —— **内联样式压过任何 class**，
+所以 scoped CSS 里写的 `.active`（`#eaf4ff` / `#2f7fe8` / 600）从来没生效，看到的是一块淡紫灰底。
+删掉这个函数和 `:style` 绑定，选中态只由 `.is-active` 决定。
+
+### 改法：页签复用全局 `.zk-chip`，不再另写一份
+
+`zk/list-page.scss` 里的 `.zk-chip` 当初就是照这一行的 chip 做的（海关数据页的一级切换在用），
+所以页签直接 `class="tags-view-item zk-chip"` + `:class="{ 'is-active': ... }"`，
+组件里只留页签条特有的部分：行的尺寸/边框、滚动区占位、`×`、右侧「更多」、右键菜单。
+`.zk-chip` 补了 `gap: 8px`（稿里 chip 内部文字与 × 的间距）。
+
+⚠️ 一个坑：全局 `a { color: inherit }` 与 `.zk-chip` **同为一个类选择器、又排在它后面**
+（`index.scss` 第 3 行就 `@import` 了 list-page.scss，`a` 规则在第 69 行），
+所以未选中页签的字色必须在组件里补一遍，否则会继承容器色。
+
+### 行高 34 → 46，顺手把两条栏高收进令牌
+
+- 新增 `--zk-layout-navbar: 64px` / `--zk-layout-tags-view: 46px`（`design-tokens.scss`，只此一处）；
+  `Navbar`、`TagsView` 读它们，`.app-main` 用它们做减法 —— 上一轮刚把 98 写进 `.app-main`，
+  这一轮行高一改就会漏；菜单宽度当年就是这么错的（`--zk-layout-sidebar` 的由来）。
+- `ScrollPane` 原来写死 `.el-scrollbar__wrap { height: 39px }`（34 的旧栏高 + 5px 把原生横条挤出视野），
+  改成 `height: 100%` + 直接藏掉原生横条，`.el-scrollbar__view` 用 flex 居中、gap 8。
+- `.tags-view-wrapper` 原来是 `width: 90vw`（整屏九成，没扣菜单也没扣 AI 抽屉），改成 `flex: 1; min-width: 0`。
+
+### 顺手（同一组件内、明显偏规范的）
+
+- 右侧「更多」：原来是 22px 灰图标 + 内联写死的旧主题色 `#1E65A5`，改成 12/18 品牌色文字链；
+- 右键菜单：纯黑投影 + 4 圆角 → 卡片口径（圆角 8、1px `#DCE7F3`、`--zk-shadow-card`、hover 浅蓝）；
+- 顶栏下边框 `#e5ebf2` → `--zk-border-card`（规范 8 是 `#DCE7F3`）。
+
+### 验证与限制
+
+- 依赖仍没装，跑不了构建。4 个改过的 SFC 用 `@vue/compiler-sfc` 编译通过，
+  改过的样式块与整条 `index.scss` 用 dart-sass 编译通过，产物里的 `.zk-chip` / `.tags-view-container` 逐条看过。
+- **没在浏览器里看过**：46 的行高、页签垂直居中、`×` 的位置与选中态观感待复核。
+- 规范 8 标的顶栏是 76，实现仍是 64（不在本轮范围，令牌注释里写明了由导航负责人收口）。

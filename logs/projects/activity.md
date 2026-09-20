@@ -1596,3 +1596,15 @@
 - 按详情页同口径把 `.app-main` 的滚动条藏掉（它压在 20 的留白上还吃 6px 宽度，卡片因此比稿窄 6px）；
   表格内部的横向条保留（那是「还有列没看到」的唯一提示）。规范 5.1 补了竖向高度口径。
 - 交付：minerals-frontend `feature-v1.8.4`。⚠️ 未跑构建（无依赖）、未在浏览器复核。
+
+## 2026-09-20 | minerals-admin | SSH 开发机 | feature-v1.8.4 | 顶部页签条按稿落地（node 6:10654）
+
+- 选中样式「不对」的根因：模板上的 `:style="activeStyle(tag)"` 给选中项内联了 `#F1F2FF`，
+  内联压过 class，scoped CSS 里的选中样式从来没生效。删掉该函数，选中态只由 `.is-active` 决定。
+- 页签条 = 规范 8 的子系统切换行（figma MCP 拉的 node 6:10654 与规范一字不差）：行高 34→**46**、
+  padding 0 22、间距 8、下边 1px `#DCE7F3`、去掉阴影；页签直接复用全局 `.zk-chip`
+  （选中 `#EDF5FF` + 90° 渐变 + 1px rgba(23,113,220,.35) + 12/18 Medium `#1771DC`，尾部 11px `×`）。
+- 行高一改就会牵动工作区高度，所以把两条栏高收进 `--zk-layout-navbar` / `--zk-layout-tags-view`
+  （design-tokens 一处定义），`Navbar` / `TagsView` / `.app-main` 全部读令牌；
+  `ScrollPane` 写死的 `height: 39px` 改成占满页签条 + 藏掉原生横条；`width: 90vw` 改成 `flex: 1`。
+- 交付：minerals-frontend `feature-v1.8.4`。⚠️ 未跑构建（无依赖）、未在浏览器复核。

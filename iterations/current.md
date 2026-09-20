@@ -1,5 +1,56 @@
 # 当前迭代
 
+## 2026-09-20（日）正矿：顶部页签条按稿落地（node 6:10654）—— 选中样式失效是内联 style 压的
+
+环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`（同步后 HEAD `c575b86`）
+
+用户给了 Figma 链接（`node-id=6-10654`）并指出「`#tags-view-container` 就是顶部导航 tab 栏，选中样式不对」。
+figma MCP 拉下来的这个节点，就是规范 8 里的「子系统切换行」，和文档一字不差：
+行高 **46**、padding `0 22`、间距 8、下边 1px `#DCE7F3`（稿里这行 `fills` 是空的、也没有阴影）；
+chip 高 30、圆角 6、白底 + 1px `#DCE7F3`、字 12/18 Regular `#6B7D92`；
+选中 = 底 `#EDF5FF` + `linear-gradient(90deg, rgba(11,102,195,.11), rgba(28,200,255,.1))`
++ 1px `rgba(23,113,220,.35)` + 字 12/18 **Medium** `#1771DC`，尾部 `×` 11/19.5 Medium 同色。
+
+### 一、选中样式为什么不对：**内联 style 压过了 CSS**
+
+模板上挂着 `:style="activeStyle(tag)"`，而 `activeStyle()` 给选中项返回
+`{ 'background-color': '#F1F2FF', 'border-color': '#F1F2FF' }`。内联压过任何 class，
+所以 scoped CSS 里写的 `.active`（`#eaf4ff` / `#2f7fe8` / 600）**从来没生效过**，
+看到的是一块淡紫灰底。删掉这个函数和 `:style` 绑定，选中态只由 `.is-active` 决定。
+
+### 二、页签复用全局 `.zk-chip`，不再各写一份
+
+`zk/list-page.scss` 的 `.zk-chip` 当初就是照这一行做的（海关数据页的一级切换在用），
+所以页签写成 `class="tags-view-item zk-chip"` + `:class="{ 'is-active': ... }"`，
+组件里只留页签条特有的：行尺寸/边框、滚动区、`×`、右侧「更多」、右键菜单。`.zk-chip` 补了 `gap: 8px`。
+
+⚠️ 坑：全局 `a { color: inherit }` 与 `.zk-chip` **同是一个类、又排在它后面**
+（`index.scss` 第 3 行 `@import` 了 list-page，`a` 规则在第 69 行），
+未选中页签的字色必须在组件里再补一遍，否则会继承容器色。
+
+### 三、行高 34 → 46，两条栏高收进令牌
+
+上一轮才把「顶栏 98」写进 `.app-main`，这一轮行高一改就会漏 —— 所以新增
+`--zk-layout-navbar: 64px` / `--zk-layout-tags-view: 46px`（`design-tokens.scss` 一处定义），
+`Navbar`、`TagsView` 读它，`.app-main` 用它做减法（和菜单宽度 `--zk-layout-sidebar` 同一套思路）。
+另外 `ScrollPane` 写死的 `.el-scrollbar__wrap { height: 39px }`（34 的旧栏高 + 5px 把原生横条挤出视野）
+改成 `height: 100%` + 直接藏掉原生横条、`.el-scrollbar__view` 用 flex 居中；
+`.tags-view-wrapper` 的 `width: 90vw`（整屏九成，没扣菜单和 AI 抽屉）改成 `flex: 1; min-width: 0`。
+
+### 四、同一组件内顺手改掉的偏差
+
+右侧「更多」从 22px 灰图标 + 内联旧主题色 `#1E65A5` 改成 12/18 品牌色文字链；
+右键菜单从纯黑投影 + 4 圆角改成卡片口径；顶栏下边框 `#e5ebf2` → `--zk-border-card`（规范 8 是 `#DCE7F3`）。
+
+### 验证与限制
+
+- 依赖仍没装，跑不了构建/lint。4 个 SFC 用 `@vue/compiler-sfc` 编译通过；改过的样式块与整条
+  `index.scss` 用 dart-sass 编译通过，产物里 `.zk-chip` / `.tags-view-container` 的规则逐条看过。
+- **没在浏览器里看过**：46 的行高、页签垂直居中、`×` 的位置与选中态观感待复核。
+- 规范 8 标的顶栏是 76、实现仍是 64 —— 不在本轮范围，令牌注释里写明由导航负责人收口。
+
+---
+
 ## 2026-09-20（日）正矿：工作区竖向高度口径 + 工作区滚动条藏起来
 
 环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`
