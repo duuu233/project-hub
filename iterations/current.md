@@ -49,6 +49,25 @@
 - 全仓审了 28 处开关，另外修了应付采购 `settleFlag`（会弹警告并把值取反）、进口采购
   `contractCompleted`、提单 `electStatus`、出库计划单/出库单的只读「客户派车」（一直显示成关）。
 
+### 五、返工：弹框没修掉（归因对、修法不到位）+ 海关数据页卡片重构
+
+用户反馈弹框依旧。确认弹框文案是「确认操作该项吗？」——**归因没错**（就是状态开关那条路），
+但我上一轮把兜底放在了页面层：只盖住「换数据那一帧」。而开关在**翻页、改列设置、表格重渲染**时
+都会被重新创建，每次创建 Element 都会再自纠一次，那个 `nextTick` 就清掉的标记一个时机都盖不住。
+
+改成组件层拦截：新增 `src/components/StatusSwitch/index.vue`，
+① 传给 el-switch 的值永远是 activeValue / inactiveValue 之一（自纠条件不成立）；
+② 组件自身 onMounted 之前收到的 change 一律丢弃（自纠在子组件 setup 阶段，必定早于它；
+用户点击必定晚于它）。**每个开关实例各有一份守卫**，什么时候被创建都拦得住。
+全仓 9 处带 `@change` 的 el-switch 全部换成它，页面层的临时兜底删掉。
+
+海关数据页（`information/customs-data`）的「样式错乱」是**卡中卡**：三层 `el-card` 分别包住
+自带卡片外观与 52 卡头的 `ListSearchCard` / `ListTableCard`，于是双层边框、双层卡头。
+去掉 el-card，新增 ② 层皮肤 `assets/styles/zk/list-page.scss`（`zk-panel` / `zk-stat-card` / `zk-chip`），
+统计卡按规范 5.2 重做，维度切换换成 `el-segmented`。规范 9、10.1、变更记录同步。
+
+提交 `aaaab2d`、`d8e9fd8`，合并远端 `152099e` 后推送（`b6be1ec`）；构建再次通过（33.6s）。
+
 ### 落地（远端在工作期间前进了 5 个提交）
 
 同事推了 `8007ddd → ee90319`，其中 `72536e7` **正好也修了我补的那三个列表页**。
