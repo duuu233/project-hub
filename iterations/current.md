@@ -57,6 +57,27 @@
 - 诊断里记下**实际命中的重载**与本次查询条件；调试板多一颗「三档都试」chip，摘要与复制文本带 `perType`。
 - **仍然不退回聚合的 `getMessageList`。**
 
+### 二之三（同日再追加）：真机第一次跑的结论 + 三条诊断（`337fa78`）
+
+用户用设备 `6c707c4ee7b5e5bea5m7hm` 跑了一次，把日志贴回来。**能确定的**：
+
+1. 调用链没问题 —— 实例方法清单与解包签名逐条对得上（还能看到混淆孪生 `bdpdqbp(...)`，
+   反射用公开名不受影响），命中 5 参重载，条件 `msgSrcId=6c707c…m7hm offset=0 limit=50`；
+2. **确实返回 0 条**（两个只读探针只在空结果时才跑，日志里有它们）；
+3. **但账号的消息中心不空**：`getMessageMaxTime() → 1789916821`，**单位是秒**，
+   即 2026-09-20 15:07:01 UTC，就是当天；
+4. `requestMessageNew()` 回的 `MessageHasNew` 解包只有三个 boolean：`alarm` / `family` /
+   `notification` —— 三档就是告警/家庭/通知，`MSG_REPORT` 对应 `alarm`。第一次打的是 `toString()`，看不出内容。
+
+**所以剩两种可能**：①那条消息不在告警档；②它的 `msgSrcId` 不是这台设备 ——
+⚠️ 后台监控列表给的是 `6c2649322ed1365a00cadl`，这次查的是 `6c707c4ee7b5e5bea5m7hm`，**不是同一台**。
+
+为把这两种分清，加了三条：**每档返回条数写进诊断**；**探针结果按 bean 展开**
+（`requestMessageNew() → alarm=…, family=…, notification=…`）；**空结果时追加「按类型取一页」**
+（`getMessageListByMsgType(0, 20, 类型)`，只打 `msgSrcId` / `msgType` / `msgTypeContent` /
+`msgCode` / `alarmType` / `dateTime`，不进 items、只在空结果时跑）。
+取数照旧只用 `getMessageListByMsgSrcId`，**仍不碰聚合的 `getMessageList`**。
+
 ### 三、验证与限制
 
 - 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；

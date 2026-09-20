@@ -1641,3 +1641,14 @@
 - 新增 `msgType:"ALL"`（三档依次各取一次，`perType` 写明每档几条）与**空结果时自动探**
   `getMessageMaxTime()` / `requestMessageNew()`，用来区分「这台设备没有」与「整个消息中心就是空的」。
 - 交付：flowerpot `39648f2`（已推送）。⚠️ 仍未真机验证；「推送等级」落在哪个字段待确认。
+
+## 2026-09-20（再追加）| flowerpot-app | SSH 开发机 | main | 真机日志的结论 + 三条诊断
+
+- 真机日志证明调用链与命中的重载都对，但「设备 + 告警档」**返回 0 条**；
+  同时 `getMessageMaxTime() → 1789916821`（**秒** = 当天 15:07 UTC）说明账号消息中心不空，
+  `MessageHasNew` 解包只有 `alarm` / `family` / `notification` 三个 boolean。
+- 剩两种可能：消息不在告警档，或它的 `msgSrcId` 不是这台设备
+  （⚠️ 后台监控列表给的 `6c2649322ed1365a00cadl` 与本次查的 `6c707c…m7hm` 不是同一台）。
+- 为分清这两种，补三条诊断：每档条数、探针结果展开成字段、空结果时按类型取一页
+  （`getMessageListByMsgType` ≤20 条，只打身份字段、不进 items、仍不碰聚合接口）。
+- 交付：flowerpot `337fa78`（已推送）。
