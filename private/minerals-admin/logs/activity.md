@@ -502,3 +502,51 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
   两段 SCSS 用 dart-sass 编译过，Element 的列宽算法是解包 2.14.5 的产物逐行核的。
 - **没有在浏览器里看过效果**：像素级的留白、页签在卡头里的观感、四种语义色的实际观感待用户复核。
 - 语义色是按**文案关键字**判定的，新按钮文案若不在关键字表里会落回品牌蓝（不会出错，只是不着色）。
+
+## 2026-09-20 | 工作区（.app-main）竖向高度口径 + 滚动条藏起来
+
+用户问「为什么很多列表页都有滚动条，是上下高度没算好吗？或者能不能像详情页那样把滚动条挪到可视区外」。
+两件事都是真的：**有算错的，也有本来就该滚的**。
+
+### 竖向预算只有三段
+
+整屏 = 顶栏（顶栏 64 + 页签条 34 = 98）+ `.app-main` 自己的 20 上下留白 + 内容。
+所以 1080 的屏幕上页面真正能用的是 **1080 - 98 - 40 = 942**。
+
+### 算错的两类（都是常驻滚动条，滚动距离只有几十 px）
+
+1. `.app-container`（`index.scss`，**14 个老页面**在用）写的是 `min-height: calc(100vh - 130px)`
+   —— 比可用高度多 8px，于是内容再短也常驻一条滚动条。改成 `min-height: 100%`
+   （百分比相对 `.app-main` 的内容盒，顶栏或留白改了不用跟着改）。
+2. 首页 `.default-index-page` 与工作台 `.workbench-page` 写的是 `calc(100vh - 98px)`
+   —— 那个数字不含工作区自己的 20 留白，多要 40px。同样改成 `min-height: 100%`。
+
+### 顶栏 fixed 时的盒子算错了（设置面板可开，localStorage 持久化）
+
+`.fixed-header + .app-main` 只给了 `padding-top: 98px`，高度仍是 `calc(100vh - 98px)` ——
+盒子是 border-box，`padding-top` 已经让过一次顶栏，高度再扣一次等于**扣两遍**：
+内容盒比可用高度少整整一个顶栏，屏幕底部还空着 98px 没有底色的带子。
+改成 fixed 分支里 `height: 100vh` / `min-height: 100vh`。
+（⚠️ `.hasTagsView .app-main` 与 `.fixed-header + .app-main` 特指度相同、靠顺序取胜，
+所以 `height` 必须写在 `.hasTagsView .fixed-header + .app-main` 这条里才压得住。）
+
+### 真列表页的滚动是正常的
+
+10 行两行高的数据行 ≈ 840，加卡头 52、表头 42、分页 60，再加搜索卡 ≈ 90 —— 1100 上下，
+942 的可用高度本来就放不下。这种滚动不该治，要治的是**那根条**：
+
+`.app-main` 按详情页 `.flex-main` 的同一口径把滚动条藏掉
+（`scrollbar-width: none` + `-ms-overflow-style: none` + `::-webkit-scrollbar { width:0; height:0 }`）。
+它原本画在工作区右缘、压在 20 的留白上，还吃掉 6px 宽度（全局 `::-webkit-scrollbar` 给的），
+卡片因此比设计稿窄 6px。藏起来后滚轮 / 触控板 / 键盘照常。
+**表格内部的横向滚动条没动** —— 那条是「右边还有列没看到」的唯一提示；
+`scrollbar-width` 不继承、`::-webkit-scrollbar` 只作用于元素自身，所以不会波及子元素。
+
+### 验证与限制
+
+- 依赖没装（磁盘只剩 1.1G），跑不了构建；`AppMain.vue` / 首页 / 工作台用 `@vue/compiler-sfc` 编译通过，
+  `index.scss` 连整条 `@import` 链用 dart-sass 编译通过，编译产物里的 `.app-main` / `.app-container` 规则逐条看过。
+- 顶栏与页签条的 64 / 34 是回源码核的（都是 border-box，1px 下边框已含在内），合计正好 98。
+- **没在浏览器里看过**：藏掉滚动条后长列表的滚动手感、以及 14 个老页面改成 `min-height: 100%` 后的观感待复核。
+- 顺手把 Hub 的 SFC 检查脚本教会了两件事：模板里的 TS 表达式（`as string[]`）要开 `expressionPlugins`、
+  空 `<script setup>` 不算错误 —— 之前这两种都会报假错。

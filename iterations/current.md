@@ -1,5 +1,57 @@
 # 当前迭代
 
+## 2026-09-20（日）正矿：工作区竖向高度口径 + 工作区滚动条藏起来
+
+环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`
+（本轮 pull 进来别人的 24 个文件改动后开工，HEAD `809c35e`）
+
+用户问「为什么很多列表页都有滚动条，是上下高度没算好吗？或者能不能像详情页那样把滚动条挪到可视区外」。
+**两件事都成立：有算错的，也有本来就该滚的。**
+
+### 一、竖向预算只有三段
+
+整屏 = 顶栏（顶栏 64 + 页签条 34 = 98，都是 border-box、1px 下边框已含在内，回源码核过）
++ `.app-main` 自己的 20 上下留白 + 内容。1080 的屏幕上页面真正能用的是 **942**。
+
+### 二、算错的两类 —— 常驻滚动条，但只能滚几十 px
+
+1. `.app-container`（`index.scss`，**14 个老页面**在用，多是系统/监控的列表页）写的是
+   `min-height: calc(100vh - 130px)`，比可用高度多 8px；
+2. 首页 `.default-index-page`、工作台 `.workbench-page` 写的是 `calc(100vh - 98px)`，
+   漏掉工作区那 20 的上下留白，多 40px。
+
+两处都改成 `min-height: 100%` —— 百分比相对 `.app-main` 的内容盒算，顶栏或留白以后再改也不用跟着改。
+
+### 三、顶栏 fixed 时盒子扣了两遍（设置面板可开、localStorage 持久化）
+
+`.fixed-header + .app-main` 只给了 `padding-top: 98px`，高度还是 `calc(100vh - 98px)`：
+border-box 下 padding-top 已经让过一次顶栏，高度再扣一次 = 内容盒比可用高度少整整一个顶栏，
+屏幕底部还空着 98px 没有底色的带子。fixed 分支改成 `height / min-height: 100vh`。
+⚠️ `.hasTagsView .app-main` 与 `.fixed-header + .app-main` 特指度相同、靠源码顺序取胜，
+所以高度必须写进 `.hasTagsView .fixed-header + .app-main` 才压得住。
+
+### 四、真列表页的滚动是正常的，要治的是那根条
+
+10 行两行高的数据行 ≈ 840 + 卡头 52 + 表头 42 + 分页 60 + 搜索卡 ≈ 90 → 1100 上下，942 放不下。
+所以按详情页 `.flex-main` 的同一口径把 `.app-main` 的滚动条藏掉
+（`scrollbar-width: none` + `-ms-overflow-style: none` + `::-webkit-scrollbar { width:0; height:0 }`）：
+它原本画在工作区右缘、压在 20 的留白上，还吃掉 6px 宽度（全局 `::-webkit-scrollbar` 给的），
+卡片因此比设计稿窄 6px。滚轮 / 触控板 / 键盘照常。
+**表格内部的横向条保留**（那是「右边还有列没看到」的唯一提示）——
+`scrollbar-width` 不继承、`::-webkit-scrollbar` 只作用于元素自身，不会波及子元素。
+
+规范 `DESIGN_SPEC.md` 5.1 补了这套竖向口径并记进变更记录；`zk/list-page.scss` 顶部同步一句。
+
+### 验证与限制
+
+- 依赖没装（磁盘只剩 1.1G），跑不了构建/lint。`AppMain.vue`、首页、工作台用 `@vue/compiler-sfc` 编译通过；
+  `index.scss` 连整条 `@import` 链用 dart-sass 编译通过，产物里的 `.app-main` / `.app-container` 规则逐条看过。
+- **没在浏览器里看过**：藏掉滚动条后长列表的手感、14 个老页面改 `min-height: 100%` 后的观感待复核。
+- 顺手修了 Hub 的 SFC 检查脚本两处假错：模板里的 TS 表达式（`as string[]`）要开 `expressionPlugins`、
+  空 `<script setup>` 不该算失败。
+
+---
+
 ## 2026-09-20（日）正矿：列表页五处按设计规范返工（Tab 进卡头 / 搜索标签 / 操作按钮语义色 / 操作列宽）
 
 环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`（同步到 `b6be1ec` 后开工，远端无新提交）
