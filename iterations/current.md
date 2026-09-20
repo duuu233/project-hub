@@ -1,5 +1,47 @@
 # 当前迭代
 
+## 2026-09-20（日）相册 APP：Wi-Fi 版两个追问 —— TF 卡播放 / FPGA 升级（`61f3e6b`，已推送）
+
+用户拿着 Wi-Fi 版相框问两件事，要求按文档回答。两条都回到协议原件逐字核过
+（`docs/相框v2.0.0/XT相框通讯协议_V1.3.1(1).pdf`，本轮用 pdf-parse 抽成文本比对），
+结论追加进 `docs/integration/WIFI_FRAME_FEATURE_GAP_AND_DETAIL_PAGE.md` 的新 §9。
+
+### 一、TF 卡播放：`play_tf` 是**零参数开关**
+
+§2.12 的下行报文只有 `action` / `msgid` / `stamac`，**一个参数都没有** ——
+不能选哪一张、不能指定目录、不能传文件名。配套信息也只有心跳三项
+（`tf` present/absent、`tfsize` MB、`tfused` MB），没有张数、没有文件列表、没有当前显示图 id。
+
+→ **不要做「TF 卡文件管理」**（浏览/选图/单张删除），协议给不了，做出来是空壳。
+→ 值得做的只有详情页里的两行：动作（播放 TF 卡内容 / 清空 TF 卡）+ 状态（卡在不在、已用/总容量），
+  后者正好替代蓝牙版的「已用槽位 X/Y」（口径已从槽位变成存储空间）。
+→ 上线前必须先问清楚：`play_tf` 之后设备是什么状态（播一张还是轮播卡内图）、
+  与正在生效的 `strategy` 冲突时谁优先、无卡时返回什么、`clean_tf(ALL)` 会不会把内置图也清掉。
+
+### 二、FPGA 升级：协议上就是第二条 OTA，但 App 侧不能复用实现
+
+- **协议层**：`fpga`（§2.4）与 `ota`（§2.3）**逐字段相同**（`{host, port, path}` + `{result, ack_msgid}`），
+  差别只有 action 名、路径前缀、回读的版本字段（心跳 `version` vs `fpga_ver`）。设备自己下载 —— 用户理解正确。
+- **后台层**：可以复用固件管理，但要加「固件类型（ESP / FPGA）」维度 ——
+  `web-ui-v2` 的 `sms/productVersion` 现在一个产品只有一条固件线，端上也只有一个 `newVersionNo`。
+- **App 层**：⚠️ 只能复用入口和文案。现在是「后端给 .bin 地址 → App 自己 HTTP 下载 →
+  通过 BLE 推给设备（`ota_ble.dart` 1259 行的 DFU、MTU 握手、分包进度）」；
+  Wi-Fi 版 App 一个字节都不碰，**没有百分比进度**（ack 只回一个状态码，
+  协议里也没有 `ota_status` 这个 action —— 二稿写错了，本轮已改）。
+  升级页要改成状态式，成功判据只能是心跳里的版本号变了。
+- 新增待确认 28~32：`play_tf` 语义与无卡返回、`clean_tf(ALL)` 会不会清掉内置图、
+  `ota`/`fpga` 的 host/port/path 是 FTP 还是 HTTP（状态码 102 写的是「获取 FTP 服务器失败」，
+  而后台存的是 HTTP 的 .bin 地址）、两条固件有无先后依赖与回滚、后台加固件类型维度。
+
+### 验证与限制
+
+- 没有改任何代码，只改文档（`docs/integration/...md` + `docs/README.md` 索引）；
+- 协议结论全部来自 PDF 原文逐条比对，**未经硬件确认**，§7 的待确认清单已同步扩到 32 条；
+- 本机没有 Flutter 工具链，未跑 analyze/test（本轮无代码改动，不影响）。
+
+---
+
+
 ## 2026-09-20（日）正矿：底栏适配菜单收窄 + 详情页全量按提单标准铺开 + el-switch 误触发修复
 
 环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`（同步到 `99b3dab` 后开工）

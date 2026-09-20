@@ -1527,3 +1527,13 @@
   去掉 el-card，新增 `zk/list-page.scss`（`zk-panel` / `zk-stat-card` / `zk-chip`），统计卡按规范 5.2 重做。
 - 交付：`aaaab2d`、`d8e9fd8`，合并远端后推送 `b6be1ec`；`vite build` 通过（33.6s）。
   ⚠️ 仍无浏览器验收；`vue-tsc` 依旧 1GB 堆 OOM，未跑。
+
+## 2026-09-20 | album-app | SSH 开发机 | main | Wi-Fi 版分析三稿：TF 卡播放与 FPGA 升级
+
+- 只改文档，无代码。协议原件用 pdf-parse 抽文本后逐条核对，结论写进 `WIFI_FRAME_FEATURE_GAP_AND_DETAIL_PAGE.md` §9。
+- `play_tf` 下行零参数（只有 action/msgid/stamac）→ 选图/列目录/单张删除都做不了，
+  App 只该出「播放 TF 卡内容 + 清空 + 容量显示」，不要做文件管理。
+- `fpga` 与 `ota` 报文逐字段相同、都由设备自己下载 → 后台加「固件类型」维度即可；
+  但 App 现在是「自己下包 + BLE 推送」，Wi-Fi 版没有进度上报，升级页要按状态式重做。
+- 顺带修正二稿里 `ota_status` 这个协议中并不存在的 action；待确认清单扩到 32 条。
+- 交付：album-app `61f3e6b`（已推送）。⚠️ 结论未经硬件确认。
