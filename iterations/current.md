@@ -1,5 +1,34 @@
 # 当前迭代
 
+## 2026-09-20（日）花盆 APP：回答「是否支持涂鸦返回的日志类型区别」（只查不改）
+
+环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（同步后 HEAD `a9e937b`）
+
+**结论：不支持。而且「涂鸦到底给不给类型字段」这个问题本身，仓库里现在还没有答案。**
+
+1. **消息通知页三档（日志 / 提醒 / 告警）是静态稿数据**：`MowerDemoMessages.items` 写死 4 条，
+   `_CategoryTabs` 点了只换高亮、列表不换数据（注释原话「免得凭空造两批不存在的消息」）；
+   进页面还按 09-18 的口径提示「当前还没有支持的 DPID」。所以没有任何按类型分流的逻辑。
+2. **09-18 加的是一块调试板，不是产品功能**：Android `MainActivity.deviceMessages` 反射找消息中心实例
+   （逐个试 `getMessageInstance` / `getThingMessageInstance` / `getTuyaMessageInstance` /
+   `getMessageCenterInstance`）→ 试 `getMessageList` 等「参数 + 回调」形态 → `beanMap()` 把每条消息
+   bean 的**所有无参 getter 原样 dump**；页面把字段全打印、**键名里带 `type` 的标品牌色**（那就是答案），
+   并按 `msgSrcId` 在已绑定设备里找归属、标是不是目标产品 `ehbx83xdh9jkmxvz`。
+3. **两条限制**：iOS 侧没接（`deviceMessages` 不在 `AppDelegate` 的 case 列表里，Dart 侧捕
+   `MissingPluginException` 如实回「iOS 待补」）；并且**没在真机 / 真账号上跑过**。
+   所以类型字段有没有、叫什么，目前仍是未知 —— 要答案就得把这块板在真机上点一次。
+   （09-19 屏蔽的是全局联调日志浮层，调试板本身照常工作：`loadDeviceMessages` 的返回值直接给面板。）
+4. **花盆（植物）那一侧完全没用涂鸦的消息 / 日志接口**。历史曲线走 DP 131–139 / 164 / 165 自解包
+   （`tuya_history_codec.dart`），日 / 周 / 月帧是**按类型区分**解的（月帧 1.0.13 起 5 字节头 +
+   段号 / 总段数）。如果用户问的「日志」指这个，那是区分的 —— 但它是设备上报的数据帧，不是涂鸦的日志类型。
+5. **补充口径**：割草机「告警」那一档其实不必等消息中心 —— DP18 故障告警位图（13 位，文案已在
+   `MowerFault.messages`）+ DP111 故障告警明细 JSON（`ro`，未接）就能驱动；只有「日志 / 提醒」
+   必须依赖消息中心的类型字段。
+
+本轮**只读不改**：没动代码、没提交（按项目 AGENTS：仅回答 / 诊断时不改代码）。
+
+---
+
 ## 2026-09-20（日）正矿：顶部页签条按稿落地（node 6:10654）—— 选中样式失效是内联 style 压的
 
 环境：ssh 开发机 · 项目 minerals-admin（`minerals-frontend`）· 工作分支 `feature-v1.8.4`（同步后 HEAD `c575b86`）
