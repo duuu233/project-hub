@@ -1619,3 +1619,17 @@
 - 花盆侧不用涂鸦消息/日志接口；历史曲线是 DP 131–139/164/165 自解包，日/周/月帧按类型区分解码。
 - 另：割草机「告警」档可由 DP18 位图（+DP111 明细，未接）驱动，不必等消息中心。
 - 本轮只读：未改代码、未提交。
+
+## 2026-09-20 | flowerpot-app | SSH 开发机 | main | 设备消息改按设备 ID 取 + 解包核实消息字段
+
+- 产品口径：**必须用 `getMessageListByMsgSrcId`**（标准 `getMessageList` 是聚合的，拿不到某台设备的
+  全量消息——上一版调的就是它，打出来的内容不对）；**iOS 是另一个方法**
+  `fetchEncryptMessageDetailListWithListRequestModel`（已记进代码注释 + 能力核对文档 + AI_CONTEXT）。
+- 解包核实（`thingsmart:7.5.1` → `thingsmart-personal-api` → `tools/aar_class_dump.py`）：
+  `IThingMessage` 的四个重载、`MessageType` 三常量、`MessageListBean.getDatas/getTotalCount`、
+  **`MessageBean` 确有类型字段**（`msgType` + `MSG_TYPE_PRD_WARN` 等 + `msgTypeContent`，
+  另有 `msgCode` / `alarmType` / `extendParams`）；**Home SDK 没有设备日志接口**。
+- 桥接改成必填设备 ID、按名字取枚举、从少参重载往多参试、诊断记实际签名、不退回聚合接口；
+  调试板加设备 ID 输入框与类型三选一。
+- 交付：flowerpot `70188e4`（已推送）。⚠️ 无工具链，analyze/test/编译/真机未跑（四个 Dart 自检 +
+  kt 自检绿）；「推送等级」落在哪个字段待真机确认；iOS 桥接未接。

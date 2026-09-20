@@ -1,5 +1,58 @@
 # 当前迭代
 
+## 2026-09-20（日）花盆 APP：设备消息改成按设备 ID 取，并把消息字段解包核实（`70188e4`，已推送）
+
+环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（起点 `a9e937b`）
+
+接上一轮的问答。用户追加三条口径，每条都落地了：
+
+1. 「这个接口打印的信息明显不对」+「**一定要用 `getMessageListByMsgSrcId`**，标准消息接口涂鸦会聚合，
+   无法全量分页查询」；
+2. 后台那条测试推送：等级**轻微**、编号 `GYjoVtpHsqHjpZbc`、名称/内容 `text2`、
+   设备 ID `6c2649322ed1365a00cadl`（来自**涂鸦后台的设备消息监控列表**）；
+3. 「**iOS 版是 `fetchEncryptMessageDetailListWithListRequestModel`**，你提前记录一下，
+   这些都是之前踩的坑」。
+
+### 一、先解包核实，不靠文档也不靠猜
+
+`com.thingclips.smart:thingsmart:7.5.1` 父 POM（`maven-commercial-releases`）→ 模块
+`thingsmart-personal-api` → `classes.jar` → 仓库自带的 `tools/aar_class_dump.py`：
+
+- `ThingHomeSdk.getMessageInstance()` 确实存在 → `com.thingclips.smart.sdk.api.IThingMessage`；
+- `getMessageListByMsgSrcId` **四个重载**：`(int,int,MessageType,String,cb)`、`+boolean encryptImage`、
+  `+boolean splitImageKey`、以及类型收成 `int` 的那版；
+- `MessageType` 只有 `MSG_REPORT` / `MSG_FAMILY` / `MSG_NOTIFY`（带 `getValue()`）；
+- 回调回 `MessageListBean`（`getDatas()` + `getTotalCount()`）；
+- **`MessageBean` 确实有类型字段**：`int msgType` + 四个常量（含 `MSG_TYPE_PRD_WARN`）、
+  `msgTypeContent`，另有 `msgCode`、`alarmType`、`extendParams` / `extendJson`、`msgSrcId`、`actionURL`…
+- 顺带回答「是不是还有其它日志接口」：**Home SDK 没有设备日志接口** ——
+  `IThingDevice` 上没有 log/alarm 方法，模块 `thingsmart-log` 是 SDK 自己的埋点上报
+  （`ThingLogSdk` / `CfgBigData`）。设备侧事件只有**消息中心 + MQTT** 两个来源。
+
+### 二、改动
+
+- 安卓桥接 `deviceMessages`：**必填设备 ID**（= `msgSrcId`），`msgType` 默认 `MSG_REPORT`，
+  反射**按名字**取枚举常量（不写死整数值），按解包出的重载从少参往多参试，
+  诊断里记下**实际命中的签名**；结果多回 `totalCount` / `msgType` / `msgSrcId`；
+  **不再退回聚合的 `getMessageList`**（没给设备 ID 就如实说「要设备 ID」）。
+- Dart：`deviceMessages({required deviceId, msgType, offset, limit})` 一路传；
+  iOS 的 `MissingPluginException` 分支把**要调的 iOS 方法名**带回页面。
+- 调试板：加「设备 ID（msgSrcId）」输入框（默认填已绑定的第一台设备，可改）+ 消息类型三选一；
+  摘要多打 `msgSrcId` / `msgType` / `totalCount`。
+- 文档：`docs/TUYA_CAPABILITY_AUDIT.md` 新增第五节（完整签名 + 字段表 + iOS 方法名 + 两条坑）；
+  `AI_CONTEXT.md` 加一行长期口径；`docs/history/2026-09/2026-09-20-消息中心按设备ID取.md` + 索引。
+
+### 三、验证与限制
+
+- 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；
+  跑了仓库自带四个 Dart 静态自检（328 文件全绿）、`tools/kt_dangling_refs.py`（`MainActivity.kt` 绿）、括号配平；
+  SDK 签名是解包核对的（比文档可靠）。
+- **待真机确认**：后台配的「推送等级（轻微）」落在 `alarmType` / `msgCode` / `extendParams` 哪个字段 ——
+  这是把「日志 / 提醒 / 告警」三档做出来的最后一块拼图；三档现在仍是静态稿数据。
+- **iOS 未接**：方法名已记进代码注释与两份文档，留给 Mac 侧（本机编译不了 iOS）。
+
+---
+
 ## 2026-09-20（日）花盆 APP：回答「是否支持涂鸦返回的日志类型区别」（只查不改）
 
 环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（同步后 HEAD `a9e937b`）
