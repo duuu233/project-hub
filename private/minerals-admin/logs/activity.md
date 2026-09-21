@@ -730,3 +730,13 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 实测：Hub `.codex-tmp/robot/switcher.cjs`（`switcher-1920.png` / `switcher-1366.png`）。
 - 规范第 8 节：切换框改写为「高 40、宽度跟随文案 120~480」；AI 入口那句原来还指向已删除的 `ai-assistant-2x.png`，改成去眼底图 + SVG 眼睛。
 
+## 2026-09-21 | 小乾去掉跟随鼠标，改 8 秒循环待机动画（`225f838`）
+
+- 用户决定不要跟随鼠标；要一段循环动画，时间我定，轻微跳动摇晃 + 眼神变化。
+- 结构：`button.ai-assistant-btn`（悬停放大 1.06）> `.ai-bot__figure`（身体动画 `ai-bot-idle`，轴心 50% 80% 即脚下）> 去眼底图 + `.ai-bot__eyes`（眼睛动画 `ai-bot-look`，轴心为两眼中心 47.6% 46.4%）。
+- 时间线（8s）：0–8% 静止；8–22% 往左看（身体 12% 左晃 -4°、上浮 2px）；25–28.5% 眨眼；36–46% 往右上看（37% 右晃 4°）；
+  55% 蹲（1.05×0.93）→ 60% 起跳 -6px → 65% 落地回弹 → 69% 复原，57–64% 眼睛压成 0.6 当笑眼；76–86% 低头看；90% / 93% 连眨两下；84% 再轻晃一下。
+- 之前避开「无限 CSS 动画」是因为动的是 SVG 里的 `<g>`（主线程重绘）；这次把眼睛包进 HTML 层、动画挂在 HTML 元素的 transform 上，合成线程跑。
+  CDP `Performance.getMetrics` 静置 3 秒：RecalcStyleCount +0、LayoutCount +0、ScriptDuration +0。
+- 测试脚本：Hub `.codex-tmp/sfc-render/idle-test.cjs`（用 `document.getAnimations()` 定格到指定毫秒截图）。
+
