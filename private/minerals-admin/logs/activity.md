@@ -722,3 +722,11 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 变量：`--turn-y` `--turn-x` `--tilt` `--lean` `--eye-x` `--eye-y`，都在 `.ai-assistant-btn` 上；`reach` 改为 `d / (d + 100)`，离得不远也能用到大部分幅度。
 - 坑：渲染台里用 `addStyleTag` 覆盖变量时，`.ai-assistant-btn{}` 权重低于 scoped 的 `.ai-assistant-btn[data-v]`，第一次对比图三档其实一样；改成三连类名才生效。
 
+## 2026-09-21 | 上下文切换框宽度跟随文案（`782189b`）
+
+- `AuthContextSwitcher.vue` 的 `.context-trigger`：`width: auto`、`min-width: 120px`、`max-width: min(480px, 100%)`。
+  标签 span 本来就是 `overflow:hidden`，flex 最小尺寸按 0 算，收窄时能出省略号；外层 `.auth-context-switcher` 与 `.right-menu` 都是 `min-width:0`，窄屏会让它先收。
+- 480 的由来：1366 屏减去菜单 88、左右 52、品牌区约 150、右侧其它项（AI、控制塔、帮助、头像、6 个 28 间距）约 650，剩约 420~450；1920 下给到 480 足够显示「系统 / 组织 / 角色」三段。
+- 实测：Hub `.codex-tmp/robot/switcher.cjs`（`switcher-1920.png` / `switcher-1366.png`）。
+- 规范第 8 节：切换框改写为「高 40、宽度跟随文案 120~480」；AI 入口那句原来还指向已删除的 `ai-assistant-2x.png`，改成去眼底图 + SVG 眼睛。
+
