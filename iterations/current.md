@@ -1,5 +1,14 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：安卓打包 `Could not delete …caches-jvm` 这次直接失败（`e449992`，仅文档）
+
+- 上一轮判断为非致命（Kotlin 回退为非守护进程编译）；这次 `:gradle:compileKotlin` 直接失败——锁一直没放，回退路径也删不掉。已在项目文档更正「无害」说法。
+- 原因：打包机上残留的 Kotlin 编译守护进程 / Gradle 守护进程（或 IDE、杀毒）占着 SDK 内 `packages\flutter_tools\gradle\build` 的缓存；不在项目里，`flutter clean` 清不到。
+- 处理（机器侧，不改项目）：`gradlew --stop` → 结束 `KotlinCompileDaemon/GradleDaemon/GradleWorkerMain` 的 java 进程 → 删 SDK 里那个 build 目录 → 重打；
+  仍被占用就用资源监视器查句柄或重启；反复出现加杀毒排除。写进 `BUILD_RELEASE.md`「一、Android」末尾。等用户反馈是否打包成功。
+
+---
+
 ## 2026-09-21（一）相册APP：核实 9-18 的 Flutter 升级不是必须；定下 3.44.x 基线与「不是必须不动依赖和环境」，写回退步骤给 ltt（`23bf305`，仅文档）
 
 用户：「不是强制的就尽量不要动依赖和环境，Flutter 也不要升级，文档写清楚，下次让她回退」「帮我确认下是否强制」。
