@@ -1702,3 +1702,11 @@
 - 用户确认推送配在产品 `ehbx83xdh9jkmxvz` 上 → 已绑定设备改打 `设备ID(pid=产品ID)` 并判一行
   「账号里有没有这个产品的设备」：规则配在 A 产品、账号绑 B 产品，是"后台看得到 App 收不到"的典型成因。
 - 交付：flowerpot `9b62a97`（已推送）。probe-v6。
+
+## 2026-09-21（再追加）| flowerpot-app | SSH 开发机 | main | 目标设备不属于当前账号
+
+- `probe-v6`：设备日志 dpIds 非空时三种取值全是 `PERMISSION_DENIED 没权限` → 参数格式已过校验、卡在权限 →
+  **`6c2649322ed1365a00cadl` 不是当前账号的设备**（账号只绑 `6c707c…m7hm`），解释了按它的 `msgSrcId` 永远 0 条。
+- 聚合时间窗单位实测是**秒**（毫秒 0 条、秒 2 条）；`msgTypeContent` 随接口变。
+- 加「填账号里已绑定的那台」、设备日志 PERMISSION_DENIED 自动换已绑定那台重试、复制文本补 pid。probe-v7。
+- 交付：flowerpot `da42d95`（已推送）。
