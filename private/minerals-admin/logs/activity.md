@@ -715,3 +715,10 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - **气泡**：`.navbar` 是 `overflow:hidden`，只能 teleport —— 用受控 `el-tooltip`（`:visible`），`popper-class="ai-bot-bubble"`。
 - **验证**：渲染台 `.codex-tmp/sfc-render/bot.html` + `bot-test.cjs` 11 项通过（尺寸、四个方向、600 次移动只写 2 次、悬停/移开/点击开关/2.2 秒收起、减少动态效果）；截图 `bot-montage.png`。未在真实整页里跑。
 
+## 2026-09-21 | 小乾跟随幅度加大（`64129cd`）
+
+- 用户：没感觉到头部转动，幅度大点。实测原参数下左转约 23°（`matrix3d` 的 cos≈0.918），平面图只是窄了 8%，不像转头。
+- 观感主要靠**歪头**（`rotate(gaze-x × 10°)`）和**整颗头位移**（5px），转头加到 30° / 22°、透视 160px；眼睛位移 6×4（面罩内沿到眼睛左右余量 ≥6，不出界）。
+- 变量：`--turn-y` `--turn-x` `--tilt` `--lean` `--eye-x` `--eye-y`，都在 `.ai-assistant-btn` 上；`reach` 改为 `d / (d + 100)`，离得不远也能用到大部分幅度。
+- 坑：渲染台里用 `addStyleTag` 覆盖变量时，`.ai-assistant-btn{}` 权重低于 scoped 的 `.ai-assistant-btn[data-v]`，第一次对比图三档其实一样；改成三连类名才生效。
+
