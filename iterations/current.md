@@ -1,5 +1,13 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：打包机回到 3.44 后又报 meta 冲突——给本地临时打包办法（仅文档）
+
+- 用户再次贴出 `objective_c 9.6.0 is incompatible with flutter_test`：仓库无变化（覆盖仍在、lock `meta 1.19.0`），是打包机 Flutter 回到了 3.44（上一轮成功那次的警告阈值属于 3.47.5）。
+- 按用户「Flutter 不升级」口径，不让再升 3.47：本机临时删覆盖两行 + `git checkout 219ad59~1 -- pubspec.lock` → `pub get` → 打包 → `git checkout -- pubspec.yaml pubspec.lock` 恢复，不提交。写入 `BUILD_RELEASE.md` 〇.7 末尾。
+- 正式回退仍由 ltt 在 Mac 上做（需 iOS 验证）；已问用户是否要我先在仓库里提交依赖部分的回退。
+
+---
+
 ## 2026-09-21（一）相册APP：安卓打包 `Could not delete …caches-jvm` 这次直接失败（`e449992`，仅文档）
 
 - 上一轮判断为非致命（Kotlin 回退为非守护进程编译）；这次 `:gradle:compileKotlin` 直接失败——锁一直没放，回退路径也删不掉。已在项目文档更正「无害」说法。
