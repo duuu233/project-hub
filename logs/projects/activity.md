@@ -1710,3 +1710,10 @@
 - 聚合时间窗单位实测是**秒**（毫秒 0 条、秒 2 条）；`msgTypeContent` 随接口变。
 - 加「填账号里已绑定的那台」、设备日志 PERMISSION_DENIED 自动换已绑定那台重试、复制文本补 pid。probe-v7。
 - 交付：flowerpot `da42d95`（已推送）。
+
+## 2026-09-21（再追加 2）| flowerpot-app | SSH 开发机 | main | 设备日志跑通
+
+- `queryDeviceOperateLogs` 真机跑通：`(设备ID, dpIds, offset, limit, 开始毫秒, 结束毫秒, "false")` →
+  `{dpc, dps[{dpId, timeStamp(秒), timeStr, value}], hasNext, total}`；调试板解成一行一条。
+- 消息中心：设备/产品都对上后三种问法告警档仍全是 0 → 设备、产品、时间都排除；剩平台侧（投递给触发设备的主人）。
+- 补探针 `getDeviceDNDSetting` / `getAllDNDList`。probe-v8。交付：flowerpot `d3947b6`（已推送）。
