@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：安卓打包 pub 解析失败（objective_c 9.6.0 与 flutter_test 冲突）——打包机 Flutter 太旧，无代码改动
+
+用户贴报错：`objective_c 9.6.0 is incompatible with flutter_test from sdk … version solving failed`。
+- 项目 `AI_CONTEXT.md`「Environment status」已记录（`aeb9fc2`）：`219ad59`（ltt，9-18 iOS 构建配置）加了 `dependency_overrides: objective_c: 9.6.0`，
+  链条 `objective_c 9.6.0 → code_assets ^2.0.0 → hooks 2.2.0 → record_use ^1.0.0 → meta ^1.19.0`，lock 里已是 `meta 1.19.0`。
+- 这轮核实（Flutter 官方仓库 tag 上的 `packages/flutter_test/pubspec.yaml`）：**3.44.0~3.44.9 全部 `meta: 1.18.0` 钉死，3.47.0~3.47.5 全部 `meta: ^1.18.3`**。
+  打包机只要还在 3.44.x 就一定解不开；升到 3.47.x stable 即可。
+- 安卓侧升级后不卡：仓库 Gradle 8.14 / AGP 8.11.1 / KGP 2.2.20，正好等于 3.47.5 `DependencyVersionChecker` 的报错下限（低于才报错），只会有「建议升级」警告。
+- 不改仓库：放宽覆盖会把共享 lock 往下改（objective_c 9.5.0 等），下一次提交又把 iOS 机器拖回去（项目文档原话）。
+- 可选改进（未做，待用户决定）：`pubspec.yaml` 的 `environment` 加 `flutter: ">=3.47.0"`，3.44 上会直接提示「需要 Flutter 3.47」而不是这条绕的依赖链。
+
+---
+
 ## 2026-09-21（一）正矿：小乾去掉跟随鼠标，改 8 秒循环待机动画（`225f838`，已推送）
 
 用户：「跟随鼠标的逻辑完全去掉，搞个循环动画，你定个时间，轻微跳动摇晃、眼神变化，知道它是活灵活现的机器人就行」。
