@@ -674,3 +674,31 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
   把 `Navbar.vue` 的模板和样式抽成静态 HTML 渲染，量出各图标与文字的竖直中心都是 37.5（差 0px），并与 Figma 导出图逐段并排比对。
   坑：Vue 模板里合法的 `<span class="navbar-divider" />` 直接当 HTML 渲染会被当成开标签、后面元素全套进去——mock 里要先改成成对标签；真实页面不受影响。
   产物在 Hub `.codex-tmp/navbar-check/`（`compare.png`）。以后改纯样式可以照这个办法先截图再推。
+
+## 2026-09-21 | 角色新增 / 编辑 / 详情按稿重做（`7f54f00`）
+
+- **环境**：ssh · `feature-v1.8.4`（改前 pull = Already up to date；中途同事推了 `cd93267 更新UI`，只动 Navbar 与 auto-imports，不冲突）
+- **稿**：353:387（新增）、353:1690（未关联系统）、353:1004（管理关联系统弹窗）；图标（展开/折叠箭头、搜索、关闭、勾/半选）都从 Figma 导出原路径。
+- **文件**：`views/system/role/template/handleDetail.vue` 重写；新增 `permission-tree.ts`（纯逻辑）、`components/RoleCheck.vue`（16px 复选框）、
+  `components/PermissionTable.vue`（工具条 + 树表）、`components/SystemManageDialog.vue`（弹窗，teleport 到 body，样式不带 scoped）。
+  系统列表合并、菜单归一、小程序过滤那批辅助函数原样搬过来。
+- **行类型判定**：叶子且 `menuType === 'F'` 算操作权限；没有 menuType 时看兄弟节点，兄弟全是叶子才算操作。有非操作子节点的是分组行，其余是页面行。
+- **缩进**（从表格外框量）：一级分组 箭头 14 / 复选框 53 / 文字 86；二级 50 / 83 / 116；页面 147 / 181。更深的层按公式外推（`indentStyle`）。
+- **提交**：`menuIds` = 勾满 + 半选节点的原始 id，外加顶层节点非 0 的 parentId；`systemId` 优先用角色数据里的原值。旧实现 `getMenuAllCheckedKeys`
+  沿 parentId 往上找祖先时在「父级的 parentId 为 0」处停，**顶层 id 只有在它本身勾满时才会带上**——3 层以上只勾一部分会漏。新结果是旧结果的超集。
+- **草稿**：`localStorage` 键 `zk:role-draft:<userId>:<new|roleId>`；与进入页面时一致就删草稿；恢复框「不恢复」删草稿，点 × 保留。
+- **1px 口径**：Figma 描边画在框内不占位，CSS border 占 1px → 卡内边距要比稿上的读数少 1（右卡 `padding-left: 19`）。
+  另外 Figma 子层累加会算上被父框裁掉的部分（基本信息卡子层合计 165，实际 163），以导出图实测为准。
+- **坑**：全局 `ruoyi.scss` 的 `.el-dialog:not(.is-fullscreen){margin-top:10vh}` 与 Element 的 `.el-dialog.is-align-center{margin:auto}` 同权重、后加载，
+  `align-center` 全站其实都不生效；这里用 `.el-dialog.role-system-dialog.is-align-center` 抬权重。Element 输入框 wrapper 的上下 1px 内边距不能清（清了只剩 38 高）。
+- **验证**：四个 SFC 编译 + 样式块 scoped 编译通过；`.codex-tmp/sfc-render/`（vue 3.3.9 + element-plus 2.13.1 + esbuild，`build.mjs` 打真组件、`mocks/` 假接口按稿造树）
+  渲染三种状态与 Figma 导出图叠图比对（`cmp-*.png`），横坐标逐像素一致；`test.cjs` 50 项交互自测通过、控制台无警告。
+  没跑 vue-tsc / eslint（本机没装依赖），没连真实后端（`menuTreeList` 是否带 `menuType` 未知，没有就走兄弟节点兜底）。
+- **与稿不一致**：「数据看板」只勾两项却画成全选 → 半选；7 个操作的行稿里 4+3 → 按宽度自动换行；页面名字重 400/500 混用 → 500；
+  折叠箭头右偏 4px → 与展开箭头对齐；右卡稿宽 1517 比基本信息卡少 1px → 按栅格撑满，没抠；工作区上内边距稿 14、实现 20（全局，没动）。
+
+## 2026-09-21 | DESIGN_SPEC 去掉「12. 变更记录」（`51e1b1d`）
+
+- 用户：「DESIGN_SPEC.md 里面的 12. 变更记录就不要写到这个文档里面，按要求在这个统筹项目中记录了就行」。
+- 整节 29 行按日期倒序搬到 `private/minerals-admin/logs/DESIGN_SPEC-变更记录.md`；规范里「末尾有变更记录」「10.4 在变更记录加一行」两处一并改掉。
+
