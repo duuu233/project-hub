@@ -1,5 +1,45 @@
 # 当前迭代
 
+## 2026-09-21（一）花盆 APP：割草机真机配网 + DP 按真实对接（`45d9a23`，已推送）
+
+环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（起点 `3024265`）
+
+用户：「割草机的设备已经就位，后面也配置了产品 ID，检查下是否支持配网流程，静态数据先不管它」，
+中途追加「顺便对接下 DPID，按真实的对接」。
+
+### 核查结论：原来不支持，五处挡着
+
+1. 搜索页 `_isOurProduct` 只认花盆两个 ID，扫到割草机也不列；
+2. 配上后设备列表点割草机进的是**花盆详情**；
+3. `MowerDevice._deliver` 只写日志、一条 DP 都不发（09-18 那轮就是这么约定的）；
+4. 所有设备快照按花盆解，割草机 DP 101–119 与花盆重叠、含义全不同，DP116 还会被当植物 id 去后端查；
+5. 配网成功把新设备设成选中，「我的」页「设备设置」会把割草机带进花盆设置页。
+
+配网本身（BLE 扫描类型全开、`IMultiModeActivator` 双模、原生设备列表不按产品过滤）对割草机没障碍，前提是双模模组。
+
+### 改法
+
+- 搜索页再认 `MowerDp.productId` 与后台 `getBasicData.deviceIdList`（开扫时顺手拉一次）；
+- `isMowerDevice` 分流：列表进 `mowerHome`（带 `MowerHomeArguments(deviceId)`），上报跳过花盆处理、走新的 `mowerReports`；
+  「我的」页改用 `selectedPlanter`；
+- 仓库加 `rawDps`（按 DP 号取原始值）；`TuyaRaw.hex` 生成 raw 下发值；
+- `MowerDevice.bind/release`（外壳管）：真机下发经 `publishMowerDps`（同花盆离线门禁、不占忙锁、内部串行保证
+  106→107→108→114 顺序），上报按原始值解；**下发后 5 秒没回显按设备快照回弹**（协议 V2.2 §1）；失败经 `failures`
+  由外壳弹提示；真机不开模拟面板；静态演示行为不变；
+- 补 DP103 解码、时区码解析、枚举按字符串/序号认；新增 15 条用例；`PRODUCT_RULES` §4.8、`AI_CONTEXT`、历史记录同步。
+
+### 验证
+
+四个 Dart 静态自检（330 文件）+ 括号配平通过；**未跑** analyze / flutter test / 编译 / 真机（本机无工具链）。
+
+### 真机第一轮要看的
+
+1. 割草机 BLE 广播的 pid、配上后 `DeviceBean` 的 pid 是否就是 `mz7g3yzaufvoh4ls`——花盆就不是（广播 `ehbx…`、平台 `yciq…`）。
+   不是的话搜索页不列 / 列表当花盆，打开 `PairingGate.showUnfilteredBleScan` 或看消息调试板里的 pid，补进后台或常量；
+2. 模组是否 Wi-Fi + BLE 双模（纯 Wi-Fi 或纯 BLE 这条配网路走不通）；
+3. DP3 枚举序（09-18 遗留：xlsx 说明列与枚举列表不一致，按枚举列表 smart=1）；
+4. iOS 没接 BLE 扫描 / 双模配网，iOS 上配不了（花盆同样）。
+
 ## 2026-09-21（一）相册APP：安卓打包 pub 解析失败（objective_c 9.6.0 与 flutter_test 冲突）——打包机 Flutter 太旧，无代码改动
 
 用户贴报错：`objective_c 9.6.0 is incompatible with flutter_test from sdk … version solving failed`。
