@@ -702,3 +702,16 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 用户：「DESIGN_SPEC.md 里面的 12. 变更记录就不要写到这个文档里面，按要求在这个统筹项目中记录了就行」。
 - 整节 29 行按日期倒序搬到 `private/minerals-admin/logs/DESIGN_SPEC-变更记录.md`；规范里「末尾有变更记录」「10.4 在变更记录加一行」两处一并改掉。
 
+## 2026-09-21 | 顶栏 AI 入口「小乾」眼睛跟随鼠标、悬停/点击台词（`aa1e974`）
+
+- **用户**：「让它的双眼始终指向用户鼠标的移动位置……谨慎实现，我看看效果好不好，可能也会去掉；hover 或点击给些文案」。
+- **抹眼睛**：原图（154×154）左眼约 x58–66 / y67–73、右眼 x78–87 / y68–74，面罩 x50–97 / y57–83。
+  盒子 `[55,64,70,77]`、`[75,65,91,79]` 内每个像素取「左右边界横向插值」与「上下边界纵向插值」的平均；8 倍放大能看出很淡的边界，77px 显示看不出。
+  工具脚本在 Hub `.codex-tmp/robot/`（`inpaint.cjs`、`preview2.cjs`）。
+- **新眼睛**：SVG 两段「∩」（`M59.4 73.4V72.1A3.5 3.4 0 0 1 66.4 72.1V73.4` / `M80.3 74.3V72.9A3.45 3.4 0 0 1 87.2 72.9V74.3`），
+  外层 `#2F8DFF` 3.8 粗 + 高斯模糊 1.3 做光晕，内芯 `#9FE3FF` 1.5 粗；原图核心色取样约 `rgb(170,235,252)`。
+- **视线**：`reach = d / (d + 160)`，眼睛平移 `4×3`（原图单位 = 显示 2×1.5px），头 `perspective(240px) rotateY(±10°) rotateX(±8°)`。
+- **性能口径**：passive `pointermove` + rAF 合并；只写 `--gaze-x/y` 两个变量；眨眼用 `setTimeout` 切类名（无限 CSS 动画会每帧重绘 SVG）；`document.hidden` 时跳过；`prefers-reduced-motion` 不挂监听。
+- **气泡**：`.navbar` 是 `overflow:hidden`，只能 teleport —— 用受控 `el-tooltip`（`:visible`），`popper-class="ai-bot-bubble"`。
+- **验证**：渲染台 `.codex-tmp/sfc-render/bot.html` + `bot-test.cjs` 11 项通过（尺寸、四个方向、600 次移动只写 2 次、悬停/移开/点击开关/2.2 秒收起、减少动态效果）；截图 `bot-montage.png`。未在真实整页里跑。
+
