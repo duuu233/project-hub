@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-21（一）花盆APP：「我的」页去掉设备设置、意见反馈读后台平台邮箱、关于页改「智能设备」（`76b2a7f`）
+
+用户：「我的页面：1，去掉设备设置 2，意见反馈要读取后台配置的邮箱，3，关于 点击去 去掉 智能花盆的文字改为智能设备（LOGO保留）」。
+- 设备设置：删 `MineMenuKind.deviceSettings`（菜单剩六项），为它加的 `selectedPlanter` 随之无用一并删（含割草机那条用例）；图标常量首页还在用，保留。
+- 意见反馈：邮箱一直是空的——`BackendBasicData.contact` 只认 `serviceEmail` 等猜的键名，swagger `BasicDataApiOut` 里实际字段是 `platformEmail`。
+  新增 `BackendBasicData.platformEmail`；`loadBasicData({refresh})`，「我的」页进页 / 网络重试都重拉，失败保留旧值。后台没配仍不显示、不写死。
+- 关于：标语改「您的智能设备贴心伴侣」，Logo / 字标不动；启动页隐藏着的同一句一起改。MaterialApp title 等其它「智能花盆」没动（不在要求内）。
+- 用例 +3（菜单六项与邮箱、refresh 重拉 / 失败保留），改 4 份旧用例；文档：PRODUCT_RULES §4.9、AI_CONTEXT、MINE / ABOUT 实现说明、history 记录。
+- 本机无工具链：四个 Dart 静态自检（331 文件）+ 括号配平；analyze / test / 真机未跑。
+
+---
+
 ## 2026-09-21（一）相册APP：依赖部分回退到 Flutter 3.44 基线（`a84ea3f`）；文档写明本机环境改动不提交（`77a7593`）
 
 用户：按「依赖部分在仓库里回退、iOS 留给 ltt」处理；「文档写清楚，不让她本地的上传到 git，不要影响我其它的电脑」。用户打包机为 Flutter 3.44.6（Dart 3.12.2）。
