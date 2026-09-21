@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-21（一）相册 APP：`flutter pub get` 报 version solving failed（只查原因 + 补文档，`aeb9fc2`，已推送）
+
+环境：ssh 开发机 · 项目 album-app（`flutter`）· 分支 `main`
+
+用户贴来的报错：`objective_c 9.6.0 is incompatible with flutter_test from sdk … version solving failed`。
+
+- **不是本轮代码引起的**（没动过依赖文件）。来源是同事 `ltt` 2026-09-18 的 `219ad59`（iOS 构建配置）：在较新的 Flutter 上
+  重新生成了 `pubspec.lock`（`meta` 1.18.0 → 1.19.0），并加了 `dependency_overrides: objective_c: 9.6.0`。
+- 依赖链（pub.dev 实查）：`objective_c 9.6.0 → code_assets ^2.0.0 → hooks 2.2.0 → record_use ^1.0.0 → meta ^1.19.0`；
+  而 **Flutter 3.44.x 的 `flutter_test` 钉死 `meta 1.18.0`**，3.47.x 放宽成 `^1.18.3`（GitHub 各 tag 实查）。
+  用户机器是 3.44.x，覆盖钉死 9.6.0，pub 退不回 9.5.0，于是解不开。
+- **处理**：用户机器 `flutter upgrade`（stable，当前 3.47.5）后 `flutter pub get`。不建议放宽覆盖——3.44 会把共享的 lock
+  往下改（objective_c 9.5.0 等），一提交就把 iOS 那台拖回去。
+- 已写进 album-app `AI_CONTEXT.md`「Environment status」（原来那条「用哪个 Flutter 版本待确认」）。
+
 ## 2026-09-21（一）相册双端：三项问题核对（小程序 `118ff7e`、App `917efa8`，均已推送）
 
 环境：ssh 开发机 · 项目 album-miniapp（`photo-album`，起点 `e9d238c`）、album-app（`flutter`，起点 `d7dfb80`）· 分支都是 `main`

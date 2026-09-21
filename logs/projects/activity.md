@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **`flutter pub get` 报 version solving failed 定位**：同事 09-18 `219ad59` 在新版 Flutter 上重生成 lock（meta 1.19.0）并加 `dependency_overrides: objective_c: 9.6.0`；该版本依赖链要求 meta ^1.19.0，而 Flutter 3.44.x 的 flutter_test 钉死 meta 1.18.0（3.47.x 放宽为 ^1.18.3）。处理：本机 `flutter upgrade` 到 3.47.x 再 pub get，不放宽覆盖。要求写进 album-app `AI_CONTEXT.md` Environment status。仅文档。 | 已推送 `aeb9fc2` |
 | **2026-09-21** | **album-miniapp + album-app（相册双端）** | ssh / `main` | **三项问题双端核对**：① 官方图库「连接并投屏」后预览仍未连接——**仅小程序**：后端记录不带本机 BLE 句柄、原样进预览靠后台预热，改为先 `ensureConnectedForAction` 再进预览，预览页无句柄时先等预热再当场连；② 下载超时英文提示——**仅小程序**：新增 `utils/download-error.js`，官方图库 / 结果页取原图 / 固件包 / AI 对话统一中文，结果页兜住 `xxx:fail` 原文；③ 一键清空设备已刷默认图还在转圈——**双端都有**：0x12 应答预算按张数给、期间只等这一条，改为 5 秒起 3 秒一拍回读 0x01，掩码清空即收尾并 `cancelPending` 收回应答（小程序 `utils/clear-watch.js`、App `clear_watch.dart`）。小程序全量 63 个用例绿（新增 3 个）；App 无 SDK 未编译，新增 4 条用例未跑；两端未真机。 | 已推送：小程序 `118ff7e`、App `917efa8` |
 | **2026-09-21** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **顶栏上下文切换框宽度跟随选中文案**：固定 326 → 自适应（最窄 120、最宽 480，超长省略、窄屏可收窄）；规范第 8 节同步并更正 AI 入口图的旧描述。 | 已推送 `782189b`；静态顶栏实测 1920/1366 两种宽度 |
 | **2026-09-21** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **小乾跟随幅度加大**：平面图光转头只会变窄，改为转头 30°/22° + 歪头 10° + 位移 5px + 眼睛 6×4，幅度收进 CSS 变量。 | 已推送 `64129cd`；11 项行为测试通过 |
