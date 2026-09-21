@@ -619,3 +619,24 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
   （`StatusSwitch`、`ListTableCard` 各少了三十来行），只删注释、不动代码，与本次报错无关。
   ⚠️ 但这意味着**写在业务仓代码注释里的说明会被抹掉**，重要口径要同时写进 `DESIGN_SPEC.md` / README（这两类没被删）。
 - **未确认这就是用户遇到的那一个**：已请用户提供控制台第一条红字报错 + 堆栈。
+
+## 2026-09-21 | 详情页顶部信息卡：只在详情显示 + 全量补标题与副标题（`de8b086`）
+
+用户口径：提单的「新建提单 / 查看与管理提单的全流程信息…」这块在新建、编辑时都不要，只有详情要；
+其余模块的详情页也补上这块（标题 + 副标题），例：出库计划详情「查看与管理出库计划、关联提货单与计划出库货物明细」，其它自拟。
+
+- **提单**：`<DetailHeaderCard v-if="+pageType === 3" title="提单详情" …>`，删掉只为新建/编辑服务的 `PAGE_TITLE` / `headerTitle`。
+- **共用 `handleDetail.vue` 的 47 个页面**：在模板根节点下第一个位置插
+  `<DetailHeaderCard v-if="+pageType === 3" title="XX详情" subtitle="…" />` + import（脚本批量插入：解析根节点开标签的
+  结束位置、跳过引号里的 `>`；插入后逐个抽查、54 个改动的 SFC 全部编译通过）。`+pageType` 兼容路由里传进来的字符串。
+- **只有详情、组件里没有 `pageType` 的**：金融产品（`financial-project`）无条件显示。
+- **详情走自定义 `detail.vue` 的**：提货、帮助中心、小程序直接放；资讯详情原来是单根 `Collapse`，
+  外面包一层 `div` 再放卡（保持单根——`AppMain` 外面有 `transition mode="out-in"`，多根会动画失效并告警）；
+  贷后详情是按事项类型分发的壳，包一层 `div`，只在 `pageType=3` 时显示，标题带类型（「贷后详情 · 海运」）。
+- **跳过两处**：国内采购订单（`deomestic-purchasing`）自带标题区（`trade-page-intro`，还是静态原型页），加了就重复；
+  消息设置（`system/news`）是配置页、自带「消息设置」标题。
+- **间距**：区块卡 `.collapse-box` 只有下边距，卡片紧贴第一块区块卡 —— 在 `zk/detail-page.scss` 里加
+  `.zk-detail-header { margin-bottom: 12px }`，并用 `.zk-detail-header:has(+ .el-affix) { margin-bottom: 0 }`
+  让紧跟 Tab 条的页面（提单、资产）不叠成 24。写在 `.zk-detail-page` 外面，自定义详情页也吃得到。
+- 文档：`DESIGN_SPEC.md` 6.1 + 变更记录、`DetailHeaderCard/README.md` 约定。
+- ⚠️ 未在浏览器里看过；副标题是按各页区块内容自拟的，全表在 Hub 的 iterations 里，供产品改字。

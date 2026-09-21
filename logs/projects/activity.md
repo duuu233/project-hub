@@ -1733,3 +1733,10 @@
   `SettlementInfo` 对字典 `.find(...).label` 没判空（切到结算信息 / 保存时触发）、`CustomsInfo` 弹窗 `JSON.parse` 没兜底。
 - 另发现队友的 automated batch synchronization 会删注释（只删注释不动代码），与本次无关。
 - 交付：minerals-frontend `a818871`（已推送）。⚠️ 未确认是用户遇到的那一个，等控制台报错原文。
+
+## 2026-09-21 | minerals-admin | SSH 开发机 | feature-v1.8.4 | 详情页顶部信息卡
+
+- 提单顶部信息卡改为只在详情显示（新建/编辑不出现）；其余 53 个详情页补上「XX详情 + 一句副标题」
+  （47 个共用 handleDetail 的用 `v-if="+pageType === 3"`，金融产品与 5 个自定义 detail.vue 直接放/包一层）。
+- 跳过国内采购订单（自带标题区）与消息设置（配置页）。卡与下方留 12，紧跟 Tab 条时不加。
+- 交付：minerals-frontend `de8b086`（已推送）。54 个 SFC 编译通过，未在浏览器看过。
