@@ -1682,3 +1682,14 @@
 - 用户反馈安卓手机上长按复制不好按：标题行右侧加 `复制全部` 按钮（与长按共用 `_copyAll`，提示带字数）；
   复制文本改成任何时候都有内容（至少带 probe 版本、uid/家庭/设备数、目标设备与类型）。版本印子升到 `probe-v4`。
 - 交付：flowerpot（已推送）。仍未真机验证。
+
+## 2026-09-21 | flowerpot-app | SSH 开发机 | main | 定位：告警档整个账号是空的
+
+- `probe-v4` 完整采集三个口径一致（按设备取 0 条、按类型取全账号告警 0 条、`alarm=false`）
+  → 后台那条 `text2` 没落进消息中心的告警档，**问题在平台侧不在查法**。
+- 顺带定下：`getMessageListByMsgSrcId` 只对告警档有意义（家庭/通知报 `101001 JSON PARSE EXCEPTION`）；
+  类型字段够用（家庭 `msgType=-1`/`msgCode=ADD_DEVICE_FOR_LOCATION_MSG_V2`、通知 `msgType=0`/`LOGIN_MSG_CENTER`，
+  细分用 `msgCode`）；该账号实际绑的是 `6c707c…m7hm`；`getMessageMaxTime` 与通知档最新时间对得上（秒）。
+- 设备日志：方法在但空 dpIds/空时间被拒（`Illegal parameter error.`），改成四种取值逐个试；
+  加 dpIds 输入框（默认 `103,105,106`）与最近 7 天毫秒时间窗。
+- 交付：flowerpot `712db4f`（已推送）。待平台侧确认推送是否落消息中心。

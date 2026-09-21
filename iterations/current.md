@@ -126,6 +126,34 @@ App 拿不到，得后端代理）。
 **待用户采集一次**（用默认设备 `6c2649322ed1365a00cadl` + 「三档都试」+ 两个按钮各点一次，长按复制），
 按这份输出能分清四种可能：账号/家庭不对、设备不在这个账号、消息不在告警档、或那条推送压根没落进消息中心。
 
+### 二之七：定位到了 —— 告警档整个账号是空的（`712db4f`）
+
+`probe-v4` 的完整采集（uid `YS40301` / 家庭 `251447714` / 已绑定 1 台 / 目标设备 `6c26…cadl` / 类型 ALL）
+**三个口径一致**：按设备取 `MSG_REPORT ← 0 条`、按类型取（不带设备、全账号）**告警 0 条**、
+`requestMessageNew() → alarm=false, family=false, notification=true`。
+
+→ **那条 `text2`（编号 `GYjoVtpHsqHjpZbc`、等级「轻微」）没有落进消息中心的告警档。**
+App 侧三种问法都说没有，再改查询参数也变不出来；往下查得回平台侧（那条推送有没有真的触发、
+推送渠道是否包含「消息中心 / App 内消息」）。
+
+顺带定下来的：
+
+1. **`getMessageListByMsgSrcId` 只对告警档有意义** —— 同参数换 `MSG_FAMILY` / `MSG_NOTIFY` 会被 SDK 报
+   `101001 JSON PARSE EXCEPTION`（通知档的消息本来就没有 `msgSrcId`）；那两档要用 `getMessageListByMsgType`。
+2. **类型字段够用，产品最初的问题可以结案**：家庭档 `msgType=-1` / `msgTypeContent=添加设备|移除设备` /
+   `msgCode=ADD_DEVICE_FOR_LOCATION_MSG_V2|DEVICE_USER_DELETE_MSG_V2` / `msgSrcId=设备ID`；
+   通知档 `msgType=0` / `通知` / `LOGIN_MSG_CENTER` / **无 msgSrcId**。分档用 `MessageType` 或
+   `msgTypeContent`，**细分文案用 `msgCode`**（比 `msgType` 有用，家庭档的 `msgType` 是 -1）。
+   「推送等级」在这两档看不到（`alarmType` 都是 0），要等真有一条告警消息。
+3. 这个账号实际绑的是 `6c707c…m7hm`（家庭消息写着「YS40301添加的花盆test」），后台给的 `6c26…cadl`
+   在该账号消息里从未出现 —— 但不是主因（告警档全账号 0 条）。
+4. `getMessageMaxTime()` 与通知档最新时间对得上（秒）。
+
+**设备日志**：`queryDeviceOperateLogs` 方法确实在（实例方法清单里），但 dpIds 与时间留空时服务端回
+`Illegal parameter error.` → 改成**四种取值逐个试**（dpIds + 毫秒时间窗 × sort=false/true、
+时间留空、dpIds 留空），每次报错记进诊断、命中的写进 `accepted`；Dart 默认给最近 7 天的毫秒时间戳，
+调试板加 dpIds 输入框（默认 `103,105,106`）。版本印子 `probe-v5`。
+
 ### 三、验证与限制
 
 - 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；
