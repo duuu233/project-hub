@@ -600,3 +600,22 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
   改过的样式块与整条 `index.scss` 用 dart-sass 编译通过，产物里的 `.zk-chip` / `.tags-view-container` 逐条看过。
 - **没在浏览器里看过**：46 的行高、页签垂直居中、`×` 的位置与选中态观感待复核。
 - 规范 8 标的顶栏是 76，实现仍是 64（不在本轮范围，令牌注释里写明了由导航负责人收口）。
+
+## 2026-09-21 | 提单详情报错排查（用户未给报错原文）
+
+用户只说「提单详情报错了」，没有控制台报错原文。排查过程与结论：
+
+- 提单详情链路（`detail.vue` → `template/handleDetail.vue` → 六个 Tab 组件 + `DetailHeaderCard` / `StatusSwitch` /
+  `AiResultCompare` / `BottomFixedBtnsBox`）13 个 SFC 用 `@vue/compiler-sfc` 全部编译通过 —— **不是模板/语法错误，是运行时**。
+- `handleDetail.vue` 自身写得很防御（`?.` / `|| []` / try-catch 都有），`CargoInfo` 的 props watcher 也有判空。
+- **确定会抛错的两处，已修（`a818871`）**：
+  1. `SettlementInfo.vue` 的 `syncWithInspectionInfo`：`product_ingredients.value.find(o => o.value == v.ingredient).label`
+     没判空。字典是异步加载的，价格接口也可能回字典里没有的成分编码 → `Cannot read properties of undefined (reading 'label')`。
+     触发时机：**切到「结算信息」Tab 或点保存 / 移交仓储**（`coordinateDataSync` 会调它）。改成 `?.label ?? v.ingredient`。
+     与队友 `fc90c3c`（融资详情 `options[0].value`）是同一类问题。
+  2. `CustomsInfo.vue` 的 `showDialog`：`JSON.parse(item.containerNos / statusNode)` 没兜底，历史数据不是 JSON 时点开弹窗就抛
+     `SyntaxError`。抽成 `parseJsonList`，解析失败按空数组。
+- 顺带确认：队友 kimi 的 `chore: automated batch synchronization`（如 `5bce8a9`）会**删掉文件里的注释**
+  （`StatusSwitch`、`ListTableCard` 各少了三十来行），只删注释、不动代码，与本次报错无关。
+  ⚠️ 但这意味着**写在业务仓代码注释里的说明会被抹掉**，重要口径要同时写进 `DESIGN_SPEC.md` / README（这两类没被删）。
+- **未确认这就是用户遇到的那一个**：已请用户提供控制台第一条红字报错 + 堆栈。

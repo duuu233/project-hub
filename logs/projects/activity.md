@@ -1726,3 +1726,10 @@
   App 查法没问题。调试板默认设备改回当前账号已绑定那台（probe-v9）。
 - 剩：推送等级字段（本账号设备真触发一次再看）、设备日志第七参语义、iOS 两个接口、三档接真数据、事件日志走后端代理。
 - 交付：flowerpot `952de08`（已推送）。
+
+## 2026-09-21 | minerals-admin | SSH 开发机 | feature-v1.8.4 | 提单详情报错排查
+
+- 用户未给报错原文。13 个相关 SFC 编译全通过 → 运行时问题。找到并修掉两处确定会抛错的：
+  `SettlementInfo` 对字典 `.find(...).label` 没判空（切到结算信息 / 保存时触发）、`CustomsInfo` 弹窗 `JSON.parse` 没兜底。
+- 另发现队友的 automated batch synchronization 会删注释（只删注释不动代码），与本次无关。
+- 交付：minerals-frontend `a818871`（已推送）。⚠️ 未确认是用户遇到的那一个，等控制台报错原文。

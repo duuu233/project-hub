@@ -1,5 +1,22 @@
 # 当前迭代
 
+## 2026-09-21（一）正矿：提单详情报错排查（`a818871`，已推送；待用户给报错原文确认）
+
+环境：ssh 开发机 · minerals-admin · `feature-v1.8.4`（同步到 `126fa68` 后开工）
+
+用户只说「提单详情报错了」，没给控制台报错。相关 13 个 SFC 编译全通过 → 运行时问题。
+`handleDetail.vue` 与 `CargoInfo` 的 watcher 都有判空；**确定会抛错的两处已修**：
+①`SettlementInfo` 的 `product_ingredients.value.find(...).label` 没判空（切到「结算信息」或点保存时触发，
+与队友 `fc90c3c` 融资详情 `options[0].value` 同类）→ `?.label ?? v.ingredient`；
+②`CustomsInfo` 弹窗 `JSON.parse` 没兜底 → `parseJsonList`，失败按空数组。
+
+另：队友的 `chore: automated batch synchronization` 会**删掉代码注释**（只删注释不动代码），与本次无关，
+但写在业务仓注释里的口径会被抹掉 —— 重要说明要同时进 `DESIGN_SPEC.md` / README。
+
+⚠️ 未确认就是用户遇到的那一个，已请用户发控制台第一条红字 + 堆栈。
+
+---
+
 ## 2026-09-21（一）花盆 APP：恢复出厂先下发 DP 141，下发成功才解绑（`3024265`，已推送）
 
 环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（起点 `4fd75a5`）
