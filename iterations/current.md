@@ -154,6 +154,22 @@ App 侧三种问法都说没有，再改查询参数也变不出来；往下查�
 时间留空、dpIds 留空），每次报错记进诊断、命中的写进 `accepted`；Dart 默认给最近 7 天的毫秒时间戳，
 调试板加 dpIds 输入框（默认 `103,105,106`）。版本印子 `probe-v5`。
 
+### 二之八：时间筛选与产品 ID 两个追问（`9b62a97`）
+
+**① `getMessageListByMsgSrcId` 不支持时间筛选。** 解包核对的四个重载里，除 `offset`/`limit`/
+`MessageType`/`msgSrcId` 外多出来的只有两个图片相关 boolean；`getMessageListByMsgType` 也没有时间参数。
+整个 `IThingMessage` 上带时间的只有**聚合**那条 `getMessageList(int, int, long start, long end, cb)`。
+→ 接成桥接 `messagesByTime`（**只当诊断**）：单位官方没写，原生先按毫秒调、拿到 0 条再按秒试一遍，
+被接受的写进 `unit`；给了设备 ID 就顺手数这一页里有几条是它的。调试板加「开始/结束 `yyyy-MM-dd`」
+两格（默认最近 7 天）+「按时间窗拉消息（聚合口径）」按钮。
+⚠️ 但时间**不是**这次查不到的原因：告警档 `totalCount=0`、按类型取全账号 0 条、`alarm=false`，空集合与时间无关。
+
+**② 产品 ID 更可疑。** 用户确认推送规则配在 `ehbx83xdh9jkmxvz` 上。调试板现在把已绑定设备打成
+`设备ID(pid=产品ID)`，并直接判一行「目标产品 `ehbx83xdh9jkmxvz`：有绑着这个产品的设备 /
+⚠️ 账号里没有这个产品的设备——推送规则配在它上面就不会触发」。
+**规则配在 A 产品、账号里绑的是 B 产品的设备**，正是"后台看得到、App 收不到"的典型成因。
+版本印子 `probe-v6`。
+
 ### 三、验证与限制
 
 - 本机无 Flutter 工具链：analyze / test / 编译 / 真机**全未跑**；

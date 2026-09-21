@@ -1693,3 +1693,12 @@
 - 设备日志：方法在但空 dpIds/空时间被拒（`Illegal parameter error.`），改成四种取值逐个试；
   加 dpIds 输入框（默认 `103,105,106`）与最近 7 天毫秒时间窗。
 - 交付：flowerpot `712db4f`（已推送）。待平台侧确认推送是否落消息中心。
+
+## 2026-09-21（追加）| flowerpot-app | SSH 开发机 | main | 时间筛选与产品 ID
+
+- `getMessageListByMsgSrcId` **没有时间参数**（四个重载多出来的只有两个图片 boolean），
+  带时间的只有聚合的 `getMessageList(int,int,long,long,cb)` → 接成 `messagesByTime`（诊断用，
+  先按毫秒试、空了按秒试，被接受的单位写进 `unit`），调试板加起止日期与按钮。
+- 用户确认推送配在产品 `ehbx83xdh9jkmxvz` 上 → 已绑定设备改打 `设备ID(pid=产品ID)` 并判一行
+  「账号里有没有这个产品的设备」：规则配在 A 产品、账号绑 B 产品，是"后台看得到 App 收不到"的典型成因。
+- 交付：flowerpot `9b62a97`（已推送）。probe-v6。
