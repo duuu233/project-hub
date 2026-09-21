@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：ltt 的 iOS 构建配置提交（`219ad59`）为什么逼着升 Flutter——不是功能需要，是绕开 objective_c 9.6.1 的坏版本（`565edb4`，仅文档）
+
+用户：读 ltt 那次升级，是不是某些功能导致必须升级（ltt 是 iOS 端）。
+- 依赖树里只有 `path_provider_foundation 2.6.0` 依赖 `objective_c`（`^9.2.1`，逐个解析 lock 里 123 个托管包的 pubspec 核实）。
+- 9-15 发布的 `objective_c 9.6.1` 构建钩子引用 `Architecture.arm64e`，已发布的 `code_assets` 都没有 → 所有 iOS/macOS 构建失败
+  （`Member not found: 'arm64e'`，dart-lang/native#3640，维护者当天承诺撤回）。ltt 9-18 升依赖正好会拿到 9.6.1，于是钉死 9.6.0 —— **绕坑，不是功能需求**。
+- 钉的是 9.6.0（`code_assets ^2.0.0` → `hooks 2.2.0` → `record_use` → `meta ^1.19.0`），这才让 3.44 解不开；钉 9.5.0 也能绕开坏版本且兼容 3.44。
+- ltt 那台 Mac 换了 Flutter（Podfile.lock 里 Flutter 校验值变了、iOS 最低 13→15 与 3.47 模板一致、meta 1.19 只有 3.47 能解）；
+  另外不止 `pub get`，fluwx 等非 SDK 包也被升了，像是跑了 `pub upgrade`。换 Flutter 的原因仓库里看不出来（同期构建号 +1→+3→+4，像在准备提审），需要问 ltt。
+- 其它：`speech_to_text` 的 Pod 这次才第一次进 Podfile.lock（语音功能加上后 iOS Pod 没重新装过）；`enable-swift-package-manager: false` 是自选（3.44/3.47 stable 都默认开）；
+  `96752a2` 把 `CURRENT_PROJECT_VERSION` 写死成 4，以后构建号要在 pubspec 和 Xcode 两处改，`--build-number` 不再生效。
+- 现状：9.6.1 已撤回（pub.dev latest = 9.6.0）。覆盖保留无害；等修好的 9.6.2 发布再去掉。全队统一 Flutter 3.47.x 才是根本（用户已升）。
+
+---
+
 ## 2026-09-21（一）相册APP：升级 Flutter 3.47 后安卓打包成功，输出里的报错/警告均非致命（`2b4c1b3`，仅文档）
 
 用户升级后打包成功，但日志里有长堆栈和三条警告。
