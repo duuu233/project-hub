@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：依赖部分回退到 Flutter 3.44 基线（`a84ea3f`）；文档写明本机环境改动不提交（`77a7593`）
+
+用户：按「依赖部分在仓库里回退、iOS 留给 ltt」处理；「文档写清楚，不让她本地的上传到 git，不要影响我其它的电脑」。用户打包机为 Flutter 3.44.6（Dart 3.12.2）。
+- `a84ea3f`：删 `dependency_overrides: objective_c: 9.6.0`；`pubspec.lock` 恢复为 `219ad59~1`（`meta 1.18.0` / `objective_c 9.4.1` / `hooks 2.0.2`）。
+  先核对 9-18 后 `pubspec.yaml` 依赖声明未变（只多 version / 覆盖 / SwiftPM 开关）；再按 3.44.6 的 flutter / flutter_test / flutter_localizations pubspec
+  核对 lock 里 14 个 SDK 钉版本包全部一致 → 3.44.6 上 `pub get` 不会改 lock。`version: 1.0.0+4` 与 SwiftPM 开关未动。
+- `77a7593`：基线定为 3.44.6；`BUILD_RELEASE.md` 〇.6 新增第 6 条「本机环境带出来的改动一律不提交、不推送」（列出易被本机工具改写的文件、提交前 `git status`、`git checkout --` 丢弃）；
+  〇.7 改为「依赖已回退、iOS 部分待 ltt」：先切 3.44.6 再拉代码、只提交 Podfile / Podfile.lock / pbxproj 部署版本行（及 SwiftPM 开关），其余丢弃；本地临时打包办法作废。
+  `AGENTS.md`、`AI_CONTEXT.md`、docs 索引同步。
+- 未在本机跑 `pub get` / 打包（无 Flutter），等用户在 3.44.6 上拉代码打包验证。
+
+---
+
 ## 2026-09-21（一）相册APP：打包机回到 3.44 后又报 meta 冲突——给本地临时打包办法（仅文档）
 
 - 用户再次贴出 `objective_c 9.6.0 is incompatible with flutter_test`：仓库无变化（覆盖仍在、lock `meta 1.19.0`），是打包机 Flutter 回到了 3.44（上一轮成功那次的警告阈值属于 3.47.5）。

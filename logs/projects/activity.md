@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **依赖回退到 Flutter 3.44 基线**：删 objective_c 9.6.0 覆盖、lock 恢复为 9-18 前版本（SDK 钉版本 14 包与 3.44.6 核对一致）；基线定为 3.44.6，文档写明「本机环境带出来的改动一律不提交」，iOS 部分（最低版本 13、SwiftPM 开关、pod install、真机）待 ltt。 | 已推送 `a84ea3f`、`77a7593`；待用户安卓打包验证、ltt 做 iOS 部分 |
 | **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **定 Flutter 3.44.x 基线：不是必须不动依赖和环境**（纯文档）：核实 9-18 `219ad59` 的升级非必须（lock 自身只要 3.44、objective_c 强制版本是升级后果、Pod 最低 iOS ≤13、3.44 默认即开 SwiftPM、7 月 3.44 已出过 iOS 正式包），打包指南新增基线规则与回退步骤（待 ltt 执行），AGENTS/AI_CONTEXT 同步。 | 已推送 `23bf305`；待 ltt 回退、安卓机随后降回 3.44 |
 | **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **ltt iOS 构建配置提交为何逼升 Flutter**（纯文档）：objective_c 9.6.0 覆盖是为绕开 9.6.1 坏版本（构建钩子引用不存在的 arm64e，iOS 全部构建失败，dart-lang/native#3640，现已撤回），不是功能需求；钉 9.6.0 恰好把 meta 拉到 1.19 才要求 Flutter 3.47。iOS 最低 15 随 3.47 模板；SwiftPM 关闭为自选。写入项目 AI_CONTEXT。 | 已推送 `565edb4` |
 | **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **安卓打包：Flutter 3.44→3.47 后的输出核对**（纯文档）：pub 解析失败根因为 3.44.x 的 flutter_test 钉死 meta 1.18.0（逐个 tag 核实），升级后打包成功；日志里 Windows 删不掉 flutter_tools 编译缓存的堆栈是非致命（Kotlin 回退为非守护进程编译），Gradle/AGP/KGP 三条为即将停止支持的预告。写入项目 AI_CONTEXT。 | 已推送 `2b4c1b3`；未在本机构建（无 Flutter） |
