@@ -658,3 +658,19 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 删掉若依遗留的一堆没用的样式（`breadcrumb-container` / `errLog-container` / `right-menu-sub-item` 等）。
 - 规范 8 补全顶栏各元素规格，5.1 竖向预算改为 76 + 46 = 122，变更记录一行。
 - 验证：三个 SFC 编译通过、样式块 dart-sass 编译通过；**未在浏览器里看过**，窄屏下右侧一排会不会挤（切换框 min-width 160）待看。
+
+## 2026-09-21 | 顶栏复核返工：机器人图、帮助中心图标、图标居中（`142ef82`）
+
+用户复核指出三处：机器人没换成稿里的、帮助中心左边的图标不对、控制塔右边的图标没上下居中；要求图从 Figma 直接下载用。
+
+- **机器人**：上一轮保留了仓库里会动的 `ai-logo.svg`，嫌稿里原图 1254×1254 / 1.1MB 太大——这是我自作主张。
+  改为用 figma MCP 按**节点渲染**导出（`pngScale: 2`）：得到 154×154、26KB，**投影已烘焙在图里**（48 的图四周各多 14.5）。
+  放进 `src/assets/images/navbar/ai-assistant-2x.png`，显示 77×77、`margin: -14.5px` 把占位收回 48×48。
+  （MCP 用 `imageRef` 下的是原始填充图；不带 `imageRef` 按节点导出才是按尺寸渲染的成品——以后要「稿里的图」走后者。）
+- **帮助中心图标**：新旧两版顶栏节点（371:2852、1:12959）里都**没有帮助中心**，没有原件可导，
+  按控制塔图标同一套画法重画（20×20、2.2 粗描边、圆角端点、跟随文字色）。已告知用户，若另有指定图标给节点链接即导出。
+- **居中**：文字链里的 svg 改 `display: block`，`.navbar-link` 固定 20 高。
+- **这次真的看了效果**：本机有 `~/.cache/ms-playwright` 的 headless Chromium，借用 `/pgdata/pg/work/.../playwright-core`（只读 import）
+  把 `Navbar.vue` 的模板和样式抽成静态 HTML 渲染，量出各图标与文字的竖直中心都是 37.5（差 0px），并与 Figma 导出图逐段并排比对。
+  坑：Vue 模板里合法的 `<span class="navbar-divider" />` 直接当 HTML 渲染会被当成开标签、后面元素全套进去——mock 里要先改成成对标签；真实页面不受影响。
+  产物在 Hub `.codex-tmp/navbar-check/`（`compare.png`）。以后改纯样式可以照这个办法先截图再推。
