@@ -1,5 +1,18 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：升级 Flutter 3.47 后安卓打包成功，输出里的报错/警告均非致命（`2b4c1b3`，仅文档）
+
+用户升级后打包成功，但日志里有长堆栈和三条警告。
+- 堆栈：`Could not delete '…\flutter\packages\flutter_tools\gradle\build\kotlin\compileKotlin\cacheable\caches-jvm'` ——
+  Kotlin 守护进程清 Flutter 自带 Gradle 插件的编译缓存失败（Windows 文件被别的 Gradle/Kotlin 守护进程、IDE 或杀毒占用），
+  调用栈里的 `compileWithDaemonOrFallbackImpl` 就是随后走了「不用守护进程」的兜底编译，所以构建成功；`exception: warning:` 那些是 Flutter 插件自身的编译警告。
+  想消掉：关 IDE → `android\gradlew --stop` → 删 SDK 里的 `packages\flutter_tools\gradle\build`（下次构建自动重建）。
+- 三条「即将停止支持」：Gradle 8.14→建议 ≥9.1.0、AGP 8.11.1→≥9.0.1、KGP 2.2.20→≥2.3.20，与上一轮按 3.47.5 源码核对的预期一致（当前值正好在报错下限上）。
+  AGP 9 是大版本，建议单独排期、带真机回归再升，不顺手改。
+- 写进项目 `AI_CONTEXT.md`「Environment status」，便于其他机器对照。
+
+---
+
 ## 2026-09-21（一）花盆 APP：割草机真机配网 + DP 按真实对接（`45d9a23`，已推送）
 
 环境：ssh 开发机 · 项目 flowerpot-app（`flowerpot`）· 分支 `main`（起点 `3024265`）

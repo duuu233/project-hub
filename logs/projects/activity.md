@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **安卓打包：Flutter 3.44→3.47 后的输出核对**（纯文档）：pub 解析失败根因为 3.44.x 的 flutter_test 钉死 meta 1.18.0（逐个 tag 核实），升级后打包成功；日志里 Windows 删不掉 flutter_tools 编译缓存的堆栈是非致命（Kotlin 回退为非守护进程编译），Gradle/AGP/KGP 三条为即将停止支持的预告。写入项目 AI_CONTEXT。 | 已推送 `2b4c1b3`；未在本机构建（无 Flutter） |
 | **2026-09-21** | **flowerpot-app (花盆APP)** | ssh / `main` | **割草机真机：配网能走通 + DP 按真实对接**。核查原来不支持（搜索页只认花盆 ID、列表点进花盆详情、`MowerDevice` 只写日志不下发、快照按花盆解、「我的」页设备设置会带上割草机）。改：搜索页认 `MowerDp.productId` + 后台 `deviceIdList`；`isMowerDevice` 分流（列表进 `mowerHome` 带设备 ID、上报走 `mowerReports` 跳过花盆处理、`selectedPlanter`）；仓库加 `rawDps`；`MowerDevice.bind/release` 接真机——下发经 `publishMowerDps`（离线门禁、串行、raw 发 hex），上报按原始值解，5 秒没回显回弹，失败由外壳弹提示；静态演示不变。新增 15 条用例。⚠️ 无工具链未跑、未真机；真机先看割草机 pid 是否 `mz7g3yzaufvoh4ls`、模组是否双模。 | 已推送 `45d9a23` |
 | **2026-09-21** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **小乾去掉跟随鼠标，改 8 秒循环待机动画**（轻晃、跳一下、左右看、眨眼）：身体/眼睛两层只动 transform，走合成线程，静置实测主线程零重算零布局；悬停/点击台词保留。 | 已推送 `225f838`；定格截图 + 行为测试通过 |
 | **2026-09-21** | **album-app (相册APP)** | ssh / `main` | **`flutter pub get` 报 version solving failed 定位**：同事 09-18 `219ad59` 在新版 Flutter 上重生成 lock（meta 1.19.0）并加 `dependency_overrides: objective_c: 9.6.0`；该版本依赖链要求 meta ^1.19.0，而 Flutter 3.44.x 的 flutter_test 钉死 meta 1.18.0（3.47.x 放宽为 ^1.18.3）。处理：本机 `flutter upgrade` 到 3.47.x 再 pub get，不放宽覆盖。要求写进 album-app `AI_CONTEXT.md` Environment status。仅文档。 | 已推送 `aeb9fc2` |
