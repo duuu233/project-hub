@@ -1,5 +1,21 @@
 # 当前迭代
 
+## 2026-09-21（一）相册APP：核实 9-18 的 Flutter 升级不是必须；定下 3.44.x 基线与「不是必须不动依赖和环境」，写回退步骤给 ltt（`23bf305`，仅文档）
+
+用户：「不是强制的就尽量不要动依赖和环境，Flutter 也不要升级，文档写清楚，下次让她回退」「帮我确认下是否强制」。
+- 结论：**不是必须**。依据——
+  ① 当前 lock 自身 `sdks` 为 `flutter >=3.44.0` / `dart >=3.12.0`（3.44.x 自带 Dart 3.12.x，发布清单核对），无包要求 3.47；
+  ② `objective_c` 只被 `path_provider_foundation 2.6.0`（`^9.2.1`）依赖，3.44 上 pub 选不到 9.6.x（需 meta 1.19），坏版本 9.6.1 碰不到——强制版本是升 Flutter 的后果；
+  ③ 所有 Pod 最低 iOS ≤ 13.0（CDN 与 pub 包内 podspec 逐个核对），iOS 15 只是 3.47 模板默认；
+  ④ SwiftPM 在 3.44.0/3.44.3/3.44.7/3.44.9 stable 均默认开启；
+  ⑤ 7-16~8-28 lock 即 `objective_c 9.4.1`，7 月（3.47 未发布）的 iOS 正式包真机测过；Xcode 工程标记未变；未查到 3.44 与 Xcode 26 不兼容。
+  唯一无法从仓库判断的是 ltt 本人为何升级（如本机 Xcode 版本），回退步骤里写了「过不去就把报错写进文档再商量」。
+- 文档：`docs/runbooks/BUILD_RELEASE.md` 新增 〇.6 基线与规则、〇.7 回退步骤（Flutter downgrade、删覆盖与 SwiftPM 开关、恢复 `219ad59~1` 的 lock 且版本不得变化、iOS 13.0、pod install、验证清单、顺序：先回退再让安卓机 downgrade）；
+  `AGENTS.md` 加 Dependencies and Toolchain 规则；`AI_CONTEXT.md` 环境说明改为新口径（替换之前「遇到就 flutter upgrade」的写法）；docs 索引同步。
+- 待办：ltt 执行回退；之后安卓打包机从 3.47.5 downgrade 回 3.44.x；基线补具体补丁号。
+
+---
+
 ## 2026-09-21（一）相册APP：ltt 的 iOS 构建配置提交（`219ad59`）为什么逼着升 Flutter——不是功能需要，是绕开 objective_c 9.6.1 的坏版本（`565edb4`，仅文档）
 
 用户：读 ltt 那次升级，是不是某些功能导致必须升级（ltt 是 iOS 端）。
