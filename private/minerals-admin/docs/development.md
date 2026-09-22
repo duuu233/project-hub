@@ -191,6 +191,7 @@ EOS
 
 | 组件 | 职责 | 文档 |
 | --- | --- | --- |
+| `src/components/ListPageHeader/` | 列表页顶部标题区：24px 品牌色图标 + 26 Bold 标题（默认取路由菜单名）+ 副标题，右侧 `actions` 插槽放主按钮 | 同目录 `README.md` |
 | `src/components/ListSearchCard/` | 搜索面板：关键词（宽 + 放大镜）+ 筛选 + 查询/重置，下方「已选条件」标签（自动从 query 派生，可逐个 ×），`advanced` 字段收进「更多筛选」折叠区 | 同目录 `README.md`、`example.vue` |
 | `src/components/ListTableCard/` | 列表面板：52px 标题行（标题 + 共 N 条 + 工具区）、批量操作条、配置驱动的 `el-table`、60px 分页；内置 **列设置**（弹窗 + `localStorage` 持久化）与 text/link/multi/badge/dict/progress/date/actions 八种单元格 | 同目录 `README.md`、`example.vue`；列设置子件 `ColumnSetting.vue` |
 
