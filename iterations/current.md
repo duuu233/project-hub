@@ -1,5 +1,20 @@
 # 当前迭代
 
+## 2026-09-22（二）正矿：深空输入框聚焦、顶栏品牌字特效、Sass 弃用警告（`f0d9033`，已推送 `1.8.4-deep-space-theme`）
+
+- 用户：
+  1. 文本框聚焦时不要再多一个矩形高亮框，只亮 border；
+  2. 顶栏「正矿数科 / 产业互联网运营平台」太单薄，加点特效；
+  3. 问 `red() / green() / blue()` 的 Sass `color-functions` 警告是什么。
+- 原因 / 改法：
+  1. `deep-space.scss` 给所有 `input, textarea` 的 `:focus-visible` 加了 2px 外轮廓（offset 3），落在 Element 输入框里就是亮边框内再套一个直角框。荧光层对 `.el-input__inner / .el-textarea__inner / .el-select__input / .el-range-input / 数字框` 去掉轮廓；按钮、链接的键盘焦点轮廓保留。
+  2. 仅深色：左侧 3px 青→紫霓虹竖条（辉光呼吸），主标题冰白渐变字 + 蓝色辉光、每 5 秒一道光带扫过，副标题拉开字距、渐变字 + 尾部渐隐光线；减少动态效果时停住。浅色不变。
+  3. Dart Sass 已弃用全局颜色通道函数（将来 3.0 移除），项目只屏蔽了 `import / global-builtin` 两类，所以每次编译刷三条。改 `@use 'sass:color'` + `color.channel()`，编译产物与改前逐字一致、警告 0。
+- 验证：渲染台挂真实 Navbar + 6 种输入框，逐个聚焦 outline 均为 none；品牌字逐帧截图确认扫光；浅色对照不变；build + check-theme 通过；已清理。
+- 合并：远端先有 duu233 的 `4f08195`（仅 auto-imports.d.ts），变基后推送。
+
+---
+
 ## 2026-09-22（二）正矿：深空主题继续改——数据看板 / 提单编辑页 + 全站深色巡检（`25e72c9`，已推送 `1.8.4-deep-space-theme`）
 
 环境：ssh · minerals-frontend · 切到 `1.8.4-deep-space-theme`，`feature-v1.8.4` 单向合入（`8463a95`，feature 分支未动）。
