@@ -1,5 +1,23 @@
 # 当前迭代
 
+## 2026-09-22（二）正矿：切到 `1.8.4-deep-space-theme`，把 `feature-v1.8.4` 合并进去（`4a53a4c`，已推送）
+
+- 用户：在当前分支基础上切到已有远程分支 `1.8.4-deep-space-theme`，把这边的代码都合并过去；**deep-space 的代码不要影响现在的分支**。
+- 分支关系：deep-space 今天从 `218d071` 分出，独有 duu233 两个「更新UI」（深空主题：`themes/deep-space.scss`、`ThemeToggle`、`store/modules/theme`、`public/theme-init.js`、`scripts/check-theme.mjs` 等 35 个文件）；
+  feature 之后多 3 个（kimi 批量同步 `60420bd`、提单列表 `611b3ec`、关键词框回退 `98873de`）。
+- 做法：本地建 `1.8.4-deep-space-theme` 跟踪远程 → `git merge --no-ff feature-v1.8.4`（单向，**没有反向合并**）。
+- 冲突 2 处，都保留主题分支的改动（feature 这边在这两个文件里只有 kimi 删注释）：
+  - `Navbar.vue` 保留 `<ThemeToggle />`，去掉过时的「眼睛跟随鼠标」注释；
+  - `TagsView` 未选页签字色保留 `var(--zk-compat-muted, #6b7d92)`，我修的选中 / 悬停品牌色仍在。
+- ⚠️ **deep-space 远程分支本身带着一处没解决的冲突标记**（`ListTableCard/index.vue` AI 钮那行，`<<<<<<< HEAD … >>>>>>> feature-v1.8.4` 被原样提交），模板会编译失败；
+  合并时顺带解决：同时保留主题类 `zk-button-ai` + `aria-label` 和 `data-ai-trigger`。全仓再扫无残留。
+- 验证：`vite build` 通过；主题回归脚本 `node scripts/check-theme.mjs` 通过。
+  推送后核对：`feature-v1.8.4` 本地 = 远程 = `98873de` 未动；feature 的提交 0 个未进入 deep-space；deep-space 独有 3 个不在 feature。
+- **当前检出分支是 `1.8.4-deep-space-theme`**：之后的正矿需求默认在它上面改，除非用户说切回。
+  feature-v1.8.4 以后再有新提交，需要再合并一次过来。
+
+---
+
 ## 2026-09-22（二）正矿：列表搜索去掉跨字段关键词框，改回原来的单字段查询（`98873de`，已推送）
 
 - 用户：「列表凡是涉及到筛选关键词的，现在都不需要，后端不支持，改回原来的搜索就行」。
