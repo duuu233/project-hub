@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-22** | **minerals-admin (正矿)** | ssh / `1.8.4-deep-space-theme` | **深色主题荧光层**：表单控件荧光白边与文字提亮（解决深色下看不清）、卡片蓝紫渐变发光边、霓虹主按钮、uiverse 次按钮填充、标题区主按钮转圈光线；只作用于深色、不含登录页。 | 已推送 `f0f6849`；check-theme + build 通过，渲染台前后截图对比 |
 | **2026-09-22** | **minerals-admin (正矿)** | ssh / `1.8.4-deep-space-theme` | **切到深空主题分支并单向合并 `feature-v1.8.4`**：2 处冲突保留主题改动；顺带修掉 deep-space 远程分支遗留的冲突标记（ListTableCard AI 钮）。feature-v1.8.4 未受影响（仍 `98873de`）。 | 已推送 `4a53a4c`；build + check-theme 通过；当前检出 deep-space |
 | **2026-09-22** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **列表搜索去掉跨字段关键词框**（后端不支持）：提单列表改回提单编号/合同号/提单号/状态/船运公司，菜单管理改回普通输入框；规范与组件说明写明不用 keyword 类型。 | 已推送 `98873de`；vite build 通过 |
 | **2026-09-22** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **提单列表按稿 1:415 逐列还原**：列与宽度、提单号复制、提单预警、预计到港改取 `expecteArrivalDate` 并算剩余/延期天数、融资/阶段标签、创建时间；去掉勾选列与运输进度；`ListTableCard` 加 `indexWidth`。 | 已推送 `611b3ec`（变基在 kimi `60420bd` 之上）；build + 渲染台实测 |
