@@ -127,10 +127,16 @@ src/views/<domain>/<feature>/
 
 API 按领域放在 `src/api/`。运行时菜单名称、路由名称、页面组件 `name` 和 TagsView 缓存存在耦合。
 
-列表页正在按「正矿后台重构 8.21 版」视觉换新（2026-09-16 起）：搜索区用 `ListSearchCard`、列表区用 `ListTableCard`，
-两张卡放在页面自己的 `.list-page` 画布里。目前只有提单列表 `views/bill-lading/bill-lading-list/index.vue` 接入作为样板，
-其余列表页仍是 `TableSearch` + `.handle-box-index` + `.table-list-index` + 全局 `Pagination` 的老结构，两套并存，
-老公共类与老组件都没有改动。迁移约定见 `docs/development.md` §7「列表页新版组件」。
+列表页已按「正矿后台重构 8.21 版」视觉换新（2026-09-16 起，09-17 全量迁移）：标题区 `ListPageHeader`、
+搜索区 `ListSearchCard`、列表区 `ListTableCard`，放在页面自己的 `.list-page` 画布里。老 `TableSearch` 等组件仍在仓库里但列表页已不用。
+迁移约定见 `docs/development.md` §7「列表页新版组件」。
+
+提单列表（`views/bill-lading/bill-lading-list/index.vue`）2026-09-22 按稿 node 1:415 逐列还原，字段已核实：
+预计到港 = `expecteArrivalDate`（用户确认；早先写的 `arrivalDate` 列表接口没有），剩余 / 延期天数前端按日期算
+（已延期红、≤7 天橙、其余蓝，只在海运途中显示）；提单预警 = `containerWarn`；代理客户 = `agentOrgName`；
+融资 `financeFlag` 0 未融资 / 1 已融资 / 2 融资中；海运状态 `oceanShipStatus` 1 待启运 / 2 海运中 / 3 已抵港。
+字段口径可查测试环境 OpenAPI：`https://dev-m.zhengkuangsc.com/purchase-service/v3/api-docs`（不需要令牌；
+列表接口 `/delivery/selectListPage` 返回通用分页，行字段看查询 DTO `PurchaseDeliveryPageDTO`）。
 
 当前新增了两个国内贸易业务模块：
 
