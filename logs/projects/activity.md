@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-09-23** | **flowerpot-app (花盆)** | ssh / `main` | **割草机电量环放大**：FittedBox 由 scaleDown 改 contain，按剩余宽高等比撑满（宽屏上原比稿子小一圈）。 | 已推送；未编译 / 未真机 |
 | **2026-09-23** | **flowerpot-app (花盆)** | ssh / `main` | **核对离线切蓝牙整条链**：解包确认涂鸦 Auto 下发会按 isBleCommunicationNodeFirst 把蓝牙排前（依赖固件 abv bit0）；日志加 bleNodeFirst。 | 已推送；未编译 / 未真机 |
 | **2026-09-23** | **flowerpot-app (花盆)** | ssh / `main` | **被动离线主动探测**：涂鸦 requestWifiSignal 每 20 秒探一次、连续 2 次没回应按离线（约 30~50 秒，原来约 5 分钟）；割草机按钮前蓝牙检查暂停（开关保留）。 | 已推送；未编译 / 未真机 |
 | **2026-09-23** | **flowerpot-app (花盆)** | ssh / `main` | **割草机按钮转圈对齐**（只换图标位）；核对离线监听（SDK 无 onDeviceOffline，等价 onStatusChanged）；蓝牙日志结论：设备固件未上报蓝牙能力（connectAbility=0），待固件。 | 已推送 `1624357`；未编译 / 未真机 |
