@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：割草机五项（`d451bad`，已推送 `main`）
+
+- ①计划图：18–24 点压扁，21–23 点色块按最小 38 像素往下画伸出纵轴、被图例盖住 → 超出就上移贴底。
+- ②首页：去充电光晕；`IntrinsicHeight` + 两个 `Spacer` 让内容撑满首屏。
+- ③设备列表名字：上次「中文 w400 / 英文 w500」本身就让两者不一样 → 统一 w400。
+- ④信号阈值 -90；用户确认「不管 Wi-Fi 有没有连接都要保证蓝牙是连接的」——控制前蓝牙检查不看 Wi-Fi，保持。
+- ⑤**蓝牙连不上根因（SDK 7.5.1 解包 `ppqbqbb.addConnectTask` / `qbdddpd`）**：`connectBleDevice` 先查 `BLUETOOTH_CONNECT` 权限、`BluetoothUtils.isBluetoothEnabled()`，再用 `DeviceBean.isBluetooth()`（= `ProductBean.capability & 1024`）判断，不满足都**静默跳过**（最后「target list is empty」），App 只能等超时。另有 `isMasterOnline`（经别的节点的本地通信）会 ignore。现在前两条提前判、写日志；**要真机日志看 `产品capability=…(蓝牙位1024=…)`**，为 false 就是涂鸦平台产品没开蓝牙能力。
+- 用户追加「割草机只有蓝牙连接也能操控，SDK 自动切换」→ `publishMowerDps` 设备标离线但蓝牙连着照发；设备列表割草机离线也能进（进页面才连蓝牙）。
+- 本机无工具链未编译；本轮查出一个 Kotlin 真编译错误（`it and 1024 != 0` 优先级）当场修掉。
+
+---
+
 ## 2026-09-23（三）花盆 APP：割草机蓝牙连不上排查 / 按钮转圈 / 去设置页问号（已推送 `main`）
 
 - 蓝牙连不上：没有真机日志，从代码侧补——`connectBleDevice` 带 uuid、`Level.FORCE`；诊断加 uuid / mac / hasBle / singleBle / BLE 通道 / `getBleConnectAbility`。⚠️ 协议 §10「蓝牙本地控制预留，模组固件升级后启用」，很可能是固件侧没开，**要真机日志那一行「蓝牙 ✗ 没连上：…」确认**。
