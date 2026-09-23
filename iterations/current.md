@@ -1,5 +1,13 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：割草机按钮转圈对齐、离线监听核对、蓝牙日志结论（`1624357`，已推送 `main`）
+
+- 转圈对齐：原来检查中整颗内容换成 28 的圈、在 86 高里居中，落在图标与文字之间 → 只把 40×40 图标位换成圈（内边距 8），文字保留。
+- 「有没有监听 onDeviceOffline」：SDK 7.5.1 **没有这个方法**（全模块 0 命中），等价 `IDevListener.onStatusChanged(devId,false)`；原生 `watchDevices` 对账号下全部设备注册，事件 → 状态层 → `MowerDevice._onStateChanged` → 立刻降级连蓝牙；另有 3 秒轮询兜底。已写进注释。
+- **蓝牙日志结论**：BT 开、capability=1025（蓝牙位在）、isBluetooth=true，但 `bleChannel=false`、`getBleConnectAbility=0`（解包：读设备上报云端的 `DeviceBizPropBean.bluetoothCapability`，为空 / 非 3 字节 → 0）、15 秒无任何连接回调 → **设备固件没上报蓝牙连接能力**，对上涂鸦答复（0x01 abv bit0、双模并行）。App 侧无参数可调，**等固件**。
+
+---
+
 ## 2026-09-23（三）花盆 APP：割草机下发通道 / 固件提醒跳转 / 蓝牙先扫描 / 首页按 Figma 重排（`901f042` `426dd73` `82002d8` 及首页提交，已推送 `main`）
 
 - **下发通道（用户：底层逻辑一定要加）**：SDK 解包 `AbsThingDevice.publishDps(String, ThingDevicePublishModeEnum, cb)` 分发表：Internet→`publishDpsByCloud`、Local→`publishDpsByIntranet`（不在局域网回 10201）、Auto→`publishDps`、Mqtt/Http。在线用 Internet（只走 Wi-Fi），仅局域网用 Local；Wi-Fi 离线先连蓝牙再 Auto（SDK 只剩蓝牙），连不上才拦。`MowerDevice` 监听状态层在线变化，掉线立刻降级连蓝牙（不受 30 秒节流）。新增原生 `publishDpsWithMode`、仓库 `publishDpsWithMode`（Mock 记 `publishedModes`）。
