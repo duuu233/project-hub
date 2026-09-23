@@ -8,7 +8,7 @@
   - `index.vue` 外包 `list-page`，加 `ListPageHeader`（标题取菜单名，副标题「管理国内销售/采购订单，跟踪买家/卖家确认与订单状态」），右侧主按钮「新建销售订单 / 新建采购订单」（权限码沿用原来的 `domestic:sale:add` / `purchase:domesticOrder:save`）。按组件 README，标题区放页面、不放进 `DomesticOrderList`。
   - `DomesticOrderList.vue`：去掉工具区旧按钮、`show-index=false`、`stripe`、多余的 `show-pagination`、订单号左固定；根节点改 `domestic-trade-list`（避免 `list-page` 套 `list-page`），`navigateTo` 去掉 add 分支。采购页顺带：搜索卡补 `:loading`，`getList` 的 loading 复位移到 `finally`（原来 code≠200 时一直转圈）。
 - 验证：`@vue/compiler-sfc` parse + compileScript + compileTemplate 四个文件全过；本机无 node_modules，未跑 build / 未截图。
-- 留意：销售列表的 `showSellerName` prop（超管才为 true）在组件里没被用到，「卖家名称」列对所有人都显示——原样没动，要不要按它隐藏待用户定。
+- 追加（`7ba76a7`）：销售列表的 `showSellerName` prop（`userType === '00'` 超管才为 true）原来在组件里没被用到，「卖家名称」列对所有人都显示。按用户「改成只给超管显示卖家名称」，给该列加 `hidden: !props.showSellerName`；隐藏的列在「列设置」里也不出现。身份切换走整页刷新，取一次值即可。SFC 编译检查通过。
 
 ---
 
