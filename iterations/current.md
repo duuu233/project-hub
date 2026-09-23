@@ -1,5 +1,14 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：全局缩放加了又撤 +「我的」页横线（`6de5ae3` → `24703f3` 撤回，`c7b5b8a`，已推送 `main`）
+
+- 用户：「整体偏小，能按比例检查所有页面吗」。我先加了全局 `DesignScale`（按 375 宽排版再放大到屏宽，`6de5ae3`）。
+- 用户随后：「参考隔壁相册 APP，那边是正常的」。核对：相册同样按 375 宽稿直接用 Figma 像素、**无全局缩放**（只 `withClampedTextScaling(1.3)`），原生层两边都没改密度 / 字体缩放，都没带字体 → 两个 App 显示机制一致，花盆偏小应是**个别页面 / 公共组件尺寸比稿子小**；全局放大会让花盆比相册大约 10% → **撤回**（`24703f3`），改逐页按 Figma 核对。
+- 「我的」页：去掉「个人信息」上方的横线、最后一项下面补一条（列表组件在相邻两项之间插线，顶部留白也算一项）→ 关自动分隔、每项下面各画一条（`c7b5b8a`）。
+- 进行中：用户给了 76 个 Figma 节点（全部页面），先抽 12 张由两个只读助手比对尺寸，找共性偏小的公共组件 / token。
+
+---
+
 ## 2026-09-23（三）花盆 APP：确认「Wi-Fi 断线 → 离线 → 连蓝牙 → 指令走蓝牙」整条链（已推送 `main`）
 
 - 用户要求确保这条链写了、且用涂鸦封装的方法。解包核对 Auto 下发：`AbsThingDevice.publishDps` → `IThingBleManager.orderLocalCommunicationList(DeviceRespBean)` → `ThingBleManager.isBleCommunicationNodeFirst(devId)`（蓝牙未连/未配对 -2；连着回设备经蓝牙报的 `getDeviceNetStatus`），为 0/1 时 `Collections.swap` 把 MQTT 挪到末位 → `publishDpsInPipeline` 按序先走蓝牙。**这就是涂鸦的自动切换**，依赖固件 abv bit0。
