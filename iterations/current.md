@@ -1,5 +1,14 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：按钮前蓝牙检查暂停（`982c546`）+ 被动离线主动探测（已推送 `main`）
+
+- 用户：蓝牙检查那套「暂时注释」→ `MowerBleGate.enabled` 默认 false，代码保留（与 DebugLogGate 同做法）；图标、下发通道、离线降级蓝牙不动。
+- 用户：主动关机由固件上报离线，不处理；**被动离线（关路由器）**要优化。App 链路只慢 ≤8 秒（推送 + 8 秒读缓存，之前口头说「每秒」是记错），5 分钟在云端两个心跳周期。
+- 实现：SDK 解包 `IThingDevice.requestWifiSignal` → `dqqpqbq` 经 MQTT 发 `{"reqType":"sigQry"}`、Wi-Fi 模组回信号，**SDK 无超时**。原生 `requestWifiSignal`（复用已注册监听的设备实例，6 秒超时）；状态层 20 秒一轮、连续 2 次没回应 → `_unreachable`，`devices` / `deviceById` 盖成离线；手机没网（`NetworkStatus.probe`）不计；回应 / DP 上报 / 云端判离线撤销；退出登录清掉。割草机下发把不可达当 Wi-Fi 离线。
+- 本机无工具链未编译；新增用例 `state_reachability_test.dart` 未跑（依赖 initialize + refreshDevices 后 `authenticated` 为真，打包机上要确认）。
+
+---
+
 ## 2026-09-23（三）花盆 APP：割草机按钮转圈对齐、离线监听核对、蓝牙日志结论（`1624357`，已推送 `main`）
 
 - 转圈对齐：原来检查中整颗内容换成 28 的圈、在 86 高里居中，落在图标与文字之间 → 只把 40×40 图标位换成圈（内边距 8），文字保留。
