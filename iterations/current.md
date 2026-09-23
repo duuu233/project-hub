@@ -18,6 +18,7 @@
   - `DomesticOrderList.vue`：去掉工具区旧按钮、`show-index=false`、`stripe`、多余的 `show-pagination`、订单号左固定；根节点改 `domestic-trade-list`（避免 `list-page` 套 `list-page`），`navigateTo` 去掉 add 分支。采购页顺带：搜索卡补 `:loading`，`getList` 的 loading 复位移到 `finally`（原来 code≠200 时一直转圈）。
 - 验证：`@vue/compiler-sfc` parse + compileScript + compileTemplate 四个文件全过；本机无 node_modules，未跑 build / 未截图。
 - 追加（`7ba76a7`）：销售列表的 `showSellerName` prop（`userType === '00'` 超管才为 true）原来在组件里没被用到，「卖家名称」列对所有人都显示。按用户「改成只给超管显示卖家名称」，给该列加 `hidden: !props.showSellerName`；隐藏的列在「列设置」里也不出现。身份切换走整页刷新，取一次值即可。SFC 编译检查通过。
+- 追加（`f587611`）：用户「国内采购列表-新增按钮改为 新增国内采购，不然和前面的重复」——原文案「新建采购订单」与进口采购列表同名，改为「新增国内采购」。销售页「新建销售订单」未改。
 
 ---
 
