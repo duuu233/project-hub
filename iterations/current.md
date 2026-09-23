@@ -1,5 +1,15 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：割草机下发通道 / 固件提醒跳转 / 蓝牙先扫描 / 首页按 Figma 重排（`901f042` `426dd73` `82002d8` 及首页提交，已推送 `main`）
+
+- **下发通道（用户：底层逻辑一定要加）**：SDK 解包 `AbsThingDevice.publishDps(String, ThingDevicePublishModeEnum, cb)` 分发表：Internet→`publishDpsByCloud`、Local→`publishDpsByIntranet`（不在局域网回 10201）、Auto→`publishDps`、Mqtt/Http。在线用 Internet（只走 Wi-Fi），仅局域网用 Local；Wi-Fi 离线先连蓝牙再 Auto（SDK 只剩蓝牙），连不上才拦。`MowerDevice` 监听状态层在线变化，掉线立刻降级连蓝牙（不受 30 秒节流）。新增原生 `publishDpsWithMode`、仓库 `publishDpsWithMode`（Mock 记 `publishedModes`）。
+- **固件提醒「立刻更新」**：关弹窗 → 跳设置页（花盆其他设置 / 割草机切「设置」栏，`MowerHomePage.tabRequests`）→ 再弹固件升级框确认后才升级。
+- **涂鸦答复**：固件要在 0x01 新功能设置里 abv bit0 置 1 + 支持双模并行（固件侧）；App 持续扫描维持连接 → 连接改 `directConnect=false` 先扫描。答复里的 BLEWIFIActivator 等是固件 TuyaOS 命名。**蓝牙仍连不上，等真机日志「蓝牙 ✗ 没连上：…」那行看 capability / 手机蓝牙 / 扫描结果**。
+- **首页 Figma（784:3844 等，60 个链接都在「割草机-控制」四张里）**：按钮贴底、下半部按稿子间距、余量只给电量环（居中、矮屏等比缩小）。
+- 本机无工具链，均未编译/未跑用例/未真机。
+
+---
+
 ## 2026-09-23（三）花盆 APP：割草机五项（`d451bad`，已推送 `main`）
 
 - ①计划图：18–24 点压扁，21–23 点色块按最小 38 像素往下画伸出纵轴、被图例盖住 → 超出就上移贴底。
