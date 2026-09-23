@@ -8,7 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
-| **2026-09-23** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **国内销售列表「卖家名称」列只对超管显示**：接上一直没用到的 `showSellerName`，列配置加 `hidden`。 | 已推送 `7ba76a7`；SFC 编译检查，未 build |
+| **2026-09-23** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **操作日志详细弹框参数不再撑出盒子**：请求 / 返回参数、异常信息改为框内换行的等宽块，JSON 缩进排版，超过 280 高框内滚动；请求地址、操作方法断长词。 | 已推送 `609c4e8`；渲染台 1920/1366 溢出测量 + 截图，未 build |\n| **2026-09-23** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **国内销售列表「卖家名称」列只对超管显示**：接上一直没用到的 `showSellerName`，列配置加 `hidden`。 | 已推送 `7ba76a7`；SFC 编译检查，未 build |
 | **2026-09-23** | **flowerpot-app (花盆)** | ssh / `main` | **消息调试板接实时推送监听**：`getPushInstance()` 的 `registerPushAlarmListener`（MQTT 802，`{type, msg}`）/ `registerMQPushListener`（MQTT 52）挂代理，收到即经事件 `pushMessage` 原样打印、按 `来源/type` 计数（`probe-v10`），供产品验「电量>0」推送的类型区分。 | 已推送 `55c0dae`；静态自检，未编译 / 未真机 |
 | **2026-09-23** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **国内销售 / 国内采购列表统一样式**：补 `ListPageHeader` 标题区并把新建按钮移到标题右侧（主按钮样式），显示序号列，去掉斑马纹、旧式 plain 新增按钮与订单号左固定；采购列表搜索卡补 loading、loading 复位改 finally。 | 已推送 `cd9858f`；SFC 编译检查，未 build |
 | **2026-09-23** | **minerals-admin (正矿)** | ssh / `feature-v1.8.4` | **四项修复**：提单列表隐藏「预计到港」「更新时间」；国内销售 / 采购**保存**时校验交货日期（原来只有提交校验），顺带修采购 rules key 写错导致「所属站点」必填失效、详情页日期可编辑；搜索卡日期区间让出日历图标位置、输入平分宽度、≤1360 降 4 格（13 处页面受益）；开票详情「开票重量」单位移到输入框外。 | 已推送 `e6e98a9`；5 种宽度 + 交互实测 + build |

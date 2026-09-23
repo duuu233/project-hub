@@ -1,5 +1,14 @@
 # 当前迭代
 
+## 2026-09-23（三）正矿：操作日志详细弹框请求参数超出盒子（`609c4e8`，已推送 `feature-v1.8.4`）
+
+- 用户：「操作日志页面弹框操作日志详细下面的请求参数内容超出盒子，优化一下」。全仓只有 `src/views/system/operlog/index.vue` 一处。
+- 原因：请求参数 / 返回参数是整串无空格 JSON，`el-form-item__content` 是 flex、默认不断词，长串直接撑出 1200 宽弹框；请求地址、长 token 同理。
+- 改：请求参数、返回参数、异常信息改用 `<pre class="operlog-code">`（等宽 12/18、`pre-wrap` + `break-all`、最高 280 框内滚动、柔和底 + 轻边框令牌）；能解析的 JSON 用 `formatJson` 缩进 2 格排版，解析失败原样显示。请求地址、操作方法包 `operlog-break` 断长词。页面原来没有 style 块，新加 scoped（弹框 append-to-body 仍带 scoped 属性，实测生效）。
+- 验证：渲染台（`harness-light` 复制为 `.codex-harness/`，mock 加 `/system-service/operlog/list` 两条：长 JSON + 非 JSON 长串/失败带异常），playwright 在 1920 / 1366 打开两条的详细，用 Range 量文本右缘：改前请求地址 / 请求参数 / 返回参数溢出，改后 0 项溢出、0 报错；截图核对。脚本 `.codex-tmp/pw/operlog-shot.mjs`。未跑 build。`node_modules` / `.codex-harness` 已删。
+
+---
+
 ## 2026-09-23（三）正矿：国内销售 / 国内采购列表按统一列表样式改造（`cd9858f`，已推送 `feature-v1.8.4`）
 
 - 用户：「国内销售列表和国内采购列表没有按其它列表的标准样式，你改造下这二个列表」。
