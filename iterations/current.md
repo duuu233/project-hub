@@ -1,5 +1,14 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：割草机蓝牙图标按通道亮 + 控制前蓝牙检查（已推送 `main`）
+
+- 用户先说「先不改」、随后「确认这种弄了 按这个改」；追加「进来设备正常情况下 wifi 和蓝牙图标应该都是亮的」「-50 改为 -80」。
+- 实现：原生 `deviceLinkState` / `bleConnectDevice` / `bleReadRssi`（全走涂鸦 `getBleManager()`，见上一条 SDK 核对）；`MowerDevice.refreshLink` 进页面自动连、3 秒刷新、30 秒节流重连；四颗按钮 `_guarded → _bleReady`（连不上 / 信号弱于 -80 各弹提示，不下发）。
+- 口径：「信号大于 -50」按「弱于阈值才拦」实现（RSSI 越大越近），阈值 -80，常量 `MowerDevice.minBleRssi`。
+- 本机无工具链未编译；因上次漏了编译错误，这次逐项人工核了 import / 可空泛型 / Kotlin 非局部 return。
+
+---
+
 ## 2026-09-23（三）花盆 APP：打包编译错误修复（`14fe25a`，已推送 `main`）+ 割草机蓝牙门禁需求（**用户说先不改**，只记 SDK 核对）
 
 - 打包报错两处都在当天新加的 `mower_firmware.dart`：没 import `TuyaException`（在 `tuya_repository.dart`）；`withBlockingProgress` 泛型被推断成非空 `FirmwareUpdate` → 显式 `<FirmwareUpdate?>`。本机无工具链，这类错误只能靠打包机发现——之后新文件要逐个核 import 和可空泛型。
