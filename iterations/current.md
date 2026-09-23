@@ -1,5 +1,13 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：确认「Wi-Fi 断线 → 离线 → 连蓝牙 → 指令走蓝牙」整条链（已推送 `main`）
+
+- 用户要求确保这条链写了、且用涂鸦封装的方法。解包核对 Auto 下发：`AbsThingDevice.publishDps` → `IThingBleManager.orderLocalCommunicationList(DeviceRespBean)` → `ThingBleManager.isBleCommunicationNodeFirst(devId)`（蓝牙未连/未配对 -2；连着回设备经蓝牙报的 `getDeviceNetStatus`），为 0/1 时 `Collections.swap` 把 MQTT 挪到末位 → `publishDpsInPipeline` 按序先走蓝牙。**这就是涂鸦的自动切换**，依赖固件 abv bit0。
+- 之前的隐患：探测判离线而云端未判时，若没有这层排序 Auto 会仍走 MQTT。`publishDpsInPipeline`（可强制通道）是 private，不用。
+- 改：通道状态多带 `bleNodeFirst`（日志可见）；state / 规则文档写清整条链。本机无工具链未编译。
+
+---
+
 ## 2026-09-23（三）花盆 APP：按钮前蓝牙检查暂停（`982c546`）+ 被动离线主动探测（已推送 `main`）
 
 - 用户：蓝牙检查那套「暂时注释」→ `MowerBleGate.enabled` 默认 false，代码保留（与 DebugLogGate 同做法）；图标、下发通道、离线降级蓝牙不动。
