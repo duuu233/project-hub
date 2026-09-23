@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：割草机联调——打开联调日志、去掉全部假数据（`376fbd6`，已推送 `main`）
+
+- 用户：「现在要开始割草机和设备的联调，可以显示调试日志了，和以前一样有DPID的都打印进去，然后去掉所有假数据，都用真实数据。」
+- 日志：`DebugLogGate` 默认改回 `true`（09-19 关的），DP 记录点本来就在，不用补。
+- 假数据全删：静态入口两处（设备列表卡、搜索页那行）、`MowerDevice` 演示模式 + 稿子初值 + `defaultSchedule`、长按电量环模拟面板、名称/型号/SN（名称改读涂鸦设备名，型号/SN **无来源空着**）、消息通知 4 条假消息与写死日期（日志=`loadDeviceOperateLogs` 全部割草机 DP 30 天；告警=`loadDeviceMessages`；提醒=空）。`MowerHomePage.deviceId` 必填；`mower_demo.dart` → `mower_ui.dart`。
+- 「恢复默认」：协议无默认计划，原来发的是稿子上四块 → 改为只提示不下发（**待产品定默认计划**）。
+- 用例：`mower_pages_test` 改为绑 Mock 割草机断言 `publishedDps`，删「记忆」用例；`mower_live_test` 删演示用例；`device_list_page_test` 在线数 3→2；日志闸用例改默认开。项目文档 PRODUCT_RULES §4.10、AI_CONTEXT、PROJECT_STRUCTURE、TEMP_STATIC_PAGE_PREVIEW、历史记录。
+- 验证：本机无工具链，analyze/test/编译/真机未跑；四个静态自检 + 括号配平 + 残留 grep 通过。
+- 待定：默认计划、型号/SN 来源、「提醒」来源、告警条目字段按真机校。
+
+---
+
 ## 2026-09-23（三）正矿：星轨登录页选中节点尖角与圆圈不像一体（`b804c79`，已推送 `1.8.4-deep-space-theme`）
 
 - 用户：「登录页 orbit-node__pointer 的箭头有一点点突兀，和圆圈一起不像一个整体」。
