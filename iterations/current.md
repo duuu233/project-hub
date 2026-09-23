@@ -1,5 +1,13 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：打包编译错误修复（`14fe25a`，已推送 `main`）+ 割草机蓝牙门禁需求（**用户说先不改**，只记 SDK 核对）
+
+- 打包报错两处都在当天新加的 `mower_firmware.dart`：没 import `TuyaException`（在 `tuya_repository.dart`）；`withBlockingProgress` 泛型被推断成非空 `FirmwareUpdate` → 显式 `<FirmwareUpdate?>`。本机无工具链，这类错误只能靠打包机发现——之后新文件要逐个核 import 和可空泛型。
+- 需求（暂缓）：详情页蓝牙 / Wi-Fi 图标按涂鸦分通道状态各自亮；自动 / 定点 / 暂停 / 回归点击前先查蓝牙连接（没连就连，连不上弹「无法连接设备蓝牙，请检查设备或靠近设备10米内」）、再查信号（「大于 -50」字面与意图可能相反，要跟产品确认是 rssi < -50 拦截），不满足不下发。
+- SDK 7.5.1 解包核对（`.codex-tmp/sdk-ble/`，thingsmart-bluetooth-api）：`ThingHomeSdk.getBleManager()` → `IThingBleManager`：`isBleLocalOnline(devId)`、`connectBleDevice(List<BleConnectBuilder>)` / `directConnectBleDevice(BleConnectBuilder)`（builder：`setDevId/setUuid/setDirectConnect/setLevel(NORMAL|FORCE)/setScanTimeout/setAutoConnect`）、`readBleRssi(devId, BleRssiListener.onResult(boolean,int))`、`readRssiByCache(devId)`、`registerDeviceConnectStatus(devId, BleConnectStatusListener.onConnectStatusChanged(String,String))`（常量 STATE_CONNECT_SUCCESS / STATE_CONNECT_BREAK / STATE_DISCONNECT，值运行时反射取）。`DeviceBean.getCommunicationOnline(CommunicationEnum.BLE|MQTT|LAN)`、`isCloudOnline()`、`hasBleCommunication`。首页两个图标在 `mower_status_card.dart` 194/202 行。
+
+---
+
 ## 2026-09-23（三）花盆 APP：割草机 DP18 最终按协议 V2.3 位图，0 = 正常黄条隐藏（已推送 `main`）
 
 - 用户随后定：「按协议 V2.3 的来，0 表示正常就隐藏」→ 撤回下面那版：`faultMessage` 改回位图 `firstMessage`，删 `messageFor`；0 或没报过黄条整条隐藏，稿子安全提示不再显示；有故障位显示位序最低那条。新增页面用例（0 隐藏 / 1 左轮异常）。未编译/未跑用例。
