@@ -1,5 +1,17 @@
 # 当前迭代
 
+## 2026-09-23（三）花盆 APP：离线状态能否更快——核对 SDK 与现有实现（只查不改）
+
+- 用户贴了涂鸦客服两段答复（离线判定 = 连续 2 个检测周期约 140 秒、最快 2~3 分钟；小程序约 20 秒；建议 SDK > 6.7.7 并用 `getOfflineReminderSupportStatus`），问有没有别的优化方案。
+- 解包 7.5.1（`thingsmart-device-api` / `thingsmart-device`）：
+  - `IThingDevice.getOfflineReminderSupportStatus / getOfflineReminderStatus / setOfflineReminderStatus`（回 `IsSupportOffLineBean {offlineReminder}` / `Boolean`）= **离线提醒推送开关**，判定仍走云端，**不提速**。SDK 7.5.1 已满足「> 6.7.7」。
+  - 没有任何调心跳周期 / 离线阈值的接口。
+  - 可用的：`DeviceBean.getCommunicationOnline(CommunicationEnum.LAN|BLE|MQTT…)` 分通道在线；`isCloudOnline` / `getIsLocalOnline`；`IThingDevice.getDp / getDpList`（主动让设备回报）；`IThingDeviceListManager.registerDeviceOnlineStatusListener`。
+- App 现状：`IDevListener.onStatusChanged` 实时转发 + 前台每秒读 `DeviceBean.getIsOnline()` 兜底（`deviceOnlineStates`）——App 侧已无延迟，慢在云端判定。`getIsOnline` 是云端与本地合并值，云端未判离线前仍为 true。
+- 给用户的方案：①本地通道（同局域网 / 蓝牙在旁边时）分通道看，本地先掉线就显示「连接中 / 可能离线」；②操作前主动探测（`getDp` / 下发后 N 秒无回显按离线处理，只改页面判断）；③固件在关机 / 低电前主动报一个 DP；④离线提醒开关只管推送。①②的实际秒数都要真机测。未改代码、未提交业务仓。
+
+---
+
 ## 2026-09-23（三）正矿：快捷搜索弹框深色看不清（`5deed6d`，已推送 `1.8.4-deep-space-theme`）
 
 - 用户：「点击类名 rail-footer 的快捷搜索的弹出框，样式没有符合现在的深空，看不清楚，按暗黑风格改一下」。
