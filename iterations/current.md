@@ -1,5 +1,28 @@
 # 当前迭代
 
+## 2026-09-23（三）正矿：国内销售 / 国内采购列表按统一列表样式改造（`cd9858f`，已推送 `feature-v1.8.4`）
+
+- 用户：「国内销售列表和国内采购列表没有按其它列表的标准样式，你改造下这二个列表」。
+- 现状：两页早已用上 `ListSearchCard` / `ListTableCard`，差的是 9-22 那批统一改造没覆盖到它们：没有 `ListPageHeader` 标题区；「新增」还是旧式 `plain` + `handle-add-btn-index` 放在列表卡工具区；`:show-index="false"` 关了序号列；多了 `stripe` 斑马纹；订单号 `fixed: 'left'`（全仓只有这两页左固定）。
+- 改：
+  - `index.vue` 外包 `list-page`，加 `ListPageHeader`（标题取菜单名，副标题「管理国内销售/采购订单，跟踪买家/卖家确认与订单状态」），右侧主按钮「新建销售订单 / 新建采购订单」（权限码沿用原来的 `domestic:sale:add` / `purchase:domesticOrder:save`）。按组件 README，标题区放页面、不放进 `DomesticOrderList`。
+  - `DomesticOrderList.vue`：去掉工具区旧按钮、`show-index=false`、`stripe`、多余的 `show-pagination`、订单号左固定；根节点改 `domestic-trade-list`（避免 `list-page` 套 `list-page`），`navigateTo` 去掉 add 分支。采购页顺带：搜索卡补 `:loading`，`getList` 的 loading 复位移到 `finally`（原来 code≠200 时一直转圈）。
+- 验证：`@vue/compiler-sfc` parse + compileScript + compileTemplate 四个文件全过；本机无 node_modules，未跑 build / 未截图。
+- 留意：销售列表的 `showSellerName` prop（超管才为 true）在组件里没被用到，「卖家名称」列对所有人都显示——原样没动，要不要按它隐藏待用户定。
+
+---
+
+## 2026-09-23（三）花盆 APP：消息调试板接实时推送监听（`55c0dae`，已推送 `main`）
+
+- 用户：后台开了设备消息推送（条件「电量 > 0」、推送给用户 + 设备消息监控、推送方式消息中心），在上次的调试板写好接收代码，他操作看有没有类型区分；中途口径「你调用接口 接受信息就行了」→ 只做注册 + 接收，推送开关 / 不重复提醒探针写了又删掉。
+- 解包（`thingsmart-personallib` 7.5.1 从商业仓库拉到 `.codex-tmp/sdk-push/`）：`getPushInstance()` → `IThingPush`，实现类 `qqpddqd` 同时是设备 MQTT 协议监听：
+  `registerPushAlarmListener` = MQTT 802 → `MQ_802_PushAlarmBean {type, msg}`（**自带 type**）；`registerMQPushListener` = MQTT 52 → `MQCompensationBean {type, link, timeStamp}`；无注销方法。
+- 改：桥接 `startPushListen`（两路动态代理 → 事件 `pushMessage`，bean 全字段 dump）；Dart 仓库 / 状态 / Mock；调试板「开始接收推送（实时）」逐条打印、`msg` 为 JSON 时展开、按 `来源/type` 计数，`probe-v10`。项目文档：能力核对 5.5、历史记录、`AI_CONTEXT`。
+- 限制：只在 App 前台收得到（系统推送 `registerDevice` 没接）；iOS 未接；本机无工具链，analyze/test/编译/真机全未跑，静态自检 + 括号配平通过。
+- 待用户真机：点按钮 → 让本账号设备报一次电量 → 看 `type`；再「拉取涂鸦消息」对照消息中心那条的 `msgType` / `msgCode` / `alarmType`。
+
+---
+
 ## 2026-09-23（三）正矿：feature-v1.8.4 四项问题（`e6e98a9`，已推送 `feature-v1.8.4`）
 
 1. **提单业务列表隐藏「预计到港」「更新时间」**：列配置加 `hidden: true`（这种列连「列设置」里也不出现），到港提示逻辑原样留着，以后要恢复去掉一行即可。

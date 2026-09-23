@@ -60,7 +60,7 @@ TypeScript 当前是渐进式配置：`strict: false`、`allowJs: true`。不要
 - 全局插件、权限指令、TagsView 插件、表头插件。
 - SVG 图标。
 - `DictTag`、`Pagination`、`TreeSelect`、上传/预览、`RightToolbar`、`Editor` 等全局组件。
-- 列表页新版卡片 `ListSearchCard` / `ListTableCard`（`src/components/`，2026-09-16 起）与顶部标题区 `ListPageHeader`（2026-09-22 起，66 个常规列表页已接入；标题取路由菜单名，页面只写 `subtitle`）**都不是全局注册**，页面按需 import；用法见各自目录的 `README.md`。
+- 列表页新版卡片 `ListSearchCard` / `ListTableCard`（`src/components/`，2026-09-16 起）与顶部标题区 `ListPageHeader`（2026-09-22 起，66 个常规列表页已接入，2026-09-23 补上国内销售 / 国内采购共 68 个；标题取路由菜单名，页面只写 `subtitle`）**都不是全局注册**，页面按需 import；用法见各自目录的 `README.md`。
 - `useDict`、下载上传、时间/表单/树/字典工具等全局属性。
 - `src/permission.ts` 中的路由守卫。
 
