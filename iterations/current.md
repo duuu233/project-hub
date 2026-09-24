@@ -1,5 +1,11 @@
 # 当前迭代
 
+## 2026-09-24（四）相册APP：iOS 包隐藏微信快捷登录（`0c4220c`，已推送 `main`）
+
+- 起因：上次 iOS 审核不通过（有第三方快捷登录、没有苹果登录）。用户方案：隐藏微信快捷登录，只针对 iOS 包；安卓不变。
+- 实施：开关 `weChatLoginHiddenOnThisApp`（`defaultTargetPlatform == iOS`，与 09-18 星币屏蔽同口径，便于 widget 测试切端），生效点只有登录页底部的微信按钮（全应用唯一入口）；`fluwx` 与 SDK 注册不动。用例 `test/auth_page_test.dart` 增 iOS / 安卓两条；历史记录 `docs/history/2026-09/2026-09-24-iOS隐藏微信快捷登录.md`。
+- ⚠️ 本机无 Flutter 工具链，analyze/test 未跑；需在 iOS 包上确认登录页无微信图标、邮箱登录正常。
+
 ## 2026-09-24（四）花盆 APP：按 Figma 76 个节点逐页核对布局（`1cd407a`，已推送 `main`）
 
 - 做法：76 个节点分 4 组交给只读助手比对（Figma 数据 + 代码具体数值），主会话统一改；报告在 `.codex-tmp/figma-review/report-group0{0..3}.md`。
