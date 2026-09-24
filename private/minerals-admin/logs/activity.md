@@ -6,6 +6,11 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-24：搜索卡日期区间内容居中（`feature-v1.8.4`，`8624bfd`）
+- 用户：时间段控件「2026-09-10    ~ 2026-10-12」两个日期和中间 ~ 距离不一致。
+- 根因：`search-card.scss` 把 `.el-range-input` 写成 `text-align: left`（两框各占一半），第一个日期右侧留空、第二个紧贴 ~。Element 默认本来是居中，只有搜索卡改成了左对齐；其它页面自带的日期区间不受影响。改为 `center`。
+- 验证：`.codex-tmp/range-test/` 渲染实测，~ 两侧到日期文字均 28.8px；占位符同样居中。DESIGN_SPEC 5.3 同步。
+
 ### 2026-09-24：提单海运状态选中底色不对（`feature-v1.8.4`，`b0ff4df`）
 - 用户：新增 / 编辑 / 详情提单页「海运基本信息」的海运状态，选中的背景色不对（稿 1:4324）。
 - 根因（渲染实测，不是猜）：`SeaInfo.vue` 用 `:deep(.el-segmented__item-selected) { display: none }` 藏 Element 的滑动选中块，但 **EP 2.14 在这块上用内联样式写了 `display: block`**，样式表压不过；于是一块纯 `--el-segmented-item-selected-bg-color`（#1771DC）盖在选中按钮上，渐变看不到。改 `display: none !important`。
