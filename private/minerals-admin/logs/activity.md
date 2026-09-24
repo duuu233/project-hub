@@ -6,6 +6,16 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-24：feature-v1.8.4 合入深空分支 + 深色核查（`1.8.4-deep-space-theme`，`9a2fe34`）
+- 用户要求合并当前改动到 `1.8.4-deep-space-theme`，核查对深空主题的影响；深空代码不得影响任何其它分支。按既定口径**单向**合：`origin/feature-v1.8.4` → 深空（13 个提交），只推深空；推后核对 feature 不含深空提交（深空领先 42，`merge-base --is-ancestor` 为否）。
+- **4 处冲突**：
+  - `zk/detail-page.scss`、`ListSearchCard/search-card.scss`：深空侧是旧版（label-top 旧修正、日期图标在右的旧写法）→ 冲突块取 feature 新版，文件其余深空内容保留；
+  - `ListTableCard/index.vue`：深空把颜色改成 `--zk-compat-*` 兼容变量，feature 改字重 → 两边合并（保留兼容变量 + 新字重 / is-strong）；
+  - `SeaInfo.vue`：深空只加过删除气泡 `confirm-button-type="danger"`（`5d9e22d`）→ 取 feature 新结构后补回该属性。
+- **深色核查**（`.codex-harness` 渲染台，深 / 浅截图 + 计算样式；脚本 `.codex-tmp/pw/ds-merge.mjs`、`ds-sea-status.mjs`、`ds-crop.mjs`，渲染台要注入假用户 `Minerals-User-Info` 否则进口采购 / 国内采购页白屏，Tab 条 affix 要解除否则盖住首张卡标题）：提单列表更多筛选、提单货物 / 海运（海运状态选中项走深空亮蓝渐变、AI 船运跟踪卡深色）、进口采购详情、国内采购提示条（深底琥珀字）、入库单详情、出库计划详情、出库单新增都正常，**无需额外处理**。
+- 开关：今天皮肤里加的 38×22 / 32×18 在深色下被深空的 48×26 胶囊规则（优先级更高）覆盖，深色开关保持原设计；浅色按规范。删除确认红按钮逻辑（`danger-action`）合并后仍在。
+- 验证：32 个合入 SFC 编译通过；深空分支生产构建通过（50.8s），`dist` 已删、`auto-imports.d.ts` 已还原。本地已切回 `feature-v1.8.4`。
+
 ### 2026-09-24：搜索卡日期区间内容居中（`feature-v1.8.4`，`8624bfd`）
 - 用户：时间段控件「2026-09-10    ~ 2026-10-12」两个日期和中间 ~ 距离不一致。
 - 根因：`search-card.scss` 把 `.el-range-input` 写成 `text-align: left`（两框各占一半），第一个日期右侧留空、第二个紧贴 ~。Element 默认本来是居中，只有搜索卡改成了左对齐；其它页面自带的日期区间不受影响。改为 `center`。
