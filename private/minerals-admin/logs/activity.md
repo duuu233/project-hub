@@ -6,6 +6,12 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-24：提单海运状态选中底色不对（`feature-v1.8.4`，`b0ff4df`）
+- 用户：新增 / 编辑 / 详情提单页「海运基本信息」的海运状态，选中的背景色不对（稿 1:4324）。
+- 根因（渲染实测，不是猜）：`SeaInfo.vue` 用 `:deep(.el-segmented__item-selected) { display: none }` 藏 Element 的滑动选中块，但 **EP 2.14 在这块上用内联样式写了 `display: block`**，样式表压不过；于是一块纯 `--el-segmented-item-selected-bg-color`（#1771DC）盖在选中按钮上，渐变看不到。改 `display: none !important`。
+- 验证：`.codex-tmp/seg-test/`（正矿仓的 vue + element-plus + 令牌 + 详情页皮肤 + SeaInfo 自身 scoped 样式，headless chromium 截图）：修前指示块 `display:block`、修后 `none`；截图与 Figma 1:4329 导出图对照一致。投影沿用全站主按钮令牌 `--zk-shadow-brand`（比稿标注淡，令牌里有注明）。
+- **Element 内联样式清单补一条**：`el-segmented` 选中块除了 `width/height/transform` 还有 `display`。
+
 ### 2026-09-24：国内销售提示条——核对后不补（`feature-v1.8.4`，`eb1f6cf`）
 - 用户要求「国内销售的提示条也一起改成新样式」。核对：页面上**没有**这条提示（上一轮助手报告「还是旧的灰色 info 样式」有误，只看到了 styles.scss 里的残留样式）。
 - 来历：`db6b7cc`（07-30 静态原型）加过「订单号规则：GNXS + 日期 + 10 位随机数；码头与堆场来源使用不同的商品字段。」；`d1edeb8`（08-03 同事接真实接口）把页面顶部整块注释掉，提示条一并去掉。
