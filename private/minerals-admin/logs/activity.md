@@ -6,6 +6,14 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-24：文本域高度改回与普通输入框一致（`feature-v1.8.4`，`27b2709`）
+- **环境**：ssh；先确认已在 `feature-v1.8.4`，pull 为最新后再改。
+- **需求**：「文本输入框 type="textarea" 以前说的高度不对，和其它 form 表单输入框的高度保持一致」——撤销 09-18 的「两倍高（80）」口径。
+- **实施**：`src/assets/styles/zk/detail-page.scss` 皮肤层 `.el-textarea__inner` 由 `min-height: calc(控件高 × 2)` 改为 `height` / `min-height: var(--zk-size-control)`（40，均 `!important`，压 Element 按 rows 写的内联高度），内边距 `10px 12px`（行高 20 → 单行垂直居中），去掉被 `font` 简写覆盖、实际无效的 `line-height: 1.5`。DESIGN_SPEC 4.2 同步改写。
+- **影响面**：只作用于挂了 `zk-detail-page` 的详情/编辑页；弹框（teleport 到 body）和 `import-data-dialog` 自带的 textarea 规则不受影响。页面里写的 `rows`（1–4）不再决定高度，多行内容在框内滚动。
+- **验证**：单条 SCSS 规则改动，未跑 `vite build`（本机无 node_modules，装依赖要占 555M）；已人工核对选择器作用域和与 `font: var(--zk-font-label)`（13px/20px）的叠加结果。
+- **未提交的遗留**：工作区里 `src/components/ListTableCard/index.vue` 有一份 09-23 18:01 的未提交改动（操作列按内容自动定宽 `measureActions`），不属于本次需求，原样留着没提交也没丢弃。
+
 ### 2026-09-09：ssh 环境提交作者名改为 dh
 - **环境**：ssh（仅本机配置，无代码改动、无提交到团队仓库）
 - **实施**：`git config --local user.name dh`，只动正矿仓库的 `.git/config`；全局仍是 `pg-dh`，同机的花盆、相册、Hub 各仓库不受影响。核对 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 同步生效。
