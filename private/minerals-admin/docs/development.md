@@ -198,7 +198,8 @@ EOS
 - 共用视觉令牌在 `src/assets/styles/list-card-tokens.scss`（面板、控件、按钮、徽标的 mixin），组件内 `@use … as lc` 引用；改视觉只动这一处。
 - **没有引入 vxe-table**：稿里的列设置本身就是「一个集合 + 隐藏列」，用 el-table 实现不到百行；引入第二套表格体系要付出包体、双份样式覆盖与 66 个列表页的迁移成本，也与本文件 §10「不擅自引入/替换核心依赖」冲突。将来若需要虚拟滚动、可编辑单元格、百万行再单独评估。
 - **滚动条规则**：横向滚动只允许出现在表格内部。`ListTableCard` 是 `min-width: 0` + `overflow: hidden`（与稿的 `.table-panel` 一致），**页面容器也必须 `min-width: 0`**——grid/flex 子项默认 `min-width: auto`，宽表格会把 `.app-main` 撑出横向滚动条。
-- **页面不要再套 `.app-container`**：那条全局样式是白底 + `min-height`，会在灰底工作区里套出一块白板；外层 `.app-main` 已给 20px 内边距与 `#f6f8fc` 底色。页面只需一个 `.list-page { display: grid; gap: 14px; align-content: start; min-width: 0 }`。
+- **页面不要再套 `.app-container`**：那条全局样式是白底 + `min-height`，会在灰底工作区里套出一块白板；外层 `.app-main` 已给内边距（上下 20；左右至少 20，32:9 带鱼屏上内容最宽 `--zk-layout-content-max` 3360 居中，多出的宽度平分到两侧）与工作区底色。页面只需一个 `.list-page { display: grid; gap: 14px; align-content: start; min-width: 0 }`。
+- **屏幕适配**（2026-09-28，规范 3.1）：页面不要自己按屏幕写断点——矮屏栏高、32:9 居中、搜索卡列数（按卡宽）、详情表单 4 / 3 / 2 / 1 格（按区块内容宽）、信息卡折行、弹框限宽都在框架 / 公共组件 / 皮肤里做了。固定定位的元素（如底栏）要对齐内容时照 `BottomFixedBtnsBox` 的算法加两侧留白。验证用渲染台的 `?frame` 模式在 1280×720 ~ 5120×1440 八种尺寸下看。
 - **迁移状态**：目前只有提单列表（`views/bill-lading/bill-lading-list/index.vue`）接入，作为效果样板；其余 65 个使用 `TableSearch` + `.table-list-index` 的列表页未动，等产品确认效果后再批量迁移。老组件 `TableSearch`、全局 `Pagination` 与 `.handle-box-index` 等公共类**保持不变**。
 - 分页 contract 与全局 `Pagination` 一致（`v-model:page` / `v-model:limit` / `@pagination`），页面的 `queryParams.pageNum/pageSize` 与 `getList` 不用改。
 
