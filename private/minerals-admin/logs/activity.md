@@ -6,6 +6,12 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-29：提单结算信息 —— 成分单价与一程 / 二程提单号合为一组（`feature-v1.8.4`，`1eb5d82`）
+- 用户：提单新增 / 编辑 / 详情「结算信息」里的结算信息 1 / 2 / 3，把动态成分的单价和一程、二程提单号放到一组，按原来的规则 3 个 form-item 一换行。
+- 原结构（`components/SettlementInfo.vue`，三种页面共用）：成分单价一个 `el-row`（个数随成分），一程 / 二程提单号另一个 `el-row`，单价不满 3 个时提单号不接在后面、另起一行。改为同一个 `el-row`，都是 `span 8`，按栅格自动 3 个一换行；「实际干重重量 / 实际结算金额」那一行（及其 `margin-top: 20px`）不动；没有成分时的提示条分支不动。
+- 验证：SFC 编译通过；最小渲染页（`.codex-tmp/settle-layout/`，项目皮肤 + element-plus，模板直接取自组件）实测成分 1 / 2 / 3 / 4 个：1 个 → 第一行「单价 / 一程 / 二程」；2 个 → 「单价 ×2 / 一程」+「二程」；3 个 → 单价一行 +「一程 / 二程」；4 个 → 单价 ×3 +「单价 / 一程 / 二程」；框宽一致。未构建、未进真实页面。
+- 顺带发现（没改）：同组件 `v-if="item?.ingredientPriceVOS.length"`，`ingredientPriceVOS` 缺失时会抛错（同 `expecteArrivalDate?.slice` 那类问题），接口目前看都会带这个数组，未处理，已告知用户。
+
 ### 2026-09-29：提单详情 AI 船运实时跟踪卡背景改白（`feature-v1.8.4`，`f001232`）
 - 用户：提单详情里类名 `ai-tracking sea-ai-card` 的背景色改为白色。
 - 这张卡是「海运信息」里的「AI 数字员工 · 船运实时跟踪」（`components/AiTracking/index.vue` 根节点 `.ai-tracking`，`SeaInfo.vue` 给它加 `sea-ai-card`，全仓只此一处使用）。原背景是按稿 1:3989 的浅蓝渐变（`--zk-surface-soft` → 品牌蓝 5%），改为 `var(--zk-surface)`（#ffffff）；外框、头部分隔线、正文框底色与描边不动。全局样式、DESIGN_SPEC 都没定义这张卡，无需同步。
