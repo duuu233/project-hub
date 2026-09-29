@@ -6,6 +6,20 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-29：币种管理汇率列图标换矢量图（`feature-v1.8.4`，`f382686`）
+- 用户：币种管理「汇率」列的图标按稿 node 165:2882 换高清版，现在太糊。
+- 原因：`rate-icon.png` 是 24×24 位图、按 24×24 显示，高分屏必糊。稿里该节点「汇率趋势」是 16×16 矢量（三根柱 + 底线），figma MCP 导出 SVG → `src/assets/images/rate-trend.svg`（Vite 按地址导入，svg-icons 插件只管 `assets/icons/svg`，不冲突）；显示按稿 16×16（原 24，PNG 自带约 4px 透明边），数值与图标之间补 `gap: 4px`；删掉只此一处引用的旧 PNG。SFC 编译通过，未进真实页面。
+
+### 2026-09-29：详情页顶部关键字段条统一 / 去掉 el-descriptions（`feature-v1.8.4`，`82fb621` `c95f353` `a274938` `a5b5ac4` `ba21cce` `592e7de`）
+- 用户：贴了 43 个 Figma 节点，「只看详情页的 UI」，以出库单详情顶部卡 node 1:9527 为样板，替代原来的「系统信息」：稿里给了字段的按稿，没提到的详情页照同一结构在标题、副标题下面放全局字段。中途补充：「其实就是不需要使用 el-descriptions 这个标签了」。
+- 筛节点：Figma REST 接口（token 由脚本从本机 MCP 配置读，不上命令行，`.codex-tmp/figma-detail/fig.py`）一次取 44 个节点名；详情页 = 码头直提 / 堆场提货 / 出库计划 / 出库单 / 入库计划 / 入库单 / 进口采购 / 代理订单 / 提单（7 个节点）。脚本从整页数据里找「宽 > 1500 且含 25 号标题」的顶部卡，抽字段条标签 / 值（首版只抓到标题行，改成广度优先取最外层卡）。
+- 新增 `components/DetailHeaderCard/utils.ts`：`dictTagField`（字典 / `{值:文案}` 映射 → 标签，颜色按 listClass，或按值给色）、`headerDate` / `headerTime` / `headerWeight` / `sumWeight`。
+- 稿子指定的页面：出库单 8 格（仓库取出库计划的，实际出库重量 = 货物 releasedWeight 之和；编辑页系统信息改只读框）；出库计划 6 格（状态改读计划自己的 `status` + `stock_out_plan_status`，原来是提货单状态；加出库计划重量；系统信息只在编辑页、改只读框，新增页不再显示空块；删 `filterDeliveryStatus`）；入库单补两个重量（计划 = stockPlanWeight/planWeight 之和、实际 = stockWeight 之和）、时间到分；入库计划改用共用工具；码头 / 堆场已符合未改；进口采购 8 格（系统信息 / 融资信息两块手写 label-value 去掉，合同金额 = 币种 + 千分位，货物重量 = 商品 weight 之和，异常预警无数据源显示 --）；代理订单 8 格（合同金额 = 商品 totalPrice 之和 + 币种符号，客户名按 customerOrgId 取，融资产品挪进订单信息）。**稿里进口采购没有「金融产品名称」、入库计划没有「融资状态」，按稿不再显示，待用户确认。**
+- 稿子没有的页面（照同一结构，编号 + 本单关键字段 + 状态 + 创建时间）：选矿厂准入、监管仓准入、选矿厂授信、采购 / 仓储应付、采购 / 仓储应收（7 页只在详情有系统信息，脚本批量改）；商品、仓库（编辑页也有 → 编辑页改只读框）；国内销售（编辑页只读框）；国内采购（原来没有顶部卡，详情补卡、编辑页 el-descriptions 改只读框，detail-grid 里重复的订单号 / 状态去掉，删两处 `.trade-system-info` 死样式）；提货单详情（三块 el-descriptions → 顶部 5 格 + 一块只读「提货信息」）。
+- 正文里的 el-descriptions：资讯详情（栏目 / 来源 / 站点进顶部；标题只读框、主图缩略图、摘要与正文用与禁用框同外观的只读块）、帮助中心详情（分类 / 状态 / 排序进顶部；颜色带色块前缀、导语、附言、图标）、质押贸易背景附件（附件正常表单项，去掉写死 240 宽）、解质押记录（6 项只读框；可能多条记录，顶部不放字段）。`src/views` 里 el-descriptions 清零。DESIGN_SPEC 6.1 补关键字段条口径。
+- 验证：所有改动 SFC 编译通过；渲染台（`.codex-tmp/inbound-render`，新增 `entry-out.js` + 假接口）实跑出库单详情 / 编辑：顶部 8 格值正确（重量求和、状态绿标签、时间到分）、编辑页系统信息 3 个只读框、无 el-descriptions、无报错。其余页面未逐页渲染、未构建、未连真实接口。
+- 未做（等用户定范围）：共用组件里的 el-descriptions——`components/Details/*`（12 个文件，贷后 / 融资 / 资产详情用）、`common/post-loan/*`（6 个，贷后各页）、`AiChatDialog`（1 处）。另有约 40 个详情页原本就没有系统信息、顶部卡也没有字段（融资、开票、台账、系统管理类等），这次按「去掉 el-descriptions」的口径没动。
+
 ### 2026-09-29：列表页块间距 14 → 12，收成全局一处（`feature-v1.8.4`，`8f6f00e`）
 - 用户：类名 `list-page` 的 gap 从 14 改为 12。
 - 查到：全局皮肤 `zk/list-page.scss` 有 `.list-page { display:grid; gap:14px; align-content:start; min-width:0 }`，另有 **65 个 .vue 在 scoped 样式里逐字抄了一份**（含两个组件 example 页），scoped 优先级更高，只改全局对这 65 页无效；另 6 页只靠全局。
