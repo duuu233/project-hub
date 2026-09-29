@@ -6,6 +6,11 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-29：提单详情 AI 船运实时跟踪卡背景改白（`feature-v1.8.4`，`f001232`）
+- 用户：提单详情里类名 `ai-tracking sea-ai-card` 的背景色改为白色。
+- 这张卡是「海运信息」里的「AI 数字员工 · 船运实时跟踪」（`components/AiTracking/index.vue` 根节点 `.ai-tracking`，`SeaInfo.vue` 给它加 `sea-ai-card`，全仓只此一处使用）。原背景是按稿 1:3989 的浅蓝渐变（`--zk-surface-soft` → 品牌蓝 5%），改为 `var(--zk-surface)`（#ffffff）；外框、头部分隔线、正文框底色与描边不动。全局样式、DESIGN_SPEC 都没定义这张卡，无需同步。
+- 验证：SFC 编译通过，scss 编译后 `.ai-tracking` 为 `background: var(--zk-surface)`；未构建、未进真实页面。深空分支有自己的深色覆盖（`deep-space-pages/_shipping.scss`），未合、未动。
+
 ### 2026-09-29：提单详情「预计到港」slice 报错又出现 —— 补到 feature-v1.8.4（`feature-v1.8.4`，`0247669`）
 - 用户：`/bill-lading/bill-lading-list/detail?id=1076034750155276288` 仍报 `TypeError: n?.expecteArrivalDate?.slice is not a function`，问为什么还会报并修复。
 - **为什么还会报**：09-22 按当时口径只修在 `1.8.4-deep-space-theme`（`90bd9f7`，`toDateText`），没进其它分支。核对远端：`feature-v1.8.4`、`feature-v1.8.5`（同事分支）详情头仍是 `header?.expecteArrivalDate?.slice(0, 10)`；`dev` / `test` / `master` 还没有这个详情头。报错里的 `?.slice` 就是这句旧代码，所以看到报错的环境是从没带修复的分支打的包（深空分支 09-22 起已不含这句；若该环境确实发的是深空，那就是还没重新部署）。

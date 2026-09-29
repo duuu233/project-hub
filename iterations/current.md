@@ -1,5 +1,9 @@
 # 当前迭代
 
+## 2026-09-29（二）正矿：提单详情 AI 船运实时跟踪卡背景改白（`feature-v1.8.4`，`f001232`，已推送）
+
+- 用户：类名 `ai-tracking sea-ai-card` 的背景色改为白色。组件 `AiTracking` 根节点背景由浅蓝渐变改为 `var(--zk-surface)`（白），其它不动；只 `SeaInfo` 用这一个组件。SFC 与 scss 编译通过，未构建。深空分支未动。
+
 ## 2026-09-29（二）正矿：提单详情「预计到港」slice 报错补到 feature-v1.8.4（`0247669`，已推送）
 
 - 用户：提单详情 `id=1076034750155276288` 仍报 `n?.expecteArrivalDate?.slice is not a function`，问为什么还会报并修复。
