@@ -6,6 +6,13 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-29：提单详情「预计到港」slice 报错又出现 —— 补到 feature-v1.8.4（`feature-v1.8.4`，`0247669`）
+- 用户：`/bill-lading/bill-lading-list/detail?id=1076034750155276288` 仍报 `TypeError: n?.expecteArrivalDate?.slice is not a function`，问为什么还会报并修复。
+- **为什么还会报**：09-22 按当时口径只修在 `1.8.4-deep-space-theme`（`90bd9f7`，`toDateText`），没进其它分支。核对远端：`feature-v1.8.4`、`feature-v1.8.5`（同事分支）详情头仍是 `header?.expecteArrivalDate?.slice(0, 10)`；`dev` / `test` / `master` 还没有这个详情头。报错里的 `?.slice` 就是这句旧代码，所以看到报错的环境是从没带修复的分支打的包（深空分支 09-22 起已不含这句；若该环境确实发的是深空，那就是还没重新部署）。
+- **改法**：在 `feature-v1.8.4` 上套用与深空 `90bd9f7` **逐字相同**的改动（`cherry-pick -n` 后自己提交；只含这一个文件的修复，不带深空主题代码）。以后 1.8.4 → 深空单向合并时这段两边一致，不会冲突。全仓只有这一处对预计到港直接 `.slice`；`SeaInfo.formatDateForPicker`、`CustomsInfo.toDateStr` 本来就兜住了各种形态。
+- **验证**：SFC 编译通过；抽出 `toDateText` / `arrivalTip` 跑 16 种输入（`.codex-tmp/eta-test/`）：旧写法在数字毫秒 / 秒时间戳、Date、对象时抛 `slice is not a function`（与线上一致，后端大概率给的是数字时间戳），新写法全部转成 YYYY-MM-DD 或空，不再抛错。未跑 type-check / 构建（本机无依赖），没拿到该单接口数据、未进真实页面。
+- 未处理：`feature-v1.8.5`（同事分支）同样有这句，没动，需要的话告诉同事或另行指示。
+
 ### 2026-09-29：代理订购单「溢短装(%)」组合框整组宽度对齐（`feature-v1.8.4`，`2a4f159`）
 - 用户：确认在 `feature-v1.8.4`（是，工作区干净，pull 为最新）；代理订购单详情「合同信息」的溢短装(%) 组合框宽度和其它不一致，按以前的要求（09-24「复合框整组宽度和其它一致」，DESIGN_SPEC 4.2 `zk-combo-main`）保持一致。
 - **根因**：该项用 `div.currency-input` 包住「符号下拉 80 + 数值框写死 200px」，皮肤的组合框规则只认表单项内容的**直接子元素** `zk-combo-main`，包了一层就没生效；单控件铺满规则（`:only-child`）也不管它。整组只有 288，其它框 429。
