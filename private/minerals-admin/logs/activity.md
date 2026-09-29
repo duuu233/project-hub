@@ -6,6 +6,13 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-09-29：代理订购单「溢短装(%)」组合框整组宽度对齐（`feature-v1.8.4`，`2a4f159`）
+- 用户：确认在 `feature-v1.8.4`（是，工作区干净，pull 为最新）；代理订购单详情「合同信息」的溢短装(%) 组合框宽度和其它不一致，按以前的要求（09-24「复合框整组宽度和其它一致」，DESIGN_SPEC 4.2 `zk-combo-main`）保持一致。
+- **根因**：该项用 `div.currency-input` 包住「符号下拉 80 + 数值框写死 200px」，皮肤的组合框规则只认表单项内容的**直接子元素** `zk-combo-main`，包了一层就没生效；单控件铺满规则（`:only-child`）也不管它。整组只有 288，其它框 429。
+- **改法**：去掉包裹层，符号下拉（`currency-select` 80）与数值框直接放进表单项，数值框加 `zk-combo-main`、删 `style="width: 200px"`；删掉只此一处用的 `.currency-input` 局部样式。全仓另一处溢短装（进口采购 `import-manage/list/template/handleDetail.vue`）用页面自己的 `currency-input { width: 100% }` + 数值框 flex 1，本来就整组铺满，未动。
+- **验证**：SFC 编译通过（`.codex-tmp/sfc-check`）；最小渲染页（`.codex-tmp/combo-width/`：element-plus 2.13.1 + 项目 design-tokens / element-ui / detail-page 皮肤，内容区 1627 ≈ 1792 屏）实测改前 288（80 + 200）→ 改后 429 × 40（80 + 8 + 341），同行保证金比例 / 销售合同号 / 交易方式均 429 × 40，右缘对齐。本机无 `node_modules`，未跑 type-check / 生产构建、未进真实页面；深空分支未合（用户没要求）。
+- 文档：DESIGN_SPEC 4.2 已有此口径，未改；私人 docs 已核对，无需更新。
+
 ### 2026-09-28：币种管理「汇率趋势」弹窗按新稿（`feature-v1.8.4`，`ca80d71`）
 - 用户要求：切到 `feature-v1.8.4`（本来就在这个分支，pull 为最新），用 figma MCP 按 372:4131 优化 `/system/currency` 的弹出框。稿里画的是点汇率旁图标弹出的「汇率趋势」弹窗，对应 `template/historyRateDialog.vue`；新增 / 修改币种、手动更新汇率这两个弹框稿里没画，没动。
 - **figma MCP**：`get_figma_data` + `download_figma_images`（渲染图、关闭 / 箭头 / 交换图标 SVG、折线面积 SVG 落在 `.codex-tmp/figma-images/currency-rate-dialog/`）。折线色 `#1677FF`、面积渐变 .22 → 0、虚线指示 `#9BC5FF` 都是从折线 SVG 里读的。
