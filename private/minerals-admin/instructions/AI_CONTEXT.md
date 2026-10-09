@@ -211,3 +211,5 @@ API 按领域放在 `src/api/`。运行时菜单名称、路由名称、页面�
 7. 核对并更新 Hub 共享私人文档，分别检查业务仓库和 Hub 的 diff；按用户授权提交与同步
 
 仓储七个列表及共享表单按 Figma 补齐（2026-10-09），使用 WarehouseUi 组件与原始透明 SVG。统计为静态示例，新筛选仅覆盖当前页，详情侧栏与附件布局沿用原接口数据；接入边界见 docs/warehouse-figma-ui.md。
+
+提单海运新增/编辑（2026-10-09）不再前端拦截到港日期对同时为空，也允许删除最后一条尾程；SeaInfo 保留父级 validate 接口，口径见 docs/bill-lading-sea-validation.md。

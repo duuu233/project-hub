@@ -191,3 +191,7 @@ AI 组件通过 `utils/aiChatState.ts` 与当前页面处理器连接，并可�
 ## 仓储页面共享展示（2026-10-09）
 
 入库/入库计划/出库/出库计划及库存查询/日志/预警复用 src/components/WarehouseUi/。页面与静态字段边界、28 个 Figma SVG 映射见 [warehouse-figma-ui.md](warehouse-figma-ui.md)。原有 API、动态菜单与权限体系沿用。
+
+## 提单海运校验（2026-10-09）
+
+SeaInfo 新增/编辑允许预计到港日期与到港日期同时为空，尾程允许删除至零条，日期必填由后端决定。共享表单 validate 接口保留，详细口径与回归场景见 [bill-lading-sea-validation.md](bill-lading-sea-validation.md)。

@@ -138,7 +138,7 @@ npm i -g @colbymchenry/codegraph   # 2026-09-09 在 ssh 装的是 1.6.0
 3. 必填字段完整，enabled 是布尔值；Context 是 Hub 内实际存在的文件，不能越出 Hub。
 4. 本机映射不存在未知 ID；公共项目未映射不是错误，只表示当前环境不可用。全局停用项目不能执行。
 5. transport 合法，位置字段齐全；本地环境变量存在，解析后的目录存在，路径指向正确项目的 Git 根目录；SSH 路径在远端检查。用户声明的环境里解析不出有效路径时停止并请用户确认环境，不要改用其他环境的映射。
-6. 分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。工作分支以当前检出的分支为准，`default_branch` 只是远端默认分支的记录。
+6. 分支和 upstream 在实际仓库核实；不要把配置中的示例值当事实。工作分支以当前检出的分支为准，`default_branch` 只是远端默认分支的记录。默认显式 pull/push `origin` 的当前本地同名分支，没有 upstream 也照此执行且不设置关联；只有用户明确要求时才合并其他分支。origin 或远端同名分支不存在时停止说明，详见 `AGENTS.md`。
 7. 环境映射随 Git 同步：`git ls-files environments` 应能看到各环境的 `projects.local.yaml`。提交前逐行确认其中只有路径、`transport`、`host` 别名和 `default_branch`，没有密码、私钥、token 或真实主机地址。
 8. `git diff --check` 应通过；审阅 `git diff` 与新增文件，确认除环境映射外的共享文件没有本机路径，且任何文件都没有 SSH 主机地址或凭据。
 
