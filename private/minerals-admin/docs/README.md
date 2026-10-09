@@ -58,3 +58,5 @@ git status --short
 ```
 
 这些链接应继续被团队 Git 忽略；真实文件的修改必须在 Hub 的 git status 中可见。提交数据库前停止 daemon 并 checkpoint，运行文件不提交。挂载与同步步骤见 Hub docs/private-mounts.md。
+
+- [仓储 Figma 页面及接口边界](warehouse-figma-ui.md)：七个列表、共享详情表单、资源映射与静态字段接入约定。

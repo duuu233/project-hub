@@ -993,3 +993,11 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
   CDP `Performance.getMetrics` 静置 3 秒：RecalcStyleCount +0、LayoutCount +0、ScriptDuration +0。
 - 测试脚本：Hub `.codex-tmp/sfc-render/idle-test.cjs`（用 `document.getAnimations()` 定格到指定毫秒截图）。
 
+
+## 2026-10-09｜work｜feature-v1.8.5｜仓储 Figma 实现
+
+- 先同步 Hub main 与正矿 feature-v1.8.5（均已最新），读取规则与设计上下文。
+- 七个列表、四个共享表单补齐展示，28 个 Figma SVG 原始资源，修复黑底和居中。
+- 保留现有接口/提交/权限；新增统计静态，新增筛选为本页过滤且不发送 ui 字段。
+- 快速构建通过，类型检查 28 个基线历史错误；隔离渲染/筛选边界检查通过，无真实后端数据写入。
+- 用户授权先提交本轮，再 pull 后处理提单校验。

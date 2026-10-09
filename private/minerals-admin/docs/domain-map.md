@@ -187,3 +187,7 @@ AI 组件通过 `utils/aiChatState.ts` 与当前页面处理器连接，并可�
 | 站点/商品逻辑 | 订单、采购、商品匹配、AI site resolver |
 | 仓储阶段 | cope/receivable、贷后、库存、资产详情 |
 | 金额/重量 | 单位、精度、千分位、汇率、合计、后端字符串/数字类型 |
+
+## 仓储页面共享展示（2026-10-09）
+
+入库/入库计划/出库/出库计划及库存查询/日志/预警复用 src/components/WarehouseUi/。页面与静态字段边界、28 个 Figma SVG 映射见 [warehouse-figma-ui.md](warehouse-figma-ui.md)。原有 API、动态菜单与权限体系沿用。
