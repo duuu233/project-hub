@@ -5393,3 +5393,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 76 项相关 Flutter 回归、6 文件 analyze、四项 Dart 自检、Kotlin 自检、差异检查和 Android arm64 compileDebugKotlin 通过；CodeGraph 已同步。
 - 用户反馈 Android 割草机首页操作时偶发闪退，具体按钮及状态不明。没有真机连接或崩溃堆栈，不能证明闪退根因或已消失。本轮未生成 / 安装 APK。
 - 详细记录及当前事实由业务项目维护：docs/history/2026-10/2026-10-10-mower-stability-plan-confirmation.md、docs/PRODUCT_RULES.md §4.19、docs/MOWER_DP_GAP_REPORT.md。
+
+## 2026-10-10 work｜相册 APP 恢复 iOS 星币入口
+
+- 用户明确仅开启入口供截图，内购后续再接，不添加其它业务代码。
+- Hub main 开始前 pull 成功；相册 APP main 起始 e892a18，原有 pubspec.lock / Android 构建报告按授权暂存、pull 后恢复。
+- 仅解除共用入口隐藏开关，恢复「我的」星币管理、AI 余额入口、星币不足「去充值」及路由；现有支付能力保持原样。
+- 41 项已有回归通过，两个 Dart 文件 analyze 无问题，diff 检查及 CodeGraph 同步完成；Windows 未进行 iOS 编译或真机截图验证。
+- 相册 APP main 提交 68e4dee；提交后再次 pull 并 push origin main 成功，分支原有 4 个本地提交一并同步。原有两处未提交修改仍保留，未纳入此次提交。
+- 详细记录在目标项目 docs/history/2026-10/2026-10-10-iOS星币入口恢复.md；统筹记录按默认流程提交、再次 pull 后推送。
