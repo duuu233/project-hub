@@ -5423,3 +5423,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 五个相关文件共 65 项回归通过，四个 Dart 文件 analyze 无问题，差异检查与 CodeGraph 同步通过。首轮列表测试遗留轮询 Timer，修正测试夹具后全绿；运行时轮询未改。
 - 未真机、未生成 APK。具体记录由目标项目维护：docs/history/2026-10/2026-10-10-device-feedback-consistency.md、PRODUCT_RULES.md、COMMON_MODULES.md。
 - 统筹交付记录按默认约定提交，再 pull 后 push。
+
+## 2026-10-10 work｜花盆 APP 启动确认与割草时间
+
+- 延续本轮：开始前两个仓库均显式 pull 当前 main 成功；业务基线 030ed0e，统筹基线 6de9a5c。保留此前迭代原文。
+- 自动、定点、启动/继续每次安全确认 → 整小时选择 → DP119下发成功后启动；回归、暂停/停止跳过两窗。按钮原有蓝牙连接/RSSI预检已移除，后台连接和传输路由保留。
+- 用户确认DP119只有小时、当天18点后禁止启动。默认按手机本地当天18点剩余完整小时向下取整，只能缩短；不足1小时友好拦截。取消、下发失败、确认跨截止时间、旧会话回调均不启动。
+- 88项相关Flutter回归、8文件analyze、四项仓库Dart自检、diff检查通过；CodeGraph同步完成。未真机、未生成APK，SDK成功不代表固件最终接受。
+- 业务main提交eb7b10f，提交后再次pull成功并已push origin main；用户关闭Excel后临时锁文件自然消失，未删除、忽略或提交它，业务工作区干净。
+- 详细契约及完整记录在业务docs/PRODUCT_RULES.md §4.10、docs/MOWER_DP_GAP_REPORT.md与docs/history/2026-10/2026-10-10-mower-start-safety-duration.md。本轮统筹记录按默认流程提交，再pull后push。
