@@ -5384,3 +5384,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 ### 交付与默认同步规则确认
 
 正矿仓储 UI 0eaf6014、提单校验 f152a424 已推送到 origin/feature-v1.8.5，工作区干净，未设置 upstream。用户明确长期默认：本地当前分支名就是拉取和推送的远端分支名；除非明确要求合并，否则不合并。已同步更新 AGENTS.md 与正矿 Context，避免没有 upstream 时重复询问。
+
+## 2026-10-10 work｜花盆 APP 删除确认与割草机稳定性
+
+- 状态：业务已提交并推送，统筹记录待提交；保留此前迭代原文。
+- 两仓库开始前均显式 pull 当前 main 成功。花盆 APP 起始 8ce4749，本轮交付 f5905d7；提交后再次 pull，已推送 origin/main，工作区干净。
+- 核实原有长按删除二次确认，补上重复触发和确认期间计划更新保护；首页控制补异常兜底，隔离旧页面回调，拦截关机后的队列指令，完善 Android 下发实例回收。
+- 76 项相关 Flutter 回归、6 文件 analyze、四项 Dart 自检、Kotlin 自检、差异检查和 Android arm64 compileDebugKotlin 通过；CodeGraph 已同步。
+- 用户反馈 Android 割草机首页操作时偶发闪退，具体按钮及状态不明。没有真机连接或崩溃堆栈，不能证明闪退根因或已消失。本轮未生成 / 安装 APK。
+- 详细记录及当前事实由业务项目维护：docs/history/2026-10/2026-10-10-mower-stability-plan-confirmation.md、docs/PRODUCT_RULES.md §4.19、docs/MOWER_DP_GAP_REPORT.md。
