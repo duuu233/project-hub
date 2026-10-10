@@ -5387,7 +5387,7 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 
 ## 2026-10-10 work｜花盆 APP 删除确认与割草机稳定性
 
-- 状态：业务已提交并推送，统筹记录待提交；保留此前迭代原文。
+- 状态：业务及统筹记录均已提交并推送；保留此前迭代原文。统筹交付记录提交为 63dbae5。
 - 两仓库开始前均显式 pull 当前 main 成功。花盆 APP 起始 8ce4749，本轮交付 f5905d7；提交后再次 pull，已推送 origin/main，工作区干净。
 - 核实原有长按删除二次确认，补上重复触发和确认期间计划更新保护；首页控制补异常兜底，隔离旧页面回调，拦截关机后的队列指令，完善 Android 下发实例回收。
 - 76 项相关 Flutter 回归、6 文件 analyze、四项 Dart 自检、Kotlin 自检、差异检查和 Android arm64 compileDebugKotlin 通过；CodeGraph 已同步。
