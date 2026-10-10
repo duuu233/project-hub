@@ -5402,3 +5402,11 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 41 项已有回归通过，两个 Dart 文件 analyze 无问题，diff 检查及 CodeGraph 同步完成；Windows 未进行 iOS 编译或真机截图验证。
 - 相册 APP main 提交 68e4dee；提交后再次 pull 并 push origin main 成功，分支原有 4 个本地提交一并同步。原有两处未提交修改仍保留，未纳入此次提交。
 - 详细记录在目标项目 docs/history/2026-10/2026-10-10-iOS星币入口恢复.md；统筹记录按默认流程提交、再次 pull 后推送。
+
+## 2026-10-10 work｜花盆 APP 同类设备提示一致性
+
+- 两仓库开始前均 pull 当前 main 成功；花盆 APP 起始 f5905d7，交付 030ed0e，提交后再次 pull 并已 push origin main，工作区干净。
+- 核对列表在线 / 离线胶囊与公共 toast，已有样式复用无需改视觉；统一割草机完全离线的提示为「设备已离线」。DP113 关机专用文字与 Wi-Fi 离线允许进入连接蓝牙的产品例外保留。
+- 五个相关文件共 65 项回归通过，四个 Dart 文件 analyze 无问题，差异检查与 CodeGraph 同步通过。首轮列表测试遗留轮询 Timer，修正测试夹具后全绿；运行时轮询未改。
+- 未真机、未生成 APK。具体记录由目标项目维护：docs/history/2026-10/2026-10-10-device-feedback-consistency.md、PRODUCT_RULES.md、COMMON_MODULES.md。
+- 统筹交付记录按默认约定提交，再 pull 后 push。
