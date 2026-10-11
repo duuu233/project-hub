@@ -5489,3 +5489,16 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 88项相关Flutter回归、8文件analyze、四项仓库Dart自检、diff检查通过；CodeGraph同步完成。未真机、未生成APK，SDK成功不代表固件最终接受。
 - 业务main提交eb7b10f，提交后再次pull成功并已push origin main；用户关闭Excel后临时锁文件自然消失，未删除、忽略或提交它，业务工作区干净。
 - 详细契约及完整记录在业务docs/PRODUCT_RULES.md §4.10、docs/MOWER_DP_GAP_REPORT.md与docs/history/2026-10/2026-10-10-mower-start-safety-duration.md。本轮统筹记录按默认流程提交，再pull后push。
+
+
+---
+
+## 2026-10-11 home｜qianrong 负责模块与特殊列表
+
+- 状态：业务已提交并推送，统筹文档本轮提交后再次 pull/push；保留此前迭代原文。
+- 起始 Hub main / f97cd9b、泰乾超级 master / dbe5853、正矿 feature-v1.8.5 / f152a42，三仓库均先 pull 当前同名分支成功。正矿仅作只读参照且始终保留该分支。
+- 用户本轮授权按正矿改造负责模块的样式与交互；已读 13 份 PRD 的结论放入项目维护文档。菜单权限继续在用户组，等待后端接口再迁移系统管理；登录与权限沿用原方案。
+- 业务 master / 97f1e31：特殊 Element 列表、菜单/部门树、日志筛选、角色授权/分配、模块标题、六个旧表单固定底栏及个人中心补齐，公开列表接入说明同步更新。接口日志尚无独立页面/接口，记录待接入；qianlian、packages、API/鉴权未修改。
+- 最终构建 4.41 秒；25 个 Vue 文件编译、150 个原业务函数和 83 组按钮绑定核对通过。16 个隔离页面/组件及原 demo 八种尺寸、日期/重置、树展开、列设置/全屏、操作与底栏对齐回归通过，diff 与信息隔离检查通过，CodeGraph 最新。
+- 全程无 POST 或真实业务请求；未真实账号/后端联调、未部署。现有构建告警、隔离路由警告和原资料 radio 弃用告警如实记录。用户根 pnpm-lock.yaml 按此前授权保留、未提交，SHA256 未变。
+- 业务提交后再次 pull master 成功并已 push。当前负责模块与延期安排见 private/taiqian-front/docs/qianrong-owned-modules.md，完整验收见 private/taiqian-front/docs/history/2026-10-11-qianrong-owned-module-ui.md；Hub 文档按默认流程提交、再次 pull main 后 push。
