@@ -6,7 +6,7 @@
 
 - 保留原生 vxe-grid：页面拥有列、数据、分页、事件、ref、列设置及全屏，不新增第二层表格包装，不转发实例方法。
 - 升级原有 TableSearch 和 BottomFixedBtnsBox；新增轻量 ListRowActions、ListToolbarTitle 和原生配置/测量辅助函数。
-- qianrong 当前 41 个 Vue 文件中 42 处分页 vxe-grid 接入视觉规范，39 处 active 插槽使用行操作组件；含费用、结算详情里的列表，详情表单其他部分不改。首页旧 el-table 只接入通用卡片/搜索视觉。
+- qianrong 原 41 个 Vue 文件中 42 处 vxe-grid 接入视觉规范，39 处 active 插槽使用行操作组件；部门树表不分页。2026-10-12 又有 34 个页面表单接入详情统一皮肤，负责模块逐项对照见 qianrong-design-standard.md。首页旧 el-table 接入通用卡片/搜索视觉。
 - 不改 qianlian、共享 packages、API 模块或接口字段；不虚构通用关键词、AI 功能、自动保存状态或后端能力。
 
 ## 视觉与行为
@@ -36,6 +36,6 @@
 
 本轮详细验证和交付见 `history/2026-10-11-qianrong-owned-module-ui.md`。
 
-颜色、尺寸、断点和内容边界仅维护 list-page.scss；接入新列表按公开说明使用原生组件，保留页面真实业务函数。框架升级后检查原生 DOM 类名和 setColumnWidth/getColumns 行为，特别是操作列测量、分页、列设置和全屏。
+颜色、尺寸与字体集中维护 design-tokens.scss，列表规则在 list-page.scss，详情布局及控件在 detail-page.scss；公开规范为 UI_DESIGN_SPEC.md。搜索内边距 13/14/12，卡头 52、分页 60，行操作 12px 常规，首数据列匹配重要编号时加粗；strong 可显式控制。接入新列表按公开说明使用原生组件，保留页面真实业务函数。框架升级后检查原生 DOM 类名和 setColumnWidth/getColumns 行为，特别是操作列测量、分页、列设置和全屏。
 
 推荐八种桌面验收尺寸：1280×720、1366×768、1440×900、1536×864、1920×1080、2560×1080、3440×1440、5120×1440。桌面检查主输入宽度、两栏右边缘、body 溢出、固定列按钮、侧栏状态和底栏遮挡；详情嵌入模式另核对 sticky 和原有隐藏按钮规则。

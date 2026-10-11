@@ -3,6 +3,8 @@
 - 根目录 AGENTS.md：执行规则与 Monorepo 边界。
 - 根目录 AI_CONTEXT.md：项目身份、应用与维护入口。
 - [qianrong-list-style.md](qianrong-list-style.md)：qianrong 列表、搜索与固定底栏约定。
+- [qianrong-design-standard.md](qianrong-design-standard.md)：全局列表/详情规范、dh 改动来源及负责模块与正矿的逐项对照。
+- [history/2026-10-12-qianrong-design-standard.md](history/2026-10-12-qianrong-design-standard.md)：统一规范、详情及相近模块交互的实施与验收记录。
 - [qianrong-owned-modules.md](qianrong-owned-modules.md)：负责的 13 个模块、PRD 阅读结论、实际口径及菜单权限迁移暂缓安排。
 - [history/2026-10-11-qianrong-owned-module-ui.md](history/2026-10-11-qianrong-owned-module-ui.md)：负责模块的特殊列表、树形展示和个人中心补齐记录。
 - [qianrong-local-proxy.md](qianrong-local-proxy.md)：qianrong 本地测试接口与代理配置。

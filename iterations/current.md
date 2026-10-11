@@ -5502,3 +5502,14 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 最终构建 4.41 秒；25 个 Vue 文件编译、150 个原业务函数和 83 组按钮绑定核对通过。16 个隔离页面/组件及原 demo 八种尺寸、日期/重置、树展开、列设置/全屏、操作与底栏对齐回归通过，diff 与信息隔离检查通过，CodeGraph 最新。
 - 全程无 POST 或真实业务请求；未真实账号/后端联调、未部署。现有构建告警、隔离路由警告和原资料 radio 弃用告警如实记录。用户根 pnpm-lock.yaml 按此前授权保留、未提交，SHA256 未变。
 - 业务提交后再次 pull master 成功并已 push。当前负责模块与延期安排见 private/taiqian-front/docs/qianrong-owned-modules.md，完整验收见 private/taiqian-front/docs/history/2026-10-11-qianrong-owned-module-ui.md；Hub 文档按默认流程提交、再次 pull main 后 push。
+
+
+---
+
+## 2026-10-12 home｜qianrong 全局列表与详情规范
+
+- 状态：业务 master / 7d3dd63 已提交并推送；本次统筹记录提交后再次 pull/push。保留此前迭代。
+- 开始前 Hub main / dab1708、泰乾超级 master / 97f1e31、正矿 feature-v1.8.5 / f152a424 均显式 pull 当前同名分支成功；正矿全程只作参照、工作区干净。原根锁文件按此前授权保留、不提交、哈希未变。
+- 读取正矿全局 DESIGN_SPEC、规范记录及 dh 历史，列表/详情以共用令牌和集中皮肤维护；34 个表单接入，7 个负责模块查看头卡和返回，用户组/角色左右权限区与草稿管理，个人资料查看编辑取消、密码清空及日志 JSON。公开规范与详情例子直接置于 qianrong。
+- 最终构建 5.20 秒、44 Vue 编译、268 原业务函数比较及 32 原脚本一致通过；23 隔离场景、实际容器两/一/四格、16 个特殊页面回归和公开 demo 八种尺寸/交互通过；diff、信息隔离及 CodeGraph 检查通过。全程无 POST 或真实业务接口，未真实账号/保存/权限刷新/图片上传联调、未部署；工具与模拟控制台提示已如实记录。
+- 菜单权限迁移仍等待后端，认证沿用原方案，接口日志独立页面/接口缺口仍记录。模块对照在 private/taiqian-front/docs/qianrong-design-standard.md，完整交付在 docs/history/2026-10-12-qianrong-design-standard.md；业务源码与公开文档无统筹痕迹。
