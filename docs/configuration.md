@@ -94,13 +94,15 @@ projects:
 
 ### 各环境挂载状态与冲突处理
 
-`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。归属口径：所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（`flowerpot-app`、`flowerpot-admin`、`album-app`、`album-admin`、`album-miniapp`）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 都提交在各自仓库里，`.codegraph/` 写在各自 `.gitignore` 中、每台机器本地生成，一律不进 Hub、不配 `private_mounts`。只有 `minerals-admin`（正矿）是企业团队仓库，私人内容不能提交进去，才把这几样迁到 `private/minerals-admin/` 并用软链接挂回业务仓库。各环境正矿仓库的物理路径不同，分别写在自己的 `environments/<env>/projects.local.yaml` 里，挂载定义共用同一份，三端最终指向 Hub 的同一份文档与索引。
+`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。归属口径：所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（`flowerpot-app`、`flowerpot-admin`、`album-app`、`album-admin`、`album-miniapp`）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 都提交在各自仓库里，`.codegraph/` 写在各自 `.gitignore` 中、每台机器本地生成，一律不进 Hub、不配 `private_mounts`。`minerals-admin`（正矿）与 `taiqian-front`（泰乾超级）是企业团队仓库，按用户要求将私人规则、文档、日志和索引存放于各自 `private/<project_id>/`，再以本地忽略的链接挂回业务根目录。面向同事的示例与使用说明仍提交业务仓库，例如 `apps/qianrong/LIST_PAGE_DEMO.md`；不把私人资料或其存放机制写进这些公开文件。各环境仓库物理路径分别写在自己的 `environments/<env>/projects.local.yaml`，复用同一挂载定义。
 
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
 | work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
 | ssh | `/pgdata/pg/dh/minerals-frontend` | 2026-09-09 已挂载（标准软链接，5 个挂载点全部建立） |
 | home | 见 `environments/home/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-11 已核实仓库并恢复 5 项挂载（NTFS Junction / SymbolicLink），本机索引已重建；复核使用 `node scripts/setup-links.mjs --env home --project minerals-admin --dry-run` |
+
+泰乾超级当前只映射 home 的 `D:/work/front`，2026-10-11 已建立五项挂载并初始化本机索引。qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」；仍使用 taiqian-front 的 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env home --project taiqian-front --dry-run`。
 
 冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。2026-09-09 在 ssh 环境遇到的 `docs/build-opt/`（2026-08-25 打包优化留下的原始日志、指标与脚本，24 个文件 / 601894 字节）即按此并入 `private/minerals-admin/docs/build-opt/`，挂载后在仓库内仍是原来的 `docs/build-opt/` 路径。
 

@@ -2,11 +2,27 @@
 version: 1
 projects:
   taiqian-front:
-    name: 泰乾德邦数字金融管理系统
+    name: 泰乾超级
     description: 泰乾德邦数字金融管理系统前端
     context: context/taiqian-front.md
     default_branch: master
     enabled: true
+    private_mounts:
+      .codegraph:
+        target: .codegraph
+        type: directory
+      docs:
+        target: docs
+        type: directory
+      AGENTS.md:
+        target: instructions/AGENTS.md
+        type: file
+      AI_CONTEXT.md:
+        target: instructions/AI_CONTEXT.md
+        type: file
+      logs:
+        target: logs
+        type: directory
   flowerpot-app:
     name: 花盆APP
     description: 花盆移动应用

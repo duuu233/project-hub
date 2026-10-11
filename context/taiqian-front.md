@@ -1,7 +1,8 @@
-# 泰乾德邦数字金融管理系统
+# 泰乾超级
 
 - project_id：taiqian-front。
-- 项目名称与用途：泰乾德邦数字金融管理系统前端，依据根目录 README.md 与 package.json 核实；包含 qianrong 和 qianlian 两个应用。
+- 名称：泰乾超级（用户指定）；用途：泰乾德邦数字金融管理系统前端，包含 qianrong 和 qianlian 两个应用。
+- 子应用「泰乾超级-qianrong」指向仓库内 `apps/qianrong/`，复用本项目 ID、根目录 Git 分支及私人资料，不登记成独立 Git 仓库。
 - 企业 Codeup 独立仓库，与正矿是不同的逻辑项目；各环境需自行具备远端访问权限。
 - 路径只保存在各环境 projects.local.yaml，不因环境或目录变化创建重复项目。
 
@@ -9,9 +10,10 @@
 
 - `README.md`：项目身份、应用目录和开发命令。
 - `apps/qianrong/README.md`：qianrong 应用文档。
+- `apps/qianrong/LIST_PAGE_DEMO.md`：面向同事的列表使用说明；示例源码位于该应用 `src/examples/`。
 - `apps/qianlian/README.md`：qianlian 应用文档。
 
-接入核查时根目录没有 `AGENTS.md`、`AI_CONTEXT.md` 或 `.codegraph/`。每轮任务重新检查适用规则与文档入口；没有索引时不自动初始化。接入本身只读取仓库，不补建业务文档、不修改源码或安装依赖。
+按用户要求复用正矿的私人挂载方案：`AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/` 和 `.codegraph/` 由 `private/taiqian-front/` 维护，业务根目录仅挂载被本地 Git 忽略的链接。索引数据库是每台机器生成的派生文件，不提交。维护入口为 `docs/README.md`，qianrong 的实施约定由项目自己的私人文档维护。
 
 ## 执行约定
 

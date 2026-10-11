@@ -37,7 +37,7 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | 相册小程序 | album-miniapp |
 | 相册APP | album-app |
 | 正矿 | minerals-admin |
-| 泰乾德邦数字金融管理系统 | taiqian-front |
+| 泰乾超级（qianrong 子应用简称「泰乾超级-qianrong」） | taiqian-front |
 
 可以直接使用名称发起任务，例如“花盆APP：修复设备列表刷新问题”。其他环境接入同名项目时，复用这些 ID，仅添加该环境自己的路径映射。
 
