@@ -1,3 +1,15 @@
+## 2026-10-11 home｜接入泰乾前端及正矿分支同步
+
+- 用户要求接入新位置并将正矿切到 feature-v1.8.5；home 初始未映射正矿，用户补充其本机仓库位置后继续，未猜测路径或套用其他环境。
+- Hub main / 72dd5b7 开始前工作区干净，先 pull 同名 main 成功。新增 taiqian-front，名称依据 README 和 package.json 确认为「泰乾德邦数字金融管理系统」，与正矿是不同的企业 Codeup 仓库；新增注册表、Context、home 映射及 README 入口。
+- 新项目接入仅只读核查，不改源码、不安装依赖、不创建项目内文档或索引；保留 master / 8d2a8f0，核实远端默认 master 和仓库根目录，工作区干净。
+- 正矿复用 minerals-admin，补 home 映射。原分支 1.8.4-deep-space-theme / aa7d6d8 干净；核实远端已有 feature-v1.8.5 后 fetch、建立同名本地分支并切换，不设置 upstream；显式 pull --ff-only origin feature-v1.8.5 成功，当前 f152a42 与 origin 同名分支一致。原主题分支保留，未合并、rebase 或修改源码。
+- 根据正矿现有规则和 private_mounts，先预览无实体冲突，再恢复五项链接并核实目标及本地忽略。sync / index 因本机未初始化而不能执行，随后按项目缺失恢复规则和 CLI 提示 init，重建 662 文件 / 11,304 节点 / 38,381 边，status 最新；索引配置、数据库和运行产物均未进入受控改动。
+- 验证：注册表版本、唯一 ID/名称、Context 路径、home 映射字段、两仓库身份、工作区、正矿分支与五项链接校验通过，diff --check 通过；未运行业务构建或测试，本轮没有业务代码修改。只修改 home 映射，其他环境不动。
+- 交付：配置及本轮记录按默认约定在 Hub main 提交，提交后再次 pull 同名分支并 push；此前未完成迭代保留。
+
+---
+
 ## 2026-10-10 home｜花盆后台文件上传保留原始名称
 
 - 状态：花盆后台 main / e653396 已提交，提交后再次 pull --ff-only origin main 成功并 push；工作区干净，未部署。

@@ -1,6 +1,12 @@
 # 共享项目注册表：同名项目复用同一个 ID，路径由各环境独立配置。
 version: 1
 projects:
+  taiqian-front:
+    name: 泰乾德邦数字金融管理系统
+    description: 泰乾德邦数字金融管理系统前端
+    context: context/taiqian-front.md
+    default_branch: master
+    enabled: true
   flowerpot-app:
     name: 花盆APP
     description: 花盆移动应用

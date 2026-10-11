@@ -2,6 +2,12 @@
 version: 1
 environment: home
 paths:
+  taiqian-front:
+    transport: local
+    path: 'D:/work/front'
+  minerals-admin:
+    transport: local
+    path: 'D:/work/minerals-frontend'
   flowerpot-app:
     transport: local
     path: 'D:/work/flowerpot'
