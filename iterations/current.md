@@ -5513,3 +5513,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 读取正矿全局 DESIGN_SPEC、规范记录及 dh 历史，列表/详情以共用令牌和集中皮肤维护；34 个表单接入，7 个负责模块查看头卡和返回，用户组/角色左右权限区与草稿管理，个人资料查看编辑取消、密码清空及日志 JSON。公开规范与详情例子直接置于 qianrong。
 - 最终构建 5.20 秒、44 Vue 编译、268 原业务函数比较及 32 原脚本一致通过；23 隔离场景、实际容器两/一/四格、16 个特殊页面回归和公开 demo 八种尺寸/交互通过；diff、信息隔离及 CodeGraph 检查通过。全程无 POST 或真实业务接口，未真实账号/保存/权限刷新/图片上传联调、未部署；工具与模拟控制台提示已如实记录。
 - 菜单权限迁移仍等待后端，认证沿用原方案，接口日志独立页面/接口缺口仍记录。模块对照在 private/taiqian-front/docs/qianrong-design-standard.md，完整交付在 docs/history/2026-10-12-qianrong-design-standard.md；业务源码与公开文档无统筹痕迹。
+
+
+## 2026-10-12 work｜各项目拉取与泰乾超级关联续接
+
+- 用户声明回公司 work，要求同步各项目、更新关联并继续此前任务。保留已有迭代与 home 交付原文；此前泰乾超级接入已在 home 完成，本轮复用 taiqian-front。
+- 统筹 main d200b57 → ae81f90。七业务仓库显式 pull 当前同名分支全部成功：花盆APP main/d15eef0，花盆后台 main/e653396，相册后台 main/322e960，相册小程序 main/118ff7e，相册APP main/68e4dee，正矿 feature-v1.8.5/f152a424，泰乾超级 master/7d3dd63。没有切分支、自动设置 upstream 或合并其他分支。
+- 三仓库四原文件按本轮授权精确路径暂存、pull 后恢复，SHA256 均一致；用户改动仍保留，未提交或覆盖。七项目 CodeGraph 均最新。
+- 补 work 泰乾超级根目录映射与五项私人链接，业务工作区干净。qianrong 的 home 已交付变更已拉到公司；最初指定 packages 重点范围记录在关联文档，未重做业务页面。
+- 仓库身份、YAML、路径、二次挂载预检、Git 忽略与派生数据库边界、索引及差异验证通过；现有 setup-links 六项回归全绿。未构建、真实接口、部署；只提交统筹关联与维护文档，再 pull main 后 push。详细验收见 logs/hub/2026-10-12-work-project-sync.md 与 private/taiqian-front/docs/history/2026-10-12-work-association.md。

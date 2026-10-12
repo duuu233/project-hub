@@ -5,6 +5,7 @@
 - 子应用「泰乾超级-qianrong」指向仓库内 `apps/qianrong/`，复用本项目 ID、根目录 Git 分支及私人资料，不登记成独立 Git 仓库。
 - 企业 Codeup 独立仓库，与正矿是不同的逻辑项目；各环境需自行具备远端访问权限。
 - 路径只保存在各环境 projects.local.yaml，不因环境或目录变化创建重复项目。
+- 已关联 home 与 work，复用同一私人资料；work 使用用户确认的 front Git 根目录，packages 为最初指定的重点维护范围。应用需求仍按具体任务限定范围，不能把 qianrong 的业务代码带入共享包。
 
 ## 项目内文档入口
 

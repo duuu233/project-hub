@@ -2,6 +2,8 @@
 
 - 根目录 AGENTS.md：执行规则与 Monorepo 边界。
 - 根目录 AI_CONTEXT.md：项目身份、应用与维护入口。
+- [workspace-association.md](workspace-association.md)：home/work 关联、五项私人挂载、本机索引和范围边界。
+- [history/2026-10-12-work-association.md](history/2026-10-12-work-association.md)：公司环境恢复关联与同步验收记录。
 - [qianrong-list-style.md](qianrong-list-style.md)：qianrong 列表、搜索与固定底栏约定。
 - [qianrong-design-standard.md](qianrong-design-standard.md)：全局列表/详情规范、dh 改动来源及负责模块与正矿的逐项对照。
 - [history/2026-10-12-qianrong-design-standard.md](history/2026-10-12-qianrong-design-standard.md)：统一规范、详情及相近模块交互的实施与验收记录。

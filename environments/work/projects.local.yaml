@@ -3,6 +3,9 @@
 version: 1
 environment: work
 paths:
+  taiqian-front:
+    transport: local
+    path: 'D:/Work/tq-plus/front'
   flowerpot-app:
     transport: local
     path: 'D:/Work/learn/flowerpot'
