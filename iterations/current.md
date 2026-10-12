@@ -1,10 +1,22 @@
+## 2026-10-12 work｜相册 APP 苹果收据文档复核与真机调试日志
+
+- 状态：本轮前端与项目文档已交付，album-app 当前 main / `2f3a67c`，提交后再次 pull origin 同名 main 成功并已 push；准备由用户进行 iOS 真机测试，未宣称真实支付或发币已验收。
+- 需求与复核：用户通知接口可见并提供 Swagger 链接；已核实 UI 使用 `/v2/api-docs`，无缓存复核仍为旧入参，缺少后端已确认的新订单/交易参数，返回及查单语义仍待真机核对。用户确认按最新三个参数继续，本轮保留已有请求契约并补日志。
+- 同步与现场：沿用 work 映射并核实两仓当前 main、规则和文档。开始及业务 push 前显式 pull 同名 main；按此前授权仅暂存两项原有修改，pull 后立即恢复并 SHA256 校验一致，未提交原有文件，临时 stash 已清理。
+- 交付：debug 控制台新增 `[AppleIAP]` 请求与返回摘要，订单号/苹果交易号可关联，收据只显示长度，原始收据和登录凭证不输出；release 不开启。同步项目当前对接文档、同日历史和仍残留的旧支付能力说明。
+- 验证：4 个相关测试文件共 61 项通过，修改的 2 个 Dart 文件 analyze 为 No issues；差异及信息隔离检查通过，CodeGraph 最新。Windows 未编译 Swift/iOS，未访问真实扣款/发币或部署。
+- 后续：用户将自行安排真机测试，具体参数与日志使用说明由目标项目文档维护。原每小时复核 automation `ios` 已按用户指令删除，本轮没有创建定时任务；仅在用户通知后复核接口。
+- Hub：仅登记本轮进展并更新定时检查已取消的状态，保留所有此前迭代；本轮修改前 pull 当前 main 成功，记录提交后再次 pull 同名 main 再 push。
+
+---
+
 ## 2026-10-12 work｜相册 APP iOS 星币内购
 
 - 状态：前端代码与文档已交付；album-app 当前 main，`6a8e2b0`（内购实现）和 `bfce1a1`（后端新入参）已提交，推送前再次 pull origin 同名 main 成功，push 成功。新后端正在发布，成功返回/交付状态待文档更新后复核；iOS 沙盒未验收。
 - 同步与现场：沿用 work 映射 `D:/Work/learn/flutter`，核实仓库身份、规则和文档，先 pull 当前 main。用户授权仅临时暂存 `pubspec.lock`、`android/build/reports/problems/problems-report.html`，同步后原样恢复；最终推送前同样只暂存这两项，恢复后 SHA256 一致，均未纳入提交。临时 stash 已清理。
 - 交付：iOS StoreKit 商品/价格预检、购买、传统 Base64 收据提交及按账号持久化的未完成交易恢复；覆盖取消、延迟批准、断网、重启和重复回调。后端新契约为 `receiptData/orderNo/transactionId`，验成功负责发币，按用户口径调整，旧 `excludeOldTransactions` 不再发送。Runner Bundle ID 已核对为 `com.boltfox.boltstar`。未增加依赖或改动构建环境。
 - 验证：Flutter 3.44.6 / Dart 3.12.2；4 个相关测试文件共 61 项通过。改动 Dart 文件 analyze 无错误/警告，5 条原有 info 保留；新参数的 3 文件 analyze 为 No issues。diff、项目文档链接及信息隔离检查通过，CodeGraph 同步并最新。Windows 未编译 Swift/iOS，未调用真实扣款或发币、未真机/沙盒联调。
-- 后续：按用户安排等发布后再查线上接口文档，核对成功返回、iOS 查单状态和幂等交付；创建本聊天每小时只读复核，automation `ios`，文档未更新时安静，完成后停止。当前契约和详细实现只维护在目标项目 `docs/integration/IOS_IN_APP_PURCHASE.md` 及历史记录，不在 Context 重复记录。
+- 后续：按用户安排等发布后再查线上接口文档，核对成功返回、iOS 查单状态和幂等交付；曾创建本聊天每小时只读复核 automation `ios`，后按用户指令删除；以后仅在用户通知后复核。当前契约和详细实现只维护在目标项目 `docs/integration/IOS_IN_APP_PURCHASE.md` 及历史记录，不在 Context 重复记录。
 - Hub：只登记本轮交付与待复核事项，保留此前未完成迭代；开始记录前当前 main / `65e288f` 干净且再次 pull 成功，记录提交后再 pull 同名 main 并 push。
 
 ---

@@ -8,6 +8,7 @@
 
 | 日期 | 涉及项目 | 环境 / 工作分支 | 变更摘要与技术方案 | 交付状态 / 关键 Commit |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-10-12** | **album-app（相册APP）** | work / main | 核对发布文档仍为旧 DTO，按用户确认保留 receiptData/orderNo/transactionId；新增 debug 参数与返回摘要，收据/凭证脱敏，同步项目联调文档。 | 已推送 2f3a67c；61 项回归通过，修改文件 analyze 无问题；原有两文件哈希一致未提交，未 iOS 编译/真机或真实发币。原定时复核已删除，后续由用户通知。 |
 | **2026-10-12** | **album-app（相册APP）** | work / main | iOS StoreKit 星币内购、传统 Base64 收据、交易/账号恢复、四语种提示；按新契约传 receiptData/orderNo/transactionId，核对 Bundle ID 并同步项目文档。 | 已推送 6a8e2b0、bfce1a1；61 项回归通过，新增参数 analyze 无问题，全改动无 error/warning、5 条既有 info。原有两文件哈希一致未提交；未 iOS 编译/真机或真实发币，后端发布后返回/交付契约待只读复核。 |
 | **2026-10-12** | **flowerpot-app（花盆APP）** | work / main | Wi-Fi 撤销灰色滤镜、恢复原图淡显，核对 Android 分通道状态，保留并说明 iOS 既有桥接缺口；业务规则/历史索引同步。 | 已推送 2f863f3；88 项相关回归、核心 analyze、diff 和 CodeGraph 检查通过；未真机或打包。 |
 | **2026-10-12** | **flowerpot-admin（花盆后台）** | work / main | 首页移除三项统计、改欢迎文案；文件模块统一为表情列表及新增/编辑/删除，侧栏兼容旧菜单名称，接口/权限不变。 | 已推送 db02ba1；生产构建 30.04 秒、语法、隔离 SSR 和声明核对通过；用户 dist.zip 原样保留且未提交，未真实业务写入、菜单同步或部署。 |
