@@ -5540,3 +5540,14 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 最终 111 项相关 Flutter 回归、23 项实际 SDK 回调断言、Android arm64 Kotlin 编译（17 秒）、四项 Dart 自检、Kotlin 自检、140 个文档链接与信息隔离检查通过，CodeGraph 最新。
 - analyze 留有两条既有提示；额外植物后台回归有两项不含既有 DP162 的断言失败，未扩展植物业务。未真机、未生成 APK；本次不能承诺实际 OTA 已缩短到 1 分钟。具体实现、验证与手测步骤在业务 docs/OTA_实现说明.md 与 docs/history/2026-10/2026-10-12-mower-ota-terminal-fixes.md。
 - 业务提交后再次 pull 成功并 push origin main，工作区干净；统筹仅追加摘要及两类流水，按默认约定提交、再次 pull main 后 push。
+
+
+## 2026-10-12 work｜花盆 Wi-Fi 原样与后台表情文案
+
+- 状态：两个业务仓库均已提交、再次 pull 当前 main 成功并 push；统筹本轮记录提交后再次 pull/push。保留此前迭代与未完成事项。
+- 开始前统筹 main / c3444b8、花盆APP main / 61a71b7、花盆后台 main / e653396 显式同步同名分支成功。后台 dist.zip 按用户本轮授权精确路径暂存、恢复，未自动处理其它文件。
+- 花盆APP main / 2f863f3：撤销此前 Wi-Fi 灰色滤镜，恢复原图在线完整、断开 30% 淡显；新增 Wi-Fi 状态切换与 BLE 独立显示的回归。Android MQTT/LAN/Cloud 与 BLE 分通道逻辑已核对，不改连接或下发；iOS 原有 deviceLinkState 桥接缺口记录，未宣称双端实时状态均正常。
+- APP 88 项相关 Flutter 回归、核心两文件 analyze、差异与索引检查通过。没有真机连接、APK 或平台构建；详细记录由业务 docs/history/2026-10/2026-10-12-mower-wifi-original-style.md 维护。
+- 花盆后台 main / db02ba1：删除绑定设备、订单金额、产品型号三项首页统计，欢迎文案按要求更新；表情列表、新增/编辑/删除与字段/提示统一命名，侧栏仅该路由兼容远端旧名称，原接口/权限/上传规则保留。
+- 后台生产构建 30.04 秒、JS 语法、实际首页/侧栏隔离 SSR 与菜单声明检查通过。原 radio 弃用提示及隔离趋势组件注册边界记录；没有真实业务请求、远端菜单写入或部署。具体维护文档为 docs/common-file-management.md 与 docs/history/2026-10/2026-10-12-home-emotion-labels.md。
+- push 前后台再次仅暂存 dist.zip，pull 后恢复并校验同一 SHA256，临时 stash 在恢复验证后移除；该文件仍保留用户修改且未提交。两业务 CodeGraph 最新，新增文档链接与信息隔离检查通过，统筹未改映射或 Context。

@@ -260,3 +260,8 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
 ## 2026-10-12｜work｜花盆 APP 三项 OTA 优化留痕
 
 统筹与花盆 APP 开始前均 pull 当前同名 main 成功，目标先读自身规则/当前文档并用 CodeGraph 定位。登记业务 61a71b7 三项 OTA 修复及验证边界；只追加本轮摘要与跨项目流水，保留此前未完成内容，未改注册表或路径映射。业务 111 项 Flutter 回归、23 项 SDK 断言和 Kotlin 编译通过，真实耗时未验证；业务再次 pull 后已 push。统筹记录 diff 检查后提交，再次 pull origin main 并 push。
+
+
+## 2026-10-12｜work｜花盆 Wi-Fi 与后台表情文案交付留痕
+
+统筹及两业务仓库均先同步当前同名 main，业务按自身文档与 CodeGraph 规则实施。记录 APP 2f863f3、后台 db02ba1 的已推送交付和验证结果，保留此前迭代；Android 通道核查与 iOS 原有缺口、后台未写真实数据/菜单/部署、dist.zip 按授权暂存后恢复均如实登记。统筹仅更新迭代及两类流水，未改映射或身份 Context，差异检查后提交、再次 pull main 并 push。
