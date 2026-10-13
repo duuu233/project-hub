@@ -1,8 +1,8 @@
 # qianrong 新接口对照与续接清单
 
-> 状态：用户要求暂停，待恢复开发；2026-10-13 work
-> 业务分支 / 基线：master / 7d3dd630b5ab8dfb4330390dd357a98e4774fdad
-> 本轮仅同步、读取文档及隔离接口对照，未修改业务源码或请求地址。
+> 状态：2026-10-14 home 用户恢复；已实施确认的地址/方法修正和13模块静态预览，尚未真实业务联调。
+> 本轮业务分支 / 起始版本：master / 79878c2；2026-10-13暂停基线为7d3dd63。
+> 当前静态范围和验证见 [静态模块说明](qianrong-static-modules.md)，下文保留前一天的接口对照事实与暂停历史。
 
 ## 目标与身份
 
@@ -16,11 +16,11 @@
 
 - 用户提供的 [Swagger UI](https://dev-qianrong.ftechain.com/api-qianrong/doc.html#/home) 和 [Swagger JSON](https://dev-qianrong.ftechain.com/api-qianrong/v2/api-docs)。
 - 2026-10-13 本机读取 JSON 返回 200：Swagger 2.0，标题「泰乾-乾融后台管理系统_接口文档」，host 为 `dev-qianrong.ftechain.com`，basePath 为空，共 216 个路径；每条路径自身已含 `/api-qianrong`。
-- 待切换服务为 `https://dev-qianrong.ftechain.com/api-qianrong`。目前代码**仍为** `https://test-deppon.ftechain.com/api-deppon`，尚未切换。
+- 当前开发服务为 `https://dev-qianrong.ftechain.com/api-qianrong`。2026-10-14已从旧德邦测试目标切换；重新只读读取JSON仍为216路径。
 - `apps/qianrong/vite.config.js`：`resUrl` 为代理目标，`server.proxy['/api-qianrong']` 配置 changeOrigin；rewrite 移除请求中一个 `/api-qianrong` 前缀后交给目标路径。
 - `apps/qianrong/src/utils/request.js`：Axios `baseURL: ''`，多数包装接口 URL 自带 `/api-qianrong`；GET 查询、Token 和统一响应处理仍在此文件。
 - 开发环境 `VITE_APP_BASE_API` 为空；production/staging 分别为 `/prod-api`、`/stage-api`，部分组件直接使用它。不能把目标的完整 `/api-qianrong` 再追加到已有 URL，避免重复前缀。
-- 最小配置方案：将代理目标改为新服务完整地址，保留当前 rewrite 和查询字符串；同步应用 README。尚未写入该方案，也未启动服务。
+- 已实施：代理目标改为新服务完整地址，保留rewrite和查询字符串，应用README已同步。实际转发在本地捕获服务验证，未调用真实业务目标。
 
 ## 模块与契约核对
 
@@ -36,7 +36,7 @@
 | S08 字典 | `src/api/system/dict/type.js`、`data.js` | 共 13 个包装路径/方法匹配；getDicts 的同步 XHR 也走 `/api-qianrong` |
 | S09 操作日志 | `src/api/system/operlog.js` | 3 个包装路径/方法匹配；页面导出应走 monitor/operlog/export |
 | S10 登录日志 | `src/api/system/logininfor.js` | 4 个包装路径/方法匹配；页面导出应走 monitor/logininfor/export |
-| S12 接口日志 | 当前无独立页面/API | 新 JSON 也未找到独立接口日志 tag 或查询/详情/导出路径；不虚构接口 |
+| S12 接口日志 | 已有静态页面，无独立API | 新JSON仍无独立接口日志tag或查询/详情/导出路径；先以records示例预览，不虚构接口或正式菜单 |
 | S13 登录 | `src/api/login.js`、`src/api/menu.js` | login/getInfo/getRouters/loginOrgList/loginRoleList 等存在；部分旧辅助与认证入口未列出，不等于服务实际不存在 |
 | S14 个人信息 | `src/api/system/user.js` 的 profile、updatePwd、avatar | 路径/方法匹配；updatePwd 仍用查询参数，avatar multipart 字段为 avatarfile |
 
@@ -44,9 +44,9 @@
 
 分页 `TableDataInfo` 定义含 code/msg/rows/total，现有分页解析有契约依据；多个详情响应只声明通用 Map/R，不能据此推定真实回填字段已兼容。没有真实登录、列表或写入请求验证。
 
-## 已确认需要修正的请求
+## 已确认并实施的请求修正（2026-10-14）
 
-以下只列续接计划，**本轮未修改**：
+以下为2026-10-13确认的续接计划，2026-10-14已按最新JSON完成这9项配置/请求修正，参数与认证流程保持现状：
 
 1. 代理目标和应用 README 切换至新 qianrong 服务。
 2. `src/api/system/system.js::systemList`：保持 `/api-qianrong/system/list`，POST + data 改为文档 GET + params；systemPage 的 GET 分页接口无需改成此接口。
@@ -85,7 +85,7 @@
 - 系统 DTO 已包含 menuIds，但用户组 DTO 仍保留 groupsSystemMenuDTOList。原「菜单权限迁移等待后端」安排未被用户撤销；需要明确系统树、详情、保存和兼容规则后再迁移，不能仅因 DTO 有字段就搬 UI。
 - 角色表单使用 roleSystems，Swagger SysRole 声明 menuIds/userGroupId/orgId 等而没有 roleSystems；现有查看页直接读 res.data.roleSystems。需要后端真实响应/保存样例确认，不能宣称授权已兼容。
 
-## 暂停现场与恢复步骤
+## 2026-10-13暂停现场与当时恢复步骤（历史）
 
 - 2026-10-13 用户明确「先暂停，将已知上下文记录到文档，提交当前项目，晚上再启动开发」。立即停止业务修改、构建和进一步接口试调，仅提交维护记录。
 - 本轮 Hub main / e66bde8 与业务 master / 7d3dd63 均已显式 pull 同名远端成功；业务无源码差异。

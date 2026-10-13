@@ -5677,3 +5677,13 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 业务main/b37814f已提交、再次pull成功并push：公共解析仅retCode406清Token和失效回调；异常分类及状态层只认业务406，HTTP401/406和其它业务码保留Token及原错误。新增普通请求/multipart矩阵和定制动画失败重试回归，产品规则及当前文档同步。
 - 61项相关回归、核心四文件Dart analyze、三项全库Dart自检通过；第四项扫描在未改mower_device.dart:683保留既有提示，HEAD原版同样命中，本轮五文件专项扫描通过。CodeGraph最新、文档链接/信息隔离/diff通过；未真实接口、真机或安装包构建，先前失败真实响应未取得。
 - 提交后pull前再次保护同两份用户文档，恢复哈希与起始一致，本轮stash已移除；业务HEAD与origin/main一致。完整实施和验证在业务docs/history/2026-10/2026-10-13-backend-session-406-only.md，当前口径为PRODUCT_RULES.md §4.3.1。统筹仅追加留痕，按main提交、再次pull/push。
+
+
+## 2026-10-14 home｜泰乾超级-qianrong静态模块与新接口续接
+
+- 状态：用户恢复前一天暂停任务，确认系统管理相关子模块、登录、权限和个人中心均负责，允许先静态开发。保留此前迭代与待确认事项。
+- 开始前统筹main/68dbd94、业务master/79878c2均干净，显式pull origin当前同名分支成功；复用taiqian-front home映射，未切分支。业务根锁文件已受控，本轮未改。
+- 业务master/3904c7a已提交、再次pull成功并push：13模块独立静态入口，原列表/表单/权限树复用，接口日志查询/脱敏详情/本地CSV，静态登录和资料内存保存；新服务代理、systemList GET+params及8处直接导入导出地址修正。
+- 最终构建4.19秒、37浏览器场景、日志筛选/分页/列设置/全屏/脱敏、资料取消/保存/刷新、登录必填/租户企业/会话隔离、9请求Swagger契约、本地捕获代理和4Vue编译通过。CodeGraph759文件最新，diff与信息隔离通过；原radio弃用与全场景一条对象提示保留。没有真实业务调用、联调、部署或PR。
+- 新Swagger只读GET为200/216路径；飞书原型入口本轮转登录页，沿用此前13PRD记录，未重读原型/L2全文。菜单权限迁移仍等后端，角色DTO/旧端点疑点、接口日志后端契约待确认，静态页面不等于真实业务完成。
+- 当前细节与验收由private/taiqian-front/docs/qianrong-static-modules.md和history/2026-10-14-qianrong-static-modules.md维护。统筹更新项目说明、历史和两类流水，按main提交，再显式pull/push。
