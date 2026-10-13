@@ -1,3 +1,13 @@
+## 2026-10-13 work｜相册 APP 苹果商品加载诊断日志
+
+- 状态：album-app 当前 main / `35ffb1e`，提交后显式 pull origin main 成功并已 push；HEAD 与 origin/main 一致，原有锁文件和 Android 问题报告保留未提交。
+- 同步：沿用 work 环境核实两仓身份与当前 main，同名分支同步成功。开始前和 push 前按既有授权仅暂存两份原有文件后原样恢复，SHA256 不变；只清理本轮临时 stash，旧 stash 保留。
+- 交付：按用户提供的客户端数组核实 xb1/xb2/xb3 和 7500→xb2 解析链路；增加 Dart/iOS 原生商品预检日志，记录选中 SKU、运行 Bundle ID、支付权限、苹果有效/无效商品 ID、失败阶段、超时及具体系统错误。业务项目维护联调方法、脱敏边界及历史，不改付款或交付条件，不根据业务字段猜真机原因。
+- 验证：五个商品/支付相关测试文件共 70 项通过，三个本轮 Dart 文件 analyze 无问题；文档索引、差异、信息隔离与 CodeGraph 最新检查通过。日志仅 debug，原生改动需重编安装；Windows 未编译 Swift/iOS，未真机/沙盒、App Store Connect 或真实购买，实际失败原因待用户日志。
+- Hub：仅追加本轮迭代和项目/自身流水；记录提交后显式 pull 同名 main 并 push。
+
+---
+
 ## 2026-10-13 work｜花盆 APP OTA 充电条件与故障提示
 
 - 状态：flowerpot-app 当前 main / `b7dfb72`，提交后显式 pull origin main 成功并已 push；HEAD 与 origin/main 一致，工作区仅保留两份原始输入文档。
