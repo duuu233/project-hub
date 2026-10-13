@@ -5648,3 +5648,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 读取项目规则、负责模块/历史记录并经 CodeGraph 核对；确认13模块，新JSON200/216路径。105包装初步对照86匹配、1方法不符、18未列出；发现八处直接导入/导出地址需修正，接口日志及权限DTO仍待确认。没有真实业务API或POST、构建或部署。
 - 新服务尚未写入代码，业务没有源文件差异、保持master/7d3dd63；不创建空业务提交。完整现场及今晚恢复步骤在private/taiqian-front/docs/qianrong-api-alignment.md，冻结记录在同目录history/2026-10-13-qianrong-api-audit-paused.md。
 - 已更新项目入口/当前背景/代理待办及项目流水，统筹文档按main提交，提交后再pull/push。用户恢复前不继续开发；续接需按当晚实际环境确认映射、pull当前同名分支并刷新新契约。
+
+
+## 2026-10-13 work｜花盆APP 仅业务406清除登录态
+
+- 用户反馈定制动画每次上传要求重新登录，后端没有配置Token有效期；只读核查确认客户端无TTL，之后用户明确「406才是登录失效，其它不要清除」，本轮按该口径实施。此前暂停的纪念日与qianrong工作不恢复，保留所有已有迭代。
+- 起始Hub main/30a3132与业务main/b7dfb72均显式pull同名分支成功；按既有明确授权仅暂存同两份本地协议/机器日志文档，恢复原字节并核验SHA256，未提交用户文件。
+- 业务main/b37814f已提交、再次pull成功并push：公共解析仅retCode406清Token和失效回调；异常分类及状态层只认业务406，HTTP401/406和其它业务码保留Token及原错误。新增普通请求/multipart矩阵和定制动画失败重试回归，产品规则及当前文档同步。
+- 61项相关回归、核心四文件Dart analyze、三项全库Dart自检通过；第四项扫描在未改mower_device.dart:683保留既有提示，HEAD原版同样命中，本轮五文件专项扫描通过。CodeGraph最新、文档链接/信息隔离/diff通过；未真实接口、真机或安装包构建，先前失败真实响应未取得。
+- 提交后pull前再次保护同两份用户文档，恢复哈希与起始一致，本轮stash已移除；业务HEAD与origin/main一致。完整实施和验证在业务docs/history/2026-10/2026-10-13-backend-session-406-only.md，当前口径为PRODUCT_RULES.md §4.3.1。统筹仅追加留痕，按main提交、再次pull/push。
