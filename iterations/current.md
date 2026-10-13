@@ -1,3 +1,13 @@
+## 2026-10-13 work｜相册 APP 真机页面商品查询详情
+
+- 状态：album-app 当前 main / `e96eb30`，提交后显式 pull origin main 成功并已 push；HEAD 与 origin/main 一致，原有锁文件/Android问题报告保持未提交。
+- 同步：按 work 映射核实两仓身份与当前 main，同名分支开始前同步成功；开始前及 push 前按既有授权仅暂存恢复原有两文件，SHA256 不变，只清理本轮临时 stash。
+- 交付：确认购买页底部直接展示并复制本次苹果商品查询详情，普通Release/TestFlight可见；实际错误code/message/details和可用栈置顶、未知字段保留，敏感信息脱敏。重试清旧内容与滚动位置，结束释放页面回调；失败价文案明确为价格获取失败，苹果长状态适配短屏，不改支付与交付逻辑。
+- 验证：五个相关文件76项回归通过，含完整/未知错误、复制/脱敏、重试/缓存、375×568及1.8倍字体、退出和异步隔离；五个Dart文件无error/warning或新增info，原PayPal跨异步context有1条既有info，analyze退出1。文档/差异/隔离/CodeGraph通过；未编译或安装iOS普通包、真机/沙盒或真实支付，实际原因待用户新包底部详情。
+- Hub：仅追加本轮迭代和项目/自身流水；记录提交后显式 pull 同名 main 并 push。
+
+---
+
 ## 2026-10-13 work｜相册 APP 苹果商品加载诊断日志
 
 - 状态：album-app 当前 main / `35ffb1e`，提交后显式 pull origin main 成功并已 push；HEAD 与 origin/main 一致，原有锁文件和 Android 问题报告保留未提交。

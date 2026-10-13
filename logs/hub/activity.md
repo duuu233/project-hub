@@ -6,6 +6,11 @@
 
 ## 操作流水（最新在最前）
 
+### 2026-10-13：work 相册 APP 真机页面诊断留痕
+- **环境 / 分支**：work / main。
+- **操作**：登记相册 APP main / e96eb30 的普通包页内商品查询详情交付，追加本轮迭代与跨项目流水，未改身份或路径映射。
+- **验证**：业务提交后显式 pull main 并 push，HEAD 与 origin/main 一致；76项相关回归通过，修改Dart无error/warning或新增info，1条既有PayPal context info如实保留。原有两文件按授权暂存恢复、哈希不变未提交；文档、差异、信息隔离与CodeGraph最新检查通过。未iOS打包、真机或真实支付；统筹记录提交后再次pull main并push。
+
 ### 2026-10-13：work 相册 APP 苹果商品诊断日志留痕
 - **环境 / 分支**：work / main。
 - **操作**：登记相册 APP main / 35ffb1e 商品预检日志交付；追加迭代和跨项目流水，未改注册表或路径映射。
