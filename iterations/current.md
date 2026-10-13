@@ -1,3 +1,13 @@
+## 2026-10-13 work｜花盆 APP OTA 充电条件与故障提示
+
+- 状态：flowerpot-app 当前 main / `b7dfb72`，提交后显式 pull origin main 成功并已 push；HEAD 与 origin/main 一致，工作区仅保留两份原始输入文档。
+- 同步与输入：沿用用户确认的 work 环境，两仓核实当前 main 和身份后同步；经本轮授权仅暂存协议 V2.6 与 APP 机器日志对接表，开始前及 push 前 pull 后均原样恢复，SHA256 与开始前一致。两份输入未提交，临时 stash 已清理。
+- 交付：割草机普通/强制 OTA 提醒及新发起仅允许 DP117=charging（1）；手动检测可看版本，确认框退出后按最新充电值判断，非充电中提示回桩。DP115 code26 核对协议残留故障位，并附加现场处理、等待1～2秒手动重试与保留位反馈建议。业务项目维护实现和产品文档，花盆原规则及已运行进度入口保持。
+- 验证：九个相关测试文件共 245 项通过，包含充电条件、离桩变化、已确认入口、协议位表及既有 OTA/控制/日志回归；八个修改 Dart 文件无新增静态诊断，state.dart:732 仍有既有 unused_element 警告，analyze 因此退出1。文档、差异、信息隔离及 CodeGraph 最新检查通过；未安装包构建、真机或真实 OTA。
+- Hub：仅追加本轮迭代和项目/自身流水；记录提交后显式 pull 同名 main 并 push。
+
+---
+
 ## 2026-10-13 work｜花盆 APP 固件升级弹框切换
 
 - 状态：flowerpot-app 当前 main / `b716cde`，提交后显式 pull origin main 成功并已 push；工作区干净，HEAD 与 origin/main 一致。
