@@ -5629,3 +5629,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 详细记录：logs/hub/2026-10-13-work-project-sync.md。
 
 ---
+
+
+## 2026-10-13 work｜泰乾超级-qianrong 新接口对照（用户暂停）
+
+- 用户先要求确认 dh 负责模块并切换至 dev-qianrong 新服务，后明确暂停并将上下文记录、提交，晚上由用户恢复。已立即停止业务修改和进一步联调，仅完成受控文档交付，保留此前迭代。
+- 起始 Hub main / e66bde8 与泰乾 master / 7d3dd63 均显式 pull 同名分支成功。仅暂存未跟踪 pnpm-lock.yaml 经本轮用户明确授权；stash 恢复的换行转换已按 blob 原字节修复，SHA256 为3262B8195B52FF403DE8B760AA53DD1433F9A9426A6119AEB205C6D5B7A06756，仍未跟踪、不提交。
+- 读取项目规则、负责模块/历史记录并经 CodeGraph 核对；确认13模块，新JSON200/216路径。105包装初步对照86匹配、1方法不符、18未列出；发现八处直接导入/导出地址需修正，接口日志及权限DTO仍待确认。没有真实业务API或POST、构建或部署。
+- 新服务尚未写入代码，业务没有源文件差异、保持master/7d3dd63；不创建空业务提交。完整现场及今晚恢复步骤在private/taiqian-front/docs/qianrong-api-alignment.md，冻结记录在同目录history/2026-10-13-qianrong-api-audit-paused.md。
+- 已更新项目入口/当前背景/代理待办及项目流水，统筹文档按main提交，提交后再pull/push。用户恢复前不继续开发；续接需按当晚实际环境确认映射、pull当前同名分支并刷新新契约。

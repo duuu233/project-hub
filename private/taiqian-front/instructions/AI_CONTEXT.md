@@ -15,3 +15,6 @@ qianrong 使用 Vue 3、Element Plus、vxe-table/vxe-pc-ui。公共搜索入口�
 面向同事的公开规范和示例随 qianrong 提交：UI_DESIGN_SPEC.md（含详情接入代码）、LIST_PAGE_DEMO.md、src/examples/ListPageDemo.vue；npm run demo:list 使用独立开发配置打开 /list-demo.html，不加载登录或业务接口，不进入正式构建入口。个人中心资料默认查看、编辑可取消，密码取消清空；不改变既有认证校验。模块对照和移植边界见 docs/qianrong-design-standard.md。公开资料不得混入本地维护机制。
 
 根 README 及 apps/qianrong/README.md、apps/qianlian/README.md 是团队维护入口。私人实施文档见 docs/README.md，技术和验收事实按当前源码更新。构建在 apps/qianrong 运行 npm run build，输出到根 dist/qianrong；没有单独的类型检查脚本。
+
+
+2026-10-13 新接口文档已提供并完成初步只读对照：负责范围仍为 dh 的 13 模块，目标为 dev-qianrong 的 api-qianrong 服务。用户明确暂停，业务仍为 master/7d3dd63，现有代理地址未切换；模块路径、旧辅助请求与权限 DTO 待确认项和恢复步骤集中在 docs/qianrong-api-alignment.md。暂无构建、真实登录或接口联调结论，用户自行恢复前不继续开发。

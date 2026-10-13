@@ -6,3 +6,8 @@
 - `changeOrigin: true`，未关闭 HTTPS 证书校验。该配置只作用于应用开发服务；生产和 staging 构建的网关口径未改，qianlian 及共享包未改。
 - 修改配置后，由开发者重启自己的开发服务。此次用户只要求配置代码，不启动服务或代理进程。
 - 团队使用说明见应用 README 的「本地接口代理」。实施验证记录见 [history/2026-10-11-qianrong-local-proxy.md](history/2026-10-11-qianrong-local-proxy.md)。
+
+
+## 待切换目标（2026-10-13）
+
+用户已提供 `https://dev-qianrong.ftechain.com/api-qianrong` 的新接口文档。旧代理上述配置仍是当前代码事实，本轮对照过程中用户要求暂停，尚未切换地址。恢复开发计划与路径/方法问题见 [qianrong-api-alignment.md](qianrong-api-alignment.md)，不以新文档已提供推定代码已改。
