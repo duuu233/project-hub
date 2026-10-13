@@ -2,6 +2,12 @@
 
 当次改动、来源、验证与边界按日期追加，具体口径以 docs 中当前文档为准。
 
+## 2026-10-13 home｜根开发工具锁文件同步
+
+- **交付**：master / 79878c2 已提交；再次pull同名master并push成功，工作区干净。
+- **范围与授权**：用户明确合并提交已有本地改动，纳入原根pnpm锁文件并说明用途；不恢复暂停的qianrong接口调查，不改业务实现。
+- **验证**：原锁文件SHA256保持，diff/隔离及CodeGraph通过；未应用构建、真实接口或部署。详情见docs/history/2026-10-13-home-root-lockfile-sync.md。
+
 ## 2026-10-12 home｜qianrong 全局列表与详情设计规范
 
 - **交付**：master / 7d3dd63，作者 dh，提交后再次 pull 同名分支成功并已 push；53 文件仅在 qianrong，原根 pnpm-lock.yaml 保留、不提交、SHA256 未变。正矿 feature-v1.8.5 / f152a424 只作参照，工作区干净。
