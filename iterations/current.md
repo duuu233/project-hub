@@ -5599,3 +5599,13 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 验证：253项相关回归通过；Dart分析无error/无新增诊断，两个既有warning/info保留；网络探测旧用例失败在起始2f863f3隔离原版复现。已有CodeGraph与差异/文档链接/信息隔离检查通过；Python四项因无实际解释器未跑，未真机/双端安装包/系统后台推送联调。
 - 用户协议与两份日志文档原内容/哈希保留，未纳入提交，授权的临时stash恢复核验后移除。花盆后台原包/锁文件及泰乾超级锁文件继续保留，其他项目未改源码或提交用户文件。
 - 初版限制：APP接收时间、离线事件无法补齐、设备20条日志未同步，日志页之外统一111提醒及后台通知待后续逐条对照。统筹本轮记录完成后按main提交、再pull/push。
+
+## 2026-10-13 work｜七项目代码同步
+
+- 状态：用户确认公司电脑 work；Project Hub 与七个业务仓库均成功显式 pull 当前本地同名分支。没有切分支、配置 upstream 或合并其他分支，七个业务 HEAD 与拉取后的 origin 同名分支一致。
+- 更新：Hub main d608c9d → 92d2c5e；花盆APP main 2f863f3 → f36be8c；相册APP main 2f3a67c → 2a9752f。泰乾超级 master/7d3dd63、花盆后台 main/db02ba1、相册后台 main/322e960、相册小程序 main/118ff7e、正矿 feature-v1.8.5/f152a424 原本已为最新。
+- 原有文件：按本轮用户授权，仅暂存四仓五个指定文件，pull 后立即恢复。两份 dist.zip、相册APP锁文件与构建报告的操作前后 SHA256 和 Git 状态一致；泰乾 pnpm-lock.yaml 的 Git autocrlf 转换已修复为 stash 原始 LF 字节，确认差异仅为换行转换、恢复后的 SHA256 与 stash blob 一致，仍为未跟踪文件。此次临时 stash 全部清理，相册APP原有旧 stash 保留。
+- 验证：七个已有 CodeGraph 索引均 sync/status 成功且最新；仅同步代码，不运行构建、业务测试或真实接口。只新增统筹同步记录，保留此前全部迭代与未完成事项；记录按当前 main 提交，再显式 pull 后 push。
+- 详细记录：logs/hub/2026-10-13-work-project-sync.md。
+
+---
