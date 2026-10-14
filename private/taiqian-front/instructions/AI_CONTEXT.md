@@ -18,3 +18,5 @@ qianrong 使用 Vue 3、Element Plus、vxe-table/vxe-pc-ui。公共搜索入口�
 
 
 2026-10-14 用户在 home 恢复前一天暂停任务。负责范围为 dh 的13模块，系统管理相关子模块、登录、权限与个人中心；新增独立 npm run demo:modules / modules-demo.html，可使用示例检查原业务列表、详情与权限表单，接口日志及静态登录也已补齐。开发代理已切换 dev-qianrong/api-qianrong，systemList GET与8处直接地址修正，当前口径见 docs/qianrong-static-modules.md；旧辅助端点和权限DTO疑点见 docs/qianrong-api-alignment.md。构建及37静态场景通过，但未真实登录或业务联调；飞书原型入口本轮要求登录，继续以先前PRD阅读记录为依据，未宣称重新读取原型全文。
+
+2026-10-14 work 已解决公司现有合并，master/9473440 已推送且干净。按用户口径保留 dh 13模块及公共支撑，同事的其它模块整理保留；唯一 Git 未解决项为根锁文件两种格式。190文件内容核对、生产构建、37静态场景及日志详情/脱敏通过，未真实业务联调。当前职责与完整处理记录见 docs/qianrong-owned-modules.md 和 docs/history/2026-10-14-work-qianrong-merge.md。
