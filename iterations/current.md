@@ -1,3 +1,12 @@
+## 2026-10-15 home｜七项目代码同步
+
+- 状态：七业务仓库均已显式 pull 当前同名分支成功，最终 HEAD 与真实远端一致，工作区干净。泰乾 master/a61445b 快进4提交；花盆APP main/a14ccaf 快进7提交；正矿 feature-v1.8.5/c9d0157、花盆后台 main/9de6aa9、相册APP main/e96eb30、相册后台 main/322e960、小程序 main/118ff7e 已为最新。
+- 保护：本轮开始所有工作区干净，无需暂存；不切分支、不设置 upstream、不更改用户文件或映射。qianrong 原对接任务继续暂停。
+- 验证：六个现有 CodeGraph 索引最新，泰乾/正矿十项挂载 dry-run 通过；未手工改业务源码，未安装依赖、构建、业务测试、真机或部署。
+- Hub：main 从852a1f9快进到9821e5e，复核更新上下文；仅追加本轮四份统筹记录，保留既有迭代。记录提交后按规则再次pull同名main并push，详情见logs/hub/2026-10-15-home-project-sync.md。
+
+---
+
 ## 2026-10-13 home｜七项目同步与本地改动提交
 
 - 状态：七业务仓库均已拉取当前同名分支并核验 HEAD 与真实远端一致，工作区干净。泰乾 master / 79878c2、花盆APP main / aaf3f2b、花盆后台 main / 9de6aa9 已提交且 push；正矿 feature-v1.8.5 / c9d0157、相册APP main / e96eb30 仅快进，相册后台 322e960 和小程序 118ff7e 已为最新。
