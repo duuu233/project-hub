@@ -2,6 +2,7 @@
 
 - 根目录 AGENTS.md：执行规则与 Monorepo 边界。
 - 根目录 AI_CONTEXT.md：项目身份、应用与维护入口。
+- [qianrong-v08-integration-tasks.md](qianrong-v08-integration-tasks.md)：2026-10-15用户暂停现场、现行原型/后端状态、268路径新契约与可续接任务清单。
 - [history/2026-10-14-work-qianrong-merge.md](history/2026-10-14-work-qianrong-merge.md)：公司现有合并、dh/同事模块保留、锁文件冲突与验收。
 - [qianrong-static-modules.md](qianrong-static-modules.md)：2026-10-14 恢复开发、13 模块静态入口、新接口修正及原型访问边界。
 - [history/2026-10-14-qianrong-static-modules.md](history/2026-10-14-qianrong-static-modules.md)：37 场景、登录/资料交互与隔离接口验证记录。

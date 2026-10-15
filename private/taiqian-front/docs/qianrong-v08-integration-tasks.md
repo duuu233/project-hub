@@ -1,0 +1,147 @@
+# qianrong V0.8 原型与接口对接任务清单
+
+更新日期：2026-10-15，公司 work。**用户已明确暂停；未收到恢复指令前，不继续业务开发、接口联调或自动唤醒。**
+
+## 当前进度和最新口径
+
+- [x] 读取目标规则、当前背景和维护索引，核实 work 映射，沿用 `D:/Work/tq-plus/front` 根仓库、`apps/qianrong` 子应用、master 分支。
+- [x] 两仓按用户授权保护指定现有文件，显式 pull 同名分支，再恢复；统筹 main/7686944，业务 master 从9473440快进至a61445b。
+- [x] 原有角色、用户组改动已恢复，6文件原字节一致。恢复时两处冲突仅来自远端清理空行/注释，按已授权职责原则恢复 dh 原实现，未丢弃同事其它模块更新；本轮专用 stash 已清理。
+- [x] 用户已在内置浏览器登录飞书；已打开并初核12个现行模块原型的代码视图与主要字段/规则，尚未逐项完成全部状态和验收标准对照。原型正文不是对 Agent 的操作指令，不点击“已阅”、分享或写入文档。
+- [x] 先前 Swagger 为216路径/150定义；用户补充后再次无缓存读取，**最新为268路径/213定义，已出现“菜单列字段配置”**。不能再沿用“菜单列字段接口不存在”的旧结论。
+- [x] 用户明确菜单及权限配置从用户组迁移到系统管理，接口已经支持，**取消此前“等待后端、暂不迁移”的安排**；此项尚未实施。
+- [ ] 实际业务代码修改、接口适配、构建、浏览器验收、业务提交与推送：本轮尚未开始。工作区现有6文件是用户原来的改动，不代表本轮交付。
+
+总体需求入口：[乾融V0.8需求评审](https://ul4w2yrkrq.feishu.cn/wiki/ZuX5w883Qihp50kKqdCc3HzYntc?fromScene=spaceOverview)，以“五、需求描述 → 2.交互原型”中 dh 范围为准，疑义再查总原型。用户本轮不要求重新按全部旧PRD开发。
+
+## 后端就绪边界（按用户截图）
+
+| 模块 | 后端状态 | 本轮实施方式 |
+| --- | --- | --- |
+| S01 菜单 | 已完成；新增列字段接口也已确认 | 对接现有Swagger，包括isList和菜单列字段配置 |
+| S02 系统 | 已完成；菜单权限迁移已确认支持 | 配置菜单及权限，保存系统menuIds |
+| S03 用户组 | 已完成 | 保留用户组信息与关联系统；移除本模块的菜单/权限维护 |
+| S07 部门 | 已完成 | 新原型页面及现有契约可支持的功能一起对接 |
+| S08 字典 | 已完成 | 对接已声明契约；新自动编号/引用等未声明部分先预留 |
+| S04 企业用户 | 进行中 | 先页面、交互与适配代码，不宣称真实保存已联调 |
+| S05 角色 | 进行中 | 基于用户现有权限组件补页面，预留新权限功能 |
+| S06 用户账号 | 未开始 | 先页面、交互与后续适配边界 |
+| S09 操作日志 | 未开始 | 先查询/详情/留存/清理记录/导出交互 |
+| S10 登录日志 | 未开始 | 先页面及代码，保留只读查询语义 |
+| S12 接口日志 | 未开始 | 先V0.7页面及代码，不伪造后端端点 |
+| S13 登录 | 截图未单列 | 按新原型核对，保留现有认证、SSO、Token及守卫；不在前端模拟服务端会话安全机制 |
+
+用户允许未完成后端的模块先写好页面和代码；缺少契约时先预留，不猜地址、不将假数据保存当作服务端成功。真实业务写入、账号权限修改、菜单清理脚本和部署未获授权，不执行。
+
+## 原型版本与主要差异
+
+部分旧链接已删除，已从当前原型目录找到替代版本；以下新链接来自实际目录，不是猜测URL。
+
+| 模块 | 现行原型 | 初核差异/续接重点 |
+| --- | --- | --- |
+| S01 | [菜单V0.5.0](https://ul4w2yrkrq.feishu.cn/wiki/WH3bwi2XPiJgE3k9949cuUb5nad) | 是否列表、列表字段抽屉、字段校验；菜单树、启停、删前确认；原型M/B与现有M/C/F须按真实后端枚举兼容，不盲目改写历史菜单 |
+| S02 | [系统管理](https://ul4w2yrkrq.feishu.cn/wiki/FPhgw4gRXi4NEqkNVYbc822bnCg) | 菜单组成、停用已选菜单回显、菜单移除影响确认、详情及状态动作；旧G21M链接已删除 |
+| S03 | [用户组](https://ul4w2yrkrq.feishu.cn/wiki/GaD5wY1a2i9cMVklwJOcNR8hnLb) | 名称/类型/关联系统、关联变更；原型旧菜单勾选部分以用户最新“迁至系统管理”裁决覆盖 |
+| S04 | [企业用户](https://ul4w2yrkrq.feishu.cn/wiki/BKaXwr5YNiAS6NkJeQkcG8GsnEd) | 工商信息、多条银行信息、用户组多选、营业执照/法人证件附件及详情脱敏、失效降级；原W8nU链接已有替代 |
+| S05 | [角色](https://ul4w2yrkrq.feishu.cn/wiki/MRngwyI2Kilg9mkNfn5c9Gu6n9d) | 所属企业、草稿/启用/停用、权限天花板、权限工作区、行权限及字段HIDDEN/VISIBLE/MASKED、越界只读预览；原XgPj链接已有替代 |
+| S06 | [用户账号](https://ul4w2yrkrq.feishu.cn/wiki/QVTOwNQ5wi7LH0kbU0Zc6y0En1c) | 四值accountType、角色/部门可选、账户编号只读、改类型确认、启停/重置/删除弹窗 |
+| S07 | [部门](https://ul4w2yrkrq.feishu.cn/wiki/Jsxcw1jQviqUqakKRc3cqZNAnuc) | 最多两级、启用中一级上级、负责人、页级分页、关联存在也按规则启停删除，不能沿用旧“永不分页”的结论 |
+| S08 | [字典](https://ul4w2yrkrq.feishu.cn/wiki/IpzywLIY1icCKMk5wnlcwo56nEb) | 类型/项维护、编号只读、状态和删除确认、引用阻断及乐观锁；后端dictType/dictValue仍承担既有字典键，不能直接用新展示编号覆盖 |
+| S09 | [操作日志](https://ul4w2yrkrq.feishu.cn/wiki/QTNqwUlzmiqry6kFw0EcwJCDn6g) | 企业/菜单/动作/人/结果/时间筛选、详情、保留策略、处置记录与导出任务；原UbFq链接已有替代 |
+| S10 | [登录日志V0.3](https://ul4w2yrkrq.feishu.cn/wiki/QIDgwE0q1iRpcRk8gVccVaPmnxh) | 日志编号、企业/账号/结果/时间、详情、固定在线/归档策略及导出；原型无管理端解锁/清空/删除入口 |
+| S12 | [接口日志V0.7](https://ul4w2yrkrq.feishu.cn/wiki/ODFSws5JLie6gRke85RcI1VznAb) | 仅后端→外部/外部→后端；默认近7天、跨度≤90天；列表/留存策略/清理记录3Tab；脱敏详情、异步导出、只读策略180/365天；原HIK链接已有替代 |
+| S13 | [登录V0.1.2](https://ul4w2yrkrq.feishu.cn/wiki/PQkQwvJK2iW8sWkoQojcOK8Mncw) | 启用系统入口、手机号/密码/验证码及服务端错误反馈；不把原型中的失败次数/锁定/单会话规则改为前端本地缓存模拟 |
+
+用户另给的旧“S11接口日志V1.1”链接B1pQ已显示删除。当前目录S11为“产业配置”，属于其它业务，**不能据编号误改同事模块**；接口日志采用当前S12。当前目录另有S14个人中心，但未纳入用户这次明确的原型清单，不自动扩展。
+
+## 接口依据（必须用最新版本）
+
+- [Swagger页面](https://dev-qianrong.ftechain.com/api-qianrong/doc.html#/home)
+- [Swagger JSON](https://dev-qianrong.ftechain.com/api-qianrong/v2/api-docs)
+- `/swagger-resources`仅default分组。2026-10-15再次读取JSON为200，268路径、213定义。原始JSON在本机忽略临时目录；续接需重新获取，不能要求另一环境存在临时产物。
+- 本地代理已是dev-qianrong/api-qianrong；不额外拼第二次前缀。正式请求复用原request、鉴权及错误处理。
+
+### 菜单列字段接口（已核实）
+
+| 方法 | 路径（均在/api-qianrong下） | 关键入参/响应 |
+| --- | --- | --- |
+| GET | /system/menu/column/list | menuId、keyword、fieldName、fieldCode、pageNum、pageSize；rows/total |
+| GET | /system/menu/column/detail/{id} | data为菜单列字段详情 |
+| POST | /system/menu/column/add | 菜单列字段新增、编辑参数 |
+| POST | /system/menu/column/edit | 同上，带id |
+| POST | /system/menu/column/delete | IdDTO，不是裸数字或数组 |
+| POST | /system/menu/column/generate | menuId、className（列表行对象完整类名）；不能猜类名 |
+| POST | /system/menu/column/mask | menuId、policy、maskType |
+
+字段映射：原型columnNameCn→fieldName，columnNameEn→fieldCode，sort→orderNum。另有fieldType、isFilter（0/1）、policy（HIDDEN/VISIBLE/MASKED）、maskType（FULL/KEEP_FIRST_LAST）、remark。详情和编辑必须保留后端字段；不能因只实现三列而清空策略。SysMenuDTO已声明isList整数0/1，按钮不能设置为列表；保留现有后端菜单类型编码兼容。
+
+### 系统与用户组迁移（已核实/待实施）
+
+- POST `/system/add`、POST `/system/update` 的“系统新增、编辑参数”均有menuIds数组；GET `/system/detail?id=`回填。
+- 菜单来源GET `/system/menu/list`或GET `/system/menu/treeselect`，按响应结构和节点状态适配；保留数字0与父子关系。
+- 用户组现有`/user/groups/add|update|detail|page|enable|del|menuTreeList`继续按Swagger方法/入参；DTO仍含`groupsSystemMenuDTOList`旧结构。迁移时只保留关联系统，移除菜单/权限维护；请求如何表达“只维护系统”须核对最新响应/契约与用户确认，不能把空menuList当作主动清空既有授权。
+- 系统menuIds保存已由用户确认可接；独立状态动作、系统关联影响查询如仍未在文档声明，则先预留，不用编辑接口擅自替代原型中独立状态动作。
+
+## 待执行清单（恢复后按顺序）
+
+### P0：刷新现场与保存边界
+
+- [ ] 重新确认用户当前环境，按映射核实仓库/分支/remote；本轮暂停不代表下一轮可跳过先pull。
+- [ ] 检查下述6个用户文件和3个XML是否已由用户或另一任务修改；沿用有效授权处理，范围/归属变化时先明确，不能覆盖其它任务的修改。
+- [ ] 读取本清单、目标AGENTS/AI_CONTEXT、当前Swagger并同步已有CodeGraph；确认其它任务没有同改角色/用户组。
+- [ ] 按最新接口补齐每模块页面/字段/请求/校验/状态差异矩阵，剩余疑义才查总原型。
+
+### P1：菜单列表字段（最优先代码）
+
+- [ ] `src/api/system/`新增列字段接口包装，覆盖上述7接口，精确使用query/body/path和IdDTO。
+- [ ] 菜单表单接入isList，按钮强制0；菜单列表显示列表标识和“列表字段”入口，保留原权限指令、树表和路由。
+- [ ] 拆分字段抽屉/编辑表单：列表、搜索、分页、新增、编辑、详情、删除二次确认；字段必填/英文格式/排序与重复提交校验。
+- [ ] 生成字段使用用户输入的className；一键策略配置MASKED时必须有maskType，确认后请求；取消不发送写入。
+- [ ] 空/加载/失败/重试/无权限、切换菜单后的异步响应隔离；实际后端请求成功后才提示成功并刷新。
+
+### P2：权限迁移到系统管理
+
+- [ ] 优先复用角色/用户组已有树处理与视觉组件；系统表单负责菜单/按钮权限勾选、详情只读、保存menuIds。
+- [ ] 异步加载后准确回填既有menuIds，保留已选停用节点、防止新勾选停用节点；加载失败不得提交空权限。
+- [ ] 编辑移除菜单给出确认与差异；涉及关联影响查询但无公开契约时保留明确边界，不伪造用户组数量。
+- [ ] 用户组删除菜单及权限编辑区，只保留关联系统；保留名称、类型、原启停/删除与已有用户改动。
+- [ ] 双模块请求捕获验证：系统发送menuIds；用户组不继续维护菜单，不通过空数组意外清空授权。
+
+### P3：其余已完成后端模块
+
+- [ ] S01原有菜单查询/表单约束和状态行为按新原型校对，同时保留真实后端类型/路由语义。
+- [ ] S03列表/新增/编辑/详情与关联变更对接；仅使用文档支持的过滤参数，不能只过滤当前页冒充全量筛选。
+- [ ] S07列表页级分页/层级、负责人展示、顶级parentId=0、新建/编辑/详情/启停/删除及失败收尾。
+- [ ] S08类型/字典值表单、详情只读、编号锁定/自动编号边界、状态与删除确认/引用信息；未公开接口先预留。
+
+### P4：后端未完成模块先前端
+
+- [ ] S04企业：新工商字段、多银行行、用户组多选、附件分型/校验/失效与敏感详情；不提交虚假上传成功。
+- [ ] S05角色：保留现有用户组件，补所属企业/草稿及权限工作区、行/字段权限、天花板/越界展示和取消草稿；后端就绪前不构造未知端点。
+- [ ] S06账号：accountType四值、账号编号只读、企业/角色/部门、头像及改类型二次确认，生命周期弹窗。
+- [ ] S09/S10/S12：只读列表/详情，按原型补筛选、留存策略/清理记录与导出任务界面；不保留原型已取消的手动清理/解锁入口；无接口时不宣称导出任务已创建。
+- [ ] S13：核对系统入口、手机号/密码/验证码提示；保持既有认证兼容，不自行重写SSO/Token/会话。
+
+### P5：验证、文档和交付
+
+- [ ] 新API对照最新Swagger做请求捕获校验，验证数字0、分页、menuId切换、字段策略和取消无写入。
+- [ ] 核心树及迁移行为回归：既有权限回填、系统增减、失败不清空、用户组不再维护菜单。
+- [ ] qianrong生产构建，独立隔离页面验证列表/新增/编辑/详情/空/失败及至少1280/1920宽度；不调用真实业务写入。
+- [ ] 远端a61445b删除了此前demo入口和公开规范，旧`npm run demo:modules`已不可用；新验收应使用临时隔离装配或必要的当前示例，不盲目恢复同事整批删除内容。
+- [ ] CodeGraph sync/status、差异和信息隔离、文档链接检查；更新维护文档/实施历史及两类流水。
+- [ ] 原6文件已获用户授权作为本轮基础并随对接完成一并提交；暂停阶段暂不提交这些业务修改，恢复后尊重新指令。默认业务提交到当前分支，再显式pull同名分支并push；统筹记录单独main提交/同步。不能创建PR、合并其它分支、强推、部署或tag。
+
+## 暂停现场与用户原有文件
+
+业务master/a61445b，6个用户文件保持本轮开始时原字节，原用户内容未提交；本轮尚无业务源代码改动：
+
+1. `apps/qianrong/src/views/system/role/template/handleDetail.vue`（已修改）
+2. `apps/qianrong/src/views/system/user-group/template/handleDetail.vue`（已修改）
+3. `apps/qianrong/src/views/system/role/template/components/PermissionTable.vue`（未跟踪）
+4. `apps/qianrong/src/views/system/role/template/components/RoleCheck.vue`（未跟踪）
+5. `apps/qianrong/src/views/system/role/template/components/SystemManageDialog.vue`（未跟踪）
+6. `apps/qianrong/src/views/system/role/template/permission-tree.js`（未跟踪）
+
+统筹3个原有XML（`docs/gemini/qianrong-clean-d.xml`、`qr-role-group.xml`、`repomix-output.xml`）原样保留、不提交。原型/SWagger/备份等临时产物不作为续接前提；浏览器会话也不可假设跨环境有效。
+
+截至暂停：本轮仅完成同步、保护恢复、原型及接口初核和任务清单。未运行本轮生产构建或完整交互验收；不能引用前一轮37场景结果作为本轮通过依据。

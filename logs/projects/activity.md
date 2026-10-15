@@ -6,6 +6,10 @@
 
 ## 变更总流水（最新在最前）
 
+## 2026-10-15 | taiqian-front / qianrong | work | master | 原型接口调查后暂停
+
+用户已暂停本轮对接。业务先pull至a61445b、原角色/用户组6文件原样恢复且暂不提交；无本轮业务源码修改。已初核12现行原型、后端就绪截图及268路径新Swagger，确认菜单列字段接口和权限迁移支持；完整任务清单在private/taiqian-front/docs/qianrong-v08-integration-tasks.md。统筹只提交文档和暂停记录，原3个XML不提交；未构建、真实业务联调或部署，用户恢复前不继续。
+
 ## 2026-10-14 | taiqian-front / qianrong | work | master | 解决现有合并
 
 按用户职责原则完成当前合并：dh 13模块及公共支撑190文件保留，同事其它业务调整保留，唯一未合并文件为两种结构的根锁文件，依赖图相同。业务合并提交9473440，随后显式pull/push origin master成功，工作区干净；生产构建、37静态页面及日志详情/脱敏通过，运行错误和真实业务请求为0，未联调或部署。完整记录在private/taiqian-front/docs/history/2026-10-14-work-qianrong-merge.md；其它项目及原待确认事项保留。
