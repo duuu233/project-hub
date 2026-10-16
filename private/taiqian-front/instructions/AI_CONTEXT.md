@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-16 work当前迭代：业务起点master/d37351c已同名pull；用户本轮明确不push。菜单C页面行统一有列字段设置入口（不依赖isList），跳转system/menu/column-settings独立页，复用七接口。用户授权的dev隐藏路由已创建并回读，真实列表/详情读取及15项隔离交互通过；真实字段写入未测试。当前约定见docs/history/2026-10-16-work-menu-columns.md与任务清单顶部；下方10/15本地状态是历史快照，不代表当前分支状态。
+
 项目是泰乾德邦数字金融管理系统前端 Monorepo，名称「泰乾超级」。qianrong 子应用简称「泰乾超级-qianrong」，位于 apps/qianrong；qianlian 是独立应用。根目录管理 Git/workspace，packages 是共享包；qianrong需求优先在应用内完成。
 
 当前采用 Vue 3.3.9、JavaScript、Element Plus、vxe-table/vxe-pc-ui。继续现有Composition API，不迁移全仓TypeScript。公共搜索 TableSearch，底栏 BottomFixedBtnsBox，列表用原生vxe-grid或ListTablePanel外壳；设计令牌在src/assets/styles/design-tokens.scss，列表与详情皮肤继续复用。

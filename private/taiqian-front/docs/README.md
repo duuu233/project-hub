@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [history/2026-10-16-work-menu-columns.md](history/2026-10-16-work-menu-columns.md)：列字段独立页、全部页面菜单入口、真实路由注册与本地验证；本轮不push。
+
 - 根目录 AGENTS.md：执行规则与 Monorepo 边界。
 - 根目录 AI_CONTEXT.md：项目身份、应用与维护入口。
 - [qianrong-v08-contract-matrix.md](qianrong-v08-contract-matrix.md)：当前Swagger八个请求模型字段及原型差异裁决。
