@@ -62,3 +62,5 @@ git status --short
 - [仓储 Figma 页面及接口边界](warehouse-figma-ui.md)：七个列表、共享详情表单、资源映射与静态字段接入约定。
 
 - [提单海运校验口径](bill-lading-sea-validation.md)：到港日期后端校验、零尾程删除与父级 validate 接口。
+
+- [提单移交仓储的保存后回读](bill-lading-transfer-storage.md)：保存→详情回读并更新页面→原移交/付款调用，详情 ID 优先及失败阻断边界。
