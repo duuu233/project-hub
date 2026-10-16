@@ -1,0 +1,2376 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/qianrong/src/views/system/user-group/**, apps/qianrong/src/views/system/role/**, apps/qianrong/src/components/Collapse/**, apps/qianrong/src/components/BottomFixedBtnsBox/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  qianrong/
+    src/
+      components/
+        BottomFixedBtnsBox/
+          index.vue
+        Collapse/
+          index.vue
+      views/
+        system/
+          role/
+            template/
+              handleDetail.vue
+            add.vue
+            authUser.vue
+            detail.vue
+            edit.vue
+            index.vue
+            selectUser.vue
+          user-group/
+            template/
+              handleDetail.vue
+            add.vue
+            detail.vue
+            edit.vue
+            index.vue
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/qianrong/src/views/system/role/add.vue">
+<template>
+  <handle-detail :page-type="1"></handle-detail>
+</template>
+
+<script setup name="Role/add">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/detail.vue">
+<template>
+  <handle-detail :page-type="3"></handle-detail>
+</template>
+
+<script setup name="Role/detail">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/edit.vue">
+<template>
+  <handle-detail :page-type="2"></handle-detail>
+</template>
+
+<script setup name="Role/edit">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/views/system/user-group/add.vue">
+<template>
+  <handle-detail :page-type="1"></handle-detail>
+</template>
+
+<script setup name="User-group/add">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/views/system/user-group/detail.vue">
+<template>
+  <handle-detail :page-type="3"></handle-detail>
+</template>
+
+<script setup name="User-group/detail">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/views/system/user-group/edit.vue">
+<template>
+  <handle-detail :page-type="2"></handle-detail>
+</template>
+
+<script setup name="User-group/edit">
+import handleDetail from './template/handleDetail.vue'
+</script>
+<style lang="scss"></style>
+</file>
+
+<file path="apps/qianrong/src/components/BottomFixedBtnsBox/index.vue">
+<template>
+  <div class="fixed-bottom-btn qr-fixed-actions" :class="{ embedded: isEmbedded }"><slot /></div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { isEmbeddedModeRoute } from '@/utils/embed'
+const route = useRoute()
+const isEmbedded = computed(() => isEmbeddedModeRoute(route))
+</script>
+</file>
+
+<file path="apps/qianrong/src/components/Collapse/index.vue">
+<template>
+  <div :class="subTitle ? 'collapse-sub-box' : 'collapse-box'" :id="id" :style="props.bodyStyle">
+    <div :class="subTitle ? 'collapse-title-box collapse-sub-title-box' : 'collapse-title-box'">
+      <div class="left flex">
+        <slot name="title">
+          <div class="title-wrapper">
+            <div class="trapezoid"></div>
+            <span class="collapse-title">{{ props.title }}</span>
+          </div>
+        </slot>
+        <slot name="leftExtra"></slot>
+      </div>
+
+      <div class="right rightExtra-box">
+        <slot name="rightExtra"></slot>
+        <el-icon :size="18" v-if="props.collapsible" class="right-icon-box" @click="toggleExpand">
+          <arrow-down v-if="expand" />
+          <arrow-right v-else />
+        </el-icon>
+      </div>
+    </div>
+
+    <div
+      class="collapse-content-box"
+      :class="{
+        block: expand || !props.collapsible,
+        hidden: !expand && props.collapsible
+      }"
+      style="transition: all 10s"
+    >
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, watch } from 'vue'
+import { ArrowDown, ArrowRight } from '@element-plus/icons-vue'
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: ''
+  },
+  collapsible: {
+    type: Boolean,
+    default: false
+  },
+  subTitle: {
+    type: Boolean,
+    default: false
+  },
+
+  bodyStyle: {
+    type: Object,
+    default: () => null
+  },
+  expand: {
+    type: Boolean,
+    default: true
+  },
+  id: {
+    type: String,
+    default: ''
+  }
+})
+
+const expand = ref(props.expand)
+
+watch(
+  () => props.expand,
+  newValue => {
+    expand.value = newValue
+  }
+)
+
+const toggleExpand = () => {
+  if (props.collapsible) {
+    expand.value = !expand.value
+    emit('update:expand', expand.value)
+
+    const input = document.querySelector('.el-input__inner')
+    setTimeout(() => {
+      input?.focus()
+    }, 30)
+  }
+}
+
+const emit = defineEmits(['change', 'update:expand'])
+</script>
+
+<style lang="scss" scoped>
+.collapse-box {
+  background: #fff;
+  padding: 20px;
+}
+.collapse-title-box {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  align-items: center;
+  border-bottom: 1px solid #e2e7f5;
+
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .collapse-title {
+    font-weight: 500;
+    color: var(--qr-text-body);
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  .left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+  }
+  .right-icon-box {
+    margin-left: 10px;
+    cursor: pointer;
+    width: 29px; height: 29px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: #f5f8fc; color: var(--qr-text-muted);
+    :deep(svg) { width: 15px; height: 15px; }
+    &:hover { background: var(--qr-tag-blue-bg); color: var(--qr-color-brand); }
+  }
+}
+.trapezoid {
+  width: 5px;
+  height: 12px;
+  background-color: var(--qr-color-brand);
+  border-radius: 1px;
+  transform: perspective(0.5em) rotateY(40deg);
+}
+
+.collapse-content-box {
+  padding: 16px 22px 0 22px;
+}
+.block {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+.collapse-sub-title-box {
+  margin-top: 0px;
+
+  .collapse-title {
+    margin-left: 5px;
+    font-size: 15px;
+    font-weight: 500;
+
+  }
+  .trapezoid {
+    width: 3px;
+    height: 12px;
+    background-color: var(--qr-color-brand);
+    border-radius: 2px;
+    transform: none;
+  }
+}
+</style>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/template/handleDetail.vue">
+<template>
+  <div class="form-have-bottom-btn qr-detail-page">
+    <DetailHeaderCard v-if="+pageType === 3" title="角色详情" subtitle="查看角色基础信息与关联系统权限" :fields="detailHeaderFields" />
+    <el-form label-position="top" ref="formRef" scroll-to-error :model="form" :rules="rules">
+      <Collapse title="基本信息">
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="角色名称" prop="roleName">
+              <el-input :disabled="pageType === 3" style="width: 220px" v-model="form.roleName" placeholder="请输入角色名称" clearable />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="角色顺序" prop="roleSort">
+              <el-input-number
+                :disabled="pageType === 3"
+                clearable
+                style="width: 220px"
+                v-model="form.roleSort"
+                controls-position="right"
+                placeholder="请输入角色顺序"
+                :min="0"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="状态">
+              <el-radio-group :disabled="pageType === 3" v-model="form.status">
+                <el-radio :disabled="pageType === 3" v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.value">{{
+                  dict.label
+                }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+
+
+
+        </el-row>
+      </Collapse>
+
+    <div class="qr-permission-layout">
+      <Collapse title="关联系统" class="qr-permission-systems">
+        <el-form-item v-if="pageType !== 3" aria-label="关联系统">
+          <LinkedSystemSelect v-model="form.selectedSystem" :options="systemList" :disabled="pageType === 3" @change="onLinkedSystemsChange" />
+        </el-form-item>
+        <div class="qr-system-list">
+          <button v-for="name in form.selectedSystem" :key="name" type="button" :class="{ 'is-active': activeName === name }" @click="selectSystemTab(name)">{{ name }}</button>
+        </div>
+      </Collapse>
+      <Collapse title="菜单权限配置" class="qr-permission-tree">
+        <div class="roleSystems-box" style="padding: 0 20px 20px 0">
+          <el-alert :style="{ width: 240 + 'px' }" v-if="!form.roleSystems || !form?.roleSystems.length" title="请先选择关联系统" type="info" />
+          <el-tabs v-else v-model="activeName" class="qr-permission-tabs">
+            <template v-for="(item, index) in form.selectedSystem">
+              <div class="tab-item-box">
+                <el-tab-pane :label="item" :name="item">
+                  <el-checkbox
+                    :disabled="pageType === 3"
+                    v-model="form.roleSystems[index].deptExpand"
+                    @change="handleCheckedTreeExpand($event, 'menu', index)"
+                    >展开/折叠</el-checkbox
+                  >
+                  <el-checkbox
+                    :disabled="pageType === 3"
+                    v-model="form.roleSystems[index].deptNodeAll"
+                    @change="handleCheckedTreeNodeAll($event, 'menu', index)"
+                    >全选/全不选</el-checkbox
+                  >
+                  <el-tree
+                    class="tree-border"
+                    :data="form.roleSystems[index].menuOptions"
+                    show-checkbox
+                    default-expand-all
+                    ref="menuRef"
+                    node-key="id"
+                    empty-text="加载中，请稍候"
+                    :props="treeProps"
+                  ></el-tree>
+                </el-tab-pane>
+              </div>
+            </template>
+          </el-tabs>
+        </div>
+      </Collapse>
+    </div>
+    </el-form>
+
+    <BottomFixedBtnsBox>
+      <el-button @click="router.back()" size="large">返 回</el-button>
+      <el-button type="primary" @click="submit" size="large" v-if="pageType !== 3">提 交</el-button>
+    </BottomFixedBtnsBox>
+  </div>
+</template>
+
+<script setup>
+import LinkedSystemSelect from '@/components/LinkedSystemSelect/index.vue'
+import DetailHeaderCard from '@/components/DetailHeaderCard/index.vue'
+import { headerTime, dictTagField } from '@/components/DetailHeaderCard/utils'
+import Collapse from '@/components/Collapse'
+import BottomFixedBtnsBox from '@/components/BottomFixedBtnsBox'
+import { addRole, updateRole, getRole } from '@/api/system/role'
+import { systemList as systemListApi, menuTreeList as menuTreeListApi } from '@/api/system/user-group'
+import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu'
+import { filterTreeIds } from '@/utils/treeUtils'
+import { onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
+
+import { useRouter } from 'vue-router'
+const { push, currentRoute, back, replace } = useRouter()
+import router from '@/router'
+const _props = defineProps({
+  pageType: Number
+})
+const form = ref({
+  roleSystems: [],
+  status: '0'
+})
+const { proxy } = getCurrentInstance()
+const { sys_normal_disable } = proxy.useDict('sys_normal_disable')
+
+const deptRef = ref(null)
+const formRef = ref()
+const systemList = ref([])
+const menuOptions = ref([])
+const checkedKeysList = ref([])
+const filterCheckedKeysList = ref([])
+const menuRef = ref()
+const activeName = ref()
+const treeProps = {
+  label: 'label',
+  children: 'children',
+  disabled: 'disabled'
+}
+async function getDetails() {
+  try {
+    const res = await getRole(currentRoute.value.query.id)
+    form.value = res.data
+    form.value.roleSort = Number(form.value.roleSort)
+    form.value.selectedSystem = getSelectedSystem(res.data.roleSystems)
+
+    if (!activeName.value && form.value.selectedSystem.length) {
+      activeName.value = form.value.selectedSystem[0]
+    }
+
+    if (form.value.roleSystems.length) {
+      form.value.roleSystems.forEach((v, index) => {
+        filterCheckedKeysList.value.push(filterTreeIds(v.menuOptions, v.menuIds))
+      })
+    }
+
+    if (filterCheckedKeysList.value && filterCheckedKeysList.value.length) {
+      filterCheckedKeysList.value.forEach((v, index) => {
+        nextTick(() => {
+          menuRef.value[index].setCheckedKeys(v)
+        })
+      })
+    }
+    if (_props.pageType === 3) {
+      if (!form.value.roleSystems || !form.value.roleSystems.length) return
+      form.value.roleSystems.forEach((v, index) => {
+        tTreeDisabled(form.value.roleSystems[index].menuOptions)
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+const submit = async () => {
+  await formRef.value.validate(async (valid, fields) => {
+    if (valid) {
+      if (!form.value.roleSystems.length) {
+        ElMessage.warning('没有关联系统')
+        return
+      }
+      let submitData = cloneDeep(form.value)
+      let roleSystems = []
+
+      submitData.roleSystems.forEach((v, index) => {
+        let item = {
+          systemId: v.systemId,
+          menuIds: getMenuAllCheckedKeys(menuRef.value[index])
+        }
+        roleSystems.push(item)
+      })
+      submitData.roleSystems = roleSystems
+      if (_props.pageType === 1) {
+        await addRole(submitData)
+      }
+      if (_props.pageType === 2) {
+        await updateRole(submitData)
+      }
+      ElMessage.success('操作成功')
+      setTimeout(() => {
+        proxy.toList({
+          path: `/system/role`,
+          listName: 'Role'
+        })
+      }, 300)
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+function changeSystem(v) {
+  if (!activeName.value && v.length) {
+    activeName.value = v[0]
+  }
+  if (v.length) {
+    v.forEach((item, index) => {
+      let menus = systemList.value.filter(o => o.systemName == item)[0].menus
+      let systemId = systemList.value.filter(o => o.systemName == item)[0].systemId
+      form.value.roleSystems[index] = {
+        menuOptions: menus,
+        systemId,
+        deptCheckStrictly: true,
+        deptNodeAll: false,
+        deptExpand: true
+      }
+    })
+  }
+}
+onMounted(async () => {
+  await getSystemList()
+  if (_props.pageType !== 1) {
+    getDetails()
+  }
+})
+async function getSystemList() {
+  const res = await menuTreeListApi({})
+  systemList.value = res.data || []
+  if (systemList.value.length === 1) {
+    form.value.selectedSystem = [systemList.value[0].systemName]
+    changeSystem([systemList.value[0].systemName])
+  }
+}
+
+function handleCheckedTreeExpand(value, type, index) {
+  if (type == 'menu') {
+    let treeList = form.value.roleSystems[index].menuOptions
+    for (let i = 0; i < treeList.length; i++) {
+      menuRef.value[index].store.nodesMap[treeList[i].id].expanded = value
+    }
+  } else if (type == 'dept') {
+    let treeList = deptOptions.value
+    for (let i = 0; i < treeList.length; i++) {
+      deptRef.value.store.nodesMap[treeList[i].id].expanded = value
+    }
+  }
+}
+
+function handleCheckedTreeNodeAll(value, type, index) {
+  if (type == 'menu') {
+    menuRef.value[index].setCheckedNodes(value ? form.value.roleSystems[index].menuOptions : [])
+  } else if (type == 'dept') {
+    deptRef.value.setCheckedNodes(value ? deptOptions.value : [])
+  }
+}
+
+function getMenuAllCheckedKeys(ref) {
+
+  let checkedKeys = ref.getCheckedKeys()
+
+  let halfCheckedKeys = ref.getHalfCheckedKeys()
+  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+  return checkedKeys
+}
+
+function getSelectedSystem(data) {
+  if (!data || !data.length) return
+  let selectedSystem = []
+
+  data.forEach(v => {
+    systemList.value.forEach(value => {
+      if (value.systemId === v.systemId) {
+        v.menuOptions = value.menus
+        v.deptCheckStrictly = true
+        v.deptNodeAll = false
+        v.deptExpand = true
+        selectedSystem.push(value.systemName)
+      }
+    })
+  })
+  return selectedSystem
+}
+function tTreeDisabled(treeData) {
+  if (treeData && treeData.length) {
+    treeData.forEach(v => {
+      v.disabled = true
+      if (v.children && v.children.length) {
+        tTreeDisabled(v.children)
+      }
+    })
+  }
+}
+const rules = reactive({
+  roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
+
+  roleSort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }]
+})
+const detailHeaderFields = computed(() => {
+  const data = form.value
+  return [
+    { label: '角色编号', value: data.roleId },
+    { label: '角色名称', value: data.roleName },
+    { label: '角色顺序', value: data.roleSort },
+    dictTagField('状态', sys_normal_disable, data.status),
+    { label: '创建时间', value: headerTime(data.createTime) }
+  ]
+})
+function selectSystemTab(name) {
+  activeName.value = name
+
+}
+
+// 选择确认前只改弹框草稿；保留仍关联系统的原生树勾选状态。
+async function onLinkedSystemsChange(selected, previous) {
+  const checked = new Map(previous.map((name, index) => [name, menuRef.value[index]?.getCheckedKeys() || []]))
+  changeSystem(selected)
+  if (!selected.includes(activeName.value)) activeName.value = selected[0]
+  if (!selected.length) form.value.roleSystems = []
+  form.value.roleSystems.splice(selected.length)
+  await nextTick()
+  selected.forEach((name, index) => {
+    menuRef.value[index]?.setCheckedKeys(checked.get(name) || [])
+  })
+}
+</script>
+<style lang="scss" scoped>
+.tab-item-box {
+  padding-left: 20px;
+}
+
+.form-have-bottom-btn {
+  padding-bottom: 84px;
+}
+</style>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/authUser.vue">
+<template>
+  <div class="app-container qr-list-page qr-owned-page">
+    <ListPageHeader fallback-title="角色授权用户" subtitle="查看已授权账号，添加或取消角色授权" />
+    <TableSearch v-show="showSearch" ref="queryRef" :query="queryParams" :options="searchOptions" :search="handleQuery" />
+    <ListTablePanel title="角色授权用户列表" :total="total" :columns="nativeColumns" storage-key="src-views-system-role-authUser.vue">
+      <template #toolbar>
+
+        <el-button type="primary" plain icon="Plus" @click="openSelectUser" v-hasPermi="['system:role:add']">添加帐户</el-button>
+
+
+        <el-button type="danger" plain icon="CircleClose" :disabled="multiple" @click="cancelAuthUserAll" v-hasPermi="['system:role:remove']"
+          >批量取消授权</el-button
+        >
+
+
+        <el-button type="warning" plain icon="Close" @click="handleClose">关闭</el-button>
+
+      <el-button icon="Refresh" @click="getList">刷新</el-button><el-button icon="Search" @click="showSearch = !showSearch">筛选</el-button>
+    </template>
+      <template #default="{ visible, actionWidth }"><el-table border v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column v-if="visible('userName')" label="用户名称" prop="userName" :show-overflow-tooltip="true" />
+      <el-table-column v-if="visible('nickName')" label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+      <el-table-column v-if="visible('email')" label="邮箱" prop="email" :show-overflow-tooltip="true" />
+      <el-table-column v-if="visible('phonenumber')" label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+      <el-table-column v-if="visible('status')" label="状态" align="center" prop="status">
+        <template #default="scope">
+          <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+        </template>
+      </el-table-column>
+      <el-table-column v-if="visible('createTime')" label="创建时间" align="center" prop="createTime" width="180">
+        <template #default="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="left" header-align="center" fixed="right" :width="actionWidth" class-name="small-padding fixed-width">
+        <template #default="scope">
+            <ListRowActions>
+          <el-button link type="primary" icon="CircleClose" @click="cancelAuthUser(scope.row)" v-hasPermi="['system:role:remove']"
+            >取消授权</el-button
+          >
+        </ListRowActions>
+          </template>
+      </el-table-column>
+    </el-table></template>
+      <template #pagination><pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" /></template>
+    </ListTablePanel>
+    <select-user ref="selectRef" :roleId="queryParams.roleId" @ok="handleQuery" />
+
+  </div>
+</template>
+
+<script setup name="AuthUser">
+import ListTablePanel from '@/components/ListTablePanel/index.vue'
+import TableSearch from '@/components/TableSearch/index.vue'
+import ListPageHeader from '@/components/ListPageHeader/index.vue'
+import ListRowActions from '@/components/ListRowActions/index.vue'
+import selectUser from './selectUser'
+import { allocatedUserList, authUserCancel, authUserCancelAll } from '@/api/system/role'
+
+const nativeColumns = [
+  {
+    "key": "selection",
+    "label": "勾选",
+    "locked": true
+  },
+  {
+    "key": "userName",
+    "label": "用户名称",
+    "locked": false
+  },
+  {
+    "key": "nickName",
+    "label": "用户昵称",
+    "locked": false
+  },
+  {
+    "key": "email",
+    "label": "邮箱",
+    "locked": false
+  },
+  {
+    "key": "phonenumber",
+    "label": "手机",
+    "locked": false
+  },
+  {
+    "key": "status",
+    "label": "状态",
+    "locked": false
+  },
+  {
+    "key": "createTime",
+    "label": "创建时间",
+    "locked": false
+  },
+  {
+    "key": "actions",
+    "label": "操作",
+    "locked": true
+  }
+]
+const route = useRoute()
+const { proxy } = getCurrentInstance()
+const { sys_normal_disable } = proxy.useDict('sys_normal_disable')
+
+const userList = ref([])
+const loading = ref(true)
+const showSearch = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const userIds = ref([])
+
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  roleId: route.params.roleId,
+  userName: undefined,
+  phonenumber: undefined
+})
+
+const searchOptions = reactive([{ prop: 'userName', label: '用户名称', type: 'input', placeholder: '请输入' }, { prop: 'phonenumber', label: '手机号码', type: 'input', placeholder: '请输入' }])
+
+function getList() {
+  loading.value = true
+  allocatedUserList(queryParams).then(response => {
+    userList.value = response.rows
+    total.value = response.total * 1
+    loading.value = false
+  })
+}
+
+function handleClose() {
+  const obj = { path: '/system/role' }
+  proxy.$tab.closeOpenPage(obj)
+}
+
+function handleQuery() {
+  queryParams.pageNum = 1
+  getList()
+}
+
+function resetQuery() {
+  proxy.$refs.queryRef?.resetForm()
+  handleQuery()
+}
+
+function handleSelectionChange(selection) {
+  userIds.value = selection.map(item => item.userId)
+  multiple.value = !selection.length
+}
+
+function openSelectUser() {
+  proxy.$refs['selectRef'].show()
+}
+
+function cancelAuthUser(row) {
+  proxy.$modal
+    .confirm('确认要取消该用户"' + row.userName + '"角色吗？')
+    .then(function () {
+      return authUserCancel({ userId: row.userId, roleId: queryParams.roleId })
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('取消授权成功')
+    })
+    .catch(() => {})
+}
+
+function cancelAuthUserAll(row) {
+  const roleId = queryParams.roleId
+  const uIds = userIds.value.join(',')
+  proxy.$modal
+    .confirm('是否取消选中用户授权数据项?')
+    .then(function () {
+      return authUserCancelAll({ roleId: roleId, userIds: uIds })
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('取消授权成功')
+    })
+    .catch(() => {})
+}
+
+getList()
+</script>
+<style scoped lang="scss">
+.app-container {
+  padding: 20px;
+}
+</style>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/selectUser.vue">
+<template>
+
+
+  <el-dialog title="选择用户" v-model="visible" width="800px" top="5vh" append-to-body class="qr-managed-dialog">
+    <TableSearch ref="queryRef" :query="queryParams" :options="searchOptions" :search="handleQuery" />
+    <ListTablePanel title="待授权用户列表" :total="total" :columns="nativeColumns" storage-key="src-views-system-role-selectUser.vue">
+      <template #toolbar></template>
+      <template #default="{ visible, actionWidth }"><el-table border @row-click="clickRow" ref="refTable" :data="userList" @selection-change="handleSelectionChange" height="260px">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column v-if="visible('userName')" label="用户名称" prop="userName" :show-overflow-tooltip="true" />
+        <el-table-column v-if="visible('nickName')" label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+        <el-table-column v-if="visible('email')" label="邮箱" prop="email" :show-overflow-tooltip="true" />
+        <el-table-column v-if="visible('phonenumber')" label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+        <el-table-column v-if="visible('status')" label="状态" align="center" prop="status">
+          <template #default="scope">
+            <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+          </template>
+        </el-table-column>
+        <el-table-column v-if="visible('createTime')" label="创建时间" align="center" prop="createTime" width="180">
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime) }}</span>
+          </template>
+        </el-table-column>
+      </el-table></template>
+      <template #pagination><pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" /></template>
+    </ListTablePanel>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="handleSelectUser">确 定</el-button>
+        <el-button @click="visible = false">取 消</el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+</template>
+
+<script setup name="SelectUser">
+import ListTablePanel from '@/components/ListTablePanel/index.vue'
+import TableSearch from '@/components/TableSearch/index.vue'
+import { authUserSelectAll, unallocatedUserList } from '@/api/system/role'
+
+const nativeColumns = [
+  {
+    "key": "selection",
+    "label": "勾选",
+    "locked": true
+  },
+  {
+    "key": "userName",
+    "label": "用户名称",
+    "locked": false
+  },
+  {
+    "key": "nickName",
+    "label": "用户昵称",
+    "locked": false
+  },
+  {
+    "key": "email",
+    "label": "邮箱",
+    "locked": false
+  },
+  {
+    "key": "phonenumber",
+    "label": "手机",
+    "locked": false
+  },
+  {
+    "key": "status",
+    "label": "状态",
+    "locked": false
+  },
+  {
+    "key": "createTime",
+    "label": "创建时间",
+    "locked": false
+  }
+]
+const props = defineProps({
+  roleId: {
+    type: [Number, String]
+  }
+})
+
+const { proxy } = getCurrentInstance()
+const { sys_normal_disable } = proxy.useDict('sys_normal_disable')
+
+const userList = ref([])
+const visible = ref(false)
+const total = ref(0)
+const userIds = ref([])
+
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  roleId: undefined,
+  userName: undefined,
+  phonenumber: undefined
+})
+
+function show() {
+  queryParams.roleId = props.roleId
+  getList()
+  visible.value = true
+}
+
+function clickRow(row) {
+  proxy.$refs['refTable'].toggleRowSelection(row)
+}
+
+function handleSelectionChange(selection) {
+  userIds.value = selection.map(item => item.userId)
+}
+
+const searchOptions = reactive([{ prop: 'userName', label: '用户名称', type: 'input', placeholder: '请输入' }, { prop: 'phonenumber', label: '手机号码', type: 'input', placeholder: '请输入' }])
+
+function getList() {
+  unallocatedUserList(queryParams).then(res => {
+    userList.value = res.rows
+    total.value = res.total * 1
+  })
+}
+
+function handleQuery() {
+  queryParams.pageNum = 1
+  getList()
+}
+
+function resetQuery() {
+  proxy.$refs.queryRef?.resetForm()
+  handleQuery()
+}
+const emit = defineEmits(['ok'])
+
+function handleSelectUser() {
+  const roleId = queryParams.roleId
+  const uIds = userIds.value.join(',')
+  if (uIds == '') {
+    proxy.$modal.msgError('请选择要分配的用户')
+    return
+  }
+  authUserSelectAll({ roleId: roleId, userIds: uIds }).then(res => {
+    proxy.$modal.msgSuccess(res.msg)
+    if (res.code === 200) {
+      visible.value = false
+      emit('ok')
+    }
+  })
+}
+
+defineExpose({
+  show
+})
+</script>
+</file>
+
+<file path="apps/qianrong/src/views/system/user-group/template/handleDetail.vue">
+<template>
+  <el-form label-position="top" class="qr-detail-page" ref="formRef" scroll-to-error :model="form" label-width="120px" :rules="rules">
+    <DetailHeaderCard v-if="+pageType === 3" title="用户组详情" subtitle="查看用户组的基础信息与现有菜单权限" :fields="detailHeaderFields" />
+    <Collapse title="系统信息" v-if="+pageType === 2">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="用户组编号" prop="userGroupsCode">
+              <el-input :model-value="form.userGroupsCode" disabled placeholder="--" />
+            </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="状态" prop="status">
+              <el-input :model-value="({ 0: '启用中', 1: '已禁用' })[form.status] || '--'" disabled placeholder="--" />
+            </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="创建时间" prop="createTime">
+              <el-input :model-value="headerTime(form.createTime)" disabled placeholder="--" />
+            </el-form-item>
+        </el-col>
+      </el-row>
+    </Collapse>
+    <Collapse title="基础信息">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="用户组名称" prop="userGroupsName">
+            <el-input
+              v-model="form.userGroupsName"
+              :disabled="pageType === 3"
+              clearable
+              placeholder="请输入用户组名称"
+              :style="{ width: 240 + 'px' }"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="用户组类别" prop="userGroupsType">
+            <el-select
+              :disabled="pageType === 3"
+              v-model="form.userGroupsType"
+              clearable
+              placeholder="请选择用户组类别"
+              :style="{ width: 240 + 'px' }"
+            >
+              <el-option v-for="item in user_groups_type" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+    </Collapse>
+    <div class="qr-permission-layout">
+      <Collapse title="关联系统" class="qr-permission-systems">
+        <el-form-item v-if="pageType !== 3" aria-label="关联系统" prop="selectedSystem">
+          <LinkedSystemSelect v-model="form.selectedSystem" :options="systemList" :disabled="pageType === 3" @change="onLinkedSystemsChange" @remove-tag="removeSystem" />
+        </el-form-item>
+        <div class="qr-system-list">
+          <button v-for="name in form.selectedSystem" :key="name" type="button" :class="{ 'is-active': activeName === name }" @click="selectSystemTab(name)">{{ name }}</button>
+        </div>
+      </Collapse>
+      <Collapse title="菜单权限配置" class="qr-permission-tree">
+        <el-alert
+          :style="{ width: '240px' }"
+          v-if="!form.groupsSystemMenuDTOList || !form.groupsSystemMenuDTOList.length"
+          title="请先选择关联系统"
+          type="info"
+        />
+        <el-tabs v-else v-model="activeName" @tab-click="handleClick" class="qr-permission-tabs">
+          <el-tab-pane v-for="(item, index) in form.selectedSystem" :key="index" :label="item" :name="item">
+            <div class="tab-content">
+              <el-checkbox
+                :disabled="pageType === 3"
+                v-model="form.groupsSystemMenuDTOList[index].deptExpand"
+                @change="val => handleCheckedTreeExpand(val, index)"
+              >
+                展开/折叠
+              </el-checkbox>
+              <el-checkbox
+                :disabled="pageType === 3"
+                v-model="form.groupsSystemMenuDTOList[index].deptNodeAll"
+                @change="val => handleCheckedTreeNodeAll(val, index)"
+              >
+                全选/全不选
+              </el-checkbox>
+              <el-tree
+                class="tree-border"
+                :data="form.groupsSystemMenuDTOList[index].deptOptions"
+                show-checkbox
+                default-expand-all
+                ref="deptRef"
+                node-key="id"
+                empty-text="加载中，请稍候"
+                :props="treeProps"
+                @check="handleNodeCheck"
+              ></el-tree>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </Collapse>
+    </div>
+    <BottomFixedBtnsBox>
+      <el-button v-throttle type="info" @click="router.back()" size="large">{{ +pageType === 3 ? '返回' : '取消' }}</el-button>
+      <el-button v-if="pageType !== 3" v-throttle type="primary" @click="submit" size="large">提交</el-button>
+    </BottomFixedBtnsBox>
+  </el-form>
+</template>
+
+<script setup>
+import LinkedSystemSelect from '@/components/LinkedSystemSelect/index.vue'
+import DetailHeaderCard from '@/components/DetailHeaderCard/index.vue'
+import { headerTime, dictTagField } from '@/components/DetailHeaderCard/utils'
+import BottomFixedBtnsBox from '@/components/BottomFixedBtnsBox/index.vue'
+import { ref, reactive, onMounted, watchEffect, getCurrentInstance, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
+import Collapse from '@/components/Collapse'
+import { treeselect as menuTreeselect } from '@/api/system/menu'
+import { systemList as systemListApi, addUserGroups, editUserGroups, detailUserGroups } from '@/api/system/user-group'
+
+const { currentRoute } = useRouter()
+const router = useRouter()
+const props = defineProps({
+  pageType: Number
+})
+
+const form = ref({
+  groupsSystemMenuDTOList: [],
+  selectedSystem: [],
+  status: 0
+})
+
+const treeProps = {
+  label: 'label',
+  children: 'children',
+  disabled: 'disabled'
+}
+
+const formRef = ref()
+const deptOptions = ref([])
+const systemList = ref([])
+const activeName = ref()
+const deptRef = ref([])
+
+const rules = reactive({
+  userGroupsName: [{ required: true, message: '请输入用户组名称', trigger: 'blur' }],
+  userGroupsType: [{ required: true, message: '请选择用户组类别', trigger: 'change' }],
+  selectedSystem: [{ required: true, message: '请选择关联系统', trigger: 'change' }]
+})
+
+const { proxy } = getCurrentInstance()
+const { user_groups_type } = proxy.useDict('user_groups_type')
+
+watchEffect(() => {
+  if ((props.pageType === 1 || props.pageType === 2) && form.value.selectedSystem && form.value.selectedSystem.length) {
+    form.value.groupsSystemMenuDTOList = form.value.selectedSystem.map(name => ({
+      deptOptions: deptOptions.value,
+      deptCheckStrictly: false,
+      deptNodeAll: false,
+      deptExpand: true,
+      menuList: [],
+      systemName: name
+    }))
+  }
+})
+
+function changeSystem(v) {
+  if (!activeName.value && v.length) {
+    activeName.value = v[0]
+  }
+}
+
+function removeSystem(v) {
+  if (v && form.value.groupsSystemMenuDTOList && form.value.groupsSystemMenuDTOList.length) {
+    form.value.groupsSystemMenuDTOList = form.value.groupsSystemMenuDTOList.filter(value => value.systemName !== v)
+  }
+}
+
+async function getSystemList() {
+  const res = await systemListApi({ status: 0, pageNum: 1, pageSize: 500 })
+  systemList.value = res.rows || []
+  if (systemList.value.length === 1) {
+    form.value.selectedSystem = [systemList.value[0].systemName]
+    activeName.value = form.value.selectedSystem[0]
+  }
+}
+
+async function getDetails() {
+  try {
+    const res = await detailUserGroups({
+      id: currentRoute.value.query.id
+    })
+
+    form.value = res.data
+    form.value.selectedSystem = []
+    form.value.userGroupsType = form.value.userGroupsType + ''
+    form.value.groupsSystemMenuDTOList = form.value.groupsSystemMenuDTOList || []
+
+    if (form.value.groupsSystemMenuDTOList.length) {
+      form.value.groupsSystemMenuDTOList.forEach((v, index) => {
+        v.deptOptions = deptOptions.value
+        v.deptCheckStrictly = false
+        v.deptNodeAll = false
+        v.deptExpand = true
+        let names = systemList.value.filter(item => v.systemId === item.id)
+        if (names.length) {
+          form.value.selectedSystem.push(names[0].systemName)
+        }
+        v.systemName = form.value.selectedSystem[index]
+        nextTick(() => {
+          deptRef.value[index].setCheckedKeys(filterParentNodes(v.menuList, form.value.groupsSystemMenuDTOList[index].deptOptions))
+          if (props.pageType === 3) {
+            tTreeDisabled(form.value.groupsSystemMenuDTOList[index].deptOptions)
+          }
+        })
+      })
+
+      if (!activeName.value && form.value.selectedSystem.length) {
+        activeName.value = form.value.selectedSystem[0]
+      }
+    }
+  } catch (error) {
+    ElMessage.error('获取详情失败')
+  }
+}
+
+function filterParentNodes(menuList, treeData) {
+  return menuList.filter(id => !isParent(treeData, id))
+}
+
+function isParent(tree, id) {
+  const stack = [...tree]
+  while (stack.length) {
+    const node = stack.pop()
+    if (node.id === id && node.children && node.children.length > 0) {
+      return true
+    }
+    if (node.children) {
+      stack.push(...node.children)
+    }
+  }
+  return false
+}
+
+function getMenuAllCheckedKeys(ref) {
+  const checkedNodes = ref.getCheckedNodes(false, true)
+
+  function getAllParentIds(nodeId) {
+    const parentIds = []
+    let currentNode = ref.getNode(nodeId)
+
+    while (currentNode && currentNode.data.parentId !== 0) {
+      parentIds.push(currentNode.data.id)
+      currentNode = ref.getNode(currentNode.data.parentId)
+    }
+
+    return parentIds
+  }
+
+  const allIds = checkedNodes.flatMap(item => {
+    const parentIds = getAllParentIds(item.parentId)
+    return [item.id, item.parentId, ...parentIds]
+  })
+
+  const ids = [...new Set(allIds)].filter(item => item !== '0' && item !== 0 && item)
+
+  return ids
+}
+
+const submit = async () => {
+  await formRef.value.validate(async (valid, fields) => {
+    if (valid) {
+      let submitData = cloneDeep(form.value)
+      submitData.groupsSystemMenuDTOList = []
+
+      if (!form.value.selectedSystem.length) {
+        ElMessage.warning('请选择关联系统')
+        return
+      }
+
+      delete submitData.selectedSystem
+
+      let hasEmptyMenu = false
+      let emptySystemNames = []
+
+      form.value.groupsSystemMenuDTOList.forEach((v, index) => {
+        const systemName = form.value.selectedSystem[index]
+        const systemId = systemList.value.find(o => o.systemName === systemName)?.id
+        let menuList = getMenuAllCheckedKeys(deptRef.value[index])
+
+        if (menuList.length === 0) {
+          hasEmptyMenu = true
+          emptySystemNames.push(systemName)
+        }
+
+        let item = {
+          systemId: systemId,
+          menuList: menuList
+        }
+        submitData.groupsSystemMenuDTOList.push(item)
+      })
+
+      if (hasEmptyMenu) {
+        ElMessage.warning(`系统 "${emptySystemNames.join(',')}" 至少需要选择一个菜单`)
+        return
+      }
+
+      try {
+        if (props.pageType === 1) {
+          await addUserGroups(submitData)
+        }
+        if (props.pageType === 2) {
+          await editUserGroups(submitData)
+        }
+        ElMessage.success('操作成功')
+
+        setTimeout(() => {
+          proxy.toList({
+            path: `/system/user-group`,
+            listName: 'User-group'
+          })
+
+        }, 300)
+      } catch (error) {
+        ElMessage.error('操作失败：' + error.message)
+      }
+    } else {
+    }
+  })
+}
+
+function handleClick(tab) {
+  updateMenuList()
+}
+
+function updateMenuList() {
+  let list = form.value.groupsSystemMenuDTOList
+  if (list && list.length) {
+    list.forEach((v, i) => {
+      v.menuList = getMenuAllCheckedKeys(deptRef.value[i])
+      v.systemName = form.value.selectedSystem[i]
+    })
+  }
+}
+
+async function getMenuTreeselect() {
+  const res = await menuTreeselect()
+  deptOptions.value = res.data
+}
+
+function tTreeDisabled(treeData) {
+  if (treeData && treeData.length) {
+    treeData.forEach(v => {
+      v.disabled = true
+      if (v.children && v.children.length) {
+        tTreeDisabled(v.children)
+      }
+    })
+  }
+}
+
+function handleCheckedTreeExpand(value, index) {
+  let treeList = form.value.groupsSystemMenuDTOList[index].deptOptions
+  for (let i = 0; i < treeList.length; i++) {
+    deptRef.value[index].store.nodesMap[treeList[i].id].expanded = value
+  }
+}
+
+function handleCheckedTreeNodeAll(value, index) {
+  deptRef.value[index].setCheckedNodes(value ? form.value.groupsSystemMenuDTOList[index].deptOptions : [])
+}
+
+function handleNodeCheck(data, checked) {
+  const currentSystemIndex = form.value.selectedSystem.findIndex(system => system === activeName.value)
+  if (currentSystemIndex !== -1) {
+    form.value.groupsSystemMenuDTOList[currentSystemIndex].menuList = getMenuAllCheckedKeys(deptRef.value[currentSystemIndex])
+  }
+}
+
+onMounted(async () => {
+  try {
+    await getSystemList()
+    await getMenuTreeselect()
+    if (props.pageType !== 1) {
+      await getDetails()
+    }
+  } catch (error) {
+    ElMessage.error('初始化失败')
+  }
+})
+const detailHeaderFields = computed(() => {
+  const data = form.value
+  return [
+    { label: '用户组编号', value: data.userGroupsCode },
+    { label: '用户组名称', value: data.userGroupsName },
+    dictTagField('用户组类别', user_groups_type, data.userGroupsType),
+    dictTagField('状态', { 0: '启用中', 1: '已禁用' }, data.status),
+    { label: '创建时间', value: headerTime(data.createTime) }
+  ]
+})
+function selectSystemTab(name) {
+  activeName.value = name
+  handleClick()
+}
+
+// 选择确认前只改弹框草稿；保留仍关联系统的原生树勾选状态。
+async function onLinkedSystemsChange(selected, previous) {
+  const checked = new Map(previous.map((name, index) => [name, deptRef.value[index]?.getCheckedKeys() || []]))
+  changeSystem(selected)
+  if (!selected.includes(activeName.value)) activeName.value = selected[0]
+  if (!selected.length) form.value.groupsSystemMenuDTOList = []
+
+  await nextTick()
+  selected.forEach((name, index) => {
+    deptRef.value[index]?.setCheckedKeys(checked.get(name) || [])
+  })
+}
+</script>
+
+<style lang="scss" scoped>
+.custom-tabs {
+  :deep(.el-tabs__header) {
+    margin-bottom: 20px;
+  }
+
+  :deep(.el-tabs__nav-wrap::after) {
+    height: 1px;
+    background-color: #e4e7ed;
+  }
+
+  :deep(.el-tabs__item) {
+    padding: 0 20px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #606266;
+    transition: all 0.3s ease;
+
+    &.is-active {
+      color: #262261;
+      font-weight: 500;
+    }
+
+    &:hover {
+      color: #262261;
+    }
+  }
+
+  :deep(.el-tabs__active-bar) {
+    height: 3px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+}
+
+.tab-item-box {
+  padding-left: 20px;
+}
+
+.tab-content {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+</style>
+</file>
+
+<file path="apps/qianrong/src/views/system/user-group/index.vue">
+<template>
+  <div class="app-container qr-list-page qr-owned-page">
+    <ListPageHeader fallback-title="用户组管理" subtitle="维护用户组、关联系统及现有权限配置">
+      <template #actions><el-button type="primary" class="handle-add-btn-index" v-hasPermi="['system:groups:add']" icon="CirclePlus" @click="handleAdd"
+          >新增</el-button
+        ></template>
+    </ListPageHeader>
+
+    <vxe-grid ref="gridRef" v-bind="gridOptions" v-on="gridEvents" class="qr-list-grid" v-list-grid="{ grid: gridRef }">
+      <template #toolbarButtons>
+        <ListToolbarTitle :total="gridOptions.pagerConfig?.total" />
+
+      </template>
+      <template #userGroupsTypeRender="{ row }">
+        <template v-if="user_groups_type">
+          <el-tag type="info" v-for="dict in user_groups_type.filter(dict => dict.value == row.userGroupsType)" :key="dict.value">
+            {{ dict.label }}
+          </el-tag>
+        </template>
+      </template>
+      <template #statusRender="{ row }">
+        <el-tag type="success" v-if="row.status === '0'">已启用</el-tag>
+        <el-tag type="info" v-if="row.status === '1'">已禁用</el-tag>
+      </template>
+      <template #createTimeRender="{ row }">
+        <span>{{ parseTime(row.createTime) }}</span>
+      </template>
+      <template #active="{ row }">
+        <ListRowActions>
+          <el-button link type="primary" v-hasPermi="['system:groups:edit']" @click="handleEdit(row)">编辑</el-button>
+          <el-button link type="primary" v-hasPermi="['system:groups:detail']" @click="handleDetail(row)">详情</el-button>
+          <el-popconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            cancel-button-type="info"
+            title="确定要修改状态?"
+            @confirm="confirmStatus(row)"
+          >
+            <template #reference>
+              <el-button v-hasPermi="['system:groups:enable']" link type="primary">{{ row.status === '0' ? '禁用' : '启用' }}</el-button>
+            </template>
+          </el-popconfirm>
+
+          <el-popconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            cancel-button-type="info"
+            title="确定要删除该项?"
+            @confirm="confirmDel(row)"
+          >
+            <template #reference>
+              <el-button link type="primary" v-hasPermi="['system:groups:del']">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </ListRowActions>
+      </template>
+    </vxe-grid>
+  </div>
+</template>
+
+<script setup name="User-group">
+import ListPageHeader from '@/components/ListPageHeader/index.vue'
+import { withListGridStyle, listGrid as vListGrid } from '@/utils/listGrid'
+import ListToolbarTitle from '@/components/ListToolbarTitle/index.vue'
+import ListRowActions from '@/components/ListRowActions/index.vue'
+
+import { userGroupsList, delUserGroups, enableUserGroups } from '@/api/system/user-group'
+import { InfoFilled } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { useVxeGridRefresh } from '@/utils/vxeGridRefresh'
+import { onMounted, onUnmounted } from 'vue'
+const router = useRouter()
+const { proxy } = getCurrentInstance()
+const { user_groups_type } = proxy.useDict('user_groups_type')
+
+const roleList = ref([])
+const loading = ref(false)
+const showSearch = ref(true)
+const ids = ref([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const dateRange = ref([])
+const gridRef = ref()
+
+const { registerGrid, unregisterGrid } = useVxeGridRefresh()
+
+const gridOptions = reactive(withListGridStyle({
+  border: true,
+  stripe: true,
+  loading: false,
+  columnConfig: {
+    resizable: true
+  },
+  pagerConfig: {
+    total: 0,
+    currentPage: 1,
+    pageSize: 10,
+    layouts: ['Home', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'End', 'Sizes', 'FullJump', 'Total']
+  },
+  rowConfig: {
+    isHover: true
+  },
+  toolbarConfig: {
+    custom: true,
+    refresh: false,
+    zoom: true,
+    slots: {
+      buttons: 'toolbarButtons'
+    }
+  },
+  columns: [
+    { type: 'seq', width: 55, align: 'center', title: '序号' },
+    { title: '用户组编号', field: 'userGroupsCode' },
+    { title: '用户组名称', field: 'userGroupsName', showOverflow: true },
+    { title: '用户组类型', field: 'userGroupsType', align: 'center', slots: { default: 'userGroupsTypeRender' } },
+    { title: '状态', field: 'status', align: 'center', slots: { default: 'statusRender' } },
+    { title: '创建时间', field: 'createTime', align: 'center', slots: { default: 'createTimeRender' } },
+    { title: '操作', field: 'active', width: 300, fixed: 'right', align: 'center', slots: { default: 'active' } }
+  ],
+  data: []
+}))
+
+const gridEvents = {
+  pageChange({ pageSize, currentPage }) {
+    gridOptions.pagerConfig.currentPage = currentPage
+    gridOptions.pagerConfig.pageSize = pageSize
+    getList()
+  }
+}
+
+const data = reactive({
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    dictName: undefined,
+    dictType: undefined,
+    status: undefined
+  }
+})
+const { queryParams, form, rules } = toRefs(data)
+
+function getList() {
+  gridOptions.loading = true
+  userGroupsList({
+    ...proxy.addDateRange(queryParams.value),
+    pageNum: gridOptions.pagerConfig.currentPage,
+    pageSize: gridOptions.pagerConfig.pageSize
+  }).then(response => {
+    gridOptions.data = response.rows
+    gridOptions.pagerConfig.total = response.total * 1
+    gridOptions.loading = false
+  })
+}
+
+function handleQuery() {
+  gridOptions.pagerConfig.currentPage = 1
+  getList()
+}
+async function confirmDel(row) {
+  try {
+    await delUserGroups([row.id])
+    ElMessage.success('已删除')
+    gridOptions.pagerConfig.currentPage = 1
+    getList()
+  } catch (error) {
+    ElMessage.error('操作失败')
+  }
+}
+async function confirmStatus(row) {
+  try {
+    await enableUserGroups({
+      id: row.id,
+      status: row.status === '0' ? '1' : '0'
+    })
+    ElMessage.success('操作成功')
+    gridOptions.pagerConfig.currentPage = 1
+    getList()
+  } catch (error) {
+    ElMessage.error('操作失败')
+  }
+}
+
+function resetQuery() {
+  dateRange.value = []
+  proxy.resetForm('queryRef')
+  handleQuery()
+}
+
+function handleExport() {
+  proxy.download(
+    'system/role/export',
+    {
+      ...queryParams.value
+    },
+    `role_${new Date().getTime()}.xlsx`
+  )
+}
+
+function handleSelectionChange(selection) {
+  ids.value = selection.map(item => item.roleId)
+  single.value = selection.length != 1
+  multiple.value = !selection.length
+}
+
+function handleStatusChange(row) {
+  let text = row.status === '0' ? '启用' : '停用'
+  proxy.$modal
+    .confirm('确认要"' + text + '""' + row.roleName + '"角色吗?')
+    .then(function () {
+      return changeRoleStatus(row.roleId, row.status)
+    })
+    .then(() => {
+      proxy.$modal.msgSuccess(text + '成功')
+    })
+    .catch(function () {
+      row.status = row.status === '0' ? '1' : '0'
+    })
+}
+
+function handleAdd() {
+  router.push({ path: '/system/user-group/add' })
+}
+const handleEdit = param => {
+  proxy.openNewTagsView({
+    name: 'User-group/edit'
+  })
+  router.push({
+    path: '/system/user-group/edit',
+    query: { id: param.id }
+  })
+}
+const handleDetail = param => {
+  proxy.openNewTagsView({
+    name: 'User-group/detail'
+  })
+  router.push({
+    path: '/system/user-group/detail',
+    query: { id: param.id }
+  })
+}
+
+onMounted(() => {
+  getList()
+  registerGrid('user-group-grid', gridRef, getList)
+})
+
+onUnmounted(() => {
+  unregisterGrid('user-group-grid')
+})
+</script>
+</file>
+
+<file path="apps/qianrong/src/views/system/role/index.vue">
+<template>
+  <div class="app-container qr-list-page qr-owned-page">
+    <ListPageHeader fallback-title="角色管理" subtitle="维护角色及功能权限配置">
+      <template #actions><el-button type="primary" class="handle-add-btn-index" v-hasPermi="['system:role:add']" icon="CirclePlus" @click="handleAdd"
+          >新增</el-button
+        ></template>
+    </ListPageHeader>
+    <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
+
+    <vxe-grid ref="gridRef" v-bind="gridOptions" v-on="gridEvents" class="qr-list-grid" v-list-grid="{ grid: gridRef }">
+      <template #toolbarButtons>
+        <ListToolbarTitle :total="gridOptions.pagerConfig?.total" />
+
+      </template>
+      <template #statusRender="{ row }">
+        <el-tag type="success" v-if="row.status === '0'">已启用</el-tag>
+        <el-tag type="info" v-if="row.status === '1'">已禁用</el-tag>
+      </template>
+      <template #createTimeRender="{ row }">
+        <span>{{ parseTime(row.createTime) }}</span>
+      </template>
+      <template #active="{ row }">
+        <ListRowActions>
+          <el-button link v-if="row.roleId != 1" type="primary" @click="handleUpdate(row)" v-hasPermi="['system:role:edit']">编辑</el-button>
+          <el-button link v-if="row.roleId != 1" type="primary" @click="handleDetail(row)" v-hasPermi="['system:role:query']">详情</el-button>
+
+          <el-button v-if="row.roleId != 1" v-hasPermi="['system:role:status']" link @click="handleStatusChange(row)" type="primary">{{
+            row.status === '0' ? '禁用' : '启用'
+          }}</el-button>
+
+          <el-button link v-if="row.roleId != 1" type="primary" @click="handleDataScope(row)" v-hasPermi="['system:role:edit']">数据权限</el-button>
+
+          <el-button link v-if="row.roleId != 1" type="primary" @click="handleAuthUser(row)" v-hasPermi="['system:role:edit']">分配用户</el-button>
+          <el-button link v-if="row.roleId != 1" type="primary" @click="handleDelete(row)" v-hasPermi="['system:role:remove']">删除</el-button>
+        </ListRowActions>
+      </template>
+    </vxe-grid>
+
+    <el-dialog :title="title" v-model="openDataScope" width="500px" append-to-body>
+      <el-form :model="form" label-width="auto">
+        <el-form-item label="角色名称">
+          <el-input style="width: 280px" v-model="form.roleName" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="权限字符">
+          <el-input style="width: 280px" v-model="form.roleKey" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="权限范围">
+          <el-select style="width: 280px" v-model="form.dataScope" @change="dataScopeSelectChange">
+            <el-option v-for="item in data_permissions_scope" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="form.dataScope == 5" prop="productIds" label="关联产业项目">
+          <el-select style="width: 280px" multiple clearable v-model="form.productIds" placeholder="请选择关联产业项目">
+            <el-option v-for="v in enumData.projectList" :key="v.id" :label="v.projectName" :value="v.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.dataScope == 6" prop="regulatoryIds" label="关联监管方">
+          <el-select style="width: 280px" multiple clearable v-model="form.regulatoryIds" placeholder="请选择关联监管方">
+            <el-option v-for="v in enumData.regulatoryAuthoritiesList" :key="v.orgId" :label="v.orgName" :value="v.orgId" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.dataScope == 7" prop="bankIds" label="关联资金方">
+          <el-select style="width: 280px" multiple clearable v-model="form.bankIds" placeholder="请选择关联资金方">
+            <el-option v-for="v in enumData.capitalOrgList" :key="v.id" :label="v.orgName" :value="v.id" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="数据权限" v-show="form.dataScope == 2">
+          <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'dept')">展开/折叠</el-checkbox>
+          <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'dept')">全选/全不选</el-checkbox>
+          <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动</el-checkbox>
+          <el-tree
+            class="tree-border"
+            :data="deptOptions"
+            show-checkbox
+            default-expand-all
+            ref="deptRef"
+            node-key="id"
+            :check-strictly="!form.deptCheckStrictly"
+            empty-text="加载中，请稍候"
+            :props="{ label: 'label', children: 'children' }"
+          ></el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitDataScope">确 定</el-button>
+          <el-button @click="cancelDataScope">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup name="Role">
+import ListPageHeader from '@/components/ListPageHeader/index.vue'
+import { withListGridStyle, listGrid as vListGrid } from '@/utils/listGrid'
+import ListToolbarTitle from '@/components/ListToolbarTitle/index.vue'
+import ListRowActions from '@/components/ListRowActions/index.vue'
+
+import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from '@/api/system/role'
+import {
+  roleMenuTreeselect,
+  treeselect as menuTreeselect,
+  roleScopeList,
+  regulatoryAuthoritiesSelectList,
+  capitalOrgAllList,
+  projectAllList
+} from '@/api/system/menu'
+import { ElMessage } from 'element-plus'
+
+import TableSearch from '@/components/TableSearch'
+import { onMounted } from 'vue'
+import { productSimpleList } from '@/api/credit'
+import { useVxeGridRefresh } from '@/utils/vxeGridRefresh'
+import { onUnmounted } from 'vue'
+const router = useRouter()
+const { proxy } = getCurrentInstance()
+
+const { data_permissions_scope } = proxy.useDict('data_permissions_scope')
+const activeName = ref()
+const roleList = ref([])
+const systemList = ref([])
+const query = reactive({})
+const open = ref(false)
+const loading = ref(true)
+const ids = ref([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
+const dateRange = ref([])
+const menuOptions = ref([])
+const menuExpand = ref(false)
+const menuNodeAll = ref(false)
+const deptExpand = ref(true)
+const deptNodeAll = ref(false)
+const deptOptions = ref([])
+const openDataScope = ref(false)
+const menuRef = ref(null)
+const deptRef = ref(null)
+const gridRef = ref()
+
+const { registerGrid, unregisterGrid } = useVxeGridRefresh()
+
+const enumData = reactive({
+  projectList: [],
+  capitalOrgList: [],
+  regulatoryAuthoritiesList: []
+})
+const checkedKeysList = ref([])
+const filterCheckedKeysList = ref([])
+
+const dataScopeOptions = ref([
+  { value: '1', label: '全部数据权限' },
+  { value: '2', label: '自定数据权限' },
+  { value: '3', label: '本部门数据权限' },
+  { value: '4', label: '本部门及以下数据权限' },
+  { value: '5', label: '仅本人数据权限' },
+  { value: '6', label: '自定义金融产品数据权限' }
+])
+
+const gridOptions = reactive(withListGridStyle({
+  border: true,
+  stripe: true,
+  loading: false,
+  columnConfig: {
+    resizable: true
+  },
+  pagerConfig: {
+    total: 0,
+    currentPage: 1,
+    pageSize: 10,
+    layouts: ['Home', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'End', 'Sizes', 'FullJump', 'Total']
+  },
+  rowConfig: {
+    isHover: true
+  },
+  toolbarConfig: {
+    custom: true,
+    refresh: false,
+    zoom: true,
+    slots: {
+      buttons: 'toolbarButtons'
+    }
+  },
+  columns: [
+    { type: 'seq', width: 55, align: 'center', title: '序号' },
+    { title: '角色编号', field: 'roleId' },
+    { title: '角色名称', field: 'roleName', showOverflow: true },
+    { title: '显示顺序', field: 'roleSort' },
+    { title: '状态', field: 'status', align: 'center', slots: { default: 'statusRender' } },
+    { title: '创建时间', field: 'createTime', align: 'center', slots: { default: 'createTimeRender' } },
+    { title: '操作', field: 'active', width: 450, fixed: 'right', align: 'center', slots: { default: 'active' } }
+  ],
+  data: []
+}))
+
+const gridEvents = {
+  pageChange({ pageSize, currentPage }) {
+    gridOptions.pagerConfig.currentPage = currentPage
+    gridOptions.pagerConfig.pageSize = pageSize
+    getList()
+  }
+}
+
+const handleSearch = () => {
+  gridOptions.pagerConfig.currentPage = 1
+  getList()
+}
+const searchOpt = ref([
+  {
+    type: 'input',
+    label: '角色名称：',
+    placeholder: '请输入',
+    prop: 'roleName'
+  }
+])
+
+const data = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    roleName: undefined,
+
+    status: undefined
+  },
+  rules: {
+    roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
+
+    roleSort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }]
+  }
+})
+
+const { queryParams, form, rules } = toRefs(data)
+
+function getList() {
+  gridOptions.loading = true
+  listRole({
+    ...proxy.addDateRange(queryParams.value, dateRange.value),
+    ...query,
+    pageNum: gridOptions.pagerConfig.currentPage,
+    pageSize: gridOptions.pagerConfig.pageSize
+  }).then(response => {
+    gridOptions.data = response.rows
+    gridOptions.pagerConfig.total = response.total * 1
+    gridOptions.loading = false
+  })
+}
+async function getDataScopeOptions() {
+  const res = await roleScopeList({})
+  dataScopeOptions.value = res.data
+}
+
+function handleQuery() {
+  gridOptions.pagerConfig.currentPage = 1
+  getList()
+}
+
+function resetQuery() {
+  dateRange.value = []
+  proxy.resetForm('queryRef')
+  handleQuery()
+}
+
+function handleDelete(row) {
+  const roleIds = row.roleId || ids.value
+  proxy.$modal
+    .confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?')
+    .then(function () {
+      return delRole(roleIds)
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+    .catch(() => {})
+}
+
+function handleExport() {
+  proxy.download(
+    '/api-qianrong/system/role/export',
+    {
+      ...queryParams.value
+    },
+    `role_${new Date().getTime()}.xlsx`
+  )
+}
+
+function handleSelectionChange(selection) {
+  ids.value = selection.map(item => item.roleId)
+  single.value = selection.length != 1
+  multiple.value = !selection.length
+}
+
+function handleStatusChange(row) {
+  let text = row.status === '0' ? '禁用' : '启用'
+  proxy.$modal
+    .confirm('确认要"' + text + '""' + row.roleName + '"角色吗?')
+    .then(function () {
+      return changeRoleStatus(row.roleId, row.status === '0' ? '1' : '0')
+    })
+    .then(() => {
+      proxy.$modal.msgSuccess(text + '成功')
+      gridOptions.pagerConfig.currentPage = 1
+      getList()
+    })
+    .catch(function () {})
+}
+
+function handleCommand(command, row) {
+  switch (command) {
+    case 'handleDataScope':
+      handleDataScope(row)
+      break
+    case 'handleAuthUser':
+      handleAuthUser(row)
+      break
+    default:
+      break
+  }
+}
+
+function handleAuthUser(row) {
+  router.push('/system/role-auth/user/' + row.roleId)
+}
+
+function getMenuTreeselect() {
+  menuTreeselect().then(response => {
+    menuOptions.value = response.data
+  })
+}
+
+function getDeptAllCheckedKeys() {
+
+  let checkedKeys = deptRef.value.getCheckedKeys()
+
+  let halfCheckedKeys = deptRef.value.getHalfCheckedKeys()
+  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+  return checkedKeys
+}
+
+function reset() {
+
+  menuExpand.value = false
+  menuNodeAll.value = false
+  deptExpand.value = true
+  deptNodeAll.value = false
+  form.value = {
+    roleId: undefined,
+    roleName: undefined,
+
+    roleSort: 0,
+    status: '0',
+    menuIds: [],
+    deptIds: [],
+    roleSystems: [],
+    menuCheckStrictly: true,
+    deptCheckStrictly: true,
+    remark: undefined
+  }
+  proxy.resetForm('roleRef')
+}
+
+function handleAdd() {
+
+  router.push({ path: '/system/role/add' })
+}
+
+function handleUpdate(row) {
+  proxy.openNewTagsView({
+    name: 'Role/edit'
+  })
+  router.push({
+    path: '/system/role/edit',
+    query: { id: row.roleId }
+  })
+  return
+  reset()
+  const roleId = row.roleId || ids.value
+
+  getRole(roleId).then(response => {
+    form.value = response.data
+    form.value.roleSort = Number(form.value.roleSort)
+    form.value.selectedSystem = getSelectedSystem(response.data.roleSystems)
+    if (!activeName.value && form.value.selectedSystem.length) {
+      activeName.value = form.value.selectedSystem[0]
+    }
+    setCheckedKeys(form.value.roleSystems)
+
+    open.value = true
+    if (filterCheckedKeysList.value && filterCheckedKeysList.value.length) {
+      filterCheckedKeysList.value.forEach((v, index) => {
+        nextTick(() => {
+          menuRef.value[index].setCheckedKeys(v)
+        })
+      })
+    }
+
+    title.value = '修改角色'
+  })
+}
+async function getEnumData() {
+  try {
+    const res1 = await regulatoryAuthoritiesSelectList({})
+    enumData.regulatoryAuthoritiesList = res1.data || []
+
+    const res2 = await capitalOrgAllList({})
+    enumData.capitalOrgList = res2.data || []
+
+    const res3 = await projectAllList({})
+    enumData.projectList = res3.data || []
+  } catch (error) {
+    console.log(error)
+  }
+}
+function handleDetail(row) {
+  proxy.openNewTagsView({
+    name: 'Role/detail'
+  })
+  router.push({
+    path: '/system/role/detail',
+    query: { id: row.roleId }
+  })
+  return
+}
+function getSelectedSystem(data) {
+  if (!data.length) return
+  let selectedSystem = []
+  checkedKeysList.value = []
+  filterCheckedKeysList.value = []
+  data.forEach(v => {
+    checkedKeysList.value.push(v.menuIds)
+    filterCheckedKeysList.value.push(v.menuIds)
+
+    systemList.value.forEach(value => {
+      if (value.systemId === v.systemId) {
+        v.menuOptions = value.menus
+        v.deptCheckStrictly = true
+        v.deptNodeAll = false
+        v.deptExpand = true
+        selectedSystem.push(value.systemName)
+      }
+    })
+  })
+  return selectedSystem
+}
+function setCheckedKeys(data) {
+  if (!data.length) return
+  data.forEach((v, index) => {
+    filterTree(v.menuOptions, index)
+  })
+}
+
+function filterTree(data, index) {
+  try {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].children && data[i].children.length) {
+        let parentId = data[i].parentId
+        let fId = data[i].id
+        const a = data[i].children.some((o, i) => {
+          return checkedKeysList.value[index].indexOf(o.id) === -1
+        })
+        if (a && checkedKeysList.value[index].indexOf(parentId) != -1) {
+          filterCheckedKeysList.value[index].splice(filterCheckedKeysList.value[index].indexOf(parentId), 1)
+        }
+        if (a && checkedKeysList.value[index].indexOf(fId) != -1) {
+          filterCheckedKeysList.value[index].splice(filterCheckedKeysList.value[index].indexOf(fId), 1)
+        }
+
+        filterTree(data[i].children, index)
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function getRoleMenuTreeselect(roleId) {
+  return roleMenuTreeselect(roleId).then(response => {
+    menuOptions.value = response.menus
+    return response
+  })
+}
+
+function getDeptTree(roleId) {
+  return deptTreeSelect(roleId).then(response => {
+    deptOptions.value = response.depts
+    return response
+  })
+}
+
+function handleCheckedTreeExpand(value, type, index) {
+  if (type == 'menu') {
+    let treeList = form.value.roleSystems[index].menuOptions
+    for (let i = 0; i < treeList.length; i++) {
+      menuRef.value[index].store.nodesMap[treeList[i].id].expanded = value
+    }
+  } else if (type == 'dept') {
+    let treeList = deptOptions.value
+    for (let i = 0; i < treeList.length; i++) {
+      deptRef.value.store.nodesMap[treeList[i].id].expanded = value
+    }
+  }
+}
+
+function handleCheckedTreeNodeAll(value, type, index) {
+  if (type == 'menu') {
+    menuRef.value[index].setCheckedNodes(value ? form.value.roleSystems[index].menuOptions : [])
+  } else if (type == 'dept') {
+    deptRef.value.setCheckedNodes(value ? deptOptions.value : [])
+  }
+}
+
+function handleCheckedTreeConnect(value, type) {
+  if (type == 'menu') {
+    form.value.menuCheckStrictly = value ? true : false
+  } else if (type == 'dept') {
+    form.value.deptCheckStrictly = value ? true : false
+  }
+}
+
+function getMenuAllCheckedKeys(ref) {
+
+  let checkedKeys = ref.getCheckedKeys()
+
+  let halfCheckedKeys = ref.getHalfCheckedKeys()
+  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+  return checkedKeys
+}
+
+function submitForm() {
+  proxy.$refs['roleRef'].validate(valid => {
+    if (valid) {
+      if (!form.value.roleSystems.length) {
+        ElMessage.warning('没有关联系统')
+        return
+      }
+      let roleSystems = []
+
+      form.value.roleSystems.forEach((v, index) => {
+        let item = {
+          systemId: v.systemId,
+          menuIds: getMenuAllCheckedKeys(menuRef.value[index])
+        }
+        roleSystems.push(item)
+      })
+      if (form.value.roleId != undefined) {
+        form.value.roleSystems = roleSystems
+
+        updateRole(form.value).then(response => {
+          proxy.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
+      } else {
+
+        form.value.roleSystems = roleSystems
+        addRole(form.value).then(response => {
+          proxy.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
+      }
+    }
+  })
+}
+
+function cancel() {
+  open.value = false
+  reset()
+}
+
+function dataScopeSelectChange(value) {
+  if (value !== '2') {
+    deptRef.value.setCheckedKeys([])
+  }
+}
+
+function handleDataScope(row) {
+  reset()
+  const deptTreeSelect = getDeptTree(row.roleId)
+  getRole(row.roleId).then(response => {
+    form.value = response.data
+    openDataScope.value = true
+    nextTick(() => {
+      deptTreeSelect.then(res => {
+        nextTick(() => {
+          if (deptRef.value) {
+            deptRef.value.setCheckedKeys(res.checkedKeys)
+          }
+        })
+      })
+    })
+    title.value = '分配数据权限'
+  })
+}
+
+function submitDataScope() {
+  if (form.value.roleId != undefined) {
+    form.value.deptIds = getDeptAllCheckedKeys()
+    dataScope(form.value).then(response => {
+      proxy.$modal.msgSuccess('修改成功')
+      openDataScope.value = false
+      getList()
+    })
+  }
+}
+
+function cancelDataScope() {
+  openDataScope.value = false
+  reset()
+}
+
+onMounted(() => {
+  getList()
+  getEnumData()
+  getDataScopeOptions()
+  registerGrid('role-grid', gridRef, getList)
+})
+
+onUnmounted(() => {
+  unregisterGrid('role-grid')
+})
+</script>
+</file>
+
+</files>
