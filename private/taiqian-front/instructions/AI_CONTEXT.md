@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-19 work仅核对企业新增/编辑契约：当前master/b3c1c73已同名pull且与远端一致，源码未修改。最新Swagger要求userGroupIds数组，已有页面仍发送sysOrgGroups单对象；另有bankList及legalIdType新增边界。核对和待修复范围见docs/qianrong-enterprise-contract-audit.md，不能继续采用10/15“仍单用户组且无银行列表”的旧结论。下方旧不push口径均是相应迭代历史，不代表新的业务修复已实施。
+
 2026-10-16同轮样式续改已本地提交master/b3c1c73：列字段页复用公共搜索、页头新增、工具栏、行操作及分页，修正原窄屏搜索对齐规则；继续不push。当前维护和验证边界见docs/history/2026-10-16-work-menu-columns-style.md。
 
 2026-10-16 work当前迭代：业务起点master/d37351c已同名pull；用户本轮明确不push。菜单C页面行统一有列字段设置入口（不依赖isList），跳转system/menu/column-settings独立页，复用七接口。用户授权的dev隐藏路由已创建并回读，真实列表/详情读取及15项隔离交互通过；真实字段写入未测试。当前约定见docs/history/2026-10-16-work-menu-columns.md与任务清单顶部；下方10/15本地状态是历史快照，不代表当前分支状态。

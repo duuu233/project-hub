@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)：2026-10-19企业新增/编辑最新userGroupIds及银行契约与旧页面差异，仅核对、源码未修复。
+
 - [history/2026-10-16-work-menu-columns-style.md](history/2026-10-16-work-menu-columns-style.md)：列字段列表样式统一、公共窄屏搜索对齐修正及本地验证；本轮不push。
 
 - [history/2026-10-16-work-menu-columns.md](history/2026-10-16-work-menu-columns.md)：列字段独立页、全部页面菜单入口、真实路由注册与本地验证；本轮不push。

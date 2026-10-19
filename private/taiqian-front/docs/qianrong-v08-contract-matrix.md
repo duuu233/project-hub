@@ -1,5 +1,9 @@
 # qianrong 当前接口字段对照（2026-10-15 work）
 
+## 2026-10-19 企业契约核对（优先于旧企业结论）
+
+最新Swagger的企业新增和编辑已改为顶层`userGroupIds: array[integer/int64]`，编辑不传保留、不允许空列表；新增`bankList`（编辑不传保留、空列表清除）及`legalIdType`。原`sysOrgGroups`已不在模型中。当前业务b3c1c73仍为旧单选对象实现，尚未修复；下方企业模型本次更新为新契约，不代表源码已完成对接。详细证据、报错解释及待修复范围见[qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)。其它模块未在本次重新全量核对。
+
 ## 2026-10-16 菜单列字段追加口径
 
 本轮重新读取Swagger，七接口契约未变；当前使用独立页替代菜单行抽屉入口。用户明确C页面菜单不依赖isList显示列字段设置，M/F/B不显示，后台isList不批量修改。真实菜单详情作为上下文，保留query menuId，当前页面拒绝目录/按钮和无权限访问。路由已按授权在dev新增，真实字段写入仍由用户自测；本轮不push。详见[10/16记录](history/2026-10-16-work-menu-columns.md)。以下10/15字段矩阵继续适用。
@@ -16,7 +20,7 @@
 | 用户组 | 只维护名称、类别、关联系统；groupsSystemMenuDTOList仅systemId，不发送menuList；查询仅名称/编号/状态及既有分页 | 原型类别/系统筛选未在page声明，不过滤当前页冒充全量 |
 | 部门 | deptName最多30字（原型50字不采用）；leader可选字符串；parentId=0一级；完整list树按一级20条分页、下级跟随；status经现有PUT字段更新 | 无负责人账户ID/新version，不能伪造负责人有效性校验或乐观锁；企业边界仍由服务端强制 |
 | 字典 | dictId/dictCode由后台生成且只读；dictType/dictValue保留既有业务键，编辑不改；dictLabel表示显示名称；状态变更确认 | 不生成DICT_TYPE/DICT_ITEM新编号；无version/引用查询，显示原后台失败原因 |
-| 企业 | 采用企业信息基础表中的工商/实控人/三类附件数组，org_type/regist_status按接口字典；保留id、原附件和0值 | sysOrgGroups仍单个userGroupId；无银行列表，不改成多用户组/多银行未知结构；后端进行中未声称真实联调 |
+| 企业 | 10/19最新模型为userGroupIds数组及bankList、legalIdType；工商/实控人/附件和字典口径保留 | 当前源码仍旧sysOrgGroups对象，与新契约不一致；银行列表/证件类型尚未接入，不声称真实联调 |
 | 账号 | userId只读、roleIds/deptId可选；创建不手输密码，编辑不发送password；旧userType原值保留 | 无accountType/accountNo四值契约，不猜映射；后端未完成 |
 | 操作/登录日志 | 保留已声明列表字段及同步导出路径，导出带当前筛选；移除手动清空/删除/解锁；只读详情；日志局部增加敏感内容遮蔽 | 留存仅规则说明，清理记录暂未开放；无异步导出任务端点，不伪造任务成功 |
 | 接口日志 | 新组件通过可注入适配器预留列表/详情/导出，默认近7天、≤90天；仅后端→外部/外部→后端；默认不请求未知后台 | 无专用Swagger端点，不注册正式菜单、不凭空构造HTTP；可通过本地隔离装配检查 |
@@ -162,6 +166,8 @@
 ### 企业：企业信息基础表
 `POST /api-qianrong/system/org/insert`
 
+同时适用于`POST /api-qianrong/system/org/update`；本节按2026-10-19最新JSON更新，前端尚未对齐。
+
 | 字段 | 类型 | 必填声明 | 约束/含义 |
 | --- | --- | --- | --- |
 | actualControllerIdNumber | string | 否/未声明 | 实控人身份证号 |
@@ -170,6 +176,7 @@
 | address | string | 否/未声明 | 详细地址 |
 | areaCode | string | 否/未声明 | 地区code |
 | areaFullName | string | 否/未声明 | 地区全称（省市区） |
+| bankList | array[SysOrgBank对象] | 否/未声明 | 编辑不传保留，空列表清除 |
 | bankType | integer | 否/未声明 |  |
 | businessLicenseUrl | array[文件信息] | 否/未声明 | 营业执照 |
 | businessScope | string | 否/未声明 | 经营范围 |
@@ -186,6 +193,7 @@
 | legalCardBackFile | array[文件信息] | 否/未声明 | 法人身份证反面 |
 | legalCardFrontFile | array[文件信息] | 否/未声明 | 法人身份证正面 |
 | legalIdNumber | string | 否/未声明 | 法人身份证 |
+| legalIdType | integer | 否/未声明 | 法人证件类型：0身份证、1护照、2港澳通行证 |
 | legalName | string | 否/未声明 | 法人姓名 |
 | legalPhone | string | 否/未声明 | 法人联系电话 |
 | orgAdminName | string | 否/未声明 | 企业管理员 |
@@ -203,7 +211,7 @@
 | remark | string | 否/未声明 | 备注 |
 | socialCreditCode | string | 否/未声明 | 社会信用代码 |
 | status | string | 否/未声明 | 状态（0正常 1停用） |
-| sysOrgGroups | SysOrgGroups对象 | 否/未声明 |  |
+| userGroupIds | array[integer/int64] | 业务校验至少一个 | 编辑不传保留，不允许空列表；不再使用sysOrgGroups |
 | tenantId | integer | 否/未声明 | 租户id |
 | updateBy | string | 否/未声明 | 更新者 |
 | updateTime | string | 否/未声明 | 更新时间 |
