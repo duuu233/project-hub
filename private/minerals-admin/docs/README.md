@@ -11,6 +11,7 @@
 | [`domain-map.md`](domain-map.md) | 业务域与目录映射 | 定位业务代码、判断相邻模块时 |
 | [`development.md`](development.md) | 开发环境、命令、实现约定 | 开发功能、调整构建、联调时 |
 | [`maintenance.md`](maintenance.md) | 维护流程、高风险清单、排障 | 修复跨模块问题或进行重构时 |
+| [`warehouse-statistics.md`](warehouse-statistics.md) | 仓储七列表统计字段、缺失项与验收口径 | 对接入出库、库存统计时 |
 | `AGENTS.md`（业务项目根目录 / Hub instructions/） | AI 协作规则 | AI 执行任何任务时 |
 
 ## 与 CodeGraph 的分工
