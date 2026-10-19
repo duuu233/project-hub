@@ -1,6 +1,6 @@
 # 泰乾超级当前背景
 
-2026-10-19 work仅核对企业新增/编辑契约：当前master/b3c1c73已同名pull且与远端一致，源码未修改。最新Swagger要求userGroupIds数组，已有页面仍发送sysOrgGroups单对象；另有bankList及legalIdType新增边界。核对和待修复范围见docs/qianrong-enterprise-contract-audit.md，不能继续采用10/15“仍单用户组且无银行列表”的旧结论。下方旧不push口径均是相应迭代历史，不代表新的业务修复已实施。
+2026-10-19 work企业新增/编辑契约修复：从干净master/b3c1c73同名pull后，按用户明确授权将userGroupIds改为多选数组，兼容新旧回填，编辑未改组省略、清空阻断，保留零值/既有关联与大ID精度；补legalIdType。bankList未新增CRUD，未编辑省略保护后台账户。49项隔离、7项浏览器/双尺寸及构建通过，未真实写入/部署；master/4c5f6f2已提交、再次同名pull后push且干净，不延续旧轮不push限制。边界见docs/qianrong-enterprise-contract-audit.md及同日实施记录，不能继续采用10/15旧字段结论。
 
 2026-10-16同轮样式续改已本地提交master/b3c1c73：列字段页复用公共搜索、页头新增、工具栏、行操作及分页，修正原窄屏搜索对齐规则；继续不push。当前维护和验证边界见docs/history/2026-10-16-work-menu-columns-style.md。
 

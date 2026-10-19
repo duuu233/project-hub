@@ -2,7 +2,7 @@
 
 ## 2026-10-19 企业契约核对（优先于旧企业结论）
 
-最新Swagger的企业新增和编辑已改为顶层`userGroupIds: array[integer/int64]`，编辑不传保留、不允许空列表；新增`bankList`（编辑不传保留、空列表清除）及`legalIdType`。原`sysOrgGroups`已不在模型中。当前业务b3c1c73仍为旧单选对象实现，尚未修复；下方企业模型本次更新为新契约，不代表源码已完成对接。详细证据、报错解释及待修复范围见[qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)。其它模块未在本次重新全量核对。
+最新Swagger的企业新增和编辑已改为顶层`userGroupIds: array[integer/int64]`，编辑不传保留、不允许空列表；新增`bankList`（编辑不传保留、空列表清除）及`legalIdType`。原`sysOrgGroups`已不在模型中。首次核对b3c1c73仍为旧实现，用户随后授权修复：已改多选、兼容新旧回填、未改省略/清空保护及证件类型；银行未新增CRUD，省略bankList保护原信息。详细证据、实现和验证见[qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)及[同日记录](history/2026-10-19-work-enterprise-group-contract.md)。其它模块未在本次重新全量核对，真实业务未联调。
 
 ## 2026-10-16 菜单列字段追加口径
 
@@ -20,7 +20,7 @@
 | 用户组 | 只维护名称、类别、关联系统；groupsSystemMenuDTOList仅systemId，不发送menuList；查询仅名称/编号/状态及既有分页 | 原型类别/系统筛选未在page声明，不过滤当前页冒充全量 |
 | 部门 | deptName最多30字（原型50字不采用）；leader可选字符串；parentId=0一级；完整list树按一级20条分页、下级跟随；status经现有PUT字段更新 | 无负责人账户ID/新version，不能伪造负责人有效性校验或乐观锁；企业边界仍由服务端强制 |
 | 字典 | dictId/dictCode由后台生成且只读；dictType/dictValue保留既有业务键，编辑不改；dictLabel表示显示名称；状态变更确认 | 不生成DICT_TYPE/DICT_ITEM新编号；无version/引用查询，显示原后台失败原因 |
-| 企业 | 10/19最新模型为userGroupIds数组及bankList、legalIdType；工商/实控人/附件和字典口径保留 | 当前源码仍旧sysOrgGroups对象，与新契约不一致；银行列表/证件类型尚未接入，不声称真实联调 |
+| 企业 | 10/19已改userGroupIds多选、回填/编辑保护及legalIdType；工商/实控人/附件和字典口径保留 | bankList尚无新CRUD界面，未编辑省略保护原账户；隔离/构建通过，不声称真实联调 |
 | 账号 | userId只读、roleIds/deptId可选；创建不手输密码，编辑不发送password；旧userType原值保留 | 无accountType/accountNo四值契约，不猜映射；后端未完成 |
 | 操作/登录日志 | 保留已声明列表字段及同步导出路径，导出带当前筛选；移除手动清空/删除/解锁；只读详情；日志局部增加敏感内容遮蔽 | 留存仅规则说明，清理记录暂未开放；无异步导出任务端点，不伪造任务成功 |
 | 接口日志 | 新组件通过可注入适配器预留列表/详情/导出，默认近7天、≤90天；仅后端→外部/外部→后端；默认不请求未知后台 | 无专用Swagger端点，不注册正式菜单、不凭空构造HTTP；可通过本地隔离装配检查 |
@@ -166,7 +166,7 @@
 ### 企业：企业信息基础表
 `POST /api-qianrong/system/org/insert`
 
-同时适用于`POST /api-qianrong/system/org/update`；本节按2026-10-19最新JSON更新，前端尚未对齐。
+同时适用于`POST /api-qianrong/system/org/update`；本节按2026-10-19最新JSON更新，前端本轮对齐范围和保留边界见顶部说明。
 
 | 字段 | 类型 | 必填声明 | 约束/含义 |
 | --- | --- | --- | --- |
