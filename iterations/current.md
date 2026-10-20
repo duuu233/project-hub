@@ -1,3 +1,11 @@
+﻿## 2026-10-20 work｜相册APP iOS支付验单参数与responseData明文日志输出
+
+- 状态：两仓干净main先显式pull成功；按用户指令支持在APP端内直接输出真实完整的验单请求参数（`receiptData`、`orderNo`、`transactionId`）与后端响应（`responseData`、`exceptionMsg`）明文，用于向后端提供完整真实数据自测，排查“非本平台的凭据”问题。
+- 交付：相册APP main/e1f347e已提交并再次同名pull后push成功，工作区干净。修改`AppleReceiptVerification`记录原始响应与异常；`verify.request`包含完整Base64收据；`verify.response`包含完整原始`responseData`与`exceptionMsg`；放行诊断收集器对该阶段三字段的明文展示且不截断，其他预检和系统异常继续保留脱敏。
+- 验证：Flutter 3.44.6运行`test/apple_iap_test.dart`、`test/apple_iap_product_diagnostics_test.dart`、`test/apple_iap_reorder_test.dart`共57项测试全量通过；`flutter analyze`无error/warning；CodeGraph同步完成；diff与隔离检查通过。
+- 统筹记录本轮变更，两处流水登记，提交后同名pull/push main。
+
+---
 ## 2026-10-20 work｜qianrong登录直达与双切换入口修正
 
 - 用户追加明确：登录页仅1→2→3，不需要身份过渡页；4/5用于登录后的切换系统，个人中心及顶部两处均保留入口。两仓先显式同名pull成功，原本地提交保留；本轮继续不push。
