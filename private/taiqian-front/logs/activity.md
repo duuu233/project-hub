@@ -1,5 +1,11 @@
 # 泰乾超级实施记录
 
+## 2026-10-20 work｜Web登录与身份授权重构
+
+业务master/1de3f62已本地提交18文件，工作区干净，仅领先origin/master一提交，不push；最终构建4.59秒、59项/15场景复跑及CodeGraph sync/status与隔离检查通过。
+
+两仓干净先同名pull，业务master/4439466；按用户提供文档与实时Swagger编号1–5实施认证/默认授权分离、共用身份树及顶部切换、待授权刷新和资料/权限/动态路由清理。旧loginType、企业角色预查、TypeLogin及ProjectSelect/setCache退出；仅qianrong，不改SSO或共享包/另一应用。59项隔离、15项真实浏览器场景及生产构建通过，未真实认证/授权/部署，当前契约与未验收边界见docs/qianrong-web-login.md及同日history。用户本轮明确不push，业务和维护资料仅本地提交，不沿用旧轮默认推送。
+
 ## 2026-10-19 work｜企业用户组新契约修复
 
 交付master/4c5f6f2，提交后再次显式同名pull并push，真实远端一致且干净；维护记录同步main。

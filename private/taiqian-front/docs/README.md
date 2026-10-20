@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-web-login.md](qianrong-web-login.md)：2026-10-20新版Web认证/默认授权/身份树/切换五接口、角色与管理员边界、刷新及权限重载；本轮仅本地不push。
+- [history/2026-10-20-work-web-login-refactor.md](history/2026-10-20-work-web-login-refactor.md)：新版登录实施、59项隔离/15浏览器场景、构建与真实联调待办。
+
 - [history/2026-10-19-work-enterprise-group-contract.md](history/2026-10-19-work-enterprise-group-contract.md)：企业用户组多选契约、回填/编辑保护、证件类型及49项/7场景/构建验证。
 - [qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)：2026-10-19企业新增/编辑最新契约、已修复范围及未真实联调边界；银行未新增CRUD。
 
