@@ -1,6 +1,6 @@
 # 泰乾超级当前背景
 
-2026-10-20 work新版Web登录：按产品《登录管理.md》和当前Swagger编号1–5对接，默认账号认证与身份授权拆分；无默认身份保留认证进入独立选择页，顶部复用身份树切换，新Token清资料并重载菜单。旧loginType/企业角色预查/项目权限缓存退出qianrong主流程，SSO与qianlian保留。当前契约见docs/qianrong-web-login.md，实施及真实联调边界见同日history；59项隔离、15项浏览器和生产构建通过，本轮用户明确不push，仅本地提交。
+2026-10-20 work新版Web登录最新口径：用户追加明确登录页只走1→2→3，成功直接进入系统，不保留独立身份过渡页；无默认身份/授权失败只在原登录页提示并允许重试第3步或更换账号，不调用4/5兜底。登录后顶部和个人中心均保留“切换系统”，共用4/5身份树及切换逻辑，新Token清资料并重载菜单。旧loginType/企业角色预查/项目权限缓存退出qianrong主流程，SSO与qianlian保留。当前契约见docs/qianrong-web-login.md及同日入口修正history；本轮用户明确不push，仅本地提交，初版测试不代替最新交互验收。
 
 2026-10-19 work企业新增/编辑契约修复：从干净master/b3c1c73同名pull后，按用户明确授权将userGroupIds改为多选数组，兼容新旧回填，编辑未改组省略、清空阻断，保留零值/既有关联与大ID精度；补legalIdType。bankList未新增CRUD，未编辑省略保护后台账户。49项隔离、7项浏览器/双尺寸及构建通过，未真实写入/部署；master/4c5f6f2已提交、再次同名pull后push且干净，不延续旧轮不push限制。边界见docs/qianrong-enterprise-contract-audit.md及同日实施记录，不能继续采用10/15旧字段结论。
 

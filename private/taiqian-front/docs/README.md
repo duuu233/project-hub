@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [history/2026-10-20-work-web-login-entry-correction.md](history/2026-10-20-work-web-login-entry-correction.md)：用户追加口径，登录1–3直达，无身份过渡页；4/5在登录后由顶部与个人中心双入口发起，本轮不push。
+
 - [qianrong-web-login.md](qianrong-web-login.md)：2026-10-20新版Web认证/默认授权/身份树/切换五接口、角色与管理员边界、刷新及权限重载；本轮仅本地不push。
 - [history/2026-10-20-work-web-login-refactor.md](history/2026-10-20-work-web-login-refactor.md)：新版登录实施、59项隔离/15浏览器场景、构建与真实联调待办。
 
