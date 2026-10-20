@@ -6,21 +6,21 @@
 
 > 最新交互口径：用户追加明确登录页只使用1→2→3，成功后直接进入系统，不增加“选择登录身份”中间页。4/5用于登录后的系统/身份切换，个人中心与顶部两个入口都保留。
 
-接口来源：[开发环境 Swagger JSON](https://dev-qianrong.ftechain.com/api-qianrong/v2/api-docs)。编号以登录管理摘要1–5为准，实际请求以paths内URL为准。
+接口来源：本轮只读核验 [work 本地后端 Swagger JSON](http://192.168.1.114:8081/api-qianrong/v2/api-docs)，替代本轮之前的开发环境响应快照。编号以登录管理摘要1–5为准，实际请求以paths内URL为准。用户最新要求先接本地后端并恢复正常登录，暂不实施02角色必填等新增角色规则；既有身份树选择及roleId传递保持原样。
 
 ## 五个接口与调用时序
 
 | 编号 | 接口 | 客户端处理 |
 | --- | --- | --- |
 | 1 | GET `/api-qianrong/loginSystemList` | 匿名查询启用系统，读 `data` 数组，使用 SysSystem.id/systemName/systemLogo；显示可选系统，也允许不指定系统 |
-| 2 | POST `/api-qianrong/defaultLogin` | 匿名，只传 username/password；username 去首尾空格，password 按原 Web 规则对 `username_原密码` Base64 编码，不裁剪密码、不发送 orgId/roleId/loginType |
-| 3 | POST `/api-qianrong/defaultAuthorize` | 携带第2步Token，只传可选 systemId；未选择时 body 为 `{}`。读取 `data.contextSelected/context`，不从前端判断账户是否管理员，不传企业、部门或管理员标记 |
+| 2 | POST `/api-qianrong/defaultLogin` | 匿名，只传 username/password；username 去首尾空格，password 按原 Web 规则对 `username_原密码` Base64 编码，不裁剪密码、不发送 orgId/roleId/loginType。读取 `data.token` 和 `data.userType`（00/01/02/03） |
+| 3 | POST `/api-qianrong/defaultAuthorize` | 携带第2步Token，只传可选 systemId；未选择时 body 为 `{}`。读取 `data.contextSelected/context`，不传企业、部门或管理员标记；00按本地后端契约允许授权结果的systemId/userGroupId为空 |
 | 4 | GET `/api-qianrong/loginIdentityTree` | 登录后打开顶部或个人中心“切换系统”弹窗时才查询；不改变会话，不作为登录页默认授权失败的兜底步骤 |
 | 5 | POST `/api-qianrong/changeLogin` | 携带当前Token，提交身份树所选完整身份；成功从 `data` 取新Token，再重建资料、权限和路由 |
 
 默认登录为1→2→3→getInfo→getRouters，成功即进入第一个可访问菜单。第3步更新原Token，不替换Token；第3步无身份或失败时只在登录页显示错误，保留认证状态供用户更换系统重试第3步，或点击“更换账号”清本地认证后重新走第2步；不查询身份树、不调用第5步，也不进入过渡页。
 
-第2和第5接口只认带泛型R的 `data` 字符串，不再兼容顶层token。getInfo/getRouters沿用原格式，资料读顶层user/roles/permissions，菜单读data。请求前缀、Authorization注入及统一code处理沿用现有request；两个匿名接口显式关闭Token。认证POST关闭公共重复提交缓存，页面分别做在途按钮保护，不把编码密码存入sessionObj。
+第2接口现在返回 `R<默认登录认证结果>`，从 `data.token/userType` 读取；不再把整个data对象当Token。第5接口仍是 `R<string>`，继续从data字符串读新Token，不混用两种结构、不兼容顶层token。缺失Token或非法userType时不安装认证会话。getInfo/getRouters沿用原格式，资料读顶层user/roles/permissions，菜单读data。请求前缀、Authorization注入及统一code处理沿用现有request；两个匿名接口显式关闭Token。认证POST关闭公共重复提交缓存，页面分别做在途按钮保护，不把编码密码存入sessionObj。
 
 ## 组件和状态职责
 
@@ -43,6 +43,8 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 ## 待授权、刷新与权限清理
 
 - 认证成功即清除旧用户资料/权限，把待授权UI状态写入sessionStorage的qianrong-authorization-pending，仅保存布尔状态，不另存Token或密码。这只用于刷新后留在登录页重试授权，不新增服务端来源标记、会话版本或权限判断。后端仍独立检查Token、身份及接口权限。
+- 账号类型保留在Store及sessionStorage的qianrong-user-type中，仅用于UI响应校验和待授权刷新重试；只接收00/01/02/03，退出/更换账号及成功切换身份时清除，getInfo返回后以当前user.userType更新。该值不授予角色、菜单或接口权限，也不发送为管理员标识；真实授权仍取后端结果。
+- 本地Swagger明确00默认授权保留企业信息，不要求系统和用户组：contextSelected=true时仍校验orgId及存在的ID字段，但允许00的systemId/userGroupId为null或缺省。01/02/03仍校验完整企业/系统/用户组上下文。新增角色必填规则本轮暂停，未新增角色选择或调用4/5作为登录兜底。
 - 默认授权失败、contextSelected=false或结果格式错误时保留认证状态，在登录页内提示更换系统重试第3步。未授权Token不得因为已存在Cookie而进入旧菜单；刷新或直达业务地址仍回登录页。不用4/5绕开默认授权失败。
 - 登录态加载以infoLoaded标记资料是否读过，不以roles.length作哨兵；无角色管理员不伪造ROLE_DEFAULT。每次会话启动getInfo从后端取，不用本地旧资料缓存恢复权限；空角色及空权限必须替换旧数组，不残留上次身份。
 - changeLogin失败保留原Token、资料和权限；成功先校验新Token并清资料缓存，然后整页进入根路径，重新getInfo/getRouters；不继承旧菜单、标签页或KeepAlive视图，不强行跳回新身份无权访问的旧业务地址。
@@ -60,4 +62,4 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 
 在apps/qianrong启动现有开发命令，选择系统或自动选择，使用真实账号验证1→2→3后直接进入系统。默认授权失败时只在原登录页更换系统重试或更换账号；确认此过程不调用4/5。登录后分别从顶部及个人中心“切换系统”打开身份树，测试角色/管理员选择、成功轮换及失败保留原身份。覆盖刷新、退出后换用户、不同系统下同企业/同ID节点、角色拒绝、部门展示、空身份/空菜单及接口过期。
 
-初版验证及交互变更原因见[首次实施记录](history/2026-10-20-work-web-login-refactor.md)；最新登录直达/双入口口径及本轮实际验证见[入口修正记录](history/2026-10-20-work-web-login-entry-correction.md)。测试身份、Token和接口数据全为合成值，无真实登录/授权/切换或业务写入，不能据此认定真实管理员权限及数据范围已验收。工具链和依赖不升级。
+初版验证及交互变更原因见[首次实施记录](history/2026-10-20-work-web-login-refactor.md)，登录直达/双入口口径见[入口修正记录](history/2026-10-20-work-web-login-entry-correction.md)，本轮本地后端与新响应适配及76项隔离/17浏览器验证见[本地联调准备记录](history/2026-10-20-work-local-login-response.md)。仅Swagger及匿名系统列表GET使用真实本地服务；测试账号、Token、认证/授权/切换响应全为合成值，无真实登录/授权/切换或业务写入，不能据此认定真实账号已登录或权限及数据范围已验收。工具链和依赖不升级。

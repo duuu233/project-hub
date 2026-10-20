@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [history/2026-10-20-work-local-login-response.md](history/2026-10-20-work-local-login-response.md)：开发代理切换work局域网后端，适配认证data.token/userType及00空系统/用户组结果；新增角色规则按用户要求暂停，76项隔离/17浏览器及真实匿名代理读取通过，仅本地不push。
+
 - [history/2026-10-20-work-web-login-entry-correction.md](history/2026-10-20-work-web-login-entry-correction.md)：用户追加口径，登录1–3直达，无身份过渡页；4/5在登录后由顶部与个人中心双入口发起，本轮不push。
 
 - [qianrong-web-login.md](qianrong-web-login.md)：2026-10-20新版Web认证/默认授权/身份树/切换五接口、角色与管理员边界、刷新及权限重载；本轮仅本地不push。

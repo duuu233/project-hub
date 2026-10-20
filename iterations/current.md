@@ -1,4 +1,13 @@
-﻿## 2026-10-20 work｜相册APP iOS支付验单参数与responseData明文日志输出
+﻿## 2026-10-20 work｜qianrong本地后端与新认证响应
+
+- 两仓干净先同名pull成功；按用户最终确认先连接本地后端并恢复登录，新角色规则暂停。业务master/c3bba2d本地提交5文件、干净，连同原两提交领先远端三提交，不push。
+- 交付：开发代理、本地新认证结果及00空上下文适配；保留登录1–3直达及顶部/个人中心双切换入口。实现细节与联调边界由项目当前文档及本轮历史维护，不改其它应用或依赖。
+- 验证：76项隔离、17浏览器、生产构建、索引及差异/隔离通过，真实代理GET本地Swagger/匿名系统列表成功；未真实登录授权或部署，用户重启开发服务后自测。
+- 统筹追加状态与流水并本地提交，不push，保留其它未完任务与历史。
+
+---
+
+## 2026-10-20 work｜相册APP iOS支付验单参数与responseData明文日志输出
 
 - 状态：两仓干净main先显式pull成功；按用户指令支持在APP端内直接输出真实完整的验单请求参数（`receiptData`、`orderNo`、`transactionId`）与后端响应（`responseData`、`exceptionMsg`）明文，用于向后端提供完整真实数据自测，排查“非本平台的凭据”问题。
 - 交付：相册APP main/e1f347e已提交并再次同名pull后push成功，工作区干净。修改`AppleReceiptVerification`记录原始响应与异常；`verify.request`包含完整Base64收据；`verify.response`包含完整原始`responseData`与`exceptionMsg`；放行诊断收集器对该阶段三字段的明文展示且不截断，其他预检和系统异常继续保留脱敏。
