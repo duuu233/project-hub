@@ -6,8 +6,12 @@
 | --- | --- | --- | --- |
 | `home/` | 家里电脑 | `home/projects.local.yaml` | 是 |
 | `work/` | 公司电脑 | `work/projects.local.yaml` | 是 |
-| `ssh/` | SSH 开发机（在服务器内运行 Hub） | `ssh/projects.local.yaml` | 是 |
+| `ssh/` | SSH 环境，等待接入；旧服务器映射已作废 | `ssh/projects.local.yaml`（空映射） | 是 |
 | — | 脱敏模板 | `projects.local.example.yaml` | 是 |
+
+## SSH 当前状态
+
+2026-10-21 用户更换服务器，旧 SSH 项目映射已全部删除，当前为**等待接入**。不得从历史日志、旧服务器路径或旧挂载状态恢复执行；新服务器核实前，声明 SSH 环境的项目任务停止在接入检查。接入要求见 [ssh/README.md](ssh/README.md)。公司和家里映射不受影响。
 
 ## 当前环境如何确定
 

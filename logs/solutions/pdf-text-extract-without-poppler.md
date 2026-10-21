@@ -3,6 +3,8 @@
 > 来源项目：album-app（相册 APP，2026-09-18 读 `docs/相框v2.0.0/` 四份 PDF）
 > 适用：SSH 开发机上要读 PDF（规格书、通讯协议），但装不了系统包
 
+> 2026-10-21：旧 SSH 服务器位置及访问授权已作废，当前等待接入。以下仅保留方法，依赖路径与读写权限必须在新环境重新核实。
+
 ## 痛点
 
 这台开发机上 **没有 `pdftotext` / `pdfinfo`（poppler-utils）**，也没有 `PyPDF2` /
@@ -11,13 +13,13 @@
 
 ## 解法
 
-**只读借用** `/pgdata/pg/work` 下别的项目已经装好的 `pdfjs-dist`（Node，纯 JS，不需要系统库）。
-用户规则允许「只读借用别人目录里的依赖，产物写回 dh 自己的目录」。
+在当前环境已授权的位置核实已有的 `pdfjs-dist`（Node，纯 JS，不需要系统库）。依赖只读使用，产物仅写入已确认的工作区；旧服务器的依赖位置和授权不再适用。
 
 ```js
 // .codex-tmp/frame-pdf/extract.mjs
 import fs from 'node:fs'
-const LIB = '/pgdata/pg/work/.../node_modules/pdfjs-dist/legacy/build/pdf.mjs'
+const LIB = process.env.PDFJS_MODULE_PATH
+if (!LIB) throw new Error('先核实当前环境的依赖路径并设置 PDFJS_MODULE_PATH')
 const pdfjs = await import(LIB)
 pdfjs.GlobalWorkerOptions.workerSrc = LIB.replace('pdf.mjs', 'pdf.worker.mjs')
 

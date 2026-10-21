@@ -1,5 +1,7 @@
 # Project Hub 私有目录管理方案
 
+> SSH状态：等待接入（2026-10-21）。旧服务器映射、路径和挂载结论已作废；本方案仅说明能力，不代表新服务器已配置。接入要求见 [environments/ssh/README.md](environments/ssh/README.md)。
+
 ## 目标
 
 在部分团队协作项目中，我有一些个人使用的文件或目录，例如：
@@ -217,13 +219,7 @@ paths:
   project-b: /Users/me/Code/project-b
 ```
 
-SSH：
-
-```yaml
-paths:
-  project-a: /home/me/projects/project-a
-  project-b: /home/me/projects/project-b
-```
+SSH：等待接入。取得并核实新服务器信息前，不提供可执行映射，不复用旧路径。
 
 ---
 

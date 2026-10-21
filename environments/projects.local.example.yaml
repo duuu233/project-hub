@@ -9,10 +9,6 @@ paths: {}
 #     transport: local
 #     path: '${PROJECTS_ROOT}/admin-web'
 #     default_branch: main  # 可选，本环境覆盖；仅填写核实过的默认分支
-#   api:
-#     transport: ssh
-#     host: dev-server  # ~/.ssh/config 内的别名，不填写密码
-#     path: /srv/projects/api
 
 # 本地 path 也可以是 D:/Work/admin-web、../admin-web 或 ~/Projects/admin-web。
-# 在 SSH 服务器内运行 Hub 时，用 environments/ssh/ 目录、transport: local 和服务器路径。
+# SSH 当前等待接入；取得并核实新服务器信息前，不填写或复用任何旧映射。

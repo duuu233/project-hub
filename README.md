@@ -26,6 +26,8 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | scripts/setup-links.mjs | 私有目录软链接初始化、迁移与解绑脚本 | 是 |
 | .gitignore | 排除机器信息和临时文件 | 是 |
 
+**SSH 状态：等待接入（2026-10-21）。** 旧服务器全部映射及目录、权限、挂载结论已作废，详见 [SSH接入状态](environments/ssh/README.md)。
+
 各环境的实际路径按环境分目录保存：`environments/home/`（家里电脑）、`environments/work/`（公司电脑）、`environments/ssh/`（SSH 开发机）。这些 `projects.local.yaml` 随 Git 同步，每台机器都能看到全部环境的位置；当前环境以你在任务开头声明的为准，细则见 [environments/README.md](environments/README.md)。文件里只放路径，不放任何凭据。第一版直接维护 YAML，无安装依赖，无固定项目数量。
 
 已接入以下项目：
@@ -77,24 +79,14 @@ paths:
 
 映射文件随 Git 同步，每台机器都能看到全部环境，所以**每次发任务先在开头说明当前是哪个环境**。Agent 按你说的环境去查映射和路径，路径对不上就停下来问你是不是环境说错了，不会自己猜。判定细则见 [environments/README.md](environments/README.md)。改映射时只动自己环境那一份。
 
-在 SSH 服务器内部运行 Hub 时，按普通本地项目配置服务器路径。若从公司或家里电脑操作 SSH 项目，在本机映射中使用：
-
-```yaml
-paths:
-  api:
-    transport: ssh
-    host: dev-server
-    path: /srv/projects/api
-```
-
-`api` 需先注册；`dev-server` 是你已有的 SSH config 别名。实际连接和修改需要当前 Agent 环境支持 SSH 操作。本机配置不随 Git 同步，也不要把真实主机信息写入共享 Context。
+SSH 当前等待新服务器接入，旧服务器配置不再提供有效示例。取得新服务器信息后，再核实接入方式、仓库根目录和写入范围，按 [SSH接入状态](environments/ssh/README.md) 逐项建立映射；不复用旧路径和别名。
 
 ## 提交迭代需求
 
 直接描述项目名称或 ID 加需求即可，例如：
 
 ```text
-当前是 ssh。
+当前是 work。
 admin：用户搜索支持手机号和邮箱，修复搜索按钮 loading 不消失。
 api：增加相应搜索条件。
 这次先改好并验证，不提交。
@@ -112,7 +104,7 @@ Agent 会解析当前环境位置，加载上下文，先同步各目标仓库�
 
 **默认不用这套机制。** 所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（花盆 APP / 花盆后台、相册 APP / 后台 / 小程序）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 就提交在各自仓库里，`.codegraph/` 由各自 `.gitignore` 忽略、每台机器本地生成，Hub 不接管、不复制。
 
-**只有正矿（`minerals-admin`）走私有化。** 它是企业团队仓库，私人文档、AI 规则、私有日志和 CodeGraph 索引都不能提交进去，所以这几样的真实文件迁到 Hub 的 `private/minerals-admin/` 统一维护和同步，业务仓库里只留软链接。三台机器（work / home / ssh）的正矿仓库物理路径不同，各自在 `environments/<env>/projects.local.yaml` 里配置自己的路径，`projects.yaml` 的 `private_mounts` 定义三端共用——因此在哪台机器上打开正矿，`docs/`、`logs/`、`AGENTS.md`、`AI_CONTEXT.md`、`.codegraph/` 指向的都是 Hub 里的同一份。唯一不进版本控制的是 CodeGraph 索引库 `codegraph.db`——它是可再生成的派生物，每台机器装好 CLI（`npm i -g @colbymchenry/codegraph`）后本地 `codegraph sync` 自建，避免多机提交同一个 33MB 二进制。新机器（或漏建链接的机器）执行下面的命令补齐链接即可。
+**只有正矿（`minerals-admin`）走私有化。** 它是企业团队仓库，私人文档、AI 规则、私有日志和 CodeGraph 索引都不能提交进去，所以这几样的真实文件迁到 Hub 的 `private/minerals-admin/` 统一维护和同步，业务仓库里只留软链接。现有 work / home 的正矿仓库物理路径不同，SSH 等待新服务器接入；各有效环境在 `environments/<env>/projects.local.yaml` 里配置自己的路径，`projects.yaml` 的 `private_mounts` 定义由已接入环境共用——因此在哪台机器上打开正矿，`docs/`、`logs/`、`AGENTS.md`、`AI_CONTEXT.md`、`.codegraph/` 指向的都是 Hub 里的同一份。唯一不进版本控制的是 CodeGraph 索引库 `codegraph.db`——它是可再生成的派生物，每台机器装好 CLI（`npm i -g @colbymchenry/codegraph`）后本地 `codegraph sync` 自建，避免多机提交同一个 33MB 二进制。新机器（或漏建链接的机器）执行下面的命令补齐链接即可。
 
 在新电脑初始化或需要一键恢复软链接时，执行：
 

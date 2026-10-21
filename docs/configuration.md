@@ -16,6 +16,10 @@
 
 公共注册表是所有环境项目的集合，不能因为公司电脑没有某个项目就把它全局删除。
 
+## SSH 当前接入状态
+
+**等待接入（2026-10-21）。** 旧服务器全部映射已删除，`environments/ssh/projects.local.yaml` 当前为 `paths: {}`。下文的 SSH 字段说明仅保留配置格式能力，不代表已有可用服务器。历史路径、写入范围、挂载和工具位置全部作废；新接入要求见 [SSH环境说明](../environments/ssh/README.md)。本次由用户明确指定清理 ssh 环境，不改变 work、home 的现有映射和项目身份。
+
 ## 环境映射
 
 环境映射保存在 `environments/<env>/projects.local.yaml`，随 Git 同步，各环境的映射彼此可见；当前用哪一份以用户在任务开头声明的环境为准，环境目录名与文件内 `environment` 字段一致（当前使用 `home` 家里电脑、`work` 公司电脑、`ssh` SSH 开发机；新增环境新建目录即可）。当前环境的判定规则见 `environments/README.md`。
@@ -99,17 +103,17 @@ projects:
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
 | work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
-| ssh | `/pgdata/pg/dh/minerals-frontend` | 2026-09-09 已挂载（标准软链接，5 个挂载点全部建立） |
+| ssh | 等待接入，无有效映射 | 旧服务器挂载结论已作废，新服务器尚未核实 |
 | home | 见 `environments/home/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-11 已核实仓库并恢复 5 项挂载（NTFS Junction / SymbolicLink），本机索引已重建；复核使用 `node scripts/setup-links.mjs --env home --project minerals-admin --dry-run` |
 
 泰乾超级已映射 home 与 work，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。
 
-冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。2026-09-09 在 ssh 环境遇到的 `docs/build-opt/`（2026-08-25 打包优化留下的原始日志、指标与脚本，24 个文件 / 601894 字节）即按此并入 `private/minerals-admin/docs/build-opt/`，挂载后在仓库内仍是原来的 `docs/build-opt/` 路径。
+冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。历史上的 `docs/build-opt/` 资料合并仅是迁移案例，不能作为新 SSH 服务器已接入或挂载的证据；旧服务器接入记录已作废。
 
 挂载完成后确认 CodeGraph。CLI 每台机器各装一次（自带运行时，装完提供 `codegraph` 命令）：
 
 ```bash
-npm i -g @colbymchenry/codegraph   # 2026-09-09 在 ssh 装的是 1.6.0
+npm i -g @colbymchenry/codegraph   # 新接入环境需重新核实版本和安装权限
 ```
 
 **索引库 `codegraph.db` 不进版本控制**，与其余项目一致（它们的 `.gitignore` 都忽略整个 `.codegraph/`），已在 `private/minerals-admin/.codegraph/.gitignore` 里忽略；Hub 只跟踪同目录下人工维护的 `task-cache/`。索引是可再生成的派生物：每台机器拉到新代码后自己跑 `codegraph sync` 即可（正矿 629 个文件全量重解析约 16 秒）。这样避免两台机器同时提交 33MB 二进制造成不可合并的冲突，也不让 Hub 仓库被历次快照撑大。
