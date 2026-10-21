@@ -18,7 +18,7 @@
 
 ## SSH 当前接入状态
 
-**等待接入（2026-10-21）。** 旧服务器全部映射已删除，`environments/ssh/projects.local.yaml` 当前为 `paths: {}`。下文的 SSH 字段说明仅保留配置格式能力，不代表已有可用服务器。历史路径、写入范围、挂载和工具位置全部作废；新接入要求见 [SSH环境说明](../environments/ssh/README.md)。本次由用户明确指定清理 ssh 环境，不改变 work、home 的现有映射和项目身份。
+**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前只映射 `flowerpot-app`（`transport: local`），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
 
 ## 环境映射
 
@@ -103,7 +103,7 @@ projects:
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
 | work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
-| ssh | 等待接入，无有效映射 | 旧服务器挂载结论已作废，新服务器尚未核实 |
+| ssh | 新服务器未映射正矿 | 旧服务器挂载结论已作废；新服务器当前只接入花盆APP |
 | home | 见 `environments/home/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-11 已核实仓库并恢复 5 项挂载（NTFS Junction / SymbolicLink），本机索引已重建；复核使用 `node scripts/setup-links.mjs --env home --project minerals-admin --dry-run` |
 
 泰乾超级已映射 home 与 work，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。

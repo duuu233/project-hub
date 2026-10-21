@@ -1,3 +1,13 @@
+## 2026-10-21 ssh｜新服务器接入花盆APP
+
+- 用户声明当前为ssh、接入flowerpot，SSH上目前只有这一个项目。Hub main干净先显式同名pull，由c42c867快进至80a6d09（含旧SSH作废、等待接入），重读变化的规则与环境文档后再改。
+- 只读核实 `/home/cc/dh/flowerpot` 是Git根目录、origin为flowerpot.git、Flutter智能花盆客户端，即花盆APP；复用flowerpot-app和原Context，登记为ssh唯一映射。业务main/2cbf14a与远端一致、干净，未pull或写入；无.codegraph，未初始化。
+- 用户确认新服务器可写范围限 `/home/cc/dh/`，目录外只读，临时产物写Hub的.codex-tmp；已写入AGENTS与ssh环境说明，README、环境说明、配置手册、模板、私有方案及两处旧“等待接入”表述同步。
+- 本机未检出flutter/dart/node/codegraph，暂不能跑花盆APP测试构建或setup-links，安装与否由用户决定。YAML解析、路径身份、文档残留与diff检查通过；注册表、Context、work/home映射未动。
+- 统筹提交到main，push前再次同名pull。详细记录：logs/hub/2026-10-21-ssh-flowerpot-attach.md。
+
+---
+
 ## 2026-10-21 work｜花盆APP纪念日回填、实时DP与OTA工单核对
 
 - 两仓干净先显式同名pull成功，业务起点main/db84e71。业务main/81ca3d5已提交18文件、再次同名pull后push，核验远端一致且工作区干净。

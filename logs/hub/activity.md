@@ -4,6 +4,10 @@
 
 ---
 
+## 2026-10-21｜ssh｜新服务器接入花盆APP
+
+Hub main 先同名pull由c42c867快进至80a6d09并重读规则。只读核实 `/home/cc/dh/flowerpot` 为花盆APP（origin flowerpot.git，main/2cbf14a 与远端一致、干净、无索引），复用 flowerpot-app 登记为 ssh 唯一映射；用户确认可写范围限 `/home/cc/dh/`，写入规则与环境说明，SSH 等待接入表述同步更新。注册表、Context、work/home 映射未动；本机无 flutter/dart/node/codegraph。YAML 解析、路径身份与 diff 检查通过。详见[本轮详情](2026-10-21-ssh-flowerpot-attach.md)。
+
 ## 2026-10-21｜work｜花盆APP纪念日与实时DP交付留痕
 
 登记花盆APP main/81ca3d5已再次同名pull后push，166项专项、Android原生编译及索引/差异/隔离通过。纪念日最新回填、SDK当前值读取与迟到响应保护、OTA工单核对由项目文档维护；旧测试问题、未真机和未iOS编译等边界如实登记。两仓本轮先pull；统筹仅追加迭代与双流水，保留其它任务，不改映射，按当前main提交、再次同名pull后push。
