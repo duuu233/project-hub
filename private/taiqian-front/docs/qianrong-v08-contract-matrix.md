@@ -1,5 +1,9 @@
 # qianrong 当前接口字段对照（2026-10-15 work）
 
+## 2026-10-21 角色与日志更新（优先于旧相关结论）
+
+最新Swagger为299路径/243定义。角色已纳入开发，SysRoleAddOrUpdateDTO/roleSystems及六个角色字段接口已对接；日志路径为logLogin/logOper/logThirdApi，留存读取sys.log.archiveMonths/sys.log.cleanMonths，清理按LOGIN/OPER/THIRD_API。真实scopeList为key/value，configKey为msg月数。第三方菜单已按授权注册，真实第三方接口受数据库del_flag缺失阻塞。完整字段裁决、验证与未联调范围见 [当前角色与日志说明](qianrong-role-logs.md)。下文角色排除、日志未开放及不push只对应当时历史迭代。
+
 ## 2026-10-19 企业契约核对（优先于旧企业结论）
 
 最新Swagger的企业新增和编辑已改为顶层`userGroupIds: array[integer/int64]`，编辑不传保留、不允许空列表；新增`bankList`（编辑不传保留、空列表清除）及`legalIdType`。原`sysOrgGroups`已不在模型中。首次核对b3c1c73仍为旧实现，用户随后授权修复：已改多选、兼容新旧回填、未改省略/清空保护及证件类型；银行未新增CRUD，省略bankList保护原信息。详细证据、实现和验证见[qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)及[同日记录](history/2026-10-19-work-enterprise-group-contract.md)。其它模块未在本次重新全量核对，真实业务未联调。

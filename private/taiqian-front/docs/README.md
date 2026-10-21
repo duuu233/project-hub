@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-role-logs.md](qianrong-role-logs.md)：2026-10-21角色基础/六个角色字段接口，三类日志、动态留存参数和分类清理记录；真实接口边界及已授权第三方菜单。
+- [history/2026-10-21-home-role-logs.md](history/2026-10-21-home-role-logs.md)：本轮home同步、12项契约/32项浏览器验证、菜单注册与直接推送记录。
+
 - [history/2026-10-20-work-web-login-entry-correction.md](history/2026-10-20-work-web-login-entry-correction.md)：用户追加口径，登录1–3直达，无身份过渡页；4/5在登录后由顶部与个人中心双入口发起，本轮不push。
 
 - [qianrong-web-login.md](qianrong-web-login.md)：2026-10-20新版Web认证/默认授权/身份树/切换五接口、角色与管理员边界、刷新及权限重载；本轮仅本地不push。
