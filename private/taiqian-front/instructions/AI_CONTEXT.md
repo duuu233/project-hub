@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-22 work菜单树最新样式：系统、用户组、角色三处统一应用内MenuPermissionTree，纵向目录/页面/按钮、展开折叠、全选全不选、半选、父子联动及搜索；不再使用角色横向权限表。SystemMenuPermissions和PermissionTable仅作原数组/叶子Set事件适配，权限来源、继承上限、DTO及撤权确认不变。详见docs/qianrong-menu-permission-tree.md与同日history，正矿只读参考、不修改。
+
 2026-10-22 work登录展示补充：直接默认显示首个具体可用系统，去掉“自动选择可用系统”，仍能切换；处理按钮统一“登录中”，不展示认证/授权阶段。接口1→2→3和登录后4/5入口保持原流程，空系统列表不虚构授权语义。按默认规则交付，详见docs/qianrong-web-login.md。
 
 2026-10-22 work 当前口径：用户纠正10-15迁移理解，权限按系统→用户组→角色逐层收窄；用户组恢复菜单勾选，以所选系统详情的已授权菜单为上限，按groupsSystemMenuDTOList[{systemId,menuList}]保存。新关联默认继承，编辑保留勾选、撤权确认，失败/缺数据阻断。角色只使用登录用户用户组菜单树，不回退系统全量菜单，不补授树外父节点，旧越界授权确认后移除，空树不覆盖保存。详见docs/qianrong-group-menu-inheritance.md及同日history。本轮按默认规则提交推送，旧“用户组只关联系统/不push”不适用。

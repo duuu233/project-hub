@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-menu-permission-tree.md](qianrong-menu-permission-tree.md)：2026-10-22三模块统一正矿式目录树，节点联动/半选/批量操作与原权限模型适配。
+- [history/2026-10-22-work-menu-tree-unification.md](history/2026-10-22-work-menu-tree-unification.md)：本轮参考版本、实施与32项测试/25组浏览器/三尺寸构建记录。
+
 - [history/2026-10-22-work-login-presentation.md](history/2026-10-22-work-login-presentation.md)：登录系统默认显示具体名称、处理按钮统一“登录中”，及本轮授权合并统筹记录。
 
 - [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)：2026-10-22系统→用户组→角色菜单继承；恢复用户组menuList、逐系统交互、失败保护与角色上限校验，覆盖10-15“用户组仅关联系统”旧结论。
