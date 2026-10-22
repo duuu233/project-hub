@@ -1,3 +1,13 @@
+## 2026-10-22 work｜正矿清报关附件上传可见性
+
+- 两仓已先同步；业务从干净 feature-v1.8.5 按用户要求切 master 并快进到 2f044f50，再新建 bill-lading-customs-upload-visible（用户要求不带 codex/）。不合并 master，不修改其它分支。
+- 仅调整 CustomsInfo 五类附件的 disabled 绑定：解除行级编辑标记造成的隐藏，保留详情只读、必填配置、其它字段和 AI 填充权限；共享上传组件与请求不变。
+- 72 组真实模板/桩组件回归通过；类型检查基线与当前相同 28 项错误、完整输出一致；CodeGraph、差异与忽略检查通过。未完整构建、未真后端上传，需测试数据验收服务端权限。
+- 具体规则及历史校验边界见 private/minerals-admin/docs/bill-lading-customs-uploads.md；实施记录见 private/minerals-admin/logs/2026-10-22-bill-lading-customs-uploads.md。业务及统筹分别提交、推送；保留原有任务历史。
+- 业务 8ffbd201 已首次推送到 origin/bill-lading-customs-upload-visible，工作区干净且远端一致；未合并 master。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序搜索与连接后设备ID读取方式对比（只读）
 
 - 用户要求按文档再次确认搜索阶段与连接后设备ID的读取方式并给结论，本轮不改业务代码。两仓main干净先显式同名pull均已最新（Hub 6127229、业务e04198d，即撤回后的状态）；无.codegraph，按设备身份架构文档、AI_CONTEXT、08-04/08-11变更记录与源码核对。
