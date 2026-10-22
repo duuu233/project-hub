@@ -39,6 +39,14 @@
 
 ---
 
+## 2026-10-22 ssh｜相册APP补齐圆屏预览
+
+- 同会话：用户要求补上小程序10-16圆屏预览（裁圆、禁用横竖向）。两仓先显式同名pull均已最新（APP main/515fc3e）。
+- APP main/17bd6fd：预览页shapeType==1（只认数字）时静态预览与编辑取景框ClipOval裁圆、拖拽阴影圆形，竖向/横向置灰不高亮不可点、_setOrientation直接返回；导出/烘焙/导出角/手势/原图不变。未写页面级用例（初始化含网络预热与图片解码，本机不可验证）。同步记录追加、docs索引、AI_CONTEXT、APP_VS_MINIPROGRAM更新。独立预览Demo页未做。
+- 验证：无Flutter，测试/分析未运行，括号平衡与diff检查通过；未编译、未真机。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序新设备相关改动同步到相册APP
 
 - 用户要求把相册小程序近期改动同步到相册APP：新设备、提示未连接、设备图、设备ID（APP已有两张新图）。三仓先显式同名pull均已最新（小程序main/809ad72、APP main/db07c36）；无.codegraph、无Flutter。
