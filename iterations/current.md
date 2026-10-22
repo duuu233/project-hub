@@ -18,6 +18,22 @@
 
 ---
 
+## 2026-10-22 ssh｜相册APP iOS查单诊断记录原始返回
+
+- 同会话：用户要求在查单诊断中加入getPayQuery原始返回（payState、exceptionMsg、错误信息）。两仓main先显式同名pull均已最新。
+- 业务main/3c945fd：苹果查单改为返回AppleOrderQuery，delivery.order.response在orderNo/orderPaid后附payState原值/payNo/exceptionMsg，查单失败附errorType/code/message；判定口径（payState=1）、失败按未支付、不重复验单不变，PayPal路径未改。诊断白名单加payState/payNo/exceptionMsg；新增用例；IOS_IN_APP_PURCHASE诊断表、history记录、docs索引、AI_CONTEXT同步。
+- 验证：无Flutter，测试/分析未运行，未编译iOS、未真机。业务再次同名pull后push。统筹按main提交，push前再次同名pull。
+
+---
+
+## 2026-10-22 ssh｜相册APP iOS支付卡“结果确认中”日志分析（只读）
+
+- 用户贴出订单2026102265350540002900223（xb1/2500星币）完整诊断日志，页面停在“支付结果确认中，请重新确认”，后端称未收到setApplePayVerifyReceipt。两仓main先显式同名pull均已最新（相册APP 78b8537）；读IOS_IN_APP_PURCHASE.md与10-22诊断记录、apple_iap/star_coin_api源码。未改代码。
+- 结论：验单已到达后端——日志有POST https://api.boltfox.cn/Client/Pay/setApplePayVerifyReceipt，HTTP200/retCode200/882ms，返回含本交易2000001255421119的苹果Sandbox明细（status0、responseMatches=true，Apple request_date 08:09:06 GMT=北京16:09:06），余额6065→8565恰为+2500。客户端四项交付条件中只有getPayQuery(orderNo,payType=2).payState=1不满足（8次均orderPaid=false），故停在delivery_unconfirmed、未finish交易。queryPay异常吞成null、日志只记布尔，无法区分payState非1与查单报错。
+- 建议：后端按订单号与时间核对验单访问日志（排查查错环境/服务）、验单发币后是否更新订单支付状态、该单getPayQuery实际返回；修正后原订单点“重新确认”只查单与余额、不重复POST不再扣款。可选前端改进：delivery.order.response记录原始payState/exceptionMsg/错误。统筹仅追加本记录。
+
+---
+
 ## 2026-10-22 ssh｜花盆APP在桩等待雨停置灰、重建docs导航与倒计时/提醒检查
 
 - 同会话：用户问上轮报告在哪（仅在对话回复中，未落文件），确认①雨停等待一起置灰②重建docs/README.md，并要求只检查不改代码：工作时间倒计时（位置、重置、显隐）、雨滴回充提示、陷坑脱困提醒、抬起/落地提醒是否落实，输出.md。两仓先同名pull均已最新。
