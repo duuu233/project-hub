@@ -1,3 +1,12 @@
+## 2026-10-22 ssh｜相册小程序绑定匹配产品按broadcastId加权
+
+- 同会话：用户贴出产品列表实际返回（EB-169/18、EC-370/17、EF6-589/15、EF6-370/9；EB-169的broadcastId与productName带尾随空格），并指向`/Client/Product/getProductList`，按“用该接口broadcastId匹配”理解实施。两仓main先显式同名pull均已最新。
+- 分析：设备图对空格已兼容。原productScore只比产品名：EC-370屏型若报0x01，型号同时命中EF6-370平分，靠列表顺序；广播名带后缀或缺失时全0分落到列表第一个（EB-169）。
+- 业务main/809ad72：广播名name/localName包含产品broadcastId（去空格、不区分大小写）加10分；新增bind-product-match用例（真实列表打乱顺序）；变更记录、docs索引、AI_CONTEXT同步，建议后台清理尾随空格。剩余缺口：广播完全无设备名时仍按型号打分，需实机绑定核对。
+- 验证：无node测试未运行；git diff --check通过；未真机。业务再次同名pull后push，远端一致干净。统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序设备图改用列表下发broadcastId
 
 - 同会话：用户确认设备列表接口返回productId和broadcastId。两仓main干净先显式同名pull均已最新（Hub ee106b0、业务cce9ccb）。

@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-22｜album-miniapp｜ssh｜main｜绑定匹配产品按broadcastId加权
+
+809ad72：bindDevice打分新增广播名命中产品列表broadcastId加10分，解决EC-370与EF6-370平分靠顺序、广播名带后缀落到首个产品的问题；新增真实产品列表用例，文档同步，同名pull后push。无node测试未运行，未真机；广播无设备名时仍待实机核对。
+
+---
+
 ## 2026-10-22｜album-miniapp｜ssh｜main｜设备图改用列表下发broadcastId
 
 用户确认设备列表返回productId与broadcastId；a7b081a去掉按productImg猜产品，记录自带broadcastId优先、缺失按productId回查产品列表，用例与项目文档同步，同名pull后push。无node测试未运行，未真机；绑定匹配产品未用broadcastId仍待实测核对。
