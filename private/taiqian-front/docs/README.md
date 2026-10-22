@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [history/2026-10-22-work-login-presentation.md](history/2026-10-22-work-login-presentation.md)：登录系统默认显示具体名称、处理按钮统一“登录中”，及本轮授权合并统筹记录。
+
 - [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)：2026-10-22系统→用户组→角色菜单继承；恢复用户组menuList、逐系统交互、失败保护与角色上限校验，覆盖10-15“用户组仅关联系统”旧结论。
 - [history/2026-10-22-work-group-menu-inheritance.md](history/2026-10-22-work-group-menu-inheritance.md)：本轮同步、20项契约/17组浏览器/构建验证及真实联调边界。
 

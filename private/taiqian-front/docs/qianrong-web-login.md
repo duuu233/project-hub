@@ -1,6 +1,8 @@
 # qianrong Web 登录与身份授权
 
 > 状态：Active；2026-10-20 work 核验。
+
+2026-10-22登录展示更新：系统列表成功后直接选中并显示第一个具体系统名称，不再提供“自动选择可用系统”选项；用户仍可切换具体系统。刷新列表保留仍有效的已选系统，失效时切到最新首项，保留0和int64字符串ID。没有可用系统时不编造名称，继续保留后台可选systemId的既有管理员语义；请求失败仍禁止提交并可重试。点击登录后，认证/默认授权及进入页面期间按钮统一显示“登录中”，不显示“正在认证并授权”。接口步骤与授权校验不变，本轮按默认规则提交推送。
 > 依据：产品提供的《登录管理.md》与同日开发环境 Swagger。本文替代旧企业类型、登录前企业/角色选择及首页项目权限缓存的 Web 口径；不改 qianlian 或后端保留的 SSO/H5 接口。
 > 本轮按用户要求仅本地交付，不 push；真实账号及各类管理员/用户数据范围尚待联调。
 
@@ -12,7 +14,7 @@
 
 | 编号 | 接口 | 客户端处理 |
 | --- | --- | --- |
-| 1 | GET `/api-qianrong/loginSystemList` | 匿名查询启用系统，读 `data` 数组，使用 SysSystem.id/systemName/systemLogo；显示可选系统，也允许不指定系统 |
+| 1 | GET `/api-qianrong/loginSystemList` | 匿名查询启用系统，读 `data` 数组，使用 SysSystem.id/systemName/systemLogo；有可选项时默认选中具体首项，不展示自动选项；空列表仍按后台可选systemId契约处理 |
 | 2 | POST `/api-qianrong/defaultLogin` | 匿名，只传 username/password；username 去首尾空格，password 按原 Web 规则对 `username_原密码` Base64 编码，不裁剪密码、不发送 orgId/roleId/loginType。读取 `data.token` 和 `data.userType`（00/01/02/03） |
 | 3 | POST `/api-qianrong/defaultAuthorize` | 携带第2步Token，只传可选 systemId；未选择时 body 为 `{}`。读取 `data.contextSelected/context`，不传企业、部门或管理员标记；00按本地后端契约允许授权结果的systemId/userGroupId为空 |
 | 4 | GET `/api-qianrong/loginIdentityTree` | 登录后打开顶部或个人中心“切换系统”弹窗时才查询；不改变会话，不作为登录页默认授权失败的兜底步骤 |
@@ -60,6 +62,6 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 
 ## 本地验收
 
-在apps/qianrong启动现有开发命令，选择系统或自动选择，使用真实账号验证1→2→3后直接进入系统。默认授权失败时只在原登录页更换系统重试或更换账号；确认此过程不调用4/5。登录后分别从顶部及个人中心“切换系统”打开身份树，测试角色/管理员选择、成功轮换及失败保留原身份。覆盖刷新、退出后换用户、不同系统下同企业/同ID节点、角色拒绝、部门展示、空身份/空菜单及接口过期。
+在apps/qianrong启动现有开发命令，确认直接显示具体可用系统并可切换，使用真实账号验证1→2→3后直接进入系统。默认授权失败时只在原登录页更换系统重试或更换账号；确认此过程不调用4/5。登录后分别从顶部及个人中心“切换系统”打开身份树，测试角色/管理员选择、成功轮换及失败保留原身份。覆盖刷新、退出后换用户、不同系统下同企业/同ID节点、角色拒绝、部门展示、空身份/空菜单及接口过期。
 
 初版验证及交互变更原因见[首次实施记录](history/2026-10-20-work-web-login-refactor.md)，登录直达/双入口口径见[入口修正记录](history/2026-10-20-work-web-login-entry-correction.md)，本轮本地后端与新响应适配及76项隔离/17浏览器验证见[本地联调准备记录](history/2026-10-20-work-local-login-response.md)。仅Swagger及匿名系统列表GET使用真实本地服务；测试账号、Token、认证/授权/切换响应全为合成值，无真实登录/授权/切换或业务写入，不能据此认定真实账号已登录或权限及数据范围已验收。工具链和依赖不升级。
