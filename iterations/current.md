@@ -39,6 +39,14 @@
 
 ---
 
+## 2026-10-22 ssh｜相册APP正式包隐藏支付诊断面板
+
+- 用户：iOS支付流程已通、马上发正式包，去掉确认购买页底部调试日志模块。两仓先显式同名pull均已最新（APP main/17bd6fd）。
+- APP main/d845231：诊断面板（含复制日志、receiptData开关、清除沙盒购买记录）改为仅!kReleaseMode显示，release（正式包与TestFlight）不显示；release下controller不再在内存保留诊断行。购买/重新确认/重新下单/交付判定未改；诊断代码与用例保留（测试为debug模式仍覆盖）。IOS_IN_APP_PURCHASE、AI_CONTEXT、history记录、docs索引同步。
+- 验证：无Flutter，测试未运行，未编译iOS、未真机。需Mac打release包确认面板消失并做正式环境购买回归。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册APP补齐圆屏预览
 
 - 同会话：用户要求补上小程序10-16圆屏预览（裁圆、禁用横竖向）。两仓先显式同名pull均已最新（APP main/515fc3e）。
