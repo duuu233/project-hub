@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-10-22 ssh｜相册APP iOS查单诊断记录原始返回
+
+- 同会话：用户要求在查单诊断中加入getPayQuery原始返回（payState、exceptionMsg、错误信息）。两仓main先显式同名pull均已最新。
+- 业务main/3c945fd：苹果查单改为返回AppleOrderQuery，delivery.order.response在orderNo/orderPaid后附payState原值/payNo/exceptionMsg，查单失败附errorType/code/message；判定口径（payState=1）、失败按未支付、不重复验单不变，PayPal路径未改。诊断白名单加payState/payNo/exceptionMsg；新增用例；IOS_IN_APP_PURCHASE诊断表、history记录、docs索引、AI_CONTEXT同步。
+- 验证：无Flutter，测试/分析未运行，未编译iOS、未真机。业务再次同名pull后push。统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册APP iOS支付卡“结果确认中”日志分析（只读）
 
 - 用户贴出订单2026102265350540002900223（xb1/2500星币）完整诊断日志，页面停在“支付结果确认中，请重新确认”，后端称未收到setApplePayVerifyReceipt。两仓main先显式同名pull均已最新（相册APP 78b8537）；读IOS_IN_APP_PURCHASE.md与10-22诊断记录、apple_iap/star_coin_api源码。未改代码。
