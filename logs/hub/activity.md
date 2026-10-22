@@ -2,6 +2,12 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-22｜ssh｜相册小程序设备图跟进留痕
+
+两仓先同名pull均已最新；登记相册小程序main/a7b081a（改用列表下发broadcastId、去掉productImg猜测）已推送及测试未运行边界。统筹仅追加迭代与两类流水，不改映射或Context，按main提交、再次同名pull后push。
+
+---
+
 ## 2026-10-22｜ssh｜接入相册APP与相册小程序交付留痕
 
 Hub main先同名pull快进至02e9881。只读核实 `/home/cc/dh/flutter` 为相册APP（flutter.git，main/78b8537最新、干净、无索引），复用album-app与原Context登记为ssh第三项映射，相关环境说明与规则文档同步；注册表、Context、work/home映射未动，YAML解析与diff检查通过，详见[本轮详情](2026-10-22-ssh-album-app-attach.md)。同轮登记相册小程序main备份分支、快进合并main-test及设备图按机型区分交付。按main提交，push前再次显式同名pull。

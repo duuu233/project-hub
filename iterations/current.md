@@ -1,3 +1,11 @@
+## 2026-10-22 ssh｜相册小程序设备图改用列表下发broadcastId
+
+- 同会话：用户确认设备列表接口返回productId和broadcastId。两仓main干净先显式同名pull均已最新（Hub ee106b0、业务cce9ccb）。
+- 业务main/a7b081a：记录自带broadcastId直接用；缺失时（详情接口是否带未核对、旧缓存）仍按productId回查产品列表；去掉无productId时按唯一productImg猜产品的逻辑。用例改为列表实际形态（productId+broadcastId同下发）与“不按产品图猜”；变更记录、docs索引、AI_CONTEXT、接口矩阵列表出参同步，原待确认项关闭。
+- 验证：无node测试未运行；git diff --check、信息隔离检查通过；未真机。仍待确认：bindDevice按名称/型号/尺寸匹配产品未用broadcastId，新机型需实际绑定核对。再次同名pull后push，远端一致干净。统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册APP接入、相册小程序main备份合并与设备图按机型区分
 
 - 同步：Hub main显式同名pull快进至02e9881；相册小程序当时停在main-test，同名pull快进至3f91803（用户新增两张设备图）；相册APP main/78b8537、花盆APP main/6c5e898已最新。三业务仓均无.codegraph；服务器仍无node/flutter。
