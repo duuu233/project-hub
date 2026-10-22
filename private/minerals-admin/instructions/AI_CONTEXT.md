@@ -4,6 +4,8 @@
 > 作用：供 AI 和维护者快速进入项目。详细说明见 `docs/`。  
 > 存储：本文件、AGENTS.md、docs/ 和 .codegraph/ 的真实内容由私人 Hub 的 private/minerals-admin/ 管理，团队项目通过链接访问；公司、家里和 SSH 各自映射，通过 Hub Git 同步。每次改动都核对并维护这份文档；若与代码冲突，以当前工作树和已同步的 CodeGraph 为准。
 
+仓储详情当前规则（2026-10-22）：四类详情复用现有顶部/侧栏组件，通过 `WarehouseUi/detail-cards.ts` 投影同一次原接口响应；刷新生命周期由 `useWarehouseDetailRequest.ts` 管理，不改变保存模型。设计链接、字段及真实会话待验边界见 [warehouse-figma-ui.md](../docs/warehouse-figma-ui.md)。库存三模块仍只有列表。
+
 ## 1. 项目概览
 
 `minerals-frontend` 是花盆项目的企业级 Web 前端。业务覆盖贸易订单、进口采购、提单与物流、出入库、库存、结算开票、资产融资、质押、应收应付、基础资料、系统权限和工作台。
