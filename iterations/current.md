@@ -39,6 +39,15 @@
 
 ---
 
+## 2026-10-22 ssh｜相册小程序新设备相关改动同步到相册APP
+
+- 用户要求把相册小程序近期改动同步到相册APP：新设备、提示未连接、设备图、设备ID（APP已有两张新图）。三仓先显式同名pull均已最新（小程序main/809ad72、APP main/db07c36）；无.codegraph、无Flutter。
+- 定位：APP广播解析遇屏型0x04整条丢弃，搜索列表退到remoteId（安卓倒序/iOS不显示）；设备记录按宽高推屏型、400×400回落5.89寸，型号防串台与真机屏型比对失败；投屏只认0x01型号表读出0×0报“未连接”，失败页把unsupported也归“未连接”；六处写死同一张设备图；绑定匹配产品不看broadcastId。
+- APP main/515fc3e：广播只认6字节原序、屏型不认识记0、电量越界置空；搜索ID只显示广播6字节否则--；DeviceItem新增productId/broadcastId/shapeType与screenCode（新尺寸为0不参与型号否决），连接/详情/投屏/绑定判重/OTA改用；新增projection_device（移植resolveTransferInfo：ID一致才用列表宽高、容量未知用IMG_MASK上限96、配置错误不报未连接），预览改用列表宽高；新增DeviceThumb覆盖七处设备图（含命名弹窗三入口）；绑定匹配broadcastId加10分；失败页unsupported中文显示具体原因、其它语言通用说明。改写广播解析用例，新增设备图/screenCode与投屏尺寸用例；BLE身份文档、history记录、docs索引、AI_CONTEXT同步。
+- 未同步：小程序10-16圆屏预览裁圆与横竖向禁用（本次未列）；freshOnly（APP不共享扫描会话）。验证：无Flutter，测试/分析未运行，未编译、未真机。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜花盆APP倒计时检查报告补充暂停与雨滴回充文字来源
 
 - 同会话：用户要求在倒计时/雨滴/陷坑/抬起检查报告中补充倒计时暂停场景，并确认“雨滴回充中”不是APP改文字而是涂鸦给什么显示什么。两仓先显式同名pull均已最新。只改报告，未改代码。
