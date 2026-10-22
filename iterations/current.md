@@ -1,3 +1,13 @@
+## 2026-10-22 work｜正矿1.8.5提单冲突与预警统计
+
+- 当前 feature-v1.8.5/8a2ba1fa 正在合并 master/2f044f50，仅提单 handleDetail.vue 冲突；按用户要求保留1.8.5新版布局、AI侧栏和关联订单，同时保留 master 已交付的移交前详情回读与子表重建，完成合并 beae2f4e。
+- 远端同名分支另有三项新提交；用户明确允许再合并远端最新代码并推送。显式 pull --no-rebase 合并 3506bbf5 为 2204a984，保留最新按ID详情洞察等改动，再移除库存存放预警“已超期批数”整卡，其余三卡、明细与请求不变。
+- 业务5d50fdf2已提交，push前显式同名pull成功后push，远端一致；未合并回master。清除构建引入的无关自动导入注释差异。
+- 提单11组隔离回归、真实统计组件SSR/三卡/其它六类统计不变、SFC编译通过；快速构建46.6秒成功；类型检查与3506bbf5基线相同24项既有错误，无本轮新增。未真实后端移交、付款或部署。
+- 项目长期文档及实施记录已维护，详见 private/minerals-admin/logs/2026-10-22-feature185-bill-conflict-alert-card.md；统筹记录不覆盖原有任务历史。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序绑定匹配产品按broadcastId加权
 
 - 同会话：用户贴出产品列表实际返回（EB-169/18、EC-370/17、EF6-589/15、EF6-370/9；EB-169的broadcastId与productName带尾随空格），并指向`/Client/Product/getProductList`，按“用该接口broadcastId匹配”理解实施。两仓main先显式同名pull均已最新。

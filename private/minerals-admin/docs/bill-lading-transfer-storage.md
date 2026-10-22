@@ -2,6 +2,8 @@
 
 核对日期：2026-10-16。实现入口：`src/views/bill-lading/bill-lading-list/template/handleDetail.vue`。
 
+2026-10-22 feature-v1.8.5 合并确认：保留 1.8.5 的 `detail-body`、AI 侧栏、关联订单 `Order` 及按提单 ID 获取详情洞察的最新接口；同时保留以下移交流程。`keep-alive` 在原布局内部增加 `detailVersion` key，`getDetail` 必须返回有效详情主体，否则移交会误判失败。不能整文件选 master，也不能只选 1.8.5 而丢失回读与子表重建逻辑。
+
 ## 调用顺序
 
 仅点击「移交仓储」（`handleSubmit('remove')`）执行：
