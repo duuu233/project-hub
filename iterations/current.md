@@ -1,3 +1,14 @@
+## 2026-10-22 ssh｜相册APP接入、相册小程序main备份合并与设备图按机型区分
+
+- 同步：Hub main显式同名pull快进至02e9881；相册小程序当时停在main-test，同名pull快进至3f91803（用户新增两张设备图）；相册APP main/78b8537、花盆APP main/6c5e898已最新。三业务仓均无.codegraph；服务器仍无node/flutter。
+- ①接入相册APP：`/home/cc/dh/flutter`核实为flutter.git、与work/home的album-app同一目录名，复用album-app与原Context，登记为ssh第三项映射；ssh环境说明、AGENTS、README、环境目录说明、配置手册与私有方案同步。详见logs/hub/2026-10-22-ssh-album-app-attach.md。
+- ②相册小程序分支（用户要求）：原main/e04198d另存为新分支`main-backup-20261022`并推送；main-test严格领先main，main以`merge --ff-only`快进到3f91803（无合并提交）后push；main-test保留，main仍为默认开发分支。
+- ③设备图按机型（用户确认对应：EB-169圆屏→circle图、EC-370→rectangle图，其余原图；用户原文写反，按图形与产品圆屏口径澄清；只改小程序）：业务main/cce9ccb新增`utils/device-thumb.js`，六处（首页设备卡、我的设备、详情、搜索、命名弹窗、投屏选设备）统一取`thumb`。判断：记录broadcastId→搜索结果广播名→shapeType=1兜底圆屏；用户起的名字不参与。已绑定记录不带broadcastId，api按productId（无则唯一productImg）回查产品列表补上，列表会话缓存、失败静默不缓存、最多等3秒；bindDevice写入匹配产品的broadcastId。新增device-thumb用例，home-entries③断言改到新写法（判据不变），两处沙箱用例补注入；项目变更记录、docs索引、AI_CONTEXT同步。
+- 验证：无node，测试未运行；git diff --check、括号平衡对比、信息隔离检查通过；未开发者工具/真机。待确认：设备列表接口是否带productId（不带且产品图重复时EC-370在列表显示原图、详情正确）；bindDevice的productScore未用broadcastId，新机型可能匹配错产品，需实际绑定核对后端记录。相册APP同两张图已入库但未改代码（用户选只改小程序）。
+- 统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 work｜相册APP支付诊断与receiptData显示开关
 
 - 两仓先检查当前main并同步；统筹分叉经用户明确允许保留双方记录合并，a2c8cea保留本地正矿与远端相册小程序记录，未更换分支。

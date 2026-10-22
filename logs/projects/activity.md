@@ -2,6 +2,18 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-22｜album-miniapp｜ssh｜main｜main备份、合并main-test与设备图按机型区分
+
+用户要求先备份main再合并main-test：原main/e04198d推为新分支main-backup-20261022，main快进到main-test/3f91803后push，main-test保留。随后在main实现设备图按机型区分（EB-169圆屏图、EC-370矩形图、其余原图，六处统一走utils/device-thumb.js，已绑定记录按产品列表broadcastId判断），用例与项目文档同步，cce9ccb同名pull后push，远端一致干净。服务器无node测试未运行，未真机；列表接口是否带productId与绑定匹配产品是否正确待核对。
+
+---
+
+## 2026-10-22｜album-app｜ssh｜main｜新服务器接入
+
+`/home/cc/dh/flutter` 核实为相册APP后登记ssh映射，业务仓main/78b8537已最新，未改动。
+
+---
+
 ## 2026-10-22｜album-app｜work｜main｜支付诊断收据显示开关
 
 业务从b311383实现默认隐藏receiptData的开关及显示/复制联动，补复制失败反馈、验单HTTP与原生错误诊断及排队手动重验保留；项目文档同步。六组定向测试115项通过，静态检查无error/warning或新增info，保留1条既有PayPal提示；索引与差异检查通过。未Swift/iOS编译、真机或真实支付调用，需重新打包验收，后端产品不符与Apple21104尚未证明解决。99ebf37已提交，同名pull后push，远端一致干净。统筹经授权合并保留双方历史并记录交付。
