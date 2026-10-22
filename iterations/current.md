@@ -1,3 +1,13 @@
+## 2026-10-22 ssh｜新服务器接入相册小程序
+
+- 用户声明当前为ssh，`/home/cc/dh/`下新引入photo-album即相册小程序，要求纳入管理。Hub main干净先显式同名pull，由f870623快进至3a64f28（他处正矿交付、文档改名与work分叉合并），重读后再改。
+- 只读核实 `/home/cc/dh/photo-album` 是Git根目录、origin为photo-album.git、微信小程序结构，work/home映射同为photo-album，即相册小程序；复用album-miniapp和原Context，登记为ssh第二项映射。业务main/70d4660与远端一致、干净，无需pull，未写入；无.codegraph，未初始化。
+- ssh环境说明、AGENTS、README、环境目录说明、配置手册与私有方案中“只映射花盆APP”同步为花盆APP、相册小程序。
+- 本机仍未检出node/codegraph，小程序`tests/*.test.js`暂不能跑，安装与否由用户决定。YAML解析、路径身份、文档残留与diff检查通过；注册表、Context、work/home映射未动。
+- 统筹提交到main，push前再次同名pull。详细记录：logs/hub/2026-10-22-ssh-album-miniapp-attach.md。
+
+---
+
 ## 2026-10-22 work｜正矿仓储详情卡片接现有接口
 
 - 两仓前置同步完成：正矿feature-v1.8.5/b243be14干净同名pull；统筹初有另一任务正在合并，按用户选择等其完成，无接手/覆盖，main/92ff4ca干净后显式pull成功再修改。

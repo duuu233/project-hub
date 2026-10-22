@@ -26,7 +26,7 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | scripts/setup-links.mjs | 私有目录软链接初始化、迁移与解绑脚本 | 是 |
 | .gitignore | 排除机器信息和临时文件 | 是 |
 
-**SSH 状态：新服务器已接入（2026-10-21），当前仅映射花盆APP，可写范围限 `/home/cc/dh/`。** 旧服务器全部映射及目录、权限、挂载结论已作废，详见 [SSH环境说明](environments/ssh/README.md)。
+**SSH 状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序，可写范围限 `/home/cc/dh/`。** 旧服务器全部映射及目录、权限、挂载结论已作废，详见 [SSH环境说明](environments/ssh/README.md)。
 
 各环境的实际路径按环境分目录保存：`environments/home/`（家里电脑）、`environments/work/`（公司电脑）、`environments/ssh/`（SSH 开发机）。这些 `projects.local.yaml` 随 Git 同步，每台机器都能看到全部环境的位置；当前环境以你在任务开头声明的为准，细则见 [environments/README.md](environments/README.md)。文件里只放路径，不放任何凭据。第一版直接维护 YAML，无安装依赖，无固定项目数量。
 
@@ -79,7 +79,7 @@ paths:
 
 映射文件随 Git 同步，每台机器都能看到全部环境，所以**每次发任务先在开头说明当前是哪个环境**。Agent 按你说的环境去查映射和路径，路径对不上就停下来问你是不是环境说错了，不会自己猜。判定细则见 [environments/README.md](environments/README.md)。改映射时只动自己环境那一份。
 
-SSH 新服务器上 Hub 在服务器内部运行，项目按普通本地项目配置（`transport: local`）；当前只接入花盆APP，其他项目由用户提供位置后按 [SSH环境说明](environments/ssh/README.md) 逐项核实再登记，不复用旧服务器路径和别名。
+SSH 新服务器上 Hub 在服务器内部运行，项目按普通本地项目配置（`transport: local`）；当前接入花盆APP、相册小程序，其他项目由用户提供位置后按 [SSH环境说明](environments/ssh/README.md) 逐项核实再登记，不复用旧服务器路径和别名。
 
 ## 提交迭代需求
 

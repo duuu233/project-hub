@@ -1,14 +1,15 @@
 # SSH 环境
 
-**状态：新服务器已接入（2026-10-21），当前仅映射花盆APP。**
+**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序。**
 
-2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目；其他项目后续再定。
+2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目花盆APP；2026-10-22 用户在 `/home/cc/dh/` 下引入 photo-album，核实后作为相册小程序接入。其他项目后续再定。
 
 ## 当前映射
 
 | 项目 | project_id | 路径 | 默认分支 |
 | --- | --- | --- | --- |
 | 花盆APP | flowerpot-app | `/home/cc/dh/flowerpot` | main |
+| 相册小程序 | album-miniapp | `/home/cc/dh/photo-album` | main |
 
 Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（Hub 与项目同在服务器内）。
 
@@ -18,11 +19,12 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 临时产物写在 `/home/cc/dh/project-hub/.codex-tmp/`（已 gitignore）。
 
-## 本机工具状态（2026-10-21 接入时核实）
+## 本机工具状态（2026-10-21 接入时核实，2026-10-22 复核）
 
 - 未检出 `flutter`、`dart`、`node`、`codegraph` 命令；有 `python3`（含 PyYAML）。
-- 因此暂不能在本机运行花盆APP的 Flutter 测试/构建，也不能运行 `scripts/setup-links.mjs`；是否安装由用户决定，安装位置同样受上面的可写边界约束。
-- 花盆APP 仓库内没有 `.codegraph/`，是否建索引由用户决定。
+- 因此暂不能在本机运行花盆APP的 Flutter 测试/构建，也不能运行相册小程序的 `tests/*.test.js`（纯 node 脚本）和 `scripts/setup-links.mjs`；是否安装由用户决定，安装位置同样受上面的可写边界约束。
+- 花盆APP、相册小程序仓库内都没有 `.codegraph/`（两仓 `.gitignore` 均已忽略），是否建索引由用户决定。
+- Git 提交作者来自服务器用户级配置（`duun`），两仓都没有仓库级 `user.name` / `user.email`，不需要另配。
 
 ## 约束
 
