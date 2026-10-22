@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-10-22 ssh｜花盆APP割草机协议V3.0与拒绝码V1.0对接
+
+- 同会话：用户在花盆APP新增《DP协议对接_V3.0》《拒绝理由与文案_V1.0》，要求更新DPID、状态严格按DP显示（回桩不聚合、未充电不显示）、雨滴/充电等待拒绝码独立、充电等待置灰暂停/继续，交互参照文档，交付简明报告。首次拉取时两文件尚未推送，停下请用户推送；推送后显式同名pull快进至704cb3b（用户同时把旧docs全部移入docs/history/other，含docs/README.md与PRODUCT_RULES.md）。无.codegraph，无Flutter。
+- 业务main/374c329：DP号不变，新增DP120 alarm_event只记日志，DP117/119日志标识符改charging/operating_time，DP110默认计划注释更新；DP5胶囊一值一词（2关机、9/10在桩等待充电/雨停）；本机日志不再推断“作业结束”“已回到充电桩”、低电量不预告回充；DP115文案逐码照V1.0（54新增、35/49独立、3提示重试、255带码，中英）；DP5=9或DP3=6时停止/继续置灰且不下发。弹窗样式、等待雨停按钮、DP117未充电不显示均未改。用例同步并新增置灰用例；变更记录、history索引、AI_CONTEXT同步。
+- 验证：无Flutter，测试/分析/格式化均未运行；git diff --check通过；未真机。业务再次同名pull后push。统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序绑定匹配产品按broadcastId加权
 
 - 同会话：用户贴出产品列表实际返回（EB-169/18、EC-370/17、EF6-589/15、EF6-370/9；EB-169的broadcastId与productName带尾随空格），并指向`/Client/Product/getProductList`，按“用该接口broadcastId匹配”理解实施。两仓main先显式同名pull均已最新。
