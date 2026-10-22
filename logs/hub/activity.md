@@ -4,6 +4,10 @@
 
 ---
 
+## 2026-10-22｜ssh｜相册小程序搜索ID改动撤回留痕
+
+登记相册小程序main/e04198d（revert 70d4660）已再次显式同名pull后push，树与86a6611一致，本机无node未跑测试。两仓本轮先pull均已最新；统筹仅追加迭代与两类流水，保留10-21的核查与交付记录，不改映射或Context，按main提交、再次同名pull后push。
+
 ## 2026-10-22｜ssh｜新服务器接入相册小程序
 
 Hub main 先同名pull由f870623快进至3a64f28并重读变化文档。只读核实 `/home/cc/dh/photo-album` 为相册小程序（origin photo-album.git，main/70d4660 与远端一致、干净、无索引），复用 album-miniapp 与原 Context 登记为 ssh 第二项映射；ssh 环境说明、AGENTS、README、环境目录说明、配置手册与私有方案中的「只映射花盆APP」同步更新。注册表、Context、work/home 映射未动；本机仍无 node，小程序 node 测试暂不能跑。YAML 解析、路径身份与 diff 检查通过。详见[本轮详情](2026-10-22-ssh-album-miniapp-attach.md)。
