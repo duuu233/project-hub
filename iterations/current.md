@@ -4,6 +4,7 @@
 - 搜索列表：`bluetooth.normalizeDevice`→`frame-protocol.parseAdvertising`取厂商广播`Screen_Type+Device_ID(4/6)+Battery`，6字节优先，解不通退4字节并标fallback；`bind.displayDeviceCode`原样展示广播ID，无广播ID时安卓显示12位BLE句柄(MAC)、iOS隐藏；共享扫描会话先回吐存量结果，连上后列表不回填。
 - 连接后：`device-ble.readTransferInfo`发0x01 GET_INFO，`parseDeviceInfo`取28字节应答前6字节，`requireComplete`校验，作为verifiedSerials唯一可认领会话、判重与入库的来源。
 - 结论：两者是不同来源，代码只在“固件广播的6字节与0x01同值同序”时才会一致，该前提08-04记为待设备方确认、08-11真机已出现广播写法与0x01不一致（字节序或MAC另一段，未定论）；另有老固件4字节、布局回退误取、安卓MAC兜底、共享扫描旧结果四类不一致来源。身份链路只认0x01，安全；搜索列表的ID仅供参考。要定论需同一台设备的原始广播advertisData与0x01回包对照。
+- 追问（同轮只读）：用户提供第三方扫描结果，EB-169、MAC 5A:44:D0:00:0B:37，厂商数据0xFFFF后`04 37 0B 00 D0 44 5A 61`。按协议拆为屏型0x04、设备ID 37:0B:00:D0:44:5A（正是MAC倒序）、电量0x61=97%。代码`SCREEN_TYPES`只有0x01~0x03，0x04使parseAdvertising整条返回null，小程序取不到广播ID：安卓列表显示BLE句柄即MAC 5A:44:D0:00:0B:37（与广播ID字节序相反），iOS不显示ID；设备靠名称白名单仍可入列。0x01回包写法未取到，待真机对照。
 - 未运行测试（本机无node）、未连真实设备；业务仓保持干净。统筹仅追加本次状态与自身流水。
 
 ---
