@@ -1,3 +1,13 @@
+## 2026-10-22 ssh｜相册小程序搜索与连接后设备ID读取方式对比（只读）
+
+- 用户要求按文档再次确认搜索阶段与连接后设备ID的读取方式并给结论，本轮不改业务代码。两仓main干净先显式同名pull均已最新（Hub 6127229、业务e04198d，即撤回后的状态）；无.codegraph，按设备身份架构文档、AI_CONTEXT、08-04/08-11变更记录与源码核对。
+- 搜索列表：`bluetooth.normalizeDevice`→`frame-protocol.parseAdvertising`取厂商广播`Screen_Type+Device_ID(4/6)+Battery`，6字节优先，解不通退4字节并标fallback；`bind.displayDeviceCode`原样展示广播ID，无广播ID时安卓显示12位BLE句柄(MAC)、iOS隐藏；共享扫描会话先回吐存量结果，连上后列表不回填。
+- 连接后：`device-ble.readTransferInfo`发0x01 GET_INFO，`parseDeviceInfo`取28字节应答前6字节，`requireComplete`校验，作为verifiedSerials唯一可认领会话、判重与入库的来源。
+- 结论：两者是不同来源，代码只在“固件广播的6字节与0x01同值同序”时才会一致，该前提08-04记为待设备方确认、08-11真机已出现广播写法与0x01不一致（字节序或MAC另一段，未定论）；另有老固件4字节、布局回退误取、安卓MAC兜底、共享扫描旧结果四类不一致来源。身份链路只认0x01，安全；搜索列表的ID仅供参考。要定论需同一台设备的原始广播advertisData与0x01回包对照。
+- 未运行测试（本机无node）、未连真实设备；业务仓保持干净。统筹仅追加本次状态与自身流水。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序撤回搜索设备ID改动
 
 - 用户要求按文档阅读相册小程序，把上一次「搜索设备ID」的改动全部撤回、还原到上一次。两仓main干净先显式同名pull均已最新（Hub 8ceecd0、业务70d4660），读项目AGENTS与git记录；无.codegraph。
