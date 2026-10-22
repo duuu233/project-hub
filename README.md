@@ -22,7 +22,7 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | iterations/current.md | 本轮需求、同步和验证记录 | 是 |
 | iterations/archive/ | 历史迭代 | 是 |
 | docs/configuration.md | 字段、路径解析、私有挂载、接入、解绑及校验清单 | 是 |
-| [Claude Code 文档使用审查](docs/claude-code-document-audit-2026-10-19.md) | work 文档范围、业务词语境、权限和资料外发注意事项（时间点审查） | 是 |
+| [业务文档使用审查](docs/document-audit-2026-10-19.md) | work 文档范围、业务词语境、权限和资料外发注意事项（时间点审查） | 是 |
 | scripts/setup-links.mjs | 私有目录软链接初始化、迁移与解绑脚本 | 是 |
 | .gitignore | 排除机器信息和临时文件 | 是 |
 
