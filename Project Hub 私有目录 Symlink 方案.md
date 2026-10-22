@@ -1,6 +1,6 @@
 # Project Hub 私有目录管理方案
 
-> SSH状态：等待接入（2026-10-21）。旧服务器映射、路径和挂载结论已作废；本方案仅说明能力，不代表新服务器已配置。接入要求见 [environments/ssh/README.md](environments/ssh/README.md)。
+> SSH状态：新服务器已接入（2026-10-21），当前仅映射花盆APP，未配置任何私有挂载。旧服务器映射、路径和挂载结论已作废；本方案仅说明能力。详见 [environments/ssh/README.md](environments/ssh/README.md)。
 
 ## 目标
 
@@ -219,7 +219,7 @@ paths:
   project-b: /Users/me/Code/project-b
 ```
 
-SSH：等待接入。取得并核实新服务器信息前，不提供可执行映射，不复用旧路径。
+SSH：新服务器当前只映射花盆APP（个人自有仓库，不走私有挂载），实际路径见 `environments/ssh/projects.local.yaml`；不复用旧服务器路径。
 
 ---
 
