@@ -1,6 +1,6 @@
 # qianrong 角色与日志当前对接口径
 
-2026-10-22菜单树交互更新：角色与系统、用户组共用纵向目录树，不再渲染横向权限表；PermissionTable仅保留叶子Set/toggle适配。展开/全选/半选等规则见[菜单树说明](qianrong-menu-permission-tree.md)，下述接口/继承和字段保存边界不变。
+2026-10-22 home最新样式：角色与系统、用户组共用“权限名称 / 操作权限”两列权限表，采用正矿feature-v1.8.5独立页面组件，替代同日早先的纵向目录树。PermissionTable仍只作叶子Set/toggle适配；展开/全选/半选、停用及筛选规则见[菜单权限表说明](qianrong-menu-permission-tree.md)，下述接口/继承和字段保存边界不变。
 
 2026-10-22菜单继承更新优先：恢复用户组menuList，系统→用户组→角色收窄；角色只取menuTreeList，不回退系统元信息菜单、不补授树外父节点。上级已收窄的原授权保存前确认移除；空树保留回显但阻断保存。具体接口、交互与后台缓存验收边界见 [菜单继承说明](qianrong-group-menu-inheritance.md)。三类日志本轮未修改。
 

@@ -2,7 +2,7 @@
 
 ## 2026-10-22 菜单权限当前口径
 
-用户明确系统管理、用户组管理、角色管理菜单权限均采用正矿式tree。以正矿role/index.vue真实目录树工具条及tree-border为交互参照，三处统一MenuPermissionTree，不继续使用独立角色页横向PermissionTable；接口和系统→用户组→角色上限不变。参考分支已同步至feature-v1.8.5/2c6055f8且只读，详细见[菜单树规范](qianrong-menu-permission-tree.md)。下方旧规范和旧模块截图是历史基线。
+2026-10-22 home用户截图更正：三模块采用正矿独立页面PermissionTable，而非role/index.vue旧授权弹窗el-tree；参考feature-v1.8.5/f24127be只读。权限名称/操作权限两列、目录浅蓝整行、页面左列与按钮横排，复用现有复选框；保持系统→用户组→角色权限边界和DTO。详见[菜单权限表规范](qianrong-menu-permission-tree.md)。同日早先纵向tree方案及下方旧截图均为历史基线。
 
 ## 基线和来源
 
