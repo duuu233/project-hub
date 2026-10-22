@@ -1,3 +1,12 @@
+## 2026-10-22 work｜相册APP支付诊断与receiptData显示开关
+
+- 两仓先检查当前main并同步；统筹分叉经用户明确允许保留双方记录合并，a2c8cea保留本地正矿与远端相册小程序记录，未更换分支。
+- 业务main基线b311383，按项目规则与文档核对后增加默认关闭的receiptData显示开关，复制与显示联动并补失败反馈；完善验单HTTP阶段与原生错误诊断，保留排队手动重验意图。具体实现及联调边界以项目docs/integration/IOS_IN_APP_PURCHASE.md、docs/history/2026-10/2026-10-22-ios-iap-trace-receipt-toggle.md为准。
+- Flutter3.44.6/Dart3.12.2六组定向回归115项通过，含大收据完整复制与短屏大字；8个Dart/测试文件静态检查无error/warning或新增info，保留1条既有PayPal提示（analyze退出1）。索引与差异检查通过，未升级依赖；Windows未编译Swift/iOS或真机联调，未调用真实支付/发币接口。
+- 业务99ebf37已提交到main，再次显式同名pull成功后push，远端一致干净。用户日志已出现后端“平台产品与凭据不符合”响应，不能将本轮诊断改进视为Apple21104或后端映射问题已解决；需要新iOS包验收。统筹仅追加任务交付与合并留痕，按main提交并再次显式同名pull/push。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序搜索列表设备ID只取本次广播（main-test）
 
 - 用户明确要求新切分支main-test实施并推送该新分支。两仓先显式同名pull均已最新（Hub e0463d2、业务main/e04198d），从main/e04198d切出main-test；无.codegraph；服务器无node（含其它位置均未找到）。
