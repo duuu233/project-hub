@@ -1,3 +1,13 @@
+## 2026-10-22 ssh｜相册小程序搜索列表设备ID只取本次广播（main-test）
+
+- 用户明确要求新切分支main-test实施并推送该新分支。两仓先显式同名pull均已最新（Hub e0463d2、业务main/e04198d），从main/e04198d切出main-test；无.codegraph；服务器无node（含其它位置均未找到）。
+- 口径（用户确认）：搜索阶段设备ID=广播厂商数据6字节原序（EB-169为37:0B:00:D0:44:5A）；现有设备均6字节，去掉4字节；取不到显示“设备ID --”；屏型与ID无关、不加0x04；设备ID不用缓存。连接后0x01正常，不改。
+- 业务main-test/997afef（15文件）：parseAdvertising只认FFFF+屏型+ID6+电量（无前缀恰8字节，FFFF开头一律按带前缀防老格式误读），屏型/电量各自置空不丢ID，删4字节与布局回退；白名单名称缺席只看FFFF；freshOnly不取共享扫描存量、签名含广播ID；bind只显示广播完整6字节否则--，去掉安卓系统地址兜底；调试台显示原始广播与解析ID；active-device仅删日志里失效字段。改写advertising-parse与4/6兼容①组用例，新增search-device-id用例；设备身份文档、AI_CONTEXT、08-04待确认项、新变更记录与docs索引同步。
+- 验证：无node，测试未运行；以Python镜像解析逻辑核对用例期望值一致，git diff --check、信息隔离检查通过；未开发者工具/真机。待真机：两端显示一致、advertisData是否带FFFF、无厂商数据包是否导致ID在值与--间跳动。相册APP（Flutter）同类逻辑不在本次范围。
+- 业务新分支首推：远端无同名分支故推送前无法同名pull，确认origin/main未变后`git push origin main-test`，未设upstream；未合并到main、未建PR。统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-22 ssh｜相册小程序搜索与连接后设备ID读取方式对比（只读）
 
 - 用户要求按文档再次确认搜索阶段与连接后设备ID的读取方式并给结论，本轮不改业务代码。两仓main干净先显式同名pull均已最新（Hub 6127229、业务e04198d，即撤回后的状态）；无.codegraph，按设备身份架构文档、AI_CONTEXT、08-04/08-11变更记录与源码核对。
