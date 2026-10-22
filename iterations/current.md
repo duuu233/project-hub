@@ -1,3 +1,13 @@
+## 2026-10-22 work｜泰乾qianrong用户组菜单与层级授权
+
+- 两仓干净先显式同名pull，统筹main/336b47a、业务master/38992a9，CodeGraph同步后按项目文档及最新Swagger复核；用户明确推翻10-15“用户组仅关联系统”的旧理解，按系统→用户组→角色逐层过滤。
+- 用户组恢复菜单面板、系统独立勾选、默认继承与编辑回填，按现有DTO发送systemId/menuList，权限上限为系统已授权与真实目录交集；新增/撤权/解除关联确认、只读详情、异常/竞态/大ID保护。角色树仅用用户组可选来源，去掉系统全量回退与树外补父权限，旧越界授权确认后移除，空树保留数据但阻断保存。
+- 20项持久化契约、17组隔离真实组件浏览器/三尺寸、生产构建通过，无页面异常及真实外部请求。未真实登录、写入用户组/角色或部署；后台menuTreeList实际过滤、级联撤权和缓存刷新仍需真实联调，不声称前端替代鉴权。
+- 业务仅qianrong源码/应用说明/测试，不改qianlian或packages；项目规则与当次记录维护于private/taiqian-front/docs/qianrong-group-menu-inheritance.md及history/2026-10-22-work-group-menu-inheritance.md。默认分别提交、push前同名pull，不创建PR或部署，保留原有任务历史。
+- 业务master/9117e7f已再次显式同名pull后push，干净且远端一致；不操作mygithub。
+
+---
+
 ## 2026-10-22 work｜正矿1.8.5提单冲突与预警统计
 
 - 当前 feature-v1.8.5/8a2ba1fa 正在合并 master/2f044f50，仅提单 handleDetail.vue 冲突；按用户要求保留1.8.5新版布局、AI侧栏和关联订单，同时保留 master 已交付的移交前详情回读与子表重建，完成合并 beae2f4e。

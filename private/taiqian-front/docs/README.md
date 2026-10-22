@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)：2026-10-22系统→用户组→角色菜单继承；恢复用户组menuList、逐系统交互、失败保护与角色上限校验，覆盖10-15“用户组仅关联系统”旧结论。
+- [history/2026-10-22-work-group-menu-inheritance.md](history/2026-10-22-work-group-menu-inheritance.md)：本轮同步、20项契约/17组浏览器/构建验证及真实联调边界。
+
 - [qianrong-role-logs.md](qianrong-role-logs.md)：2026-10-21角色基础/六个角色字段接口，三类日志、动态留存参数和分类清理记录；真实接口边界及已授权第三方菜单。
 - [history/2026-10-21-home-role-logs.md](history/2026-10-21-home-role-logs.md)：本轮home同步、12项契约/32项浏览器验证、菜单注册与直接推送记录。
 

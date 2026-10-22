@@ -1,5 +1,9 @@
 # qianrong 当前接口字段对照（2026-10-15 work）
 
+## 2026-10-22 用户组菜单恢复（优先于旧迁移结论）
+
+用户明确系统→用户组→角色逐层过滤。用户组恢复菜单界面并发送groupsSystemMenuDTOList[{systemId,menuList}]，上限来自所选系统已授权菜单；角色仅使用用户组可选树。新增/编辑/撤权确认与异常阻断已实现，详细规则、验证和未真实联调范围见 [菜单继承说明](qianrong-group-menu-inheritance.md)。下表“用户组只关联系统”是旧轮裁决，不再适用。
+
 ## 2026-10-21 角色与日志更新（优先于旧相关结论）
 
 最新Swagger为299路径/243定义。角色已纳入开发，SysRoleAddOrUpdateDTO/roleSystems及六个角色字段接口已对接；日志路径为logLogin/logOper/logThirdApi，留存读取sys.log.archiveMonths/sys.log.cleanMonths，清理按LOGIN/OPER/THIRD_API。真实scopeList为key/value，configKey为msg月数。第三方菜单已按授权注册，真实第三方接口受数据库del_flag缺失阻塞。完整字段裁决、验证与未联调范围见 [当前角色与日志说明](qianrong-role-logs.md)。下文角色排除、日志未开放及不push只对应当时历史迭代。
@@ -21,7 +25,7 @@
 | 菜单列字段 | 7接口；menuId/id使用真实编号；fieldName/fieldCode/orderNum映射；保留策略、筛选项和0值 | 不猜生成器className |
 | 菜单 | isList数字0/1；保留M/C/F并兼容按钮B；查询使用menuName/menuType/status；按钮不能新增下级或设为列表 | 不按原型重编码历史类型 |
 | 系统 | menuIds、status、systemName；系统编辑DTO已声明status，表单变更二次确认后经现有update保存；菜单移除确认 | 无精确关联影响查询，不伪造用户组数量；不猜独立状态端点 |
-| 用户组 | 只维护名称、类别、关联系统；groupsSystemMenuDTOList仅systemId，不发送menuList；查询仅名称/编号/状态及既有分页 | 原型类别/系统筛选未在page声明，不过滤当前页冒充全量 |
+| 用户组 | 名称、类别、关联系统及每系统menuList；上限为系统已授权菜单，按10-22口径回填与保存；查询仍用既有分页 | 不把全部菜单目录当授权上限；后台级联撤权及有效权限仍待真实联调 |
 | 部门 | deptName最多30字（原型50字不采用）；leader可选字符串；parentId=0一级；完整list树按一级20条分页、下级跟随；status经现有PUT字段更新 | 无负责人账户ID/新version，不能伪造负责人有效性校验或乐观锁；企业边界仍由服务端强制 |
 | 字典 | dictId/dictCode由后台生成且只读；dictType/dictValue保留既有业务键，编辑不改；dictLabel表示显示名称；状态变更确认 | 不生成DICT_TYPE/DICT_ITEM新编号；无version/引用查询，显示原后台失败原因 |
 | 企业 | 10/19已改userGroupIds多选、回填/编辑保护及legalIdType；工商/实控人/附件和字典口径保留 | bankList尚无新CRUD界面，未编辑省略保护原账户；隔离/构建通过，不声称真实联调 |
