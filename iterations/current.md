@@ -1,3 +1,14 @@
+## 2026-10-23 ssh｜相册小程序与相册APP EC-370图标与APP最多照片数：列表记录按详情接口补机型
+
+- 用户反馈：小程序EC-370首页、列表页图标不对（应为home-device-rectangle-thumb.png），途中补充小程序搜索页、详情页是对的；APP EC-370首页/列表/详情图标都不对，且最多照片数量读不出（小程序正常）。用户贴出产品列表接口返回（EC-370为productId 17/broadcastId EC-370，EB-169带尾随空格）并问该接口不是有标识吗。环境未声明，按Hub在SSH服务器内运行、近期迭代均为ssh执行。三仓先显式同名pull均已最新（小程序main/40ce6da、APP main/72c365a）；无.codegraph、无node/Flutter；后端Swagger公开地址返回500/404，未拿到列表接口原始返回。
+- 分析：产品列表有标识且两端一直在用，问题在设备记录→产品这一步。小程序首页/我的设备走getDevices（列表接口），详情页走getDeviceDetail（详情接口）；同一记录详情认得出、列表认不出，说明列表那条记录没有能对上产品列表的productId/broadcastId（APP里抄的swagger注释也显示列表出参无productId、详情有）。APP三页都用列表映射的同一个DeviceItem，且原_fillBroadcastIds在无productId>0时直接返回，故三页都错；capacityOf按机型给不出、屏型也给不出时详情显示--。
+- 小程序main/0b2006e：api新增withDetailBroadcastId/isProductBroadcastId/settleWithin；getDevices按productId回查后仍认不出的记录按userProductId静默调详情（showError:false），按同口径补broadcastId；详情正常返回结果会话内复用（认不出记空串），失败不缓存，产品列表拉不到不调，最多再等3秒。device-thumb用例新增r-detail及只调认不出记录、会话复用、产品列表失败不调断言，原断言不变。10-22变更记录再追加、docs索引、AI_CONTEXT同步。
+- APP main/e162214：新增device/product_broadcast_id.dart（ProductBroadcastId.resolve同小程序口径）；_fillBroadcastIds去掉无productId提前退出，认不出的调getUserProductDetail补（会话缓存、失败静默、最多3秒），补上后已读过0x01的设备按机型重算liveCapacity；新增test/product_broadcast_id_test.dart；history记录、docs导航、AI_CONTEXT同步。
+- 遗留：若列表记录带的是产品列表认得、但不属于它的广播名（如EF6-370），按“自带认得不覆盖”不会调详情、仍会错；需用户提供EC-370设备在getUserProductList的原始返回确认。
+- 验证：无node/Flutter，测试/分析未运行，未真机；git diff --check与信息隔离自查通过。两业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜相册小程序与相册APP设备容量按规格书v1.6机型区分
 
 - 用户提供新协议《电子相框产品需求规格书1.6.pdf》（APP仓docs/，用户提交6bb1a96），要求再看：EC-370照片存储数量两端读不出；EB-169 APP能读、小程序读不出。两业务仓先显式同名pull均已最新（小程序main/7ad56b3、APP main/6bb1a96，含他处提交de0370b屏型否决修复）；统筹main与origin分叉（本地a198cb5未推、远端cac19de），按规则暂停统筹修改，事后经用户同意merge。本机无PDF工具，自写stdlib解析脚本（scratchpad）抽取ToUnicode文本。
