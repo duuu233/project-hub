@@ -2,9 +2,17 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜设备容量按规格书v1.6机型区分
+
+小程序main/40ce6da、APP main/72c365a均已再次显式同名pull后push origin。容量先按broadcastId机型（EF6-370 95、EF6-589 51、EB-169 25、EC-370 11）再按屏型（新增0x04→25），修复EB-169小程序--、APP常量32冒充，EC-370两端读不出；投屏选槽同口径。无node/Flutter，测试未跑，未真机。
+
 ## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜新设备图按productId回查兜底，APP连接只读排查
 
 小程序main/7ad56b3、APP main/6eb28a9均已再次显式同名pull后push origin。记录的broadcastId缺失或不是产品广播名时按productId回查产品列表（APP此前缺这一步，导致挂件EC-370首页/列表/详情错图）。小程序两款都没有新图无法由代码解释，待核对运行版本与设备所属产品。APP连接不稳只读排查：连上后多一道屏型否决（小程序无），用户说明暂不修复（可能测试固件）。无node/Flutter，测试未运行，未真机。
+
+## 2026-10-23｜minerals-admin｜work｜feature-v1.8.5｜入库单移除批次号列
+
+用户补充后，新增、编辑、详情货物表统一移除“批次号”列，保留仓库批次号和原数据逻辑。业务c2870d54、1ff0bd45均再次同名pull后push；模板编译、diff检查通过，类型检查与修改前同24项既有错误、无新增，未浏览器验收。私人文档与流水已同步。
 
 ## 2026-10-23｜flowerpot-app｜ssh｜main｜应用名改为东方金穗改动说明报告
 

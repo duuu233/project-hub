@@ -1,3 +1,15 @@
+## 2026-10-23 ssh｜相册小程序与相册APP设备容量按规格书v1.6机型区分
+
+- 用户提供新协议《电子相框产品需求规格书1.6.pdf》（APP仓docs/，用户提交6bb1a96），要求再看：EC-370照片存储数量两端读不出；EB-169 APP能读、小程序读不出。两业务仓先显式同名pull均已最新（小程序main/7ad56b3、APP main/6bb1a96，含他处提交de0370b屏型否决修复）；统筹main与origin分叉（本地a198cb5未推、远端cac19de），按规则暂停统筹修改，事后经用户同意merge。本机无PDF工具，自写stdlib解析脚本（scratchpad）抽取ToUnicode文本。
+- 规格书v1.6要点：§5.2容量EF6-370 95、5.89寸51、1.69寸25、EC-370（挂牌）11；0x01无容量字段；SCREEN_TYPE 0x01 3.7/0x02 5.89/0x03 7.3/0x04 1.69；§6.10.5广播名EF6-370/EC-370（均3.7寸）/EF6-589/EB-169；0x22应答带IMG_COUNT/STORAGE_FREE。
+- 原因：两端容量只按屏型表（0x01/02/03）给。EB-169报0x04→0：小程序显示--；APP liveCapacity不写入、回落常量maxImages=32显示n/32（看似能读，实际错）。EC-370与EF6-370同屏型，按屏型最多给95；两端都读不出说明真机可能报表外屏型字节（未证实）。
+- 小程序main/40ce6da：frame-protocol新增MODEL_CAPACITY/capacityOf（先broadcastId包含匹配，再屏型，0x04→25，未知0），parseDeviceInfo用之；详情三处、列表连接收尾totalMemory按机型；projection-device选槽上限机型优先；SCREEN_TYPES未加0x04（避免影响型号否决/OTA预检）；新增tests/device-capacity.test.js、docs/changes记录、docs索引、AI_CONTEXT。
+- APP main/72c365a：FrameProtocol.capacityOf同口径，state回填liveCapacity按机型；详情页liveCapacity为空显示--不再用32；resolveProjectionTransfer/castImages新增broadcastId；新增test/device_capacity_test.dart、history记录，docs导航加规格书1.6链接、AI_CONTEXT。
+- 遗留：记录取不到broadcastId时退回屏型（EC-370若报0x01仍显示95）；EC-370真机0x01屏型字节未核实；小程序仓未放规格书1.6。
+- 验证：无node/Flutter，测试/分析未运行，未真机；git diff --check与信息隔离自查通过。两业务仓再次同名pull后push。
+
+---
+
 ## 2026-10-23 ssh｜相册小程序与相册APP新设备图兜底、APP连接链路只读排查
 
 - 用户反馈（挂件=EC-370、吧唧=EB-169）：①小程序两款新设备图没有；②APP两款连接很不稳、EC-370一直连不上而小程序可连，先查代码再查信号；③APP挂件设备图只有搜索页对，首页/列表/详情错。途中用户说明②暂不修复，可能是测试固件问题。三仓先显式同名pull均已最新（小程序main/809ad72、APP main/adc4dcb）；无.codegraph、无node/Flutter。
@@ -6,6 +18,15 @@
 - APP main/6eb28a9：refreshDevices与设备列表并行拉产品列表，_fillBroadcastIds同规则回查（成功会话缓存、失败静默、最多等3秒），绑定拉到的产品列表顺手刷新缓存；新增docs/history/2026-10/2026-10-23-device-thumb-product-fallback.md，docs导航、AI_CONTEXT同步。state网络层无测试注入点，未加用例。
 - ②只读排查（子代理静态对比，主会话抽查核实首条）：APP连上后_verifyBoundDeviceIdentity先做sameScreenCode(记录screenCode, 0x01原始屏型字节)再比ID，小程序deviceInfoMatches只比6字节ID；记录码≠0（后台无宽高回落0x02、或480×720/绑成EF6-370）且EC-370报其它屏型即判错台→断开排除→报未搜到，且该分支无日志。扫描阶段matchScannedDevice、绑定判重同一否决。另：APP连上2秒后切LOW_POWER并下发0x13（小程序关闭）、25秒心跳、扫描阶段无防重入、Android androidLegacy:true收不到扩展广播。按用户要求未改；判定需EC-370列表width/height/productId、广播屏型字节、0x01 b[26]，以及BlePerfLog。
 - 验证：无node/Flutter，测试/分析未运行，未真机；git diff --check与信息隔离自查通过。两业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
+## 2026-10-23 work｜正矿入库单移除批次号列
+
+- 用户最初要求详情移除货物信息中的“批次号”列，随后补充新增、编辑也不需要；最终从共享表单移除整列，保留仓库批次号及原接口、模型与保存参数。
+- 两仓干净先显式同名pull：统筹main至1d5f19a，业务feature-v1.8.5至0d23126f；CodeGraph未准确定位目标文件，按具体源码核查后最小修改。
+- 业务c2870d54与补充提交1ff0bd45均再次同名pull成功后push origin/feature-v1.8.5。共享Vue模板编译、diff检查通过，最终类型检查与修改前同24项既有错误、无新增；CodeGraph已同步。未浏览器验收。
+- 私人页面契约、业务流水与统筹流水同步；统筹按main提交，push前再次显式同名pull，保留全部旧迭代。
 
 ---
 
