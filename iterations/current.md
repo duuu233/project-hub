@@ -1,3 +1,12 @@
+## 2026-10-23 ssh｜相册APP iOS付款框关闭提示支付失败
+
+- 用户要求：拉起苹果支付后，用户主动取消或面容识别失败、密码错误等导致付款框关闭，要弹系统提示框“支付失败，请重新支付”，支持多语种。两仓先显式同名pull均已最新（相册APP main/032ac5d）；无.codegraph、无Flutter。
+- 现状：付款框关闭以canceled/failed交易回到控制器（原生按SKError.paymentCancelled区分），控制器清理记录并置phase，页面说明只显示“已取消支付”/“本次支付未完成”，无弹框。
+- 业务main/adc4dcb：控制器拉起付款前记下本进程订单号，清理canceled/failed时生成unannouncedFailure/takeFailure（换账号、沙盒清理清除；重启后清理的上次失败不提示）；确认购买页按“购买成功”同样方式取走后弹showAppNoticeDialog，关掉留在本页可立即再买，页面打开丢弃旧失败；新增starApplePayFailedRetry中繁英日（繁中显式给出）；拉起前错误（商品不可用、不允许支付）不弹。测试：取消用例断言提示一次、新增重启不提示、页面取消用例断言弹框。内购契约§4.0、AI_CONTEXT、docs导航、history同步。
+- 验证：本机无Flutter/Mac，测试/分析/iOS编译未运行，未真机。信息隔离自查无命中。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜花盆APP实施总结并入历史曲线修正并改名
 
 - 用户要求把此前“曲线负数”那一版（花盆APP main/2c66572：零下温度、未采集灰显、日视图时刻刻度、过去日帧满96点、月曲线不截）补进OTA实施总结，并改文件名。两仓先显式同名pull均已最新（花盆APP main/8ae4e46）。
