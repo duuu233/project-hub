@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜全部项目｜work｜当前同名分支｜代码同步
+
+七仓均显式同名 `pull --ff-only` 成功，最终工作区干净且本地 HEAD 与真实 origin 同名分支一致：泰乾 master/d08dab3、花盆APP main/3035ac5、花盆后台 main/7f53d3a、相册后台 main/7ea5e56、相册小程序 main/809ad72、相册APP main/d845231、正矿 feature-v1.8.5/f24127be。全部已有 CodeGraph 索引 sync 成功，泰乾和正矿各五项现有挂载核验通过。业务仓只同步，不新增提交或推送，不改分支及 upstream；未运行构建、测试或部署。
+
 ## 2026-10-22｜全部项目、taiqian-front｜home｜当前同名分支｜同步与权限表更正
 
 七仓已pull并核验远端一致、工作区干净：泰乾master/d08dab3、正矿feature-v1.8.5/f24127b、花盆APPmain/3035ac5、花盆后台main/7f53d3a、相册APPmain/d845231、相册后台main/7ea5e56、相册小程序main/809ad72。除泰乾外仅同步，六个已有索引同步，无索引跳过。
