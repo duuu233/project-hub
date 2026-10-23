@@ -1,3 +1,14 @@
+## 2026-10-23 ssh｜相册两端搜索列表按广播名显示sizeModel；抖动type按原定义保持
+
+- 承接上一条。用户确认：①抖动type数值与原来一致不改，后端后续同步，先改代码；②搜索列表也改为按广播名匹配产品显示sizeModel；③小程序后台合法域名里的seekink删除。三仓先显式同名pull均已最新（小程序main/85711f3、APP main/5889f5f）。
+- type原定义（小程序docs/changes/2026-07-22-照片预览需求调整.md）：对接第三方时追加，0=5.8寸大设备(EF6-589 680×960)、1=3.7寸小设备(EF6-370 480×720)，按上传图（恒为竖向设备分辨率）判型，出帧策略非旋转角；其余机型（含EB-169 400×400）传0。后端Swagger写成“屏幕类型(1=顺时针90° 2=逆时针90°)”需后端改。两端代码注释与文档改为该口径，去掉“待确认”。
+- 小程序main/b468393：api新增scanSizeModel（name/localName包含产品broadcastId，去空白、大小写不敏感，多命中取最长，返回去空白sizeModel，无则空）与getProductCatalog；bind页onLoad并行拉产品列表，applyScanResult带sizeModel，列表到后补到已搜设备；nearby-sub由item.screen改item.sizeModel。bindDevice匹配仍用广播screen。新增tests/scan-size-model.test.js。另把list/records/request/toast/ai-i18n里seekink出帧旧注释改为抖动接口。AI_CONTEXT、流水线、接口矩阵、当日changes追加、索引同步。
+- APP main/c415d92：ProductBroadcastId.sizeModelOfScan同口径，typedef ProductSizeModel；state在_cacheProductBroadcastIds顺带缓存广播名→sizeModel，新增loadProductSizeModels（共用一次请求）；绑定流程initState并行拉、_entryOf副标题尺寸改sizeModel（原screenLabelOf）。product_broadcast_id_test加3例。AI_CONTEXT、API_INTEGRATION、当日history追加、导航同步。
+- ③合法域名在微信小程序管理后台（开发管理→开发设置→服务器域名），仓库无该配置，需用户在后台删除；未代办。
+- 验证：无node/Flutter，测试未运行，未真机；git diff --check与信息隔离自查通过。两业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜接入相册后台；产品尺寸型号sizeModel三端打通，相册两端抖动出帧迁到后端
 
 - 用户声明ssh环境，在/home/cc/dh/下引入web-ui-v2即相册后台（album-admin，注册表已有）。核实：Git根目录、origin duuu233/web-ui-v2、远端HEAD main、工作区干净，与home/work同名映射一致；登记ssh映射（transport local），ssh README、configuration、AGENTS当前映射同步。

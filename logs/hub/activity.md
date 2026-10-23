@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-23｜ssh｜登记相册两端搜索列表sizeModel与抖动type口径
+
+main干净先显式同名pull已最新。登记相册两端搜索列表按广播名显示sizeModel、抖动type按原定义保持（后端对齐）的迭代与跨项目流水。按main提交，push前再次显式同名pull。
+
 ## 2026-10-23｜ssh｜接入相册后台并登记sizeModel与抖动迁移
 
 main干净先显式同名pull已最新（2d0f8bd）。用户引入/home/cc/dh/web-ui-v2即相册后台：核实Git根目录、origin、远端HEAD main与home/work同名映射一致后登记environments/ssh/projects.local.yaml（album-admin，transport local），ssh README、configuration、AGENTS当前映射同步；YAML解析与注册表ID校验通过。登记三端sizeModel与相册两端抖动出帧迁后端的迭代与跨项目流水。按main提交，push前再次显式同名pull。

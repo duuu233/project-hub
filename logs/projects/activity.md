@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜搜索列表按广播名显示sizeModel；抖动type按原定义
+
+小程序main/b468393、APP main/c415d92均已再次显式同名pull后push origin。绑定页搜索列表按广播名匹配产品broadcastId显示sizeModel（匹配不到或没配不显示），不再用广播屏型；抖动type数值不变（0=5.8寸大设备、1=3.7寸小设备），由后端对齐，注释与文档改口径。seekink合法域名需用户在小程序后台删除。无node/Flutter，测试未跑，未真机。
+
 ## 2026-10-23｜album-admin、album-miniapp、album-app｜ssh｜main｜产品尺寸型号sizeModel；相册两端抖动出帧迁后端
 
 ssh环境新接入相册后台（/home/cc/dh/web-ui-v2）。后台main/17da9a3：产品新增/编辑/详情加选填尺寸型号sizeModel（清空提交空串）。小程序main/85711f3、APP main/5889f5f：设备详情「屏幕尺寸」直接展示sizeModel，没配不展示；投屏抖动出帧由第三方seekink改调后端/Client/Basic/imageDitheringBinDownload（参数不变，带用户自己的userToken），删getXTYUserToken及调试台Token卡片，各加用例。三仓均再次显式同名pull后push origin。无node/Flutter，构建/测试未运行，未真机；type语义、搜索列表屏幕文案待确认。
