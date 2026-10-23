@@ -6,6 +6,11 @@
 
 ## 历史记录（最新在最前）
 
+### 2026-10-23：入库单新增、编辑、详情移除批次号列
+
+- work、feature-v1.8.5从0d23126f开始；用户补充后从共享handleDetail.vue货物表移除batchNo列，保留仓库批次号及所有原数据和保存逻辑。
+- c2870d54与补充提交1ff0bd45均再次显式同名pull成功后push。模板编译、diff检查通过；最终类型检查与修改前同24项既有错误、无新增；CodeGraph同步完成。未浏览器验收，当前契约见docs/warehouse-figma-ui.md。
+
 ### 2026-10-23：七个仓储列表关键词查询与入库计划三卡
 
 - 交付：feature-v1.8.5/4e21895f已再次显式同名pull后push origin，远端一致且干净，CodeGraph最新。
