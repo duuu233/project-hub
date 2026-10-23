@@ -1,5 +1,7 @@
 # 仓储统计字段对接
 
+2026-10-23 当前调整：入库计划列表按用户要求去掉“待入库”整张卡，仅保留入库计划单总数、待审核、已入库；后端pendingStockInCount仍存在，不展示、不推算。七列表搜索已统一后端keyword，不再本页过滤；当前请求边界见[仓储列表搜索](warehouse-list-search.md)。
+
 接口与实现核对日期：2026-10-16。当轮对应 `feature-v1.8.5` 本地未提交实现，用户要求先本地测试，不提交、不推送；当轮 HEAD `09e4d1d2` 是任务开始前已有的本地提交，领先远端 `c9d01577` 一项，当时未重置、合并或推送。
 
 2026-10-19 同步复核：业务当前 `feature-v1.8.5` / `5946aab8`，工作区干净，同名 pull/push 后与真实远端一致；已用 CodeGraph 核对当前共享统计字段定义、格式化及组件输入仍在。本轮只同步与审查文档，按用户新授权提交原维护记录，不新增业务提交，也不代表用户已完成本地验收。下述接口缺项和未真实联调限制继续保留。
@@ -20,7 +22,7 @@
 
 | 列表接口 | 响应结构 | 统计字段 → 展示 |
 | --- | --- | --- |
-| `/stockInPlan/list` | `StockInPlanCountVO` | `stockInPlanCount` 总数；`pendingAuditCount` 待审核（已创建）；`pendingStockInCount` 待入库；`completedStockInCount` 已入库 |
+| `/stockInPlan/list` | `StockInPlanCountVO` | `stockInPlanCount` 总数；`pendingAuditCount` 待审核（已创建）；`completedStockInCount` 已入库 |
 | `/stockIn/list` | `StockInCountVO` | `stockInCount` 总数；`completedStockInCount` 已入库；`currentMonthStockInWeight` 本月入库总重量 |
 | `/stockOutPlan/list` | `StockOutPlanCountDTO` | `currentMonthStockOutPlanCount` 本月计划总数；`pendingStockOutPlanCount` 待出库；`partialStockOutPlanCount` 部分出库；`completedStockOutPlanCount` 已完全出库；`currentMonthStockOutPlanWeight` 本月计划出库总重量 |
 | `/stockOut/list` | `StockOutCountDTO` | `stockOutCount` 总数；`completedStockOutCount` 已出库；`currentMonthStockOutWeight` 本月出库总重量 |
@@ -28,7 +30,7 @@
 | `/stockInfoLog/list` | `StockInfoLogCountDTO` | `batchNoCount` 库存总批次数；`currentMonthStockInCount` 本月累计入库；`currentMonthStockInWeight` 本月累计入库重量；`currentMonthStockOutCount` 本月累计出库；`currentMonthStockOutWeight` 本月累计出库重量 |
 | `/stockInfo/earlylist` | `EarlyStockInfoCountDTO` | `earlyStockInfoCount` 预警总批数；`willEarlyStockInfoCount` 临期预警批数；`earlyStockInfoWeight` 预警总重量 |
 
-注意冻结字段是 **`beDeliveredWeight`**，不是 `beDeliveredCount`；库存日志首卡是库存批次数，不是变动次数。日志其余统计明确限定本月，标题同步体现时间范围。入库计划补出文档中新增的“待审核”卡，复用原有图标，原图标、配色、布局规则不改。
+注意冻结字段是 **`beDeliveredWeight`**，不是 `beDeliveredCount`；库存日志首卡是库存批次数，不是变动次数。日志其余统计明确限定本月，标题同步体现时间范围。入库计划当前显示总数、待审核、已入库三卡，复用原图标，配色与布局规则不改。
 
 ## 展示和请求规则
 
@@ -36,7 +38,7 @@
 - 有限数值或数字字符串可展示。0/`"0"` 是有效值；缺字段、null、空白字符串、非数值、无穷值显示 `--`，不当作零。数量按整数千分位，重量沿用现有设计的吨、四位小数，不自行转换或推断混合单位。
 - 不再显示写死的 128/27 等样例、“本月新增”“较昨日”“较上月”及百分比；文档没提供趋势，不能生成趋势。
 - 每次请求清空统计为占位，只有最新请求可以写入列表、分页和统计并结束 loading，防止旧查询成功/失败覆盖新结果。最新请求失败清空统计、行和分页总数，结束 loading；错误提示仍由统一请求层处理。
-- 原服务路径、GET 参数、日期转换、当前页 `ui*` 筛选边界、分页、权限、详情/编辑/新增/关闭等业务不改。统计采用后端返回口径，不承诺本页筛选会重算企业总数。
+- 原服务路径、日期转换、分页、权限、详情/编辑/新增/关闭等业务保留；2026-10-23查询统一后端keyword并按接口白名单传参，删除ui*本页筛选。统计采用后端同次响应口径，不承诺关键词/筛选会重算企业总数。
 
 ## 文档缺项与限制
 
