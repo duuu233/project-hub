@@ -4,7 +4,7 @@
 
 ## 2026-10-23｜flowerpot-app｜ssh｜main｜App升级红点与强制升级补全
 
-业务main/77503a0已再次显式同名pull后push origin。修复「关于东方金穗」有新版本显示复制图标而非红点、关于页检查更新加红点；版本号改由package_info_plus读取（原写死1.0.0会使强制升级永远关不掉）；立即更新用url_launcher外部打开；无下载地址不按强制弹。对照相册APP实现（只读，未改）。本机无Flutter，pubspec.lock待更新，测试/构建未运行，未真机。
+业务main/77503a0已再次显式同名pull后push origin。修复「关于东方金穗」有新版本显示复制图标而非红点、关于页检查更新加红点；版本号改由package_info_plus读取（原写死1.0.0会使强制升级永远关不掉）；立即更新用url_launcher外部打开；无下载地址不按强制弹。对照相册APP实现（只读，未改）。同日追加main/e48ee54：后台配置不提示升级（compulsory=4）时不点红点。本机无Flutter，pubspec.lock待更新，测试/构建未运行，未真机。
 
 ## 2026-10-23｜minerals-admin｜work｜feature-v1.8.5｜仓储列表关键词与入库计划统计
 
