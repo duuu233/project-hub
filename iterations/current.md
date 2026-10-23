@@ -1,3 +1,13 @@
+## 2026-10-23 ssh｜花盆APP App升级红点与强制升级检测补全
+
+- 用户要求按文档检测App升级是否完整：①普通升级在升级栏显示红点；②强制升级是否完整；途中补充与相册APP后台升级配置一致、可对照其实现。花盆APP、相册APP、统筹先显式同名pull均已最新（花盆APP main/dc7159f，相册APP main/adc4dcb只读对照未改）；无.codegraph、无Flutter。
+- 检测结论：①「我的→关于东方金穗」状态有新版本已传到菜单，但27bbbd9（2026-09-09）把badge渲染成复制图标，红点从未显示，意见反馈反而丢了复制图标；关于页「检查更新」无红点。②强制升级启动检测、isUpdate+compulsory==1判定、不可关闭均在；但版本号写死1.0.0（发新版后装新包仍判有更新，强制框永远关不掉）、「立即更新」只复制链接、后台无下载地址时强制框卡死。相册APP做法：package_info_plus读版本、url_launcher外部打开（白名单https/market/itms-apps）、无地址不弹强制；它没有红点，非强制只在设置页手动检查。
+- 业务main/77503a0：新增AppBuildInfo（package_info_plus，main()先读，读不到不查版本），关于页当前版本改读它；我的菜单badge改红点+箭头、意见反馈有邮箱恢复复制图标；关于页检查更新行加红点；升级弹窗用url_launcher外部打开（同白名单），强制不关；启动与检查更新在无下载地址时不按强制弹；pubspec加package_info_plus ^10.2.1、url_launcher ^6.3.0（与相册APP同版本），Android queries加https VIEW；新增红点测试2例；PRODUCT_RULES §4.28、AI_CONTEXT、关于页实现说明、history同步。
+- 待定/遗留：compulsory=4（不提示）有新版本仍点红点；未移植getAndroidDownload兜底（返回结构未核实、iOS不适用）；pubspec.lock未更新，需有Flutter环境pub get后提交；未接路由的旧AppSettingsPage「App 升级」行未动。
+- 验证：本机无Flutter，pub get/analyze/test/构建均未运行，未真机。信息隔离自查无命中。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜花盆APP应用名改为东方金穗
 
 - 用户要求：①App名称“智能花盆”改为“东方金穗”；②App内页面展示的YSplanter文字改为“东方金穗”，不动包名和配置名称。两仓先显式同名pull均已最新（花盆APP main/b95cb6a）；业务仓未找到含“东方金穗”的需求文档，按用户原话执行。

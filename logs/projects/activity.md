@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜flowerpot-app｜ssh｜main｜App升级红点与强制升级补全
+
+业务main/77503a0已再次显式同名pull后push origin。修复「关于东方金穗」有新版本显示复制图标而非红点、关于页检查更新加红点；版本号改由package_info_plus读取（原写死1.0.0会使强制升级永远关不掉）；立即更新用url_launcher外部打开；无下载地址不按强制弹。对照相册APP实现（只读，未改）。本机无Flutter，pubspec.lock待更新，测试/构建未运行，未真机。
+
 ## 2026-10-23｜minerals-admin｜work｜feature-v1.8.5｜仓储列表关键词与入库计划统计
 
 业务feature-v1.8.5/4e21895f已再次显式同名pull成功后push origin，真实远端SHA一致、工作区干净。
