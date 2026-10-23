@@ -1,3 +1,14 @@
+## 2026-10-23 ssh｜相册小程序与相册APP新设备图兜底、APP连接链路只读排查
+
+- 用户反馈（挂件=EC-370、吧唧=EB-169）：①小程序两款新设备图没有；②APP两款连接很不稳、EC-370一直连不上而小程序可连，先查代码再查信号；③APP挂件设备图只有搜索页对，首页/列表/详情错。途中用户说明②暂不修复，可能是测试固件问题。三仓先显式同名pull均已最新（小程序main/809ad72、APP main/adc4dcb）；无.codegraph、无node/Flutter。
+- ①③分析：两端六处取图链路在main上完整；已绑定记录只看设备列表下发的broadcastId/productId/shapeType。APP同步10-22时漏了小程序的productId回查产品列表，broadcastId取不到时EC-370落默认图（EB-169靠shapeType兜底）；两端原规则“记录自带broadcastId就不动”，在该字段不是产品广播名时也会跳过回查。小程序两款都没有，代码无法解释，怀疑：预览/体验版不是main最新（main-test仅有两张图无取图代码），或设备当初绑错产品（809ad72加权前EC-370可与EF6-370平分、无广播名落列表第一个），绑错时尺寸/形状也跟着错，需后台核对、错的删除重绑。
+- 小程序main/7ad56b3：withProductBroadcastId改为记录broadcastId是产品列表认得的广播名才不动，否则按productId覆盖；device-thumb用例新增r-foreign（原断言不变）；10-22变更记录追加、docs索引、AI_CONTEXT同步。
+- APP main/6eb28a9：refreshDevices与设备列表并行拉产品列表，_fillBroadcastIds同规则回查（成功会话缓存、失败静默、最多等3秒），绑定拉到的产品列表顺手刷新缓存；新增docs/history/2026-10/2026-10-23-device-thumb-product-fallback.md，docs导航、AI_CONTEXT同步。state网络层无测试注入点，未加用例。
+- ②只读排查（子代理静态对比，主会话抽查核实首条）：APP连上后_verifyBoundDeviceIdentity先做sameScreenCode(记录screenCode, 0x01原始屏型字节)再比ID，小程序deviceInfoMatches只比6字节ID；记录码≠0（后台无宽高回落0x02、或480×720/绑成EF6-370）且EC-370报其它屏型即判错台→断开排除→报未搜到，且该分支无日志。扫描阶段matchScannedDevice、绑定判重同一否决。另：APP连上2秒后切LOW_POWER并下发0x13（小程序关闭）、25秒心跳、扫描阶段无防重入、Android androidLegacy:true收不到扩展广播。按用户要求未改；判定需EC-370列表width/height/productId、广播屏型字节、0x01 b[26]，以及BlePerfLog。
+- 验证：无node/Flutter，测试/分析未运行，未真机；git diff --check与信息隔离自查通过。两业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜花盆APP应用名改为东方金穗改动说明报告
 
 - 用户要求把应用名改为东方金穗的改动与未改动单独写成简明报告。两仓先显式同名pull均已最新（花盆APP main/e48ee54）。

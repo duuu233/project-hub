@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜新设备图按productId回查兜底，APP连接只读排查
+
+小程序main/7ad56b3、APP main/6eb28a9均已再次显式同名pull后push origin。记录的broadcastId缺失或不是产品广播名时按productId回查产品列表（APP此前缺这一步，导致挂件EC-370首页/列表/详情错图）。小程序两款都没有新图无法由代码解释，待核对运行版本与设备所属产品。APP连接不稳只读排查：连上后多一道屏型否决（小程序无），用户说明暂不修复（可能测试固件）。无node/Flutter，测试未运行，未真机。
+
 ## 2026-10-23｜flowerpot-app｜ssh｜main｜应用名改为东方金穗改动说明报告
 
 业务main/736a782已再次显式同名pull后push origin。新增简明报告（已改/没改及原因/待决定），docs导航同步；只改文档。
