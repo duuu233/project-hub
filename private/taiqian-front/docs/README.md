@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)：菜单表单仅响应所属活动路由、ID校验、缓存草稿和在途响应失效。
+- [history/2026-10-23-work-menu-route-lifecycle.md](history/2026-10-23-work-menu-route-lifecycle.md)：跨列表 undefined 请求根因、修复及50项回归/隔离浏览器/构建验证。
+
 - [qianrong-menu-permission-tree.md](qianrong-menu-permission-tree.md)：2026-10-22 home按截图更正为正矿独立页面两列权限表，节点联动/半选/批量操作和原权限模型适配；覆盖同日早先纵向树方案。
 - [history/2026-10-22-home-permission-table-alignment.md](history/2026-10-22-home-permission-table-alignment.md)：本轮来源纠正、40项回归、27组隔离浏览器/13张四尺寸截图及构建记录。
 - [history/2026-10-22-work-menu-tree-unification.md](history/2026-10-22-work-menu-tree-unification.md)：本轮参考版本、实施与32项测试/25组浏览器/三尺寸构建记录。
