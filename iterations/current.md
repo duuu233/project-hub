@@ -1,3 +1,11 @@
+## 2026-10-23 ssh｜花盆APP OTA接回参数调整
+
+- 用户要求把OTA中断后接回的自定参数改为：120分钟内的中断才接回、前台每10秒最多问一次SDK（原30分钟/30秒）。两仓先显式同名pull均已最新（花盆APP main/d3c059e）。
+- 业务main/f585b04+文档补记：FlowerpotState.otaResumeWindow=120分钟、otaResumeCheckInterval=10秒及注释；对应用例改为超过120分钟不接回；OTA实现说明、AI_CONTEXT、实施总结报告同步，另在docs/history索引注明参数已调整（用户提醒文档也更新）。启动接口30秒等待超时不相关，未动。
+- 验证：本机无Flutter，测试未运行。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜相册APP iOS确认购买页梳理与购买成功重复弹框
 
 - 用户要求：①iOS确认购买流程梳理优化：确认中底部按钮置灰、久不返回才可重试、页面不闪、文案不频繁变化；②测试反馈重开APP又弹一次“购买成功，到账7500星币”（只下一次单、未重复到账）。两仓先显式同名pull均已最新（相册APP main/8e07732）；无.codegraph、无Flutter。
