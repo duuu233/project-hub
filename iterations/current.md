@@ -1,3 +1,12 @@
+## 2026-10-23 ssh｜花盆APP OTA中断后接回（花盆+割草机）
+
+- 用户先要求核查OTA中途关App、息屏、断网恢复后能否继续（重开在固件升级看到百分比；恢复后弹层进度继续走）。核查结论：Android点入口可接回SDK已有任务，但静默检查不挂接、断网时SDK先报超时后原生释放监听百分比不再走；iOS checkFirmware/start只认status1，升级中被当成“已是最新”，且无查询兜底。用户随后要求按四条改。两仓再次同名pull（花盆APP main/2c66572，统筹快进至49cbf07）。
+- 业务main/2de8dc6：①iOS checkFirmware识别2/5为inProgress带componentType，start按目标/组件筛选、2/5只挂delegate不重新下发；②FlowerpotState.checkFirmware查到升级中且本地无在走任务即_reattachOta（设备页提醒、其他设置静默检查、入口共用），入口升级中分支直接开进度；③resumeDeviceWatch立即、前台在线轮询每台≤30秒一次，对SDK非明确失败30分钟内/核验中/停滞（iOS回前台含所有进行中）重问SDK，仍在升级就接回、同目标保留百分比；④SDK已无任务转核验现读版本判成功。明确拒绝不接回。新增7例状态测试；OTA实现说明、AI_CONTEXT、history同步。
+- 自定参数：接回窗口30分钟、轮询节流30秒；网络恢复借前台轮询，不新增connectivity依赖。未覆盖：重开时设备正安装重启离线，入口仍先提示离线（上线后设备页自动接回）。
+- 验证：本机无Flutter/Mac，测试/分析/iOS编译均未运行，未真机。信息隔离自查无命中。业务再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 work｜泰乾qianrong菜单表单跨页面请求修复
 
 - 用户授权修复用户组/其它列表重复请求system/menu/undefined。两仓干净先同名pull，业务master/d08dab3、统筹main/7d53f50；按项目规则同步索引并核对文档。
