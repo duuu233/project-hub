@@ -1,8 +1,8 @@
 # SSH 环境
 
-**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP。**
+**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP、相册后台。**
 
-2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目花盆APP；2026-10-22 用户在 `/home/cc/dh/` 下引入 photo-album，核实后作为相册小程序接入；同日又在该目录下新增 flutter，用户指明即相册APP，核实后接入。其他项目后续再定。
+2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目花盆APP；2026-10-22 用户在 `/home/cc/dh/` 下引入 photo-album，核实后作为相册小程序接入；同日又在该目录下新增 flutter，用户指明即相册APP，核实后接入；2026-10-23 用户引入 web-ui-v2，指明即相册后台，核实后接入。其他项目后续再定。
 
 ## 当前映射
 
@@ -11,6 +11,7 @@
 | 花盆APP | flowerpot-app | `/home/cc/dh/flowerpot` | main |
 | 相册小程序 | album-miniapp | `/home/cc/dh/photo-album` | main |
 | 相册APP | album-app | `/home/cc/dh/flutter` | main |
+| 相册后台 | album-admin | `/home/cc/dh/web-ui-v2` | main |
 
 Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（Hub 与项目同在服务器内）。
 
@@ -24,8 +25,8 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 - 未检出 `flutter`、`dart`、`node`、`codegraph` 命令；有 `python3`（含 PyYAML）。
 - 因此暂不能在本机运行花盆APP、相册APP的 Flutter 测试/构建，也不能运行相册小程序的 `tests/*.test.js`（纯 node 脚本）和 `scripts/setup-links.mjs`；是否安装由用户决定，安装位置同样受上面的可写边界约束。
-- 花盆APP、相册小程序、相册APP仓库内都没有 `.codegraph/`（三仓 `.gitignore` 均已忽略），是否建索引由用户决定。
-- Git 提交作者来自服务器用户级配置（`duun`），三仓都没有仓库级 `user.name` / `user.email`，不需要另配。
+- 花盆APP、相册小程序、相册APP、相册后台仓库内都没有 `.codegraph/`（四仓 `.gitignore` 均已忽略），是否建索引由用户决定；相册后台的 `npm run build` / `node --test` 同样因无 Node 暂不能运行。
+- Git 提交作者来自服务器用户级配置（`duun`），各仓都没有仓库级 `user.name` / `user.email`，不需要另配。
 
 ## 约束
 

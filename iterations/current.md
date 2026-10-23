@@ -1,3 +1,15 @@
+## 2026-10-23 ssh｜接入相册后台；产品尺寸型号sizeModel三端打通，相册两端抖动出帧迁到后端
+
+- 用户声明ssh环境，在/home/cc/dh/下引入web-ui-v2即相册后台（album-admin，注册表已有）。核实：Git根目录、origin duuu233/web-ui-v2、远端HEAD main、工作区干净，与home/work同名映射一致；登记ssh映射（transport local），ssh README、configuration、AGENTS当前映射同步。
+- 四仓先显式同名pull均已最新（Hub main/2d0f8bd、后台main/7ea5e56、小程序main/0b2006e、APP main/e162214）；无.codegraph、无node/Flutter。只读拉取后台公开Swagger核实：ProductAddApiIn/ProductDetailApiOut/ProductApiOut/ClientUserProductApiOut均含string sizeModel（尺寸型号：例3.6寸），覆盖后台add/edit/detail与用户端getProductList/getUserProductList/getUserProductDetail；/Client/Basic/imageDitheringBinDownload存在，参数同用户所贴。
+- 相册后台main/17da9a3：DetailForm共享表单在尺寸(cm)与广播ID之间加选填“尺寸型号”输入框（详情只读），回填缺省空串；buildSubmitData会删空串字段，sizeModel例外始终提交（去首尾空白），保证编辑能清空。接口清单、接入进度、AI_CONTEXT、history记录与索引同步。列表未加列。
+- 小程序main/85711f3：详情「屏幕尺寸」resolutionText（屏型查表→后端宽高→--）改为sizeModelText只读sizeModel，空则整行连分隔线不渲染。dithering.js改调/Client/Basic/imageDitheringBinDownload，URL/header由新导出的request.clientRequestParts生成（公共参数+用户userToken，header与query同口径），401/406调新导出expireSession；删seekink token获取/缓存/预热/强制重登，前缀「接口(第三方)-」改「接口-」，业务报错显示retMsg、网络失败重试3次。删api.getXTYUserToken、预览页预热、调试台第三方Token卡片（js/wxml/wxss）。新增tests/dithering-backend.test.js；projection-preview-demo原“预览页预热token”断言按有意删除改为“预览页不得碰抖动模块”。AI_CONTEXT、投屏流水线、接口矩阵、changes记录与索引同步。
+- APP main/5889f5f：DeviceItem加sizeModel（列表/详情映射，详情带键才覆盖）；详情页删_resolutionText，屏幕尺寸行展示sizeModel、空则隐藏。ApiClient新增postMultipartForBytes（公共header/query同upload，JSON/非2xx走_parse抛错、401/406清会话，二进制不整帧打日志）；DitheringApi改走它，删token逻辑，网络失败重试3次。删BoltFoxApi.getXTYUserToken、预览页预热、调试台Token卡片。新增test/dithering_api_test.dart。AI_CONTEXT、API_INTEGRATION、PROJECT_STRUCTURE、IMAGE_SLOT_INDEX、history记录与导航同步。
+- 分析/待确认：①Swagger把type描述为“屏幕类型(1=顺时针90° 2=逆时针90°)”，与原第三方抖动策略用法（480×720传1、其余0）字面不同，按用户“参数一样”沿用原值，需联调确认3.7寸传1不被旋转；②绑定前搜索列表的屏幕文案仍来自蓝牙广播屏型字节（无设备记录），是否改为按广播名匹配产品sizeModel待用户定；③后端二进制响应Content-Type未实测；④小程序后台request合法域名里的cloud.seekink.cn:8443已不再使用，是否移除由用户决定。
+- 验证：本机无node/Flutter，后台build/node --test、小程序tests、APP analyze/test均未运行，未浏览器/真机；git diff --check与信息隔离自查通过。三业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜相册小程序与相册APP EC-370图标与APP最多照片数：列表记录按详情接口补机型
 
 - 用户反馈：小程序EC-370首页、列表页图标不对（应为home-device-rectangle-thumb.png），途中补充小程序搜索页、详情页是对的；APP EC-370首页/列表/详情图标都不对，且最多照片数量读不出（小程序正常）。用户贴出产品列表接口返回（EC-370为productId 17/broadcastId EC-370，EB-169带尾随空格）并问该接口不是有标识吗。环境未声明，按Hub在SSH服务器内运行、近期迭代均为ssh执行。三仓先显式同名pull均已最新（小程序main/40ce6da、APP main/72c365a）；无.codegraph、无node/Flutter；后端Swagger公开地址返回500/404，未拿到列表接口原始返回。

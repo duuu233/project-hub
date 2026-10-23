@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-23｜album-admin、album-miniapp、album-app｜ssh｜main｜产品尺寸型号sizeModel；相册两端抖动出帧迁后端
+
+ssh环境新接入相册后台（/home/cc/dh/web-ui-v2）。后台main/17da9a3：产品新增/编辑/详情加选填尺寸型号sizeModel（清空提交空串）。小程序main/85711f3、APP main/5889f5f：设备详情「屏幕尺寸」直接展示sizeModel，没配不展示；投屏抖动出帧由第三方seekink改调后端/Client/Basic/imageDitheringBinDownload（参数不变，带用户自己的userToken），删getXTYUserToken及调试台Token卡片，各加用例。三仓均再次显式同名pull后push origin。无node/Flutter，构建/测试未运行，未真机；type语义、搜索列表屏幕文案待确认。
+
 ## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜EC-370图标与APP最多照片数：列表记录按详情接口补机型
 
 小程序main/0b2006e、APP main/e162214均已再次显式同名pull后push origin。列表记录认不出机型（无可用productId/broadcastId）时按userProductId静默调详情接口补broadcastId，会话内复用；APP机型补上后按机型重算容量（EC-370→11）。修复小程序EC-370首页/我的设备图标、APP首页/列表/详情图标与最多照片数。无node/Flutter，测试未跑，未真机；列表接口原始返回待用户提供确认。
