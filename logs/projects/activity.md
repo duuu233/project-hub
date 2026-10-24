@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-24｜flowerpot-app｜ssh｜main｜核对平台功能点清单备注并精简改动说明
+
+- fe84cdd：纯文档，改动说明按需求口径重写，登记功能点清单xlsx；发现DP3备注（random弃用、smart=2）与平台枚举（旧8项、smart=1）不一致，待设备确认；已推送。
+
 ## 2026-10-24｜flowerpot-app｜ssh｜main｜割草机DP3改为5值枚举
 
 - 89bb9b6：DP3改0 standby/1 random弃用/2 smart/3 spot/4 goto_charge，DP115回执val按新序号匹配，在桩等待只看DP5；拒绝条件对照拒绝码均已有文案；DP5改动说明加第5节；已推送，未运行测试未真机。

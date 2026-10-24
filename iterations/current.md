@@ -1,3 +1,14 @@
+## 2026-10-24 ssh｜花盆APP核对平台功能点清单备注并精简改动说明
+
+- 用户要求拉代码、看docs/YUSEN Robot Mower(mz7g3yzaufvoh4ls)_10_24.xlsx是否带备注，核对DP3/DP5/DP18枚举，改动以需求口径精简写入DP5改动说明。两仓显式同名pull：Hub已最新；花盆APP快进到18fef90（用户合并提交，相对89bb9b6只多该xlsx）。
+- xlsx无openpyxl，用标准库解包读取（临时产物在.codex-tmp/xlsx/）。两个工作表：功能点（H列为备注）、产品高级功能。
+- 核对：DP5备注15项与平台枚举顺序、APP显示名一致✓。DP18备注13项与APP一致✓，平台枚举第10位写spot_out_boundaty（备注写boundary，APP日志标识符用boundary，只影响日志）。**DP3冲突**：备注「0 standby/1 random弃用/2 smart/3 spot/4 goto_charge」（APP 89bb9b6已按此），平台枚举F列仍是旧8项standby,smart,spot,goto_charge,edge_mowing,secondary,wait_charge,wait_rain（无random，smart=1），需设备确认。其余备注：DP118盖子「回归工作调用」与APP一致；DP119平台标识符写opearting_time（APP日志用operating_time，只影响日志）。
+- 花盆APP main/fe84cdd：只改文档。改动说明重写为需求口径（DP5状态表、DP18黄条表、DP3模式与拒绝条件、倒计时规则、待确认3项、验收4条），去掉技术细节与提交号；docs导航登记xlsx并更新报告条目。代码未动。
+- 待确认：DP3以备注还是平台枚举为准（若按平台，需回退89bb9b6的DP3序号改动）；取消任务回待机入口；回待机是否清倒计时。
+- 验证：纯文档，git diff --check与信息隔离自查通过。
+
+---
+
 ## 2026-10-24 ssh｜花盆APP割草机DP3改为5值枚举并核对拒绝条件
 
 - 用户给出DP3：0 standby（取消任务回主页）/1 random弃用/2 smart/3 spot/4 goto_charge（枚举序=传输值）及拒绝条件（smart：休眠、急停、报警、OTA、开盖；spot另加充电、在线外；goto_charge同smart），途中重申DP5、DP18两份列表（与b4f1d51一致，无需再改）。两仓先显式同名pull均已最新（Hub main/d5a5e16、花盆APP main/b4f1d51）。
