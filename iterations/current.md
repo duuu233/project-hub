@@ -1,3 +1,14 @@
+## 2026-10-24 ssh｜花盆APP割草机协议V3.0更新：DP5补12/13/14
+
+- 用户要求先拉花盆APP，按更新后的docs/Grass_Master_Automower_DP协议对接_V3.0.md补齐DP18、DP5。环境未声明，按Hub在SSH服务器内运行、近期均为ssh执行。两仓先显式同名pull：Hub main已最新；花盆APP 45e98fd→13f856a（用户提交，仅改该协议文档）。无.codegraph、无Flutter。
+- 文档diff：DP5由12值扩为15值（12 escaping陷坑脱困中、13 goto_charge_low_pwr低电回充中、14 goto_charge_rain雨滴回充中，0~11不变，普通回充仍4，到桩仍9/10）；优先级加「陷坑脱困」；DP120新增51~53开始回充（151~153结束）及注意点「回充原因看DP5」。DP18（§3.5）本次未改。
+- 分析：MowerStatus原只有12项，enumOf对12~14越界返回null，设备报这三值时胶囊停在上一个状态。DP18的13位标识符与文案MowerFault已逐位对齐，无需改；用户所说「补齐DP18」按文档无可补项，若指DP120 51~53，只补注释（界面按协议以DP5判回充原因）。
+- 花盆APP main/fc3e0dd：MowerStatus追加escaping/gotoChargeLowPower/gotoChargeRain，文案取协议§4.2；本机日志12/13/14各记一条，12并入作业状态；DP120注释补51~53；codec/机器日志/首页胶囊用例；history记录、history索引、AI_CONTEXT（原「回桩途中区分雨滴/正常未实施」改为已由DP5 13/14落实）同步。
+- 遗留：黄条脱困提醒仍只认DP120 41/141，未跟随DP5=12。
+- 验证：无Flutter/Dart，测试/分析/格式化未运行，未真机；git diff --check与信息隔离自查通过。业务仓再次同名pull后push；统筹按main提交，push前再次同名pull。
+
+---
+
 ## 2026-10-23 ssh｜相册两端搜索列表按广播名显示sizeModel；抖动type按原定义保持
 
 - 承接上一条。用户确认：①抖动type数值与原来一致不改，后端后续同步，先改代码；②搜索列表也改为按广播名匹配产品显示sizeModel；③小程序后台合法域名里的seekink删除。三仓先显式同名pull均已最新（小程序main/85711f3、APP main/5889f5f）。

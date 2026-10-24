@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-24｜flowerpot-app｜ssh｜main｜割草机DP5新增12/13/14状态
+
+花盆APP main/fc3e0dd，已再次显式同名pull后push origin。按用户更新的协议V3.0文档：DP5补12陷坑脱困中、13低电回充中、14雨滴回充中（此前这三值解析为null、胶囊停在旧状态），状态胶囊与本机日志对接；DP18文档未变、代码13位已一致未改；DP120 51~53只补注释。无Flutter，测试未跑，未真机。
+
 ## 2026-10-23｜album-miniapp、album-app｜ssh｜main｜搜索列表按广播名显示sizeModel；抖动type按原定义
 
 小程序main/b468393、APP main/c415d92均已再次显式同名pull后push origin。绑定页搜索列表按广播名匹配产品broadcastId显示sizeModel（匹配不到或没配不显示），不再用广播屏型；抖动type数值不变（0=5.8寸大设备、1=3.7寸小设备），由后端对齐，注释与文档改口径。seekink合法域名需用户在小程序后台删除。无node/Flutter，测试未跑，未真机。
