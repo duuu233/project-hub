@@ -1,3 +1,13 @@
+## 2026-10-24 ssh｜花盆APP割草机DP改以xlsx「功能点属性」为准
+
+- 用户更正：xlsx以「功能点属性」（F列）为准，前面按备注说错了。两仓先显式同名pull均已最新（Hub main/edc8114、花盆APP main/cca4893）。
+- 重新核对F列：DP3为standby,smart,spot,goto_charge,edge_mowing,secondary,wait_charge,wait_rain（smart=1），备注random编号不采用；DP5十五值、DP18十三位顺序与代码一致（第10位平台写spot_out_boundaty）；DP13/105/107/109/117/119/120范围一致。F列无中文，DP5/DP18显示名仍取备注；DP3拒绝条件仍取备注。另发现：DP116清单为alarm_clear故障清除（bool rw），APP按协议V3.0当ota_status；标识符DP117 charging_status、DP119 opearting_time与代码日志标识符不同（只影响日志）。
+- 花盆APP main/592111d：lib/test中DP3还原到b4f1d51（撤销89bb9b6代码部分），DP18第10位标识符改回spot_out_boundaty，注释注明以功能点属性为准；改动说明依据改为功能点属性、DP3表改8项带编号、DP18表标识符、待确认补DP116用途与固件编号；AI_CONTEXT、docs导航、新增history记录与索引。
+- 待确认：DP116用途；取消任务回待机入口；回待机是否清倒计时。
+- 验证：无Flutter/Dart，测试未运行，未真机；git diff --check与信息隔离自查通过。
+
+---
+
 ## 2026-10-24 ssh｜花盆APP割草机DP以功能点清单备注为准
 
 - 用户确认：以xlsx备注为准。两仓先显式同名pull均已最新（Hub main/2d05a91、花盆APP main/fe84cdd）。代码已按备注实现（DP3 89bb9b6、DP5/DP18 b4f1d51），无需改代码，上一条「若按平台需回退89bb9b6」作废。
