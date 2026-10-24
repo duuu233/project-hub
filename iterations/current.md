@@ -1,3 +1,13 @@
+## 2026-10-24 ssh｜花盆APP改动范围收窄：工作模式不动，只同步DP5、DP18与倒计时隐藏
+
+- 用户口径：根据文档再次确认，工作模式（DP3）不要动，只同步DP5、DP18，加上待机/休眠/关机/离线隐藏倒计时。两仓先显式同名pull均已最新（Hub main/8c0485f、花盆APP main/592111d）。
+- 核实：`git diff 13f856a HEAD -- lib test`中DP3（MowerMode 8值、显示名、sendable、DP115回执、waitingOnDock含DP3=6/7）均与今日改动前一致，只差592111d在MowerMode上加的注释。保留的改动：DP5新增12/13/14与平台名、DP5=12黄条脱困提示；DP18平台名与第10位spot_out_boundaty；visibleWorkEndsAt隐藏倒计时。
+- 花盆APP main/e08d3e6：MowerMode注释还原为原文（DP3与13f856a完全一致）；改动说明标题改「状态、告警与倒计时」，删第3节工作模式、待确认里取消任务回待机/DP116/固件编号三项、验收DP3一条，注明DP3不改；docs导航、AI_CONTEXT（顺带把末尾「第10位改spot_out_boundary」旧说法改为spot_out_boundaty）、新增history记录与索引。
+- 剩余待确认：回待机是否清倒计时。DP116用途差异仍记在AI_CONTEXT与docs导航的xlsx条目里，改动说明不再列。
+- 验证：只改一处注释与文档，无Flutter/Dart未运行测试，未真机；git diff --check与信息隔离自查通过。
+
+---
+
 ## 2026-10-24 ssh｜花盆APP割草机DP改以xlsx「功能点属性」为准
 
 - 用户更正：xlsx以「功能点属性」（F列）为准，前面按备注说错了。两仓先显式同名pull均已最新（Hub main/edc8114、花盆APP main/cca4893）。
