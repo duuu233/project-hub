@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-24｜flowerpot-app｜ssh｜main｜割草机DP3改为5值枚举
+
+- 89bb9b6：DP3改0 standby/1 random弃用/2 smart/3 spot/4 goto_charge，DP115回执val按新序号匹配，在桩等待只看DP5；拒绝条件对照拒绝码均已有文案；DP5改动说明加第5节；已推送，未运行测试未真机。
+
 ## 2026-10-24｜flowerpot-app｜ssh｜main｜割草机DP5状态名与DP18黄条文案改平台名称
 
 - b4f1d51：DP5十五个状态显示名、DP18十三位黄条/告警弹窗文案按平台名称，第10位标识符改spot_out_boundary；DP5改动说明加新旧对照；已推送，未运行测试未真机。

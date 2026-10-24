@@ -1,3 +1,13 @@
+## 2026-10-24 ssh｜花盆APP割草机DP3改为5值枚举并核对拒绝条件
+
+- 用户给出DP3：0 standby（取消任务回主页）/1 random弃用/2 smart/3 spot/4 goto_charge（枚举序=传输值）及拒绝条件（smart：休眠、急停、报警、OTA、开盖；spot另加充电、在线外；goto_charge同smart），途中重申DP5、DP18两份列表（与b4f1d51一致，无需再改）。两仓先显式同名pull均已最新（Hub main/d5a5e16、花盆APP main/b4f1d51）。
+- 核对：APP下发DP3按标识符，不受序号影响；但DP115回执val与序号型上报按枚举序匹配，旧序号（smart=1、goto_charge=3）在新固件下会对不上→拒绝原因不弹，必须改。原4~7只用于waitingOnDock的DP3=6/7分支。拒绝条件对照拒绝理由V1.0：16/19·23/26/18/21，spot另加32·54/33，APP均已有文案；APP前置只拦盖子、暂停、关机、离线；APP无下发standby的按钮。
+- 花盆APP main/89bb9b6：MowerMode改5值、goto_charge显示名「回充」、sendable排除random；waitingOnDock只看DP5=9/10；注释/日志同步；用例改序号、DP115 val（smart 2、goto_charge 4），删DP3=wait_charge/7置灰用例。DP5改动说明新增第5节（序号对照、拒绝条件对照表）、风险补「固件须同步新序号、仓内协议V3.0的DP3表仍是旧序号」、验收补DP3一条、DP18补「同日再次确认」；AI_CONTEXT、docs导航、新增history记录与索引。
+- 待确认：设备固件是否已按新序号回执；APP是否需要「取消任务回待机」入口（standby）。
+- 验证：无Flutter/Dart，测试/分析/格式化未运行，未真机；git diff --check与信息隔离自查通过。
+
+---
+
 ## 2026-10-24 ssh｜花盆APP割草机DP5状态名与DP18黄条文案改平台名称
 
 - 用户给出DP5十五值、DP18十三位的平台名称，补充「18是黄色提示框的」，要求据此更新DP5改动说明。两仓先显式同名pull均已最新（Hub main/c88e433、花盆APP main/f626e65）。
