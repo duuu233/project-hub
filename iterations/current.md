@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序WiFi列表改由设备扫描（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/b04efc7 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户定流程：App BLE 连设备 → 设备扫描附近 WiFi（3~5 秒，「正在搜索网络...」）→ 列表（SSID + 信号）→ 选 SSID 输密码 → 下发 WiFi + MQTT 参数。
+- photo-album main-wifi/4aaac95：blufi 加 CTRL 0x09 / DATA 0x11 解析与 session.scanWifi；wifi-list 改为蓝牙连设备后由设备扫描（去掉手机 getWifiList/getConnectedWifi），同名取强、隐藏网络不列、4 格信号，失败可重新搜索/手动输入；会话保留到配网第 2 步复用，返回搜索页断开。测试补 0x09/0x11 解析与列表页流程；变更记录/进度/AI_CONTEXT 同步。
+- 依赖/剩余：固件需实现 BluFi 获取 WiFi 列表（乐鑫 demo 有，协议未单列）；MQTT 参数来源仍未定不下发；无 Node 测试未跑，未真机/固件联调。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序配网先进WiFi列表、尺寸loading与蓝牙尺寸（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/022824d 均已最新，origin/main 无未合入；origin 为 GitHub。
