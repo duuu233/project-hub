@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜相册小程序WiFi搜索：sizeModel显示与未知设备拦截补强（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/bb1596f 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 反馈：后台产品新增 sizeModel（如「13.3寸」）要直接显示、没有显示「--寸」；「查不到/空/失败显示未知设备禁止连接」「未知设备点击直接弹窗」未生效。
+- 排查：getProductByDevice、getProductList 不带登录态均回 406，未能看到真实返回与后台 broadcastId 配置。按代码找出三处可致失效：①只认后台写成 IJ_* 的模板，若写成 IJ_ 会按蓝牙包含匹配归为蓝牙版（不查规格、走蓝牙绑定）——最可能的原因；②只有 sizeModel 或 productId=0 的空壳记录被当查到；③点行只选中，要再点底部按钮才弹窗。首页那块附近设备列表是 mock 数据，真实搜索只在 bind 页。
+- photo-album main-wifi/6a6e669：broadcast-match 内置 IJ_* 模板（IJ_+12 位一律 WiFi 版，后台其它 * 模板优先）；非搜索页扫描入口一律不收 WiFi 设备；normalizeWifiProduct 只认有效 productId（非空非0）或产品名并导出；WiFi 行第二行改为 sizeModel || '--寸'；WiFi 行点击即处理（未知弹窗不选中、查到进配置页、查询中提示稍候）。蓝牙行尺寸仍按 10-23 口径（没配不显示），未改。wifi-search 测试同步改写（两条旧断言按规则变更挪位并注明）。变更记录/进度文档/README/AI_CONTEXT 已更新。
+- 验证/剩余：无 Node，测试未运行，未真机；需用户确认后台 WiFi 产品 broadcastId 实际写法、未开通设备时 getProductByDevice 的真实返回；「--寸」是否也要用到蓝牙行待确认。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi版STEP0联调基础+STEP1搜索（main-wifi）
 
 - 同步：Hub main 已最新；photo-album 当前分支 main-wifi，fd61171 快进至 445d35e（新增 docs/wifi 三份文档），origin/main 无未合入提交；origin 为 GitHub。

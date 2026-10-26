@@ -2531,3 +2531,7 @@ a2d0779已提交、再次pull/push成功；出库单提交日期字段转毫秒�
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi版STEP0联调基础+STEP1搜索
 
 bb1596f已提交、再次pull/push成功；IoT 客户端（错误码/HTTP/WS）、搜索区分WiFi版/蓝牙版并查规格拦截未知设备、新增WiFi配置与配网状态静态页。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi搜索sizeModel显示与未知设备拦截补强
+
+6a6e669已提交、再次pull/push成功；WiFi行尺寸读sizeModel（没配--寸），IJ_+12位一律按WiFi版、空壳记录算查不到、点未知设备行直接弹窗。未运行测试，未真机。
