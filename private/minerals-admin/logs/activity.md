@@ -299,7 +299,7 @@
 ### 2026-09-09：ssh 环境提交作者名改为 dh
 - **环境**：ssh（仅本机配置，无代码改动、无提交到团队仓库）
 - **实施**：`git config --local user.name dh`，只动正矿仓库的 `.git/config`；全局仍是 `pg-dh`，同机的花盆、相册、Hub 各仓库不受影响。核对 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 同步生效。
-- **邮箱**：随后按用户要求一并改为 `duun235@163.com`（仓库级）。先实测过「留空」这条路——Git 允许，提交对象里是 `author dh <>`，但托管平台靠邮箱认账号，空邮箱在 Codeup 上归属不到人且可能被推送规则拦，故用真实邮箱。
+- **邮箱**：随后按用户要求一并改为 `duun235@163.com`（仓库级）。先实测过「留空」这条路——Git 允许，提交对象里是 `author dh <>`，但托管平台靠邮箱认账号，空邮箱在托管平台上归属不到人且可能被推送规则拦，故用真实邮箱。
 - **未改**：已推送的历史提交（`08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 及 2026-09-01 那批）作者仍是 `pg-dh`——`feature-v1.8.3` 与团队共用，改写要强推，没做。
 - **口径**：`.git/config` 不随 Git 同步，work / home 需各自再配一次；写入 `docs/development.md` 新增的「11. 提交身份」。
 
@@ -1048,3 +1048,35 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 推送目标尚待用户确认，不设置 upstream。
 
 - 最终交付：0eaf6014 / f152a424 已显式推送 origin/feature-v1.8.5。用户确认今后默认显式同步当前同名分支，不设置 upstream，不擅自合并。
+
+## 2026-10-26 ssh｜远端口径更正
+
+用户确认正矿远端是 GitHub，之前记录的「企业 Codeup 仓库」说法已从 Hub Context、AGENTS 与本目录说明中去掉。
+
+## 2026-10-26 ssh｜新服务器私人关联
+
+用户在 ssh 引入 `/home/cc/dh/zk`。核实为同一正矿仓库（feature-v1.8.5 / 1c9e465，pull 已最新；私人日志 152 个提交号中 115 个在其历史中；origin 为用户 GitHub 的 zk，远端仅此分支）。本机无 node，按 setup-links 规则手动建立五项软链接与本地忽略，check-ignore 命中、业务工作区干净；无 codegraph，索引未建，构建与类型检查不能运行。未改业务源码。旧服务器 2026-09-09 的 ssh 挂载记录已作废，仅供追溯。
+
+## 2026-10-26 ssh｜提单 Tab 条遮挡页签修复 + 缓存失效排查
+
+提单详情 `el-affix` offset 由写死 84 改为取本页滚动区顶边，固定后不再压住页签条；未构建、未浏览器验证。页面缓存失效只做分析：菜单 2.0（baf8a3a）去掉路由拍平导致 keep-alive 只包到 ParentView，详见 docs/maintenance.md 与 logs/2026-10-26-bill-affix-keepalive-analysis.md。
+
+## 2026-10-26 ssh｜恢复路由拍平修复页面缓存
+
+permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → 页面」，keep-alive 直接包住页面组件；侧栏 / 顶栏三层与 resRoutes 不变，URL 不变。未 type-check / 构建 / 浏览器回归；次因（无组件名、重复名、noCache）未改。详见 logs/2026-10-26-keepalive-route-flatten.md。
+
+## 2026-10-26 ssh｜列表缓存名称对齐
+
+核对 `proxy.toList` 强制刷新机制（exclude 600ms）与列表缓存的名称耦合；53 处 toList 中 8 处不一致，按证据修正 5 处（车辆、提货、仓库、场地列表组件名，内贸销售 listName），销售收货 / 未开票 / 码头库存等待后端路由名确认。未 type-check / 浏览器验证。详见 docs/maintenance.md「页面缓存（KeepAlive）不生效」。
+
+## 2026-10-26 ssh｜保存后回列表统一走 toList
+
+缓存恢复后排查保存成功仍用 router.back/push 回列表的页面：授信集中器、帮助中心、仓库管理改为 toList 强制刷新，授信集中器列表组件名对齐 Credit-concentrator；其余此类页面的列表本就不缓存（无组件名 22 页）未改。未 type-check / 浏览器验证。
+
+## 2026-10-26 ssh｜仓储附件上传框文字重叠
+
+WarehouseAttachment 可编辑态的格式提示与「拖放到此处或单击上传」重叠：提示与图标块从绝对定位改为拖放区内 ::before / ::after 正常排版。影响入库单、入库计划、出库单、出库计划。未构建、未浏览器验证。详见 docs/warehouse-figma-ui.md。
+
+## 2026-10-26 ssh｜出库单日期转时间戳 + 附件必填中文提示
+
+新增 utils/dateTimestamp.ts；出库单提交前把 …Date / …Time 日期文本统一转毫秒时间戳（实际出库日期、装货日期及带回的计划 / 详情日期）；出库附件必填改规则 + 中文提示。未构建、未联调。详见 docs/warehouse-figma-ui.md。

@@ -132,3 +132,30 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 - **已知**：确认 dh 负责的 13 模块；新 Swagger JSON 读取 200 / 216 路径；105 包装对照中 86 路径/方法匹配、1 方法不符、18 未列出。八处导入/导出地址和代理需调整，角色 DTO 与菜单权限迁移仍需契约核对，接口日志仍无独立接口。
 - **边界**：只有文档下载与捕获 request/XHR 的隔离检查，未真实业务请求、构建或部署；CodeGraph 当前最新。锁文件仅按授权暂存恢复，Git 换行转换已还原原字节，SHA256 一致，文件仍未跟踪且不提交，本轮 stash 已移除。
 - **续接**：docs/qianrong-api-alignment.md 及 history/2026-10-13-qianrong-api-audit-paused.md 保存完整现场；下次按实际环境先 pull、刷新契约后实施，不在暂停期间自动恢复。
+
+## 2026-10-26 ssh｜SSH 服务器私人关联
+
+用户称「超级泰乾-qianrong」，核实 `/home/cc/dh/tq-plus` 即 front 仓库（master / 9975d7f，pull 已最新，origin 为用户 GitHub 的 tq-plus），复用 taiqian-front 与本私人目录。本机无 node，按 setup-links 规则手动建立五项软链接与本地忽略，check-ignore 全部命中、业务工作区干净；无 codegraph，索引未建。未改业务源码、未构建。用户再次明确：本项目和正矿一样走私人配置，文档更新只写本目录，不在业务仓库生成。详见 docs/workspace-association.md。
+
+## 2026-10-26 ssh｜远端口径更正
+
+用户确认本项目远端一直是 GitHub 上的 tq-plus 仓库，之前记录的「企业 Codeup 仓库」是写错的；已从 Hub Context、ssh 说明、关联文档与历史记录中去掉。
+
+## 2026-10-26 ssh｜企业用户移除超级管理员信息
+
+- **范围**：qianrong 企业用户新增/编辑/详情共用的 handleDetail.vue 删除「超级管理员信息」分组与手机号过滤函数，详情副标题同步；提交白名单保留 orgAdminName/orgAdminPhone，编辑原值原样回传、不清空。只改 1 个文件，不动 qianlian 与共享包。
+- **验证**：本机无 Node/pnpm、无 codegraph，未构建、未浏览器验证、未真实请求；仅 diff 自查与信息隔离检查。说明见 docs/qianrong-enterprise-contract-audit.md。
+
+## 2026-10-26 ssh｜角色配置权限改独立页面并去掉静态标识
+
+- **同步**：master 536f662 快进至 c96f263（用户新增 permissions.vue 占位页）。
+- **范围**：permissions.vue 承接原弹窗内容，dynamicRoutes 登记 `/system/role-permission/index/:roleId`，列表按钮改为跳转，删除 RolePermissionsDialog；四个面板与预览去掉静态/演示/示例标识，样例企业名去「示例」；测试移除弹窗、新增独立页面与无标识断言；README 改为配置页说明并保留未对接接口说明。数据仍为前端模型，保存不落库。
+- **验证**：无 Node/codegraph，未构建、未跑 node --test、未浏览器验证；Python 核对新增断言正则命中。详见 docs/qianrong-role-logs.md。
+
+## 2026-10-26 ssh｜角色配置权限页 UI 调整
+
+permissions.vue 改用 DetailHeaderCard 头卡 + 白底区块卡包住四个标签（详情皮肤同令牌），修复迁成页面后没有白底的问题；脚本与面板不变。未构建、未浏览器验证。详见 docs/qianrong-role-logs.md。
+
+## 2026-10-26 ssh｜系统中心页面不再因点列表调详情接口
+
+新增 useOwnRouteLoad，系统中心 9 个页面（系统 / 部门 / 企业用户 / 角色 / 用户组 / 用户表单、菜单列字段、字典数据、配置权限）改为只在本页激活时按本页参数加载；新增 tests/own-route-load.test.mjs。未运行测试、未构建、未浏览器验证。详见 docs/qianrong-menu-route-lifecycle.md。

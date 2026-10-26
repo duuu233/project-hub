@@ -52,7 +52,7 @@ Hub 内改动：
 ## 待确认与阻塞
 
 - `minerals-admin` 的项目名称按用户指定改为「正矿」，ID 保持 `minerals-admin` 不变（改名不改 ID）。
-- `minerals-admin`（正矿）走 Codeup 远端和单独的 SSH 身份。接入时该私钥有口令导致 Agent 无法访问远端，用户已解除口令，现已可正常 `ls-remote` / `fetch`，本项目回到 Hub 通用约定，无例外。6 个仓库远端均可达。
+- `minerals-admin`（正矿）走单独的 SSH 身份。接入时该私钥有口令导致 Agent 无法访问远端，用户已解除口令，现已可正常 `ls-remote` / `fetch`，本项目回到 Hub 通用约定，无例外。6 个仓库远端均可达。
 - 本环境所有仓库都没有 `.codegraph/` 索引，定位代码时按项目自身方式检索；是否建索引由用户决定。
 - `home` 与 `work` 目录当前为空占位，各自机器上再放入自己的 `projects.local.yaml`，提交后所有环境都能看到彼此的位置。
 - 环境映射改为随 Git 同步后，当前环境以用户在任务开头声明的为准；按该环境的映射解析路径，对不上就停下并提示用户确认环境，不换环境重试。判定细则见 `environments/README.md`。

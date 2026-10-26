@@ -1,6 +1,6 @@
 # SSH 环境：新服务器（2026-10-21 接入），Hub 在服务器内部运行，全部使用 transport: local。
 # 旧服务器映射已作废，不得从历史记录恢复；本文件随 Git 同步，只放路径，不放任何凭据。
-# 当前接入花盆APP（2026-10-21）、相册小程序、相册APP（2026-10-22）、相册后台（2026-10-23），其他项目待用户后续指定。
+# 当前接入花盆APP（2026-10-21）、相册小程序、相册APP（2026-10-22）、相册后台（2026-10-23）、泰乾超级、正矿（2026-10-26，均走私有挂载），其他项目待用户后续指定。
 version: 1
 environment: ssh
 paths:
@@ -20,3 +20,11 @@ paths:
     transport: local
     path: /home/cc/dh/web-ui-v2
     default_branch: main
+  taiqian-front:
+    transport: local
+    path: /home/cc/dh/tq-plus
+    default_branch: master
+  minerals-admin:
+    transport: local
+    path: /home/cc/dh/zk
+    default_branch: feature-v1.8.5

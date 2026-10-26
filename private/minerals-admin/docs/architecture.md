@@ -167,7 +167,7 @@ views/login.vue
 2. 从 `Minerals-User-Info` 读取 `user.userType`；只有 `userType === '00'` 的超级管理员保留 `menuId=2000` 的用户组管理路由，其他情况（含缓存缺失或无效）递归移除该节点及其子路由。
 3. 排除名为 `Weapp` 的菜单节点。
 4. 处理多层菜单，将后端结构标准化。
-5. 复制为侧栏、实际路由和顶部菜单三套数据。
+5. 复制为侧栏、实际路由和顶部菜单三套数据。侧栏 / 顶栏用三层的 menuTree；**实际注册的路由经 `flattenRouteTree` 拍平为「模块 → 页面」两层**（页面 path 取绝对 fullPath，URL 不变，分组不再注册为路由），保证 AppMain 的 keep-alive 直接包住页面组件；`resRoutes` 保留未拍平的原树供 404 恢复与切换系统。
 6. 将组件标识映射：
    - `Layout`
    - `ParentView`
@@ -181,7 +181,7 @@ views/login.vue
 
 - 后端 `component` 必须与 `src/views` 文件路径匹配。
 - 路由 `name` 应保持唯一。
-- 页面 `<script setup name>` 参与 KeepAlive/TagsView 行为。
+- 页面 `<script setup name>` 参与 KeepAlive/TagsView 行为：keep-alive 按组件名匹配 `cachedViews` 中的路由名，两者必须一致，且页面必须是模块 `Layout` 的直接子路由（见上「拍平」）。
 - `meta.activeMenu` 控制侧栏高亮。
 - `meta.noCache`、`affix`、`link`、`breadcrumb` 会被布局组件消费。
 - 动态路由必须先注册，最终通配 404 才能注册，否则会过早吞掉后端路由。

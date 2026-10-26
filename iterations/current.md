@@ -1,3 +1,143 @@
+## 2026-10-26 ssh｜正矿出库单日期转时间戳与附件必填中文提示
+
+- 同步：Hub main、正矿 feature-v1.8.5/9ea735a 均已最新；origin均为GitHub。
+- 正矿 a2d0779：新增 utils/dateTimestamp.ts（datesToTimestamp：…Date/…Time 字段的 YYYY-MM-DD[ HH:mm[:ss]] 文本→本地毫秒时间戳，递归、不改入参）；出库单新增/编辑提交整包转换（实际出库日期、装货日期及带回的 stockOutPlanDate/createTime 等）；出库附件去掉裸 required，改 rules 中文「请上传出库附件」。私人 warehouse-figma-ui 与日志已记。未构建/联调。
+
+---
+
+## 2026-10-26 ssh｜正矿出库单附件上传框文字重叠修复
+
+- 同步：Hub main、正矿 feature-v1.8.5/9a2f001 均已最新；origin均为GitHub。
+- 原因：WarehouseAttachment 可编辑态把格式提示绝对定位在129px，FileUpload 拖放区（170高、内容居中）里「拖放到此处或单击上传」落在约118~136px，二者重叠。
+- 正矿 9ea735a：隐藏 FileUpload 自带图标，图标块与提示改为 .tips-box::before/::after 进入正常排版，与只读态同序；入库单/入库计划/出库单/出库计划共用。私人 warehouse-figma-ui 与日志已记。未构建/浏览器验证。
+
+---
+
+## 2026-10-26 ssh｜qianrong系统中心点列表调详情接口修复
+
+- 同步：Hub main、tq-plus master/ef5693b 均已最新；origin均为GitHub。
+- 原因：同10-23菜单表单问题——KeepAlive缓存页对全局路由 query/params 的 immediate watch 仍生效，点其它列表即按别的参数重载、调详情并报错；10-23只修了菜单表单。
+- tq-plus master/61b359c：新增 src/utils/ownRouteLoad.js（useOwnRouteLoad：记创建path，仅本页激活时加载，key未变且已就绪不重载，失败仅再次进入重试），接入9页：系统/部门/企业用户/角色/用户组/用户表单、菜单列字段、字典数据（并入onMounted首载）、角色配置权限页；清理无用watch导入；新增 tests/own-route-load.test.mjs。私人 menu-route-lifecycle 与日志已记。
+- 验证：无Node，测试/构建/浏览器均未运行。
+
+---
+
+## 2026-10-26 ssh｜qianrong用户组编辑「系统授权菜单暂不可读取」排查（仅分析）
+
+- 同步：Hub main 已最新；tq-plus master 264cd15 快进至 ef5693b（含 kimi 8b35f23/d27176f：adjust-qianrong-system-menus.mjs、hide-qianrong-list-menus.mjs、路由树调整）。
+- 结论：group-menu-model.js:23 systemPermissionScope 要求系统 detail 的 menuIds 全在 menu/list 中。最可能触发为 adjust 脚本移走日志页后删除「日志管理」目录，服务端只校验子菜单与角色分配、不校验系统授权，系统 menuIds 留下悬空 ID；其次为菜单列表按用户过滤。脚本是否已执行待确认。无代码改动；结论写入私人 qianrong-group-menu-inheritance.md。
+
+---
+
+## 2026-10-26 ssh｜qianrong角色配置权限页UI调整
+
+- 同步：Hub main、tq-plus master/a2d99e5 均已最新；origin均为GitHub。
+- tq-plus master/264cd15：配置权限页迁成页面后无白底，改用 DetailHeaderCard（字段同角色详情头卡）+ 白底区块卡包住四标签（详情皮肤 .collapse-box 同令牌），标签栏54高/分隔线/3px指示条；脚本与面板不变。私人 role-logs 与日志已记。无Node未构建/浏览器验证。
+
+---
+
+## 2026-10-26 ssh｜正矿列表缓存名称对齐（proxy.toList）
+
+- 同步：Hub main、正矿 feature-v1.8.5/357085c 均已最新。
+- 核对：列表靠 keep-alive 缓存，新增/编辑成功后 proxy.toList({path,listName}) 关当前页签、跳回列表、exclude listName 600ms 强制重挂载（自 init 起即有）。路由名（cachedViews）＝列表组件名＝listName 才生效；后端路由名按菜单 path（Xxx-list、Xxx-list/add…）。脚本 .codex-tmp/audit_tolist.py 审 53 处 toList：45 一致、8 不一致。
+- 正矿 728aa1d：按 toList+子页名一致证据修 5 处——车辆/提货列表组件名（原复制为 Service-provider-list）→Car-list/Pick-up-goods-list，仓库/场地 Store/Site→Store-list/Site-list，内贸销售 listName Domestic-sales-list→Domestic-sales。用户要求 22 个无组件名页面不管。
+- 待后端路由名确认：销售收货（Sales-pickup vs Receipt，子页复制 Enterprise-users/*）、未开票列表与开票同名 Invoicing-list、码头库存四页复制 Service-provider-list、提货/码头库存保存逻辑复制商品属性、审批分派/日志保存后跳出口商列表。私人 maintenance 与日志已记。未 type-check/浏览器验证。
+- 正矿 9a2f001：缓存恢复后保存成功仍 router.back/push 的页面改走 toList——授信集中器（列表名 CreditConcentrator→Credit-concentrator）、帮助中心、仓库管理；其余此类页面列表属无组件名22页未改。另查已用 toList 的文件无保存后绕开 toList 的分支。
+- 出库计划单时间戳：用户表示先不改。
+
+---
+
+## 2026-10-26 ssh｜正矿恢复路由拍平修复页面缓存
+
+- 同步：Hub main、正矿 feature-v1.8.5/55ea33a 均干净，显式同名pull已最新；origin均为GitHub。
+- 正矿 feature-v1.8.5/357085c：permission.ts 新增 flattenRouteTree/flattenPages，generateRoutes 注册路由前把「模块→分组→页面」拍平为「模块→页面」（页面用绝对fullPath，URL不变；Layout/ParentView分组不再注册；带组件且有子级的节点保留自身），侧栏/顶栏menuTree与resRoutes不变。不加分组跳转占位（filterAsyncRouter会删无子级redirect致非法路由）。
+- 私人文档：architecture（拍平与keep-alive耦合）、maintenance（主因已修、回归要点、次因待办）、新增日志。
+- 验证/剩余：无node，未type-check/构建/浏览器回归；次因（22个无组件名页面、重复组件名/路由改名、后端noCache）需后端实际路由名，未改。
+
+---
+
+## 2026-10-26 ssh｜正矿提单Tab条遮挡页签修复 + 页面缓存失效排查
+
+- 同步：Hub main、正矿 feature-v1.8.5/1c9e465 均干净，显式同名pull已最新；origin均为GitHub。无node/codegraph，源码分析。
+- 提单 feature-v1.8.5/55ea33a：bill-lading handleDetail 的 el-affix offset 写死84，而顶栏76+页签46（小屏60+40）且本页滚动区为 .flex-main，固定后压住 tags-view；改为取 .flex-main 视口顶边（挂载/activated/resize 重算），固定后贴滚动区顶部、页签之下，原毛玻璃固定样式不变。未type-check/构建/浏览器验证。资产(60)、融资(90)详情同样写死，未改。
+- 缓存失效（只分析）：主因 baf8a3a（2026-09-18 菜单2.0 automated sync）去掉 filterAsyncRouter 的 filterChildren 拍平，分组下页面经 ParentView（裸router-view）渲染，AppMain keep-alive 只包到 ParentView、不在 include 中→分组子树切走即销毁；次因22个页面无组件名、组件名重复与 resolveRouteName 改名、后端noCache；AppMain transition包router-view非原因。修复方向：注册路由前恢复拍平（侧栏仍三层），待用户决定。结论写入私人 docs/maintenance.md 与 logs。
+
+---
+
+## 2026-10-26 ssh｜接入正矿（zk）并恢复私有挂载
+
+- 用户要求：ssh 新增 zk 即正矿，按文档规则引入。
+- 核实：`/home/cc/dh/zk` 为 Git 根目录，当前 feature-v1.8.5，origin 为 GitHub duuu233/zk（远端仅此分支，origin/HEAD 指向它），工作区干净；显式同名 pull 已最新（1c9e465）。Hub 正矿私人日志 152 个提交号中 115 个在其历史中，确认即 minerals-admin，复用 ID 与 private/minerals-admin。
+- 登记：environments/ssh/projects.local.yaml 增 minerals-admin（default_branch 本机覆盖为 feature-v1.8.5，共享仍记 master）；ssh README（映射表、正矿私有挂载段）、environments README、configuration（SSH 状态与挂载表）、AGENTS SSH 映射、context/minerals-admin.md、私人日志同步。
+- 挂载：本机无 node，按 setup-links 规则手动建五项软链接与 .git/info/exclude；check-ignore 命中（AGENTS/AI_CONTEXT 由业务 .gitignore 忽略），业务 git status 干净，无业务提交。
+- 剩余：无 codegraph/node，索引未建，构建与类型检查不能运行，是否安装由用户决定。
+
+---
+
+## 2026-10-26 ssh｜花盆APP倒计时隐藏规则、DP119转圈、OTA提醒门禁与OTA调试日志文件
+
+- 同步：Hub main、花盆APP main/e29a8f1 均干净，显式同名pull已最新；origin均为GitHub。
+- 花盆APP main/51cd0f0：
+  - 倒计时：visibleWorkEndsAt只看DP121剩余（为0或无计划隐藏，去掉待机/休眠/关机/离线条件），状态卡减到0整块收起；DP119下发成功→awaitingWorkPlan图标+转圈，收到与下发时不同的DP121计划（含无计划）或60秒到点结束。
+  - OTA门禁：新增OtaProgressLayer（进度弹层计数），FirmwareReminderHost开着时不弹；割草机DP116拒绝/失败提示在进度层开着时不进failures（此前会叠在进度层上另弹toast）。
+  - OTA调试日志：新增OtaDebugLog写手机文件 ota_logs/ota-YYYY-MM-DD.log（Android外部应用文件目录、iOS Documents+Info.plist文件共享），保留7天，总闸APP_DEBUG_TOOLS；来源native（Android/iOS新增otaLog事件，dump SDK升级信息列表、服务回调/轮询bean、旧版监听原始回调、错误码/NSError、发起/接回/释放）、sdk（原样OTA事件）、app（状态判定全链路与[ota-timing]）、ui（进度层显示、提醒、入口分支与用户选择）；联调日志框「OTA日志」复制并提示路径。新增path_provider依赖。
+  - 测试：倒计时用例重写；新增ota_debug_log_test；firmware_reminder_test加进度层门禁用例。AI_CONTEXT、docs导航、产品说明报告（含取日志方法）、history记录已补。
+- 补充（同日）：用户问日志复制是否会过长——会（3秒轮询整bean+剪贴板约1MB限制+聊天软件长度限制）；建议轮询去重、改「分享文件」(share_plus)、安全截断复制，待用户确认。五项改动说明改为简明版 c44a8c4。
+- 用户选定「分享文件」：75bb666 OtaDebugLog.exportForShare合并7天日志为ota_logs/share/ota-log-<时间>.txt（含导出时间/App版本头），联调日志框「OTA日志」经share_plus（>=11 <14，SharePlus API）分享；轮询去重与截断复制未做（用户未选）。
+- 风险/剩余：本机无Flutter/Android/Xcode，Dart测试、analyze、Kotlin/Swift编译均未运行；**pubspec.lock未更新**，需flutter pub get后提交；iOS开文件共享后正式包Documents也可见（目前只有OTA日志写入且正式包不写）；Android 11+需USB/adb或「OTA日志」复制取文件。
+
+---
+
+## 2026-10-26 ssh｜花盆APP割草机倒计时改以DP121当前计划为准
+
+- 同步：Hub main干净已最新；花盆APP main c7ccdc1快进至f215b84（用户更新协议V3.0：26个DP，新增DP121 schedule_current `{st,et,now}`）。origin均为GitHub。
+- 花盆APP main/e29a8f1：新增MowerCurrentPlan解析与MowerDp.scheduleCurrent=121；终点=收到新帧本机时刻+et−now，同一帧快照不动、无计划收起、坏帧丢弃，计划变化记日志；DP119下发不再计时，去掉本机SharedPreferences终点；待机/休眠/关机/离线隐藏规则保留。测试重写（解析边界、快照起算、同帧不动、兜底重设、换计划、坏帧、无计划、DP119不计时）；AI_CONTEXT、docs导航、新增产品说明报告与history记录，10-24启动无倒计时报告标为已取代。
+- 边界：首次进页用云端缓存帧，最多偏差一个兜底周期60s；旧固件无DP121将不再显示倒计时；启动瞬间DP5仍待机时按隐藏规则晚一拍出现。
+- 验证：本机无Flutter，测试未运行，未真机；git diff --check与信息隔离自查通过。
+
+---
+
+## 2026-10-26 ssh｜qianrong角色配置权限改独立页面并去掉静态标识
+
+- 同步：Hub main干净已最新；tq-plus master 536f662快进至c96f263（用户新增permissions.vue占位页，内容为复制的新增页）。origin均为GitHub。
+- 实施：permissions.vue承接原RolePermissionsDialog全部内容（身份头、四标签、未保存确认），头部改getRole只读回读；dynamicRoutes按「分配用户」方式登记`/system/role-permission/index/:roleId`（RolePermissions，system:role:edit），列表「配置权限」改跳转，删除弹窗。去掉界面全部静态/演示/示例标识，样例企业名去「示例」。测试去掉弹窗、新增独立页面与无标识断言；业务README改配置页说明并保留「尚未对接接口」开发说明；私人role-logs与日志已补。
+- 风险：四标签数据仍为前端模型，保存不落库；去标识后界面像真实配置，待后端接口替换permission-workspace-model。
+- 验证：无Node/codegraph，未构建、未跑node --test、未浏览器验证；Python核对新增断言正则与源码匹配。
+
+---
+
+## 2026-10-26 ssh｜花盆APP割草机启动无倒计时排查（仅分析）
+
+- 同步：Hub main、花盆APP main/c7ccdc1 均干净，显式同名pull已最新；无代码改动、无业务提交。
+- 结论：两层原因叠加。①倒计时起点是DP119下发成功（setOperatingTime→_restartCountdown），盖子未合、跨整点超限、过18:00、暂停/关机、离线、DP119发送失败都在下发前返回，不计时（见业务reports/2026-10-24启动无倒计时报告，弹窗即计时方案faf57fd已撤回、待产品定）。②10-24新增隐藏规则visibleWorkEndsAt：DP5=standby/sleep、DP113关机、离线时不显示；启动时机器在桩仍为DP5=0待机，DP119成功后终点已设但被隐藏，要等DP5上报割草类状态才出现；启动被DP115拒绝、DP5迟迟不报或未报（默认待机）时一直不显示。
+- 定位方法：联调日志有无「倒计时 · 割草机工作时间 N 小时」——无则是①，有则看随后DP5上报是否仍为standby（②）。
+- 待用户/产品决定：是否改为确认即显示，或启动后待机期间不隐藏。
+
+---
+
+## 2026-10-26 ssh｜qianrong企业用户去掉超级管理员信息；花盆APP割草计划两时段间隔10分钟
+
+- 同步：Hub main、tq-plus master/9975d7f、花盆APP main/e08d3e6 均干净，显式同名pull已最新；三仓origin均为GitHub。
+- 泰乾超级 master/536f662：企业用户新增/编辑/详情共用的handleDetail.vue删除「超级管理员信息」分组（管理员手机号码、昵称）与手机号过滤函数，详情副标题改「查看企业资料及用户组信息」。契约中orgAdminName/orgAdminPhone非必填，提交白名单保留：新增不发送、编辑原值原样回传不清空。私人契约文档与日志已补。本机无Node/codegraph，未构建、未浏览器验证。
+- 花盆APP main/c7ccdc1：MowerScheduleDay新增minGapMinutes=10与overlaps；编辑周X保存时相交提示重叠、间隔不足10分钟（含首尾相接）提示需间隔，08:00–12:00后最早12:10，时段2在前须07:50前结束，停用时段不参与。setSchedule底线改用overlaps，设备已有首尾相接旧计划不阻断整周下发。单测更新并新增边界用例；AI_CONTEXT、history记录与索引同步。V3.0协议未规定两段间隔，属APP产品规则。本机无Flutter，测试未运行，未真机。
+- 前置排查（同日，无改动）：泰乾超级系统编辑提示「部分已有权限暂不可读取」来自all-system handleDetail.vue:42树外ID保护——system/detail的menuIds有编号不在system/menu/list中；疑似菜单删除未清关联、菜单列表按用户/状态过滤或编号不一致，待用户用Network比对确认。
+
+---
+
+## 2026-10-26 ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
+
+- 用户要求：ssh 环境新接入「超级泰乾-qianrong」，和正矿一样开启私人配置，文档更新不在业务项目中生成。
+- 身份判定：注册表已有泰乾超级（taiqian-front），qianrong 是其 `apps/qianrong/` 子应用（Context 约定不登记独立仓库）。`/home/cc/dh/tq-plus` 为 Git 根目录、结构与 front monorepo 一致，Hub 私人日志里的多个提交号都在其历史中，确认同一项目，复用 ID 与 `private/taiqian-front/`，不新建项目。
+- 同步：Hub main/d087782、tq-plus master/9975d7f 均干净，显式同名 pull 均已最新。tq-plus 的 origin 是用户 GitHub 的 tq-plus 仓库（远端一直是 GitHub）。
+- 登记：`environments/ssh/projects.local.yaml` 增 taiqian-front（`/home/cc/dh/tq-plus`，master）；ssh README、environments README、configuration、AGENTS 当前映射、context/taiqian-front.md（别名、ssh、私人配置硬要求）同步；私人 workspace-association 与日志补 ssh 段。
+- 挂载：本机无 node，按 setup-links 规则手动建立五项软链接并写 `.git/info/exclude`；check-ignore 五项命中，业务 `git status` 干净，业务仓库没有提交。
+- 剩余：本机无 codegraph、pnpm/node，索引未建、构建不能跑，是否安装由用户决定。
+- 更正（同日）：用户确认泰乾超级远端一直是 GitHub，之前「企业 Codeup 仓库」的记录是写错的，已从 Context、ssh 说明与私人资料中去掉。
+- 再更正（同日）：「企业团队仓库」说法也去掉，私有化理由统一为用户要求。新增全局规则：所有环境、所有仓库的提交只推送 GitHub，提交前核对 origin，不是 GitHub 就暂停询问用户、不提交不推送（AGENTS「任务完成后的默认动作」第 0 条，ssh README 引用）；五个业务仓与 Hub 的 origin 已核实均为 GitHub。
+- 三更正（同日）：用户确认正矿也推 GitHub，正矿 Context、AGENTS 信息隔离段、邮箱说明与旧归档中的 Codeup 说法一并去掉。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序分支整理、新建main-wifi并评审WiFi版对接文档
 
 - 用户要求：五仓先拉取；相册小程序只保留main、删多余分支；在main基础建main-wifi并切过去，阅读docs/前端对接文档_草稿.md给后端（Java）写详细建议。今后main修旧问题、main-wifi开发WiFi大版本并及时合并main。
@@ -1179,7 +1319,7 @@
 ## 2026-10-11 home｜接入泰乾前端及正矿分支同步
 
 - 用户要求接入新位置并将正矿切到 feature-v1.8.5；home 初始未映射正矿，用户补充其本机仓库位置后继续，未猜测路径或套用其他环境。
-- Hub main / 72dd5b7 开始前工作区干净，先 pull 同名 main 成功。新增 taiqian-front，名称依据 README 和 package.json 确认为「泰乾德邦数字金融管理系统」，与正矿是不同的企业 Codeup 仓库；新增注册表、Context、home 映射及 README 入口。
+- Hub main / 72dd5b7 开始前工作区干净，先 pull 同名 main 成功。新增 taiqian-front，名称依据 README 和 package.json 确认为「泰乾德邦数字金融管理系统」，与正矿是不同的仓库（远端为 GitHub，2026-10-26 更正）；新增注册表、Context、home 映射及 README 入口。
 - 新项目接入仅只读核查，不改源码、不安装依赖、不创建项目内文档或索引；保留 master / 8d2a8f0，核实远端默认 master 和仓库根目录，工作区干净。
 - 正矿复用 minerals-admin，补 home 映射。原分支 1.8.4-deep-space-theme / aa7d6d8 干净；核实远端已有 feature-v1.8.5 后 fetch、建立同名本地分支并切换，不设置 upstream；显式 pull --ff-only origin feature-v1.8.5 成功，当前 f152a42 与 origin 同名分支一致。原主题分支保留，未合并、rebase 或修改源码。
 - 根据正矿现有规则和 private_mounts，先预览无实体冲突，再恢复五项链接并核实目标及本地忽略。sync / index 因本机未初始化而不能执行，随后按项目缺失恢复规则和 CLI 提示 init，重建 662 文件 / 11,304 节点 / 38,381 边，status 最新；索引配置、数据库和运行产物均未进入受控改动。
@@ -6279,7 +6419,7 @@ DESIGN_SPEC 的 4.2 / 6.1 / 6.2 都已补上这些实现口径，变更记录加
 - 环境：ssh；minerals-admin。**本机 Git 配置调整，无代码改动、无新提交进团队仓库**（工作区仍干净，分支 `feature-v1.8.3`）。
 - 需求：正矿在当前环境提交到远程分支的 commit 作者名由 `pg-dh` 改为 `dh`。
 - 执行：`git -C /pgdata/pg/dh/minerals-frontend config --local user.name dh`。选仓库级而不是全局：用户只点名正矿，同机的花盆、花盆后台、Hub 仍是 `pg-dh`（已逐个核对）。验证 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 一并生效。
-- 追加：邮箱也按用户要求改成 `duun235@163.com`（同样仓库级）。用户先问「能不能留空」，在临时仓库实测：Git 允许空邮箱，提交对象记为 `author dh <>`；但托管平台是按邮箱把提交归属到账号的，空邮箱在 Codeup 上认不到人、还可能被推送校验拦下，所以用了用户给的备选邮箱。现在 `git var GIT_AUTHOR_IDENT` = `dh <duun235@163.com>`，花盆 / 花盆后台 / Hub 仍是 `pg-dh <xxxxx.com>`。
+- 追加：邮箱也按用户要求改成 `duun235@163.com`（同样仓库级）。用户先问「能不能留空」，在临时仓库实测：Git 允许空邮箱，提交对象记为 `author dh <>`；但托管平台是按邮箱把提交归属到账号的，空邮箱在托管平台上认不到人、还可能被推送校验拦下，所以用了用户给的备选邮箱。现在 `git var GIT_AUTHOR_IDENT` = `dh <duun235@163.com>`，花盆 / 花盆后台 / Hub 仍是 `pg-dh <xxxxx.com>`。
 - 未做，需用户决定：
   - **历史提交没重写**：本机此前推上去的 `08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 以及 2026-09-01 那批作者仍是 `pg-dh`。`feature-v1.8.3` 是与 zhengmaoru 等人共用的团队分支，改作者要重写历史并强推，按约定不自动做。
 - 口径记录：`.git/config` 不随 Git 同步，**work / home 需各自再配一次**；已写入 `private/minerals-admin/docs/development.md` 新增的「11. 提交身份」，原「11. 跨机器协作」顺延为 12。

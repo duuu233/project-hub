@@ -162,6 +162,30 @@
 - 页面依赖的全局组件、自动导入和类型声明是否仍存在。
 - AppMain/KeepAlive 是否因 name 不一致缓存了错误实例。
 
+### 页面缓存（KeepAlive）不生效
+
+2026-10-26 ssh 源码排查结论；**主因已于同日修复**：`permission.ts` 新增 `flattenRouteTree`，注册路由前拍平为「模块 → 页面」，侧栏 / 顶栏仍用三层 menuTree（未运行 type-check / 构建，未浏览器回归）。次因各项未改，需对照后端菜单数据逐项处理：
+
+- **主因：菜单 2.0 改写（baf8a3a，2026-09-18）去掉了路由拍平。** 之前 `filterAsyncRouter(rdata, false, true)` 经 `filterChildren` 把 `ParentView` 层的子页拍平到顶层 `Layout` 下；现在 `normalizeMenuTree` 保留「模块 → 分组 → 页面」三层，分组（非根 `Layout` 也会被换成 `ParentView`）下的页面实际渲染链是 `Layout → ParentView → 页面`。`AppMain` 的 `<keep-alive :include="cachedViews">` 只包住它自己那层 `router-view` 渲染出的组件，即 `ParentView`；`cachedViews` 里是页面路由名，`ParentView` 不在其中，于是整个分组子树每次切走都被销毁。`ParentView/index.vue` 只有一个裸 `<router-view />`，内部也没有缓存。只有直接挂在模块下的页面才可能被缓存。
+- **次因（个别页面）**：
+  - 22 个页面组件没有 `<script setup name>`（如 access/concentrator、billing/items、billing/protocol、import-manage/list、sales-pickup/list 及其两个详情、system/all-system、system/bank），名称推断为文件名，永远匹配不上路由名。
+  - 组件名重复：Service-provider-list（4）、Enterprise-users/add·detail·edit（5~6）、Invoicing-list/add/edit/detail、Attr/*、Cope-list/index、MarketData、Stock-query、Yard-replenish 等。后端路由名若同样重复，`resolveRouteName` 会改写为 `名称-menuId`（控制台「菜单数据存在重复项」警告），被改名的路由与组件名对不上；关闭页签按名称删缓存时也会波及同名页面。
+  - 后端菜单「是否缓存」（`meta.noCache`）设为不缓存的页面本来就不进 `cachedViews`，需以实际 getRouters 数据核对。
+- **不是原因**：`AppMain` 是 `<transition>` 包 `<router-view>`（与 RuoYi 标准顺序相反），历史一直如此，只影响切换动画；`:key="route.path"` 使新增 / 编辑 / 详情同路径不同 id 共用一个实例，是既有设计。
+- **已采用的修复**：只拍平 `routeTree` 用于 `addRoute`，`menuTree` 仍三层给侧栏；分组不再注册为路由（与原 filterChildren 一致），模块根保留 redirect 到首个页面。未采用「给 ParentView 加 keep-alive」（嵌套缓存的关闭 / 刷新难处理）。
+- **回归要点**：列表页填搜索条件 / 翻页 → 切到别的页签 → 切回仍保留；关闭页签后重开为新页面；页签右键刷新、关闭其他 / 全部；新增 / 编辑 / 详情经 `toList` 返回列表后列表刷新；侧栏高亮（隐藏详情页按 activeMenu）、首页跳转首个可访问页面、刷新浏览器后路由恢复、切换系统后菜单与路由正确。
+- **仍待处理**：上面三条次因（无组件名页面、重复组件名 / 路由改名、noCache）需要后端实际路由名才能逐页修正，未改。
+- **列表缓存与 `proxy.toList` 强制刷新（2026-10-26 核对）**：列表靠 keep-alive 缓存；新增 / 编辑成功后 `proxy.toList({ path, listName })` 关掉当前页签、跳回列表，并把 `listName` 放进 exclude 600ms，丢掉列表缓存后重新挂载（新数据可见），之后恢复缓存。三者必须一致：后端路由名（进 cachedViews）＝列表组件 `<script setup name>`＝`listName`。后端路由名按菜单 path 命名（列表 `Xxx-list`、子页 `Xxx-list/add|edit|detail`，`openNewTagsView` 按此名比对）。
+  - 已按「toList + 子页名」一致证据修正：车辆列表、提货列表组件名（原复制成 Service-provider-list）→ Car-list / Pick-up-goods-list；仓库、场地列表 Store / Site → Store-list / Site-list；内贸销售 toList 的 listName Domestic-sales-list → Domestic-sales（列表与三个子页均为 Domestic-sales）。
+  - 待后端菜单数据确认：销售收货列表组件名 Sales-pickup 与 toList 的 Receipt 不一致、子页名复制成 Enterprise-users/*；未开票列表与开票列表同名 Invoicing-list；码头库存四页均复制成 Service-provider-list；提货 / 码头库存保存逻辑是商品属性的复制（attributeAdd / 跳 goods-library/attr）；审批分派 / 审批日志保存后跳出口商列表（疑似复制）。
+  - 缓存恢复后，保存成功却用 `router.back/push` 回列表的页面会看到旧列表。已改为保存成功走 `toList`（取消 / 返回仍用缓存）：授信集中器（列表组件名 CreditConcentrator → Credit-concentrator，与子页 Credit-concentrator/* 一致）、帮助中心（help-me）、仓库管理（Warehouse-list/index）。资质集中器、监管仓、导入管理、销售提货码头 / 堆场新增的列表属于无组件名的 22 页（本就不缓存），按用户要求不处理。
+  - 审核工具：逐个 `toList` 调用按 path 找到目标列表，比对 listName 与组件名（53 / 56 一致，剩余 3 条为上述待确认与无组件名的 sales-pickup/list）；另查「保存成功后未走 toList」的页面（上条）。
+  - `listName` 进的是 keep-alive 的 exclude，按**列表组件名**匹配：哪怕路由名未知，listName 写成列表组件名就能保证强制刷新。
+
+### 详情页固定 Tab 条
+
+页面自己有滚动区（如提单 `.flex-main`）时，`el-affix` 的 `offset` 不能写死：顶栏 + 页签条高度随断点变化（76+46 / 60+40）。提单已改为取滚动区在视口中的顶边（挂载、`activated`、窗口尺寸变化时重算）。资产（offset 60）、融资（offset 90）详情同样写死，若出现遮挡按同一方式处理。
+
 ### 刷新后页面丢失或回首页
 
 区分：

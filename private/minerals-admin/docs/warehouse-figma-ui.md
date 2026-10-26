@@ -71,3 +71,13 @@
 - 用户登录页面实测入库计划列表与详情；后续整页切换回登录页，所以剩余内容使用隔离预览，不修改登录鉴权来绕过会话。
 - 临时验证脚本确认当前页筛选、数值零筛选、查询对象不变异、`ui*` 请求字段隔离、28 个非空 SVG。
 - `npm run build:fast` 通过。`npm run type-check` 有 28 个基线历史错误；本轮涉及的仓储文件未新增类型错误。快速构建不验证 gzip。
+
+## 附件上传框（WarehouseAttachment）排版（2026-10-26 ssh）
+
+可编辑态原来把图标块（top 52px）和「支持 PDF、图片，单文件不超过 30M」（top 129px）绝对定位叠在 FileUpload 拖放区上，拖放区（高 170、内边距 10、内容居中）里「将文件/图片拖放到此处或单击上传」实际落在约 118~136px，提示与之重叠。现改为隐藏 FileUpload 自带图标，用 `.tips-box::before`（40px 浅蓝图标块 + 原 svg）和 `::after`（格式提示）放进拖放区正常排版，与只读态同序（图标块 → 文字 → 提示），高度变化也不会再重叠。入库单、入库计划、出库单、出库计划四处共用。未构建、未浏览器验证。
+
+## 出库单新增 / 编辑：日期转时间戳与附件必填提示（2026-10-26 ssh）
+
+- 接口日期字段要毫秒时间戳。新增 `src/utils/dateTimestamp.ts`：`datesToTimestamp` 递归把字段名以 Date / Time 结尾、值为 `YYYY-MM-DD[ HH:mm[:ss]]` 的文本按本地时区转成毫秒时间戳，数字、空值、非日期文本不变，返回新对象。出库单提交（新增、编辑两个分支）整包经它转换：覆盖实际出库日期 `stockOut.stockOutDate`、车辆装货日期 `stockOutCars[].shipmentTime`，以及随计划 / 详情带回的 `stockOutPlanDate`、`createTime` 等日期文本。日期选择器仍按文本显示与回填，只在提交时转换。
+- 出库附件原只写 `required` 属性，校验失败显示校验器英文默认提示「stockOutFileList is required」；改为 rules 中 `{ required: true, type: 'array', message: '请上传出库附件' }`，去掉属性。
+- 未构建、未联调，后端对各日期字段的实际口径以接口为准。

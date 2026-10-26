@@ -2,9 +2,57 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
-## 2026-10-26｜work｜七项目同步与角色静态工作区留痕
+## 2026-10-26｜ssh｜登记qianrong系统中心路由加载修复
 
-统筹main干净先同名pull由cac19de至d087782；work七映射项目均核对身份、干净状态、origin及当前远端同名分支后pull，保留相册小程序main-wifi与正矿feature-v1.8.5，无分支切换。登记用户最终静态优先、行级删除规则状态表的要求、泰乾四Tab交付及55项/浏览器/构建验证，更新其私人当前说明、history、背景、索引和流水，保留旧迭代。按main提交并在push前再次显式同名pull。
+main干净先显式同名pull已最新。登记tq-plus 61b359c，私人 route-lifecycle 文档与日志随本次提交。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记正矿列表缓存名称对齐
+
+main干净先显式同名pull已最新。登记正矿728aa1d及待确认项，私人maintenance与日志随本次提交。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记正矿路由拍平修复缓存
+
+main干净先显式同名pull已最新。登记正矿357085c的迭代与跨项目流水，私人architecture/maintenance与日志随本次提交。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记正矿提单Tab条修复与缓存排查
+
+main干净先显式同名pull已最新。登记正矿55ea33a与缓存失效分析的迭代与跨项目流水，私人维护文档、日志随本次提交。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜接入正矿（zk）并恢复私有挂载
+
+main干净先显式同名pull已最新。用户引入/home/cc/dh/zk即正矿：核实Git根目录、GitHub origin、远端唯一分支feature-v1.8.5及提交号与私人日志一致后登记ssh映射（default_branch本机覆盖）；ssh README、environments README、configuration、AGENTS、context、私人日志同步；YAML与ID校验通过。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记花盆APP倒计时规则与OTA调试日志
+
+main干净先显式同名pull已最新。登记花盆APP倒计时隐藏/转圈、OTA提醒门禁与OTA调试日志文件的迭代与跨项目流水。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记花盆APP倒计时改用DP121
+
+main干净先显式同名pull已最新。登记花盆APP割草机倒计时改以DP121当前计划为准的迭代与跨项目流水。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记qianrong角色配置权限独立页面
+
+main干净先显式同名pull已最新。登记qianrong配置权限弹窗改独立页面、去静态标识的迭代与跨项目流水，泰乾超级私人role-logs与日志随本次提交。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜登记qianrong超级管理员信息移除与花盆APP时段间隔
+
+main干净先显式同名pull已最新（cec2f72）。登记泰乾超级536f662、花盆APP c7ccdc1的迭代与跨项目流水，泰乾超级私人契约文档与日志随本次提交；含系统编辑权限提示排查结论。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜去掉正矿Codeup说法
+
+main干净先显式同名pull已最新（5028e8f）。用户确认正矿也推GitHub：context/minerals-admin.md远端改为GitHub，AGENTS信息隔离段去掉「公司Codeup团队仓」，正矿邮箱说明与旧归档里的Codeup改为中性表述；Hub现仅剩泰乾超级更正说明中引用的Codeup字样。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜去掉泰乾超级「企业团队仓库」说法并规定SSH一律推送GitHub
+
+main干净先显式同名pull已最新（f72123b）。按用户要求去掉泰乾超级「企业团队仓库」口径（README、configuration、ssh README、私人关联文档及两处旧流水），私有化理由改为用户要求；README私有化段同步补泰乾超级。AGENTS「任务完成后的默认动作」新增第0条全局规则：所有环境、所有仓库的提交只推送GitHub，提交前核对origin，不是GitHub即暂停询问、不提交不推送；ssh README引用该条。核实五个业务仓与Hub的origin均为GitHub。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜更正泰乾超级远端为GitHub
+
+main干净先显式同名pull已最新（27fbf1b）。用户确认泰乾超级远端一直是GitHub，去掉Context、ssh README、迭代记录与私人资料里的「企业Codeup仓库」错误口径。按main提交，push前再次显式同名pull。
+
+## 2026-10-26｜ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
+
+main干净先显式同名pull已最新（d087782）。用户引入/home/cc/dh/tq-plus称「超级泰乾-qianrong」：核实即已有taiqian-front的front仓库（qianrong为子应用），复用ID与私人目录，登记environments/ssh/projects.local.yaml；ssh README、environments README、configuration、AGENTS当前映射与context同步，context写明私人配置为硬要求。本机无node，按setup-links规则手动建五项软链接与本地忽略，核验通过；无codegraph未建索引。按main提交，push前再次显式同名pull。
 
 ## 2026-10-26｜ssh｜登记相册小程序双分支约定与WiFi版评审迭代
 

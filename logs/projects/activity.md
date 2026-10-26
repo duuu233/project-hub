@@ -528,7 +528,7 @@ C页面菜单行统一“列字段设置”，独立页面复用七接口，保�
 | **2026-10-11** | **taiqian-front（泰乾超级-qianrong）** | home / master | 负责模块的特殊列表、树表、授权列表、页面标题、个人中心和固定底栏按正矿 feature-v1.8.5 补齐；记录 13 模块 PRD 结论、菜单权限迁移待后端及接口日志待接入，公开示例说明同步更新。 | 已推送 97f1e31；最终构建 4.41 秒、16 个隔离页面/组件及原 demo 八种尺寸回归通过，原函数/按钮绑定、diff 与信息隔离通过，CodeGraph 最新。无 POST/真实业务请求或部署，锁文件保留未提交；正矿只读且分支/工作区核对通过。 |
 | **2026-10-11** | **taiqian-front（泰乾超级-qianrong）** | home / master | 本地代理指向德邦测试接口并替换请求前缀，保留查询参数；应用 README 补使用方法。 | 已推送 dbe5853；配置加载及路径改写、生产构建 4.33 秒通过，CodeGraph 最新；用户锁文件保留且未提交，未启动代理或开发服务、未真实接口联调或部署。 |
 | **2026-10-11** | **taiqian-front（泰乾超级 / 泰乾超级-qianrong）** | home / master | 按正矿改造 qianrong 列表、搜索、操作对齐、大屏适配和固定底栏；保留原生 vxe-grid，轻量抽取共用视觉能力。可运行示例及说明直接供同事查看；维护配置与资料独立挂载。 | 已推送 7e1a00a；最终构建 5.64 秒、八种尺寸与隔离交互验收通过，业务绑定比较、diff 与信息隔离检查通过，CodeGraph 最新；未真实账号联调或部署。 |
-| **2026-10-11** | **taiqian-front（泰乾德邦数字金融管理系统）** | home / master | 核实独立企业仓库身份与文档名称，新增注册表、Context 及 home 映射；接入只读，不修改业务源码。 | 已接入；业务保留 8d2a8f0，工作区干净，未构建。 |
+| **2026-10-11** | **taiqian-front（泰乾德邦数字金融管理系统）** | home / master | 核实独立仓库身份与文档名称，新增注册表、Context 及 home 映射；接入只读，不修改业务源码。 | 已接入；业务保留 8d2a8f0，工作区干净，未构建。 |
 | **2026-10-11** | **minerals-admin（正矿）** | home / feature-v1.8.5 | 用户补充本机路径后绑定已有 ID；从主题分支切至远端已有 feature-v1.8.5 并 pull，保留旧分支；恢复五项忽略挂载及本机索引。 | 同步至 f152a42，与 origin 同名分支一致、工作区干净，未设置 upstream；CodeGraph 最新，未修改业务代码或运行构建。 |
 | **2026-10-10** | **flowerpot-admin（花盆后台）** | home / main | 文件管理补上传入口并传 isSaveOldFileName=1，name/url 回填，原始名称只读；上传期间保护，失败保留原值，其他上传调用兼容。更新业务文档与历史记录。 | 已推送 e653396；最终构建 13.91 秒、语法及隔离浏览器验收通过，diff 与信息隔离通过；未真实上传/写业务数据、未部署。 |
 | **2026-10-10** | **flowerpot-app（花盆APP）** | home / main | 接入V2.6 DP115四颗控制按钮拒绝回执，code≥16在安全/时间交互后弹设备异常，状态类按协议建议；关闭不重发，隔离旧/重复/错配回执并支持迟到与seq回绕。修复320宽按钮溢出，纳入协议并同步业务文档。 | 已推送 d15eef0；111项割草机回归、核心analyze、diff与信息隔离检查通过，CodeGraph最新；未真机/打包。 |
@@ -2447,3 +2447,75 @@ f594e0a已提交、再次pull/push成功；按V2.6修正DP101星期分组、七�
 ## 2026-10-14 | flowerpot-app | work | main | 计划DP来源与下发核查
 
 df47b16已提交、再次pull/push成功；移除计划本地乐观显示，收发诊断分离，修复已报停用默认时间丢失并校验完整七天/参数，计划拒绝回执提示。185回归及六Dart分析通过，SDKraw转换只读核验，未真机/打包。用户所述日期的实际默认DP仍待原始包，未把合成样例当现场数据；详细契约及边界由业务文档维护。
+
+## 2026-10-26 | taiqian-front | ssh | master | SSH接入与私有挂载
+
+用户称「超级泰乾-qianrong」，核实/home/cc/dh/tq-plus即泰乾超级front仓库（master/9975d7f，pull已最新），复用taiqian-front；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 企业用户去掉超级管理员信息
+
+536f662已提交、再次pull/push成功；新增/编辑/详情删除超级管理员分组，白名单保留orgAdmin字段编辑原样回传。无Node，未构建/浏览器验证/真实请求。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 割草计划两时段间隔10分钟
+
+c7ccdc1已提交、再次pull/push成功；编辑周X保存要求两启用时段间隔≥10分钟（08:00–12:00后最早12:10），下发底线仍只拦相交。单测已更新，无Flutter未运行，未真机。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 角色配置权限改独立页面
+
+a2d99e5已提交、再次pull/push成功；弹窗迁到permissions.vue独立路由，去掉静态/演示标识，数据仍为前端模型不落库。无Node，未构建/测试/浏览器验证。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 割草机倒计时改用DP121
+
+e29a8f1已提交、再次pull/push成功；倒计时改由设备DP121当前计划（et−now）驱动，DP119不再计时、不存本机终点，隐藏规则不变。测试已重写，无Flutter未运行，未真机。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 倒计时规则+OTA日志文件
+
+51cd0f0已提交、再次pull/push成功；倒计时只按DP121剩余为0隐藏、DP119后转圈等计划（60秒上限）；OTA进度层开着不弹提醒；OTA全过程（原生原始字段/状态判定/界面）写手机文件。未编译未测试，pubspec.lock待更新。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 五项改动简明说明
+
+c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为简明版（逐项说明、联调包打包命令、取日志方法与复制过长的已知限制、验收要点）。纯文档。
+
+## 2026-10-26 | flowerpot-app | ssh | main | OTA日志改分享文件
+
+75bb666已提交、再次pull/push成功；「OTA日志」合并保留日志为一个txt，经share_plus系统分享（微信/QQ/邮件），去掉剪贴板复制。新增share_plus，lock待更新；未编译未测试。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 10-26两份说明合并
+
+490dc86已提交、再次pull/push成功；倒计时改用DP121说明与五项改动说明合并为 docs/reports/2026-10-26-割草机倒计时与OTA改动说明.md，按用户要求只写按DP121的当前规则、OTA提醒、OTA日志用法、打包与验收，不写改动过程；旧两份删除，导航与引用改指新文件。纯文档。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | SSH接入与私有挂载
+
+核实/home/cc/dh/zk即正矿（feature-v1.8.5/1c9e465，pull已最新，origin为GitHub），复用minerals-admin；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 提单Tab条遮挡修复+缓存排查
+
+55ea33a已提交、再次pull/push成功；提单详情affix偏移改按滚动区顶边，不再遮挡页签条（未构建/浏览器验证）。页面缓存失效仅分析：菜单2.0去掉路由拍平致keep-alive只包到ParentView，结论在私人维护文档。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 恢复路由拍平修复缓存
+
+357085c已提交、再次pull/push成功；注册路由前拍平为模块-页面两层，keep-alive重新命中页面组件，侧栏三层与URL不变。未type-check/构建/回归；无组件名等次因未改。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 列表缓存名称对齐
+
+728aa1d已提交、再次pull/push成功；toList刷新名与列表组件名对齐5处（车辆、提货、仓库、场地、内贸销售），其余不一致待后端路由名确认。未type-check/浏览器验证。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 保存后回列表走toList
+
+9a2f001已提交、再次pull/push成功；授信集中器、帮助中心、仓库管理保存成功经toList刷新列表，授信集中器列表名对齐。未type-check/浏览器验证。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 角色配置权限页UI
+
+264cd15已提交、再次pull/push成功；配置权限页改详情头卡+白底区块卡。未构建/浏览器验证。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 系统中心点列表不再调详情
+
+61b359c已提交、再次pull/push成功；9个系统中心页面改为只在本页激活时按本页参数加载，新增公共逻辑与回归用例。测试未运行。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 附件上传框文字重叠
+
+9ea735a已提交、再次pull/push成功；仓储附件上传框提示改入拖放区排版，修复与上传文字重叠（四个仓储表单共用）。未构建/浏览器验证。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 出库单日期时间戳+附件提示
+
+a2d0779已提交、再次pull/push成功；出库单提交日期字段转毫秒时间戳，出库附件必填改中文提示。未构建/联调。
