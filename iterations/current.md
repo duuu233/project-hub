@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序配网第4步先在线后绑定（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/4816338 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户要求：在线查询（日志里 #1 返回 503）成功后再调老服务绑定。
+- photo-album main-wifi：run 第 4 步改为轮询 /api/device/online（503/403/网络继续、401 停、60s 超时不绑定）→ online=true 后 bindWifiDevice → 成功；测试断言顺序与不绑定场景；进度文档与变更记录同步。
+- 风险：与接口文档 2.4「先绑定再轮询」相反，在线接口对未绑定设备若仍 403 将轮询至超时，需后端确认（或免权限配网状态接口）。本次日志是 503（权限服务不可用），非 403。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序选WiFi两步、密码默认加密、配网日志写清接口（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/ae66ec6 均已最新，origin/main 无未合入；origin 为 GitHub。
