@@ -2455,3 +2455,7 @@ df47b16已提交、再次pull/push成功；移除计划本地乐观显示，收�
 ## 2026-10-26 | flowerpot-app | ssh | main | 割草计划两时段间隔10分钟
 
 c7ccdc1已提交、再次pull/push成功；编辑周X保存要求两启用时段间隔≥10分钟（08:00–12:00后最早12:10），下发底线仍只拦相交。单测已更新，无Flutter未运行，未真机。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 角色配置权限改独立页面
+
+a2d99e5已提交、再次pull/push成功；弹窗迁到permissions.vue独立路由，去掉静态/演示标识，数据仍为前端模型不落库。无Node，未构建/测试/浏览器验证。

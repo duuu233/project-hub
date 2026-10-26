@@ -141,3 +141,9 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 
 - **范围**：qianrong 企业用户新增/编辑/详情共用的 handleDetail.vue 删除「超级管理员信息」分组与手机号过滤函数，详情副标题同步；提交白名单保留 orgAdminName/orgAdminPhone，编辑原值原样回传、不清空。只改 1 个文件，不动 qianlian 与共享包。
 - **验证**：本机无 Node/pnpm、无 codegraph，未构建、未浏览器验证、未真实请求；仅 diff 自查与信息隔离检查。说明见 docs/qianrong-enterprise-contract-audit.md。
+
+## 2026-10-26 ssh｜角色配置权限改独立页面并去掉静态标识
+
+- **同步**：master 536f662 快进至 c96f263（用户新增 permissions.vue 占位页）。
+- **范围**：permissions.vue 承接原弹窗内容，dynamicRoutes 登记 `/system/role-permission/index/:roleId`，列表按钮改为跳转，删除 RolePermissionsDialog；四个面板与预览去掉静态/演示/示例标识，样例企业名去「示例」；测试移除弹窗、新增独立页面与无标识断言；README 改为配置页说明并保留未对接接口说明。数据仍为前端模型，保存不落库。
+- **验证**：无 Node/codegraph，未构建、未跑 node --test、未浏览器验证；Python 核对新增断言正则命中。详见 docs/qianrong-role-logs.md。

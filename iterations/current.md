@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜qianrong角色配置权限改独立页面并去掉静态标识
+
+- 同步：Hub main干净已最新；tq-plus master 536f662快进至c96f263（用户新增permissions.vue占位页，内容为复制的新增页）。origin均为GitHub。
+- 实施：permissions.vue承接原RolePermissionsDialog全部内容（身份头、四标签、未保存确认），头部改getRole只读回读；dynamicRoutes按「分配用户」方式登记`/system/role-permission/index/:roleId`（RolePermissions，system:role:edit），列表「配置权限」改跳转，删除弹窗。去掉界面全部静态/演示/示例标识，样例企业名去「示例」。测试去掉弹窗、新增独立页面与无标识断言；业务README改配置页说明并保留「尚未对接接口」开发说明；私人role-logs与日志已补。
+- 风险：四标签数据仍为前端模型，保存不落库；去标识后界面像真实配置，待后端接口替换permission-workspace-model。
+- 验证：无Node/codegraph，未构建、未跑node --test、未浏览器验证；Python核对新增断言正则与源码匹配。
+
+---
+
 ## 2026-10-26 ssh｜花盆APP割草机启动无倒计时排查（仅分析）
 
 - 同步：Hub main、花盆APP main/c7ccdc1 均干净，显式同名pull已最新；无代码改动、无业务提交。
