@@ -2463,3 +2463,7 @@ a2d99e5已提交、再次pull/push成功；弹窗迁到permissions.vue独立路�
 ## 2026-10-26 | flowerpot-app | ssh | main | 割草机倒计时改用DP121
 
 e29a8f1已提交、再次pull/push成功；倒计时改由设备DP121当前计划（et−now）驱动，DP119不再计时、不存本机终点，隐藏规则不变。测试已重写，无Flutter未运行，未真机。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 倒计时规则+OTA日志文件
+
+51cd0f0已提交、再次pull/push成功；倒计时只按DP121剩余为0隐藏、DP119后转圈等计划（60秒上限）；OTA进度层开着不弹提醒；OTA全过程（原生原始字段/状态判定/界面）写手机文件。未编译未测试，pubspec.lock待更新。

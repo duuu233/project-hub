@@ -1,3 +1,15 @@
+## 2026-10-26 ssh｜花盆APP倒计时隐藏规则、DP119转圈、OTA提醒门禁与OTA调试日志文件
+
+- 同步：Hub main、花盆APP main/e29a8f1 均干净，显式同名pull已最新；origin均为GitHub。
+- 花盆APP main/51cd0f0：
+  - 倒计时：visibleWorkEndsAt只看DP121剩余（为0或无计划隐藏，去掉待机/休眠/关机/离线条件），状态卡减到0整块收起；DP119下发成功→awaitingWorkPlan图标+转圈，收到与下发时不同的DP121计划（含无计划）或60秒到点结束。
+  - OTA门禁：新增OtaProgressLayer（进度弹层计数），FirmwareReminderHost开着时不弹；割草机DP116拒绝/失败提示在进度层开着时不进failures（此前会叠在进度层上另弹toast）。
+  - OTA调试日志：新增OtaDebugLog写手机文件 ota_logs/ota-YYYY-MM-DD.log（Android外部应用文件目录、iOS Documents+Info.plist文件共享），保留7天，总闸APP_DEBUG_TOOLS；来源native（Android/iOS新增otaLog事件，dump SDK升级信息列表、服务回调/轮询bean、旧版监听原始回调、错误码/NSError、发起/接回/释放）、sdk（原样OTA事件）、app（状态判定全链路与[ota-timing]）、ui（进度层显示、提醒、入口分支与用户选择）；联调日志框「OTA日志」复制并提示路径。新增path_provider依赖。
+  - 测试：倒计时用例重写；新增ota_debug_log_test；firmware_reminder_test加进度层门禁用例。AI_CONTEXT、docs导航、产品说明报告（含取日志方法）、history记录已补。
+- 风险/剩余：本机无Flutter/Android/Xcode，Dart测试、analyze、Kotlin/Swift编译均未运行；**pubspec.lock未更新**，需flutter pub get后提交；iOS开文件共享后正式包Documents也可见（目前只有OTA日志写入且正式包不写）；Android 11+需USB/adb或「OTA日志」复制取文件。
+
+---
+
 ## 2026-10-26 ssh｜花盆APP割草机倒计时改以DP121当前计划为准
 
 - 同步：Hub main干净已最新；花盆APP main c7ccdc1快进至f215b84（用户更新协议V3.0：26个DP，新增DP121 schedule_current `{st,et,now}`）。origin均为GitHub。
