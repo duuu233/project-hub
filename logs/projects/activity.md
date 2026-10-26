@@ -2447,3 +2447,11 @@ df47b16已提交、再次pull/push成功；移除计划本地乐观显示，收�
 ## 2026-10-26 | taiqian-front | ssh | master | SSH接入与私有挂载
 
 用户称「超级泰乾-qianrong」，核实/home/cc/dh/tq-plus即泰乾超级front仓库（master/9975d7f，pull已最新），复用taiqian-front；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 企业用户去掉超级管理员信息
+
+536f662已提交、再次pull/push成功；新增/编辑/详情删除超级管理员分组，白名单保留orgAdmin字段编辑原样回传。无Node，未构建/浏览器验证/真实请求。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 割草计划两时段间隔10分钟
+
+c7ccdc1已提交、再次pull/push成功；编辑周X保存要求两启用时段间隔≥10分钟（08:00–12:00后最早12:10），下发底线仍只拦相交。单测已更新，无Flutter未运行，未真机。

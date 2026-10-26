@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜qianrong企业用户去掉超级管理员信息；花盆APP割草计划两时段间隔10分钟
+
+- 同步：Hub main、tq-plus master/9975d7f、花盆APP main/e08d3e6 均干净，显式同名pull已最新；三仓origin均为GitHub。
+- 泰乾超级 master/536f662：企业用户新增/编辑/详情共用的handleDetail.vue删除「超级管理员信息」分组（管理员手机号码、昵称）与手机号过滤函数，详情副标题改「查看企业资料及用户组信息」。契约中orgAdminName/orgAdminPhone非必填，提交白名单保留：新增不发送、编辑原值原样回传不清空。私人契约文档与日志已补。本机无Node/codegraph，未构建、未浏览器验证。
+- 花盆APP main/c7ccdc1：MowerScheduleDay新增minGapMinutes=10与overlaps；编辑周X保存时相交提示重叠、间隔不足10分钟（含首尾相接）提示需间隔，08:00–12:00后最早12:10，时段2在前须07:50前结束，停用时段不参与。setSchedule底线改用overlaps，设备已有首尾相接旧计划不阻断整周下发。单测更新并新增边界用例；AI_CONTEXT、history记录与索引同步。V3.0协议未规定两段间隔，属APP产品规则。本机无Flutter，测试未运行，未真机。
+- 前置排查（同日，无改动）：泰乾超级系统编辑提示「部分已有权限暂不可读取」来自all-system handleDetail.vue:42树外ID保护——system/detail的menuIds有编号不在system/menu/list中；疑似菜单删除未清关联、菜单列表按用户/状态过滤或编号不一致，待用户用Network比对确认。
+
+---
+
 ## 2026-10-26 ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
 
 - 用户要求：ssh 环境新接入「超级泰乾-qianrong」，和正矿一样开启私人配置，文档更新不在业务项目中生成。

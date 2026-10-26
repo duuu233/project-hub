@@ -136,3 +136,8 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 ## 2026-10-26 ssh｜远端口径更正
 
 用户确认本项目远端一直是 GitHub 上的 tq-plus 仓库，之前记录的「企业 Codeup 仓库」是写错的；已从 Hub Context、ssh 说明、关联文档与历史记录中去掉。
+
+## 2026-10-26 ssh｜企业用户移除超级管理员信息
+
+- **范围**：qianrong 企业用户新增/编辑/详情共用的 handleDetail.vue 删除「超级管理员信息」分组与手机号过滤函数，详情副标题同步；提交白名单保留 orgAdminName/orgAdminPhone，编辑原值原样回传、不清空。只改 1 个文件，不动 qianlian 与共享包。
+- **验证**：本机无 Node/pnpm、无 codegraph，未构建、未浏览器验证、未真实请求；仅 diff 自查与信息隔离检查。说明见 docs/qianrong-enterprise-contract-audit.md。

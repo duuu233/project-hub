@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜登记qianrong超级管理员信息移除与花盆APP时段间隔
+
+main干净先显式同名pull已最新（cec2f72）。登记泰乾超级536f662、花盆APP c7ccdc1的迭代与跨项目流水，泰乾超级私人契约文档与日志随本次提交；含系统编辑权限提示排查结论。按main提交，push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜去掉正矿Codeup说法
 
 main干净先显式同名pull已最新（5028e8f）。用户确认正矿也推GitHub：context/minerals-admin.md远端改为GitHub，AGENTS信息隔离段去掉「公司Codeup团队仓」，正矿邮箱说明与旧归档里的Codeup改为中性表述；Hub现仅剩泰乾超级更正说明中引用的Codeup字样。按main提交，push前再次显式同名pull。
