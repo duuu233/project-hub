@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序信号格与隐藏网络过滤（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/9d8f155 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 需求：设备信号强弱改仿 iPhone 信号格（满格 4、弱 1 格）；WiFi 列表 SSID 为空的不显示（联调查看也不列）。
+- photo-album main-wifi：新增 components/signal-bars 与 utils/signal.js（门槛同原文字档位 -55/-67/-78，未知 0 格）；bluetooth 扫描记录加 signalLevel；搜索设备列表两类行与 WiFi 列表统一用信号格，去掉「强/弱」文字；WiFi 列表隐藏网络各模式都过滤并在联调统计计数。测试（新增 signal-bars）与文档同步。调试台仍显示 RSSI 数值。
+- 验证：无 Node 测试未跑，未真机看样式。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序接设备WiFi列表真实格式、2.4G过滤（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/b51f70d 均已最新，origin/main 无未合入；origin 为 GitHub。

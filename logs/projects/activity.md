@@ -2579,3 +2579,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 设备WiFi列表真实格式与2.4G过滤
 
 已提交、再次pull/push成功；按真机日志解析自定义数据文本行（ssid/rssi/ch），按信道只留2.4G，边收边显示、最后一批后等5秒结束。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 信号格与隐藏网络过滤
+
+已提交、再次pull/push成功；信号强弱改仿iPhone信号格（搜索列表与WiFi列表共用），WiFi列表名称为空的不列。未运行测试，未真机。
