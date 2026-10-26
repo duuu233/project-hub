@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜qianrong系统中心点列表调详情接口修复
+
+- 同步：Hub main、tq-plus master/ef5693b 均已最新；origin均为GitHub。
+- 原因：同10-23菜单表单问题——KeepAlive缓存页对全局路由 query/params 的 immediate watch 仍生效，点其它列表即按别的参数重载、调详情并报错；10-23只修了菜单表单。
+- tq-plus master/61b359c：新增 src/utils/ownRouteLoad.js（useOwnRouteLoad：记创建path，仅本页激活时加载，key未变且已就绪不重载，失败仅再次进入重试），接入9页：系统/部门/企业用户/角色/用户组/用户表单、菜单列字段、字典数据（并入onMounted首载）、角色配置权限页；清理无用watch导入；新增 tests/own-route-load.test.mjs。私人 menu-route-lifecycle 与日志已记。
+- 验证：无Node，测试/构建/浏览器均未运行。
+
+---
+
 ## 2026-10-26 ssh｜qianrong用户组编辑「系统授权菜单暂不可读取」排查（仅分析）
 
 - 同步：Hub main 已最新；tq-plus master 264cd15 快进至 ef5693b（含 kimi 8b35f23/d27176f：adjust-qianrong-system-menus.mjs、hide-qianrong-list-menus.mjs、路由树调整）。

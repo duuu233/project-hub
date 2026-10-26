@@ -151,3 +151,7 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 ## 2026-10-26 ssh｜角色配置权限页 UI 调整
 
 permissions.vue 改用 DetailHeaderCard 头卡 + 白底区块卡包住四个标签（详情皮肤同令牌），修复迁成页面后没有白底的问题；脚本与面板不变。未构建、未浏览器验证。详见 docs/qianrong-role-logs.md。
+
+## 2026-10-26 ssh｜系统中心页面不再因点列表调详情接口
+
+新增 useOwnRouteLoad，系统中心 9 个页面（系统 / 部门 / 企业用户 / 角色 / 用户组 / 用户表单、菜单列字段、字典数据、配置权限）改为只在本页激活时按本页参数加载；新增 tests/own-route-load.test.mjs。未运行测试、未构建、未浏览器验证。详见 docs/qianrong-menu-route-lifecycle.md。

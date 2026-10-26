@@ -2503,3 +2503,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | taiqian-front/qianrong | ssh | master | 角色配置权限页UI
 
 264cd15已提交、再次pull/push成功；配置权限页改详情头卡+白底区块卡。未构建/浏览器验证。
+
+## 2026-10-26 | taiqian-front/qianrong | ssh | master | 系统中心点列表不再调详情
+
+61b359c已提交、再次pull/push成功；9个系统中心页面改为只在本页激活时按本页参数加载，新增公共逻辑与回归用例。测试未运行。
