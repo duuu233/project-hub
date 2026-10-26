@@ -1,3 +1,16 @@
+## 2026-10-26 ssh｜相册小程序WiFi：问题确认修正 + STEP2配网（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/69d4549 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户确认五点 → photo-album cc27c6e：①②③ 仍拿不到登录态看不到真实返回，normalizeWifiProduct 再兼容分页/包裹形状，并打 `[WiFi规格查询]` 原始返回日志供对照；④ 序号改到白圈里（未开始态显示 1~4，取代 69d4549 的圈后文字）；⑤ 去掉 getProductByDevice 的 deviceNo 缓存——老逻辑只缓存产品列表（getProductList 会话级），没有按设备查询这环，故不缓存，重新搜索全部重查（同一次搜索同台只查一次）。
+- STEP2 → photo-album e484452。用户拍板：mqtt_config 先留接口位不下发（config.iotMqttConfig=null）、绑定 deviceId 带冒号同蓝牙版、BluFi 先不加密。
+  - utils/blufi.js：乐鑫 BluFi（FFFF/FF01/FF02，经 ble-notify-hub key blufi），帧编码/分片/解帧、WiFi 状态 TLV、自定义 JSON（date/data 两写法）、UTF-8；会话 configureSta/connectWifi/request。
+  - utils/wifi-provision.js：①getNetworkType ②BluFi 下发 STA+SSID+密码（有配置才 mqtt_config 等 result=0）③connectWifi 等状态报告 30s（FAIL 停、无报告放行）后释放蓝牙 ④api.bindWifiDevice（已绑定复用、回查 userProductId）→ since=配网开始时间，2s 轮询 online、60s 超时，503/403 继续，401 停。页面交接放内存，密码不进路由。
+  - 配置页：getConnectedWifi 2.4G 回填，没连/5G 弹列表（安卓 getWifiList 只留<3000MHz、同名取强、排序；iOS 只列当前并提示手输）。状态页接真实流程，亮屏，成功「立即体验」选中新设备回首页。
+  - 测试新增 blufi、wifi-provision，改写 wifi-search 配置页用例；文档：STEP2 变更记录、进度表、README、AI_CONTEXT。
+- 验证/剩余：无 Node 测试未跑，未真机；BluFi 仅按乐鑫协议实现未与本固件联调（若固件强制加密需补 DH+AES）；不下发 mqtt_config 时设备能否上云待固件确认；绑定先于上云，失败会留「已绑定未联网」记录（重配网复用）；首页 WiFi 设备展示在 STEP3/4。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序配网状态页步骤加序号（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/6a6e669 均已最新，origin/main 无未合入；origin 为 GitHub。
