@@ -2631,3 +2631,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 选择WiFi改回一步
 
 已提交、再次pull/push成功；点一行即进账号密码页，去掉连接按钮。未运行测试。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 配网日志按全流程①~⑯标注
+
+已提交、再次pull/push成功；只改日志加流程标签与参数，流程不变。opmode 0x00/0x01 不一致待确认；未运行测试。

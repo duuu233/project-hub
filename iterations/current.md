@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序配网日志按全流程①~⑯标注（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/103709e 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户给后端配网全流程 ①~⑯，要求日志加这些参数，只改日志不改代码。
+- photo-album main-wifi：wifi-provision.run 日志加【流程N】标签与参数（配网模式预期、deviceNo=clientid、opmode 文档 0x00 vs 实发 0x01、MQTT 文档约定 host/port/usr、国家码未下发、灯效、⑧~⑬ 服务端步骤、⑭ 在线、⑮ 绑定、⑯ device/info 未调用）；流程代码未变。测试与变更记录同步。
+- 待确认：流程写「标准 BluFi opmode=0x00」与实际 0x01（STA）不一致；MQTT pwd 未提供故仍不下发。无 Node 测试未跑。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序选择WiFi改回一步（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/b9bad24 均已最新，origin/main 无未合入；origin 为 GitHub。
