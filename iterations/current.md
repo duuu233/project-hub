@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序点行只选中、设备ID两种写法、未知设备原因（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/c2bcf01 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户问为何提示未知设备；要求设备 ID 带/不带冒号都判断、点搜索列表只选中、把原因写到弹窗上。
+- photo-album main-wifi：bind.selectDevice 恢复只选中（撤销 WiFi 行点击即处理）；api.lookupProductByDevice 先查 12 位再查带冒号写法，返回 {product, reason}（接口失败/返回为空/空对象/无产品 ID 和名称）；未知设备弹窗非正式版显示「原因：…」。新增 wifi-product-lookup 测试，wifi-search 用例改写，文档同步。
+- 验证：无 Node 测试未跑，未真机；未知设备的真实原因待用户真机看弹窗原因。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序配网第4步先在线后绑定（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/4816338 均已最新，origin/main 无未合入；origin 为 GitHub。
