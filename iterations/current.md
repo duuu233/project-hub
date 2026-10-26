@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜qianrong用户组编辑「系统授权菜单暂不可读取」排查（仅分析）
+
+- 同步：Hub main 已最新；tq-plus master 264cd15 快进至 ef5693b（含 kimi 8b35f23/d27176f：adjust-qianrong-system-menus.mjs、hide-qianrong-list-menus.mjs、路由树调整）。
+- 结论：group-menu-model.js:23 systemPermissionScope 要求系统 detail 的 menuIds 全在 menu/list 中。最可能触发为 adjust 脚本移走日志页后删除「日志管理」目录，服务端只校验子菜单与角色分配、不校验系统授权，系统 menuIds 留下悬空 ID；其次为菜单列表按用户过滤。脚本是否已执行待确认。无代码改动；结论写入私人 qianrong-group-menu-inheritance.md。
+
+---
+
 ## 2026-10-26 ssh｜qianrong角色配置权限页UI调整
 
 - 同步：Hub main、tq-plus master/a2d99e5 均已最新；origin均为GitHub。
