@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
+
+main干净先显式同名pull已最新（d087782）。用户引入/home/cc/dh/tq-plus称「超级泰乾-qianrong」：核实即已有taiqian-front的front仓库（qianrong为子应用），复用ID与私人目录，登记environments/ssh/projects.local.yaml；ssh README、environments README、configuration、AGENTS当前映射与context同步，context写明私人配置为硬要求。本机无node，按setup-links规则手动建五项软链接与本地忽略，核验通过；无codegraph未建索引。按main提交，push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜登记相册小程序双分支约定与WiFi版评审迭代
 
 main干净先显式同名pull已最新（68d49e3）。用户确立相册小程序双长期分支：main修旧问题、main-wifi开发WiFi版并及时合并main，写入context/album-miniapp.md执行约定。登记分支清理、main-wifi创建与对接文档评审建议的迭代与跨项目流水。按main提交，push前再次显式同名pull。

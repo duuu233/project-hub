@@ -2443,3 +2443,7 @@ f594e0a已提交、再次pull/push成功；按V2.6修正DP101星期分组、七�
 ## 2026-10-14 | flowerpot-app | work | main | 计划DP来源与下发核查
 
 df47b16已提交、再次pull/push成功；移除计划本地乐观显示，收发诊断分离，修复已报停用默认时间丢失并校验完整七天/参数，计划拒绝回执提示。185回归及六Dart分析通过，SDKraw转换只读核验，未真机/打包。用户所述日期的实际默认DP仍待原始包，未把合成样例当现场数据；详细契约及边界由业务文档维护。
+
+## 2026-10-26 | taiqian-front | ssh | master | SSH接入与私有挂载
+
+用户称「超级泰乾-qianrong」，核实/home/cc/dh/tq-plus即泰乾超级front仓库（master/9975d7f，pull已最新），复用taiqian-front；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。

@@ -1,3 +1,14 @@
+## 2026-10-26 ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
+
+- 用户要求：ssh 环境新接入「超级泰乾-qianrong」，和正矿一样开启私人配置，文档更新不在业务项目中生成。
+- 身份判定：注册表已有泰乾超级（taiqian-front），qianrong 是其 `apps/qianrong/` 子应用（Context 约定不登记独立仓库）。`/home/cc/dh/tq-plus` 为 Git 根目录、结构与 front monorepo 一致，Hub 私人日志里的多个提交号都在其历史中，确认同一项目，复用 ID 与 `private/taiqian-front/`，不新建项目。
+- 同步：Hub main/d087782、tq-plus master/9975d7f 均干净，显式同名 pull 均已最新。tq-plus 的 origin 是用户 GitHub 的 tq-plus 仓库，不是公司 Codeup。
+- 登记：`environments/ssh/projects.local.yaml` 增 taiqian-front（`/home/cc/dh/tq-plus`，master）；ssh README、environments README、configuration、AGENTS 当前映射、context/taiqian-front.md（别名、ssh、私人配置硬要求）同步；私人 workspace-association 与日志补 ssh 段。
+- 挂载：本机无 node，按 setup-links 规则手动建立五项软链接并写 `.git/info/exclude`；check-ignore 五项命中，业务 `git status` 干净，业务仓库没有提交。
+- 剩余：本机无 codegraph、pnpm/node，索引未建、构建不能跑，是否安装由用户决定；ssh 上推送只到 GitHub tq-plus，进 Codeup 需在 home/work 侧同步。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序分支整理、新建main-wifi并评审WiFi版对接文档
 
 - 用户要求：五仓先拉取；相册小程序只保留main、删多余分支；在main基础建main-wifi并切过去，阅读docs/前端对接文档_草稿.md给后端（Java）写详细建议。今后main修旧问题、main-wifi开发WiFi大版本并及时合并main。

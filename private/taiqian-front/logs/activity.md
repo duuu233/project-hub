@@ -128,3 +128,7 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 - **已知**：确认 dh 负责的 13 模块；新 Swagger JSON 读取 200 / 216 路径；105 包装对照中 86 路径/方法匹配、1 方法不符、18 未列出。八处导入/导出地址和代理需调整，角色 DTO 与菜单权限迁移仍需契约核对，接口日志仍无独立接口。
 - **边界**：只有文档下载与捕获 request/XHR 的隔离检查，未真实业务请求、构建或部署；CodeGraph 当前最新。锁文件仅按授权暂存恢复，Git 换行转换已还原原字节，SHA256 一致，文件仍未跟踪且不提交，本轮 stash 已移除。
 - **续接**：docs/qianrong-api-alignment.md 及 history/2026-10-13-qianrong-api-audit-paused.md 保存完整现场；下次按实际环境先 pull、刷新契约后实施，不在暂停期间自动恢复。
+
+## 2026-10-26 ssh｜SSH 服务器私人关联
+
+用户称「超级泰乾-qianrong」，核实 `/home/cc/dh/tq-plus` 即 front 仓库（master / 9975d7f，pull 已最新，origin 为用户 GitHub 的 tq-plus），复用 taiqian-front 与本私人目录。本机无 node，按 setup-links 规则手动建立五项软链接与本地忽略，check-ignore 全部命中、业务工作区干净；无 codegraph，索引未建。未改业务源码、未构建。用户再次明确：本项目和正矿一样走私人配置，文档更新只写本目录，不在业务仓库生成。详见 docs/workspace-association.md。

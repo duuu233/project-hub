@@ -18,7 +18,7 @@
 
 ## SSH 当前接入状态
 
-**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`（中间两项 2026-10-22、`album-admin` 2026-10-23 接入，均为 `transport: local`），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
+**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`、`taiqian-front`（中间两项 2026-10-22、`album-admin` 2026-10-23、`taiqian-front` 2026-10-26 接入，均为 `transport: local`；`taiqian-front` 已建五项私有挂载），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
 
 ## 环境映射
 
@@ -103,10 +103,10 @@ projects:
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
 | work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
-| ssh | 新服务器未映射正矿 | 旧服务器挂载结论已作废；新服务器当前只接入花盆APP、相册小程序、相册APP、相册后台（均为个人自有仓库，不走私有挂载） |
+| ssh | 新服务器未映射正矿 | 旧服务器挂载结论已作废；新服务器接入的花盆APP、相册小程序、相册APP、相册后台为个人自有仓库，不走私有挂载；泰乾超级走私有挂载（见下） |
 | home | 见 `environments/home/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-11 已核实仓库并恢复 5 项挂载（NTFS Junction / SymbolicLink），本机索引已重建；复核使用 `node scripts/setup-links.mjs --env home --project minerals-admin --dry-run` |
 
-泰乾超级已映射 home 与 work，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。
+泰乾超级已映射 home、work 与 ssh，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引；ssh 于 2026-10-26 接入（用户称「超级泰乾-qianrong」），因本机无 node 按脚本规则手动建立五项软链接与本地忽略，无 codegraph CLI 暂未建索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。
 
 冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。历史上的 `docs/build-opt/` 资料合并仅是迁移案例，不能作为新 SSH 服务器已接入或挂载的证据；旧服务器接入记录已作废。
 
