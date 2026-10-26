@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序选择WiFi改回一步（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/b9bad24 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-list 撤回「选中 + 连接」两步，点一行即进账号密码页，去掉连接按钮、selectedSsid 与选中态样式；测试与变更记录同步。无 Node 测试未跑。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序点行只选中、设备ID两种写法、未知设备原因（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/c2bcf01 均已最新，origin/main 无未合入；origin 为 GitHub。
