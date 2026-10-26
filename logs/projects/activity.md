@@ -2583,3 +2583,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 信号格与隐藏网络过滤
 
 已提交、再次pull/push成功；信号强弱改仿iPhone信号格（搜索列表与WiFi列表共用），WiFi列表名称为空的不列。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 选择WiFi页按线上处理
+
+已提交、再次pull/push成功；去掉页面调试内容，提示语下加手动输入灰字入口，标题改设备附近的2.4G WiFi。未运行测试，未真机。

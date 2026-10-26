@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜相册小程序选择WiFi页按线上处理（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/7647507 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-list 去掉全部页面调试内容（回包字段、统计、联调日志），各环境同一套界面，联调信息只打控制台；提示语下加灰字「若列表搜索不到您的wifi，请手动输入」→ 账号密码页；标题改「设备附近的2.4G WiFi」。测试替换调试用例，文档同步。
+- 验证：无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序信号格与隐藏网络过滤（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/9d8f155 均已最新，origin/main 无未合入；origin 为 GitHub。
