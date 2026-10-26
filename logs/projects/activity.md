@@ -2475,3 +2475,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | flowerpot-app | ssh | main | OTA日志改分享文件
 
 75bb666已提交、再次pull/push成功；「OTA日志」合并保留日志为一个txt，经share_plus系统分享（微信/QQ/邮件），去掉剪贴板复制。新增share_plus，lock待更新；未编译未测试。
+
+## 2026-10-26 | flowerpot-app | ssh | main | 10-26两份说明合并
+
+490dc86已提交、再次pull/push成功；倒计时改用DP121说明与五项改动说明合并为 docs/reports/2026-10-26-割草机倒计时与OTA改动说明.md，按用户要求只写按DP121的当前规则、OTA提醒、OTA日志用法、打包与验收，不写改动过程；旧两份删除，导航与引用改指新文件。纯文档。
