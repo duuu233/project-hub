@@ -2611,3 +2611,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 选择WiFi页样式优化
 
 已提交、再次pull/push成功；手动输入改为底部居中次按钮，列表卡片样式优化。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 配网日志
+
+已提交、再次pull/push成功；配网全程日志（密码打码），状态页开发/体验版显示可复制。未运行测试，未真机。

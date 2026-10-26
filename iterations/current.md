@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序配网日志（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/72ce94a 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-provision.run 加 onLog（每步入参与结果、蓝牙收发帧、设备 WiFi 状态/自定义数据/报错/断开、绑定、每次在线查询、失败步骤），密码只记位数、密码帧打码（blufi 发送帧事件带类型）；配网状态页非正式版显示日志面板（自动滚到最新、复制日志），正式版只打控制台 [配网]。测试补日志与打码断言，文档同步。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序选择WiFi页样式优化（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/130f7f2 均已最新，origin/main 无未合入；origin 为 GitHub。
