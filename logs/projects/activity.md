@@ -2639,3 +2639,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 配网日志只留真实参数
 
 已提交、再次pull/push成功；去掉流程文档示例数据，只保留App运行时拿到的参数与③④⑤⑦⑭⑮标签。未运行测试。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 下发mqtt_config
+
+8a324eb已提交、再次pull/push成功；config写入EMQX设备账号（mqtt.boltfox.cn:11883），配网第2步下发mqtt_config，日志打码凭据。未运行测试，未真机。

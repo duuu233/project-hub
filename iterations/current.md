@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序下发mqtt_config（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/a4a41f1 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户提供 EMQX 设备账号；确认 host/port 用 mqtt.boltfox.cn:11883，并同意写入业务仓 utils/config.js 提交（Hub 不记录密码）。
+- photo-album main-wifi/8a324eb：config.iotMqttConfig 填 host/port/usr/pwd，配网第 2 步下发 mqtt_config 并要求 ack result=0；日志 pwd 打码、手机发出的自定义数据帧整帧打码；测试补 MQTT 密码不进日志断言；进度文档/AI_CONTEXT/README/变更记录同步。
+- 待联调：设备对 mqtt_config 的应答（10s 无应答会停在第 2 步）；无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序配网日志按全流程①~⑯标注（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/103709e 均已最新，origin/main 无未合入；origin 为 GitHub。
