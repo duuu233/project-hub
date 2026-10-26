@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜相册小程序设备扫描搜不到WiFi排查：先连设备+联调日志（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/a22a8a4 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 反馈：用设备扫描搜不到；问一开始是否连了设备，要求第一步先用蓝牙连设备。
+- 排查：列表页原本进页面即 BLE 连接再发 0x09，但设备回的 0x12 错误报告无人接（只会干等 12s 报未返回），且设备 WiFi 不在 STA 时乐鑫扫描会直接失败；乐鑫示例 0 个 AP 时不回任何数据。无设备，无法确定实际卡点。
+- photo-album main-wifi：搜索页点 WiFi 设备先「连接设备中」BLE 连上才进列表页（失败停在搜索页提示）；scanWifi 先发 0x02 STA 再发 0x09，设备报错立即 reject 并按乐鑫错误码翻译；列表页「正在连接设备...」→「正在搜索网络...」；非正式版底部联调日志（步骤 + 收发原始帧 + 控制帧 + 报错），控制台同步。测试与文档同步。
+- 待用户：真机复现后发联调日志定位。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序设备WiFi列表字段打印（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/4aaac95 均已最新，origin/main 无未合入；origin 为 GitHub。
