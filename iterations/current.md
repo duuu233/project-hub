@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜花盆APP割草机倒计时改以DP121当前计划为准
+
+- 同步：Hub main干净已最新；花盆APP main c7ccdc1快进至f215b84（用户更新协议V3.0：26个DP，新增DP121 schedule_current `{st,et,now}`）。origin均为GitHub。
+- 花盆APP main/e29a8f1：新增MowerCurrentPlan解析与MowerDp.scheduleCurrent=121；终点=收到新帧本机时刻+et−now，同一帧快照不动、无计划收起、坏帧丢弃，计划变化记日志；DP119下发不再计时，去掉本机SharedPreferences终点；待机/休眠/关机/离线隐藏规则保留。测试重写（解析边界、快照起算、同帧不动、兜底重设、换计划、坏帧、无计划、DP119不计时）；AI_CONTEXT、docs导航、新增产品说明报告与history记录，10-24启动无倒计时报告标为已取代。
+- 边界：首次进页用云端缓存帧，最多偏差一个兜底周期60s；旧固件无DP121将不再显示倒计时；启动瞬间DP5仍待机时按隐藏规则晚一拍出现。
+- 验证：本机无Flutter，测试未运行，未真机；git diff --check与信息隔离自查通过。
+
+---
+
 ## 2026-10-26 ssh｜qianrong角色配置权限改独立页面并去掉静态标识
 
 - 同步：Hub main干净已最新；tq-plus master 536f662快进至c96f263（用户新增permissions.vue占位页，内容为复制的新增页）。origin均为GitHub。
