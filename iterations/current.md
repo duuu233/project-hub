@@ -1,3 +1,14 @@
+## 2026-10-26 ssh｜相册小程序WiFi配置页：5G不回填、iOS限制说明（main-wifi）
+
+- 同步：photo-album main-wifi/44d2014 已最新（同一轮内）；origin 为 GitHub。
+- 反馈：连着 5G 名称被直接回填，应直接显示列表；要求尽量按文档实现、做不到说明原因。
+- 原因：iOS getConnectedWifi 不回频段，原逻辑频段未知也回填；安卓传了 partialInfo:true（只回 SSID/BSSID），同样拿不到频段。
+- photo-album main-wifi/8f6770f：只有确认 2.4G（2400~2500MHz，兼容 GHz）才回填，没连/5G/频段未知一律弹列表；去掉 partialInfo；iOS 列表先放当前网络（标「当前连接」），另给「获取附近WiFi（将跳转系统设置）」入口，取回列表无频段原样列出，选频段未知的网络提示确认 2.4G。测试补 iOS 5G、GHz 用例；STEP2 变更记录加「做不到的部分」表，进度文档同步。
+- 做不到（微信限制）：iOS 判不了当前 WiFi 频段 → 2.4G 也无法直接回填；iOS 附近列表要跳系统设置、且无法筛 2.4G。
+- 验证：无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序未知设备提示复用弹层样式（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/e484452 均已最新，origin/main 无未合入；origin 为 GitHub。

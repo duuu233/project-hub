@@ -2547,3 +2547,7 @@ cc27c6e（规格查询去缓存、返回形状兼容与日志、白圈序号）�
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 未知设备提示复用弹层样式
 
 已提交、再次 pull/push 成功；未知设备提示改用首页同款底部提示弹层。未运行测试，未真机查看。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi配置页5G不回填、iOS列表入口
+
+8f6770f已提交、再次pull/push成功；只有确认2.4G才回填，5G/频段未知弹列表，去掉partialInfo，iOS补当前网络与获取附近入口。未运行测试，未真机。
