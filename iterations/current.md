@@ -1,3 +1,15 @@
+## 2026-10-26 ssh｜相册小程序WiFi版STEP0联调基础+STEP1搜索（main-wifi）
+
+- 同步：Hub main 已最新；photo-album 当前分支 main-wifi，fd61171 快进至 445d35e（新增 docs/wifi 三份文档），origin/main 无未合入提交；origin 为 GitHub。
+- photo-album main-wifi/bb1596f：
+  - STEP0：新增 IoT 客户端 iot-errors（统一错误码+action：401 relogin、503/429/5xx retry，429 读 retryAfter/Retry-After）、iot-request（Header userToken，GET 自拼 query，401 走老服务 expireSession、503 不登出，GET 网络失败静默重试2次、POST 不重发）、iot-ws（单例按需连接，Header userToken 握手，补订阅、30s ping、1s→30s 退避、回前台重连、重连带 reconnect:true，握手401停重连；clearSession 时 close）、iot-api（online/info）；调试台加「IoT 联调」卡。
+  - STEP1：broadcast-match（带 * 为 WiFi 模板，中间正好12位取 deviceId；蓝牙版沿用原包含匹配，未改为文档写的完全匹配，免得带后缀的现网广播名搜不到）；bluetooth.discoverDevices 新增 includeWifi，仅搜索页传，其余扫描入口不收 WiFi 设备；兜底名单加 IJ_*；api.getProductByDevice（静默、retry:false、查到缓存5分钟）；搜索页广播名后挂「WiFi版」（青绿）/「蓝牙版」（蓝）标签，WiFi 行显示12位 deviceNo 与「规格查询中…/型号·尺寸/未知设备」，按钮「立即配网」，未知设备弹「未知设备，请联系客服开通」，查到进 wifi-config；蓝牙绑定流程未动。
+  - 新增静态页 wifi-config（2.4G 提示、名称+切换图标弹示例列表点选回填、明文密码、下一步不带密码）、wifi-provision（四步状态演示，成功「设备入网成功/立即体验」，?demo=fail 看失败态）；新画 wifi-provision-art.svg（手机→设备→云；仓库里没找到原「手机-设备」图标，按品牌橙另画）及 badge/切换图标。
+  - 测试：新增 wifi-search、iot-foundation；search-device-id 的搜索页桩补 api.scanSizeModel（10-23 起该用例就会抛错）并注入 broadcast-match。项目文档：变更记录、对接开发进度 STEP0/1 状态、docs/README 索引、AI_CONTEXT。
+- 验证/剩余：无 Node，测试未运行；未在开发者工具/真机看页面（SVG 未渲染核对）。需后台加 iot.boltfox.cn request/socket 合法域名；getProductByDevice 返回结构未见样例；iOS 能否读完整 IJ_ 广播名待真机；WS 握手 401/503 只能靠 errMsg 文本识别。
+
+---
+
 ## 2026-10-26 ssh｜qianrong角色配置权限页行级/列级/预览改接现有接口
 
 - 同步：Hub main 快进至 309dd1f、tq-plus master/61b359c 已最新；origin均为GitHub。
