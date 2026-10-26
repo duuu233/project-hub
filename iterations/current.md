@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜qianrong角色配置权限页UI调整
+
+- 同步：Hub main、tq-plus master/a2d99e5 均已最新；origin均为GitHub。
+- tq-plus master/264cd15：配置权限页迁成页面后无白底，改用 DetailHeaderCard（字段同角色详情头卡）+ 白底区块卡包住四标签（详情皮肤 .collapse-box 同令牌），标签栏54高/分隔线/3px指示条；脚本与面板不变。私人 role-logs 与日志已记。无Node未构建/浏览器验证。
+
+---
+
 ## 2026-10-26 ssh｜正矿列表缓存名称对齐（proxy.toList）
 
 - 同步：Hub main、正矿 feature-v1.8.5/357085c 均已最新。

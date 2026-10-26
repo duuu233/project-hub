@@ -8,6 +8,8 @@
 
 ## 角色管理
 
+- 2026-10-26 ssh：配置权限页 UI 调整——由弹窗迁成页面后内容直接落在工作区底色上、没有白底。改为与详情页一致：顶部用 `DetailHeaderCard`（标题「角色名 · 配置权限」，字段与角色详情头卡相同：角色编号 / 权限字符 / 所属企业 / 状态 / 创建时间），四个标签放进白底区块卡（与 `.collapse-box` 同令牌：--qr-surface、--qr-border-light、--qr-radius-section、--qr-shadow-card），标签栏高 54、分隔线 --qr-border-section、选中蓝色 3px 指示条；去掉原自绘身份栏。脚本与四个面板不变。本机无 Node，未构建、未浏览器验证。
+
 - 2026-10-26 ssh：「配置权限」由弹窗改为独立页面 `role/permissions.vue`（用户新建的页面文件，原内容为复制的新增页，已替换）。路由按「分配用户」同样方式登记在前端 dynamicRoutes：`/system/role-permission/index/:roleId`，name RolePermissions，权限 system:role:edit，activeMenu 角色管理；不依赖后台新增菜单。弹窗 RolePermissionsDialog 删除，四个面板原样复用。页面头部改为 getRole 只读回读角色名称/企业/状态（原先取列表行）；未保存修改在切标签、离开路由、切换角色时确认。按用户要求去掉所有界面上的静态/演示标识（警告条、底部说明、「示例权限」「全部为静态示例」标签、按钮「（演示）」、提示「暂存于当前演示」、预览「示例命中行数」等），样例企业名去掉「示例」。**注意：四个标签的数据仍是前端模型，保存不落库**，去掉标识后界面看起来像真实配置，需后端接口就绪后替换 permission-workspace-model；业务 README 保留「尚未对接接口」的开发说明。本机无 Node，构建与 node --test 未运行，仅用 Python 核对新增用例的正则与源码匹配。
 
 - 保留原生 vxe-grid、独立新增/编辑/详情路由、权限指令与用户分配页面；接入角色列表、详情、增改、启停、删除和数据权限。

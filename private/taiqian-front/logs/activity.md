@@ -147,3 +147,7 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 - **同步**：master 536f662 快进至 c96f263（用户新增 permissions.vue 占位页）。
 - **范围**：permissions.vue 承接原弹窗内容，dynamicRoutes 登记 `/system/role-permission/index/:roleId`，列表按钮改为跳转，删除 RolePermissionsDialog；四个面板与预览去掉静态/演示/示例标识，样例企业名去「示例」；测试移除弹窗、新增独立页面与无标识断言；README 改为配置页说明并保留未对接接口说明。数据仍为前端模型，保存不落库。
 - **验证**：无 Node/codegraph，未构建、未跑 node --test、未浏览器验证；Python 核对新增断言正则命中。详见 docs/qianrong-role-logs.md。
+
+## 2026-10-26 ssh｜角色配置权限页 UI 调整
+
+permissions.vue 改用 DetailHeaderCard 头卡 + 白底区块卡包住四个标签（详情皮肤同令牌），修复迁成页面后没有白底的问题；脚本与面板不变。未构建、未浏览器验证。详见 docs/qianrong-role-logs.md。
