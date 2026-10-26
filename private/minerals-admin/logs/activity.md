@@ -1072,3 +1072,7 @@ permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → �
 ## 2026-10-26 ssh｜保存后回列表统一走 toList
 
 缓存恢复后排查保存成功仍用 router.back/push 回列表的页面：授信集中器、帮助中心、仓库管理改为 toList 强制刷新，授信集中器列表组件名对齐 Credit-concentrator；其余此类页面的列表本就不缓存（无组件名 22 页）未改。未 type-check / 浏览器验证。
+
+## 2026-10-26 ssh｜仓储附件上传框文字重叠
+
+WarehouseAttachment 可编辑态的格式提示与「拖放到此处或单击上传」重叠：提示与图标块从绝对定位改为拖放区内 ::before / ::after 正常排版。影响入库单、入库计划、出库单、出库计划。未构建、未浏览器验证。详见 docs/warehouse-figma-ui.md。

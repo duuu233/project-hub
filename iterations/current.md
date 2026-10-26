@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜正矿出库单附件上传框文字重叠修复
+
+- 同步：Hub main、正矿 feature-v1.8.5/9a2f001 均已最新；origin均为GitHub。
+- 原因：WarehouseAttachment 可编辑态把格式提示绝对定位在129px，FileUpload 拖放区（170高、内容居中）里「拖放到此处或单击上传」落在约118~136px，二者重叠。
+- 正矿 9ea735a：隐藏 FileUpload 自带图标，图标块与提示改为 .tips-box::before/::after 进入正常排版，与只读态同序；入库单/入库计划/出库单/出库计划共用。私人 warehouse-figma-ui 与日志已记。未构建/浏览器验证。
+
+---
+
 ## 2026-10-26 ssh｜qianrong系统中心点列表调详情接口修复
 
 - 同步：Hub main、tq-plus master/ef5693b 均已最新；origin均为GitHub。
