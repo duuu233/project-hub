@@ -2595,3 +2595,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 信号格与文字对齐
 
 已提交、再次pull/push成功；信号格组件外层改为不占行高的居中inline-flex。未运行测试，未真机确认。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 信号格改绿色
+
+已提交、再次pull/push成功；信号格点亮改为绿色（与WiFi图标同色）。未真机确认。
