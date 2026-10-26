@@ -2487,3 +2487,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 提单Tab条遮挡修复+缓存排查
 
 55ea33a已提交、再次pull/push成功；提单详情affix偏移改按滚动区顶边，不再遮挡页签条（未构建/浏览器验证）。页面缓存失效仅分析：菜单2.0去掉路由拍平致keep-alive只包到ParentView，结论在私人维护文档。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 恢复路由拍平修复缓存
+
+357085c已提交、再次pull/push成功；注册路由前拍平为模块-页面两层，keep-alive重新命中页面组件，侧栏三层与URL不变。未type-check/构建/回归；无组件名等次因未改。

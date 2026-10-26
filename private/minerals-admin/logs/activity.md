@@ -1060,3 +1060,7 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 ## 2026-10-26 ssh｜提单 Tab 条遮挡页签修复 + 缓存失效排查
 
 提单详情 `el-affix` offset 由写死 84 改为取本页滚动区顶边，固定后不再压住页签条；未构建、未浏览器验证。页面缓存失效只做分析：菜单 2.0（baf8a3a）去掉路由拍平导致 keep-alive 只包到 ParentView，详见 docs/maintenance.md 与 logs/2026-10-26-bill-affix-keepalive-analysis.md。
+
+## 2026-10-26 ssh｜恢复路由拍平修复页面缓存
+
+permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → 页面」，keep-alive 直接包住页面组件；侧栏 / 顶栏三层与 resRoutes 不变，URL 不变。未 type-check / 构建 / 浏览器回归；次因（无组件名、重复名、noCache）未改。详见 logs/2026-10-26-keepalive-route-flatten.md。

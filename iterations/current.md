@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜正矿恢复路由拍平修复页面缓存
+
+- 同步：Hub main、正矿 feature-v1.8.5/55ea33a 均干净，显式同名pull已最新；origin均为GitHub。
+- 正矿 feature-v1.8.5/357085c：permission.ts 新增 flattenRouteTree/flattenPages，generateRoutes 注册路由前把「模块→分组→页面」拍平为「模块→页面」（页面用绝对fullPath，URL不变；Layout/ParentView分组不再注册；带组件且有子级的节点保留自身），侧栏/顶栏menuTree与resRoutes不变。不加分组跳转占位（filterAsyncRouter会删无子级redirect致非法路由）。
+- 私人文档：architecture（拍平与keep-alive耦合）、maintenance（主因已修、回归要点、次因待办）、新增日志。
+- 验证/剩余：无node，未type-check/构建/浏览器回归；次因（22个无组件名页面、重复组件名/路由改名、后端noCache）需后端实际路由名，未改。
+
+---
+
 ## 2026-10-26 ssh｜正矿提单Tab条遮挡页签修复 + 页面缓存失效排查
 
 - 同步：Hub main、正矿 feature-v1.8.5/1c9e465 均干净，显式同名pull已最新；origin均为GitHub。无node/codegraph，源码分析。
