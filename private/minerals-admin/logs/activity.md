@@ -1068,3 +1068,7 @@ permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → �
 ## 2026-10-26 ssh｜列表缓存名称对齐
 
 核对 `proxy.toList` 强制刷新机制（exclude 600ms）与列表缓存的名称耦合；53 处 toList 中 8 处不一致，按证据修正 5 处（车辆、提货、仓库、场地列表组件名，内贸销售 listName），销售收货 / 未开票 / 码头库存等待后端路由名确认。未 type-check / 浏览器验证。详见 docs/maintenance.md「页面缓存（KeepAlive）不生效」。
+
+## 2026-10-26 ssh｜保存后回列表统一走 toList
+
+缓存恢复后排查保存成功仍用 router.back/push 回列表的页面：授信集中器、帮助中心、仓库管理改为 toList 强制刷新，授信集中器列表组件名对齐 Credit-concentrator；其余此类页面的列表本就不缓存（无组件名 22 页）未改。未 type-check / 浏览器验证。

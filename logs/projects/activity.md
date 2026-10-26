@@ -2495,3 +2495,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 列表缓存名称对齐
 
 728aa1d已提交、再次pull/push成功；toList刷新名与列表组件名对齐5处（车辆、提货、仓库、场地、内贸销售），其余不一致待后端路由名确认。未type-check/浏览器验证。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 保存后回列表走toList
+
+9a2f001已提交、再次pull/push成功；授信集中器、帮助中心、仓库管理保存成功经toList刷新列表，授信集中器列表名对齐。未type-check/浏览器验证。
