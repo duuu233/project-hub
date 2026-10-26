@@ -6,6 +6,7 @@
   - OTA门禁：新增OtaProgressLayer（进度弹层计数），FirmwareReminderHost开着时不弹；割草机DP116拒绝/失败提示在进度层开着时不进failures（此前会叠在进度层上另弹toast）。
   - OTA调试日志：新增OtaDebugLog写手机文件 ota_logs/ota-YYYY-MM-DD.log（Android外部应用文件目录、iOS Documents+Info.plist文件共享），保留7天，总闸APP_DEBUG_TOOLS；来源native（Android/iOS新增otaLog事件，dump SDK升级信息列表、服务回调/轮询bean、旧版监听原始回调、错误码/NSError、发起/接回/释放）、sdk（原样OTA事件）、app（状态判定全链路与[ota-timing]）、ui（进度层显示、提醒、入口分支与用户选择）；联调日志框「OTA日志」复制并提示路径。新增path_provider依赖。
   - 测试：倒计时用例重写；新增ota_debug_log_test；firmware_reminder_test加进度层门禁用例。AI_CONTEXT、docs导航、产品说明报告（含取日志方法）、history记录已补。
+- 补充（同日）：用户问日志复制是否会过长——会（3秒轮询整bean+剪贴板约1MB限制+聊天软件长度限制）；建议轮询去重、改「分享文件」(share_plus)、安全截断复制，待用户确认。五项改动说明改为简明版 c44a8c4。
 - 风险/剩余：本机无Flutter/Android/Xcode，Dart测试、analyze、Kotlin/Swift编译均未运行；**pubspec.lock未更新**，需flutter pub get后提交；iOS开文件共享后正式包Documents也可见（目前只有OTA日志写入且正式包不写）；Android 11+需USB/adb或「OTA日志」复制取文件。
 
 ---
