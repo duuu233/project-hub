@@ -1076,3 +1076,7 @@ permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → �
 ## 2026-10-26 ssh｜仓储附件上传框文字重叠
 
 WarehouseAttachment 可编辑态的格式提示与「拖放到此处或单击上传」重叠：提示与图标块从绝对定位改为拖放区内 ::before / ::after 正常排版。影响入库单、入库计划、出库单、出库计划。未构建、未浏览器验证。详见 docs/warehouse-figma-ui.md。
+
+## 2026-10-26 ssh｜出库单日期转时间戳 + 附件必填中文提示
+
+新增 utils/dateTimestamp.ts；出库单提交前把 …Date / …Time 日期文本统一转毫秒时间戳（实际出库日期、装货日期及带回的计划 / 详情日期）；出库附件必填改规则 + 中文提示。未构建、未联调。详见 docs/warehouse-figma-ui.md。

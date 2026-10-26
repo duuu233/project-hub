@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜正矿出库单日期转时间戳与附件必填中文提示
+
+- 同步：Hub main、正矿 feature-v1.8.5/9ea735a 均已最新；origin均为GitHub。
+- 正矿 a2d0779：新增 utils/dateTimestamp.ts（datesToTimestamp：…Date/…Time 字段的 YYYY-MM-DD[ HH:mm[:ss]] 文本→本地毫秒时间戳，递归、不改入参）；出库单新增/编辑提交整包转换（实际出库日期、装货日期及带回的 stockOutPlanDate/createTime 等）；出库附件去掉裸 required，改 rules 中文「请上传出库附件」。私人 warehouse-figma-ui 与日志已记。未构建/联调。
+
+---
+
 ## 2026-10-26 ssh｜正矿出库单附件上传框文字重叠修复
 
 - 同步：Hub main、正矿 feature-v1.8.5/9a2f001 均已最新；origin均为GitHub。
