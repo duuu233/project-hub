@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜work｜登记相册后台产品设备交付
+
+起始main/3a75387干净且显式GitHub同名pull成功。追加相册后台main/348bcc3的完成状态与跨项目流水，保留此前迭代；详细实现留在业务仓库。统筹main提交后再次显式同名pull/push，不记录鉴权参数。
+
 ## 2026-10-26｜ssh｜登记qianrong系统中心路由加载修复
 
 main干净先显式同名pull已最新。登记tq-plus 61b359c，私人 route-lifecycle 文档与日志随本次提交。按main提交，push前再次显式同名pull。
