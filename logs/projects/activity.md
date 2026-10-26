@@ -2535,3 +2535,7 @@ bb1596f已提交、再次pull/push成功；IoT 客户端（错误码/HTTP/WS）�
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi搜索sizeModel显示与未知设备拦截补强
 
 6a6e669已提交、再次pull/push成功；WiFi行尺寸读sizeModel（没配--寸），IJ_+12位一律按WiFi版、空壳记录算查不到、点未知设备行直接弹窗。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 配网状态页步骤加序号
+
+已提交并 pull/push；配网状态页四个步骤前加序号 1~4。未在开发者工具/真机查看。

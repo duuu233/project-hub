@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜相册小程序配网状态页步骤加序号（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/6a6e669 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-provision 四个状态前加「1.」~「4.」（状态图标之后、文字之前），颜色随状态；变更记录追加一节。
+- 验证：纯样式改动，无 Node / 未在开发者工具与真机查看。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi搜索：sizeModel显示与未知设备拦截补强（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/bb1596f 均已最新，origin/main 无未合入；origin 为 GitHub。
