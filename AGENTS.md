@@ -27,7 +27,7 @@
 
 ## SSH 环境：新服务器与可写边界（2026-10-21 用户明确）
 
-用户已更换服务器，旧 SSH 服务器的全部项目映射、目录、写入范围、挂载状态及工具位置均已作废。新服务器于 2026-10-21 接入，Hub 在服务器内运行（`/home/cc/dh/project-hub`），当前映射花盆APP（`/home/cc/dh/flowerpot`）、相册小程序（`/home/cc/dh/photo-album`，2026-10-22 接入）、相册APP（`/home/cc/dh/flutter`，2026-10-22 接入）与相册后台（`/home/cc/dh/web-ui-v2`，2026-10-23 接入）与泰乾超级（`/home/cc/dh/tq-plus`，2026-10-26 接入，和正矿一样走私有挂载），其他项目后续由用户指定。
+用户已更换服务器，旧 SSH 服务器的全部项目映射、目录、写入范围、挂载状态及工具位置均已作废。新服务器于 2026-10-21 接入，Hub 在服务器内运行（`/home/cc/dh/project-hub`），当前映射花盆APP（`/home/cc/dh/flowerpot`）、相册小程序（`/home/cc/dh/photo-album`，2026-10-22 接入）、相册APP（`/home/cc/dh/flutter`，2026-10-22 接入）与相册后台（`/home/cc/dh/web-ui-v2`，2026-10-23 接入）、泰乾超级（`/home/cc/dh/tq-plus`，2026-10-26 接入，走私有挂载）与正矿（`/home/cc/dh/zk`，2026-10-26 接入，走私有挂载），其他项目后续由用户指定。
 
 **在 SSH 环境通过本 Hub 工作时，可写范围只有 `/home/cc/dh/` 这一个目录。** 界线是「读可以，写不行」：
 

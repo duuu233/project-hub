@@ -2479,3 +2479,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | flowerpot-app | ssh | main | 10-26两份说明合并
 
 490dc86已提交、再次pull/push成功；倒计时改用DP121说明与五项改动说明合并为 docs/reports/2026-10-26-割草机倒计时与OTA改动说明.md，按用户要求只写按DP121的当前规则、OTA提醒、OTA日志用法、打包与验收，不写改动过程；旧两份删除，导航与引用改指新文件。纯文档。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | SSH接入与私有挂载
+
+核实/home/cc/dh/zk即正矿（feature-v1.8.5/1c9e465，pull已最新，origin为GitHub），复用minerals-admin；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。

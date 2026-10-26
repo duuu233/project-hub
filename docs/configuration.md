@@ -18,7 +18,7 @@
 
 ## SSH 当前接入状态
 
-**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`、`taiqian-front`（中间两项 2026-10-22、`album-admin` 2026-10-23、`taiqian-front` 2026-10-26 接入，均为 `transport: local`；`taiqian-front` 已建五项私有挂载），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
+**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`、`taiqian-front`、`minerals-admin`（中间两项 2026-10-22、`album-admin` 2026-10-23、`taiqian-front` 与 `minerals-admin` 2026-10-26 接入，均为 `transport: local`；后两项已建五项私有挂载），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
 
 ## 环境映射
 
@@ -103,7 +103,7 @@ projects:
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |
 | work | `D:/Work/zk/minerals-frontend` | 2026-09-08 已挂载（NTFS Junction / SymbolicLink） |
-| ssh | 新服务器未映射正矿 | 旧服务器挂载结论已作废；新服务器接入的花盆APP、相册小程序、相册APP、相册后台为个人自有仓库，不走私有挂载；泰乾超级走私有挂载（见下） |
+| ssh | 见 `environments/ssh/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-26 核实仓库并手动建立 5 项软链接与本地忽略（本机无 node，按 setup-links 规则）；无 codegraph 未建索引。旧服务器挂载结论已作废；花盆APP、相册三端不走私有挂载，泰乾超级走私有挂载（见下） |
 | home | 见 `environments/home/projects.local.yaml` 中的 minerals-admin 映射 | 2026-10-11 已核实仓库并恢复 5 项挂载（NTFS Junction / SymbolicLink），本机索引已重建；复核使用 `node scripts/setup-links.mjs --env home --project minerals-admin --dry-run` |
 
 泰乾超级已映射 home、work 与 ssh，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引；ssh 于 2026-10-26 接入（用户称「超级泰乾-qianrong」），因本机无 node 按脚本规则手动建立五项软链接与本地忽略，无 codegraph CLI 暂未建索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。

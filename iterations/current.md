@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜接入正矿（zk）并恢复私有挂载
+
+- 用户要求：ssh 新增 zk 即正矿，按文档规则引入。
+- 核实：`/home/cc/dh/zk` 为 Git 根目录，当前 feature-v1.8.5，origin 为 GitHub duuu233/zk（远端仅此分支，origin/HEAD 指向它），工作区干净；显式同名 pull 已最新（1c9e465）。Hub 正矿私人日志 152 个提交号中 115 个在其历史中，确认即 minerals-admin，复用 ID 与 private/minerals-admin。
+- 登记：environments/ssh/projects.local.yaml 增 minerals-admin（default_branch 本机覆盖为 feature-v1.8.5，共享仍记 master）；ssh README（映射表、正矿私有挂载段）、environments README、configuration（SSH 状态与挂载表）、AGENTS SSH 映射、context/minerals-admin.md、私人日志同步。
+- 挂载：本机无 node，按 setup-links 规则手动建五项软链接与 .git/info/exclude；check-ignore 命中（AGENTS/AI_CONTEXT 由业务 .gitignore 忽略），业务 git status 干净，无业务提交。
+- 剩余：无 codegraph/node，索引未建，构建与类型检查不能运行，是否安装由用户决定。
+
+---
+
 ## 2026-10-26 ssh｜花盆APP倒计时隐藏规则、DP119转圈、OTA提醒门禁与OTA调试日志文件
 
 - 同步：Hub main、花盆APP main/e29a8f1 均干净，显式同名pull已最新；origin均为GitHub。
