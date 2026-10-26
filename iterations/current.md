@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序信号格分色与提示文案（main-wifi）
+
+- 同步：photo-album main-wifi/1bc8bf9 已最新（同一轮内）；origin 为 GitHub。
+- photo-album main-wifi：signal-bars 加 tone，蓝牙版设备蓝色 #2f6feb、WiFi 版设备与 WiFi 列表绿色 #0e9f87（与各自标签同色）；选择 WiFi 页灰字改「若列表搜索不到您的wifi，请点击此处手动输入」。测试与变更记录同步。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序信号格与文字对齐（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/6596d9f 均已最新，origin/main 无未合入；origin 为 GitHub。
