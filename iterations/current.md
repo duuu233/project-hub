@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序WiFi密码小眼睛（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/c1989f9 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-config 密码框加小眼睛（新增 eye-open/eye-closed.svg），默认明文、点击切 ****；测试与变更记录同步。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序选择WiFi页按线上处理（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/7647507 均已最新，origin/main 无未合入；origin 为 GitHub。

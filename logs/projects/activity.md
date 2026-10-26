@@ -2587,3 +2587,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 选择WiFi页按线上处理
 
 已提交、再次pull/push成功；去掉页面调试内容，提示语下加手动输入灰字入口，标题改设备附近的2.4G WiFi。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi密码小眼睛
+
+已提交、再次pull/push成功；密码框加小眼睛切换明文/****（默认明文）。未运行测试，未真机。
