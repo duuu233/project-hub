@@ -3,7 +3,8 @@
 - 同步：Hub main、photo-album main-wifi/103709e 均已最新，origin/main 无未合入；origin 为 GitHub。
 - 用户给后端配网全流程 ①~⑯，要求日志加这些参数，只改日志不改代码。
 - photo-album main-wifi：wifi-provision.run 日志加【流程N】标签与参数（配网模式预期、deviceNo=clientid、opmode 文档 0x00 vs 实发 0x01、MQTT 文档约定 host/port/usr、国家码未下发、灯效、⑧~⑬ 服务端步骤、⑭ 在线、⑮ 绑定、⑯ device/info 未调用）；流程代码未变。测试与变更记录同步。
-- 待确认：流程写「标准 BluFi opmode=0x00」与实际 0x01（STA）不一致；MQTT pwd 未提供故仍不下发。无 Node 测试未跑。
+- 用户随即说明流程里的数据是模拟的、只打能拿到的参数 → 同日再改：只保留③④⑤⑦⑭⑮标签与运行时真实参数，去掉热点/灯效/MQTT 示例值/国家码/服务端步骤/⑯/opmode 说明；测试断言不含示例数据。
+- 待确认：流程写「标准 BluFi opmode=0x00」与实际 0x01（STA）不一致（已从日志去掉，留作沟通项）；MQTT pwd 未提供故仍不下发。无 Node 测试未跑。
 
 ---
 
