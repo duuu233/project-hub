@@ -2471,3 +2471,7 @@ e29a8f1已提交、再次pull/push成功；倒计时改由设备DP121当前计�
 ## 2026-10-26 | flowerpot-app | ssh | main | 五项改动简明说明
 
 c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为简明版（逐项说明、联调包打包命令、取日志方法与复制过长的已知限制、验收要点）。纯文档。
+
+## 2026-10-26 | flowerpot-app | ssh | main | OTA日志改分享文件
+
+75bb666已提交、再次pull/push成功；「OTA日志」合并保留日志为一个txt，经share_plus系统分享（微信/QQ/邮件），去掉剪贴板复制。新增share_plus，lock待更新；未编译未测试。
