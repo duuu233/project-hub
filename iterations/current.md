@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜相册小程序未知设备提示复用弹层样式（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/e484452 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：搜索页「未知设备，请联系客服开通」由 wx.showModal 改为页面底部提示弹层，版式复用首页「设备连接失败」提示（×、居中标题「无法连接该设备」+ 说明、橙色「我知道了」），遮罩/底板/关闭钮沿用本页扫描帮助弹层；wifi-search 测试改断言弹层数据；变更记录追加一节。
+- 验证：无 Node 测试未跑，未在开发者工具/真机看样式。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi：问题确认修正 + STEP2配网（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/69d4549 均已最新，origin/main 无未合入；origin 为 GitHub。

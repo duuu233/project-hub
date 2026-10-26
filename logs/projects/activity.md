@@ -2543,3 +2543,7 @@ bb1596f已提交、再次pull/push成功；IoT 客户端（错误码/HTTP/WS）�
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi问题确认修正 + STEP2配网
 
 cc27c6e（规格查询去缓存、返回形状兼容与日志、白圈序号）、e484452（BluFi 下发 WiFi、老服务绑定、since 轮询在线，配置页接当前 WiFi 与 2.4G 列表）已提交、再次 pull/push 成功。mqtt_config 暂不下发、BluFi 未加密。未运行测试，未真机/固件联调。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 未知设备提示复用弹层样式
+
+已提交、再次 pull/push 成功；未知设备提示改用首页同款底部提示弹层。未运行测试，未真机查看。
