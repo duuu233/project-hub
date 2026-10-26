@@ -1,6 +1,15 @@
 # 角色配置权限工作区
 
-当前口径：2026-10-26 work，用户明确“先做好静态页面”，行级下面的“已配置规则状态”不需要。此轮只交付静态界面与本地演示交互，不将缺少契约的功能伪装为已接接口。原有角色编辑、整体数据权限及列字段配置入口保留。
+当前口径：2026-10-26 ssh，用户明确行级、列级、预览三个标签不是新功能，改接现有接口；功能权限标签仍为前端模型。配置权限已是独立页面（`permissions.vue`，`/system/role-permission/index/:roleId`），下文 work 静态版描述中的“弹窗”“行级五档”“列级演示三态”“合成样例预览”均已被本节取代。
+
+## 2026-10-26 ssh 接口化（当前有效）
+
+- **行级**：去掉“选择列表”与五档预设。就是角色列表“数据权限”按钮的功能：抽出 `RoleDataScopeForm`（getRole + `role/scopeList` + `role/deptTree/{roleId}` 读取，`PUT role/dataScope` 保存），列表弹窗 `RoleDataScopeDialog` 与本页 `RoleDataScopePanel` 共用。权限范围去掉标签以“本企业”开头的选项（按标签判断，不知道后端 key）；角色当前已是本企业时保留为禁用项显示，保存会提示重新选择。列表弹窗同样去掉了本企业（共用组件，两处一致）。面板暴露 dirty/busy，未保存切页签/离开仍走原确认。
+- **列级**：就是角色列表“列字段配置”的功能：抽出 `RoleColumnConfig`（角色已授权 C 菜单选择 + `RoleColumnWorkspace`），`RoleColumnDialog`（列表/角色详情只读）与 `RoleColumnPanel` 共用；各操作即时保存，无 dirty。
+- **预览**：选列表即调用本系统该列表的接口，多传 `previewRoleId`=当前页角色编号。菜单不存接口地址，故前端维护 `preview-sources.js`：菜单 component 路径 → 该页面现用的列表 API 函数（23 个，均为 GET + pageNum/pageSize；准入 admission 需 type 参数、在线用户走 system-service，未登记）。可选列表 = `roleMenuOptions` 里角色已授权且 component 在对照表中的页面（roleMenuOptions 选项新增 component 字段）。取第 1 页 20 条，按顶层非空字段数降序（同数保持原序）取 3 条；表头优先读该角色该菜单的列字段配置（`role/column/list`，失败退回接口字段名）。total 显示接口 total。
+- **角色编号来源**：三个标签用 permissions.vue 在本页 load 时记下的 `roleId` ref，不直接绑 `route.params.roleId`，避免缓存页在“分配用户”等带 roleId 的页面激活时按别的角色重载（同 10-26 系统中心点列表调详情问题）。
+- **未定/风险**：`previewRoleId` 只是前端多传的查询参数，后端是否已在这 23 个列表接口生效未核实；“当前系统”按本前端能调用的列表理解，未用登录上下文 systemId（刷新后 store.context 为空）。“本企业”按标签前缀识别。
+- **验证**：ssh 无 Node，`node --test`、构建、浏览器均未运行；测试文件已按新口径重写（模型函数、共用组件、previewRoleId 调用、对照表页面存在、页签只认本页角色编号）。
 
 ## 来源与范围
 

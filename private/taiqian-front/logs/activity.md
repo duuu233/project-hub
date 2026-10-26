@@ -159,3 +159,10 @@ permissions.vue 改用 DetailHeaderCard 头卡 + 白底区块卡包住四个标�
 ## 2026-10-26 ssh｜系统中心页面不再因点列表调详情接口
 
 新增 useOwnRouteLoad，系统中心 9 个页面（系统 / 部门 / 企业用户 / 角色 / 用户组 / 用户表单、菜单列字段、字典数据、配置权限）改为只在本页激活时按本页参数加载；新增 tests/own-route-load.test.mjs。未运行测试、未构建、未浏览器验证。详见 docs/qianrong-menu-route-lifecycle.md。
+
+## 2026-10-26 ssh｜角色配置权限页行级/列级/预览改接现有接口
+
+- **同步**：master 61b359c 已最新；Hub main 快进至 309dd1f。提交 master/3063971，再次 pull 后已 push。
+- **改动**：抽出 RoleDataScopeForm、RoleColumnConfig 供列表弹窗与配置页共用；行级去掉选择列表/五档预设并去掉本企业；列级复用列字段配置；预览新增 preview-sources.js（组件路径→列表接口）与 preview-model.js，调接口带 previewRoleId 取最全 3 条；三标签用本页记录的 roleId；演示模型只留功能权限；README 与测试改写。
+- **验证**：无 Node，未跑测试/构建/浏览器；previewRoleId 后端是否生效未核实。详见 docs/qianrong-role-permission-workspace.md。
+

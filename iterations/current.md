@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜qianrong角色配置权限页行级/列级/预览改接现有接口
+
+- 同步：Hub main 快进至 309dd1f、tq-plus master/61b359c 已最新；origin均为GitHub。
+- tq-plus master/3063971：行级=角色列表“数据权限”（抽出RoleDataScopeForm共用，dataScope接口，去掉选择列表与本企业，列表弹窗同步去掉）；列级=“列字段配置”（抽出RoleColumnConfig共用）；预览新增preview-sources.js（菜单component→列表API，23个）与preview-model.js，选中列表调接口多传previewRoleId=当前角色，取非空字段最多的3条，表头优先该角色列字段配置；三标签只认本页加载时的roleId，防缓存页跟随其它页面路由参数重载。功能权限仍为前端模型。私人role-permission-workspace、AI_CONTEXT与日志已记。
+- 验证/剩余：无Node，测试（已改写）/构建/浏览器未运行；后端是否已对这些列表支持previewRoleId未核实；“本企业”按标签前缀识别。
+
+---
+
 ## 2026-10-26 ssh｜正矿出库单日期转时间戳与附件必填中文提示
 
 - 同步：Hub main、正矿 feature-v1.8.5/9ea735a 均已最新；origin均为GitHub。
