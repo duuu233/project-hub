@@ -27,4 +27,4 @@
 
 ## 交付
 
-本轮业务已提交并推送 master / 7e1a00a，作者 dh。首次 push 被 Codeup 的 SSH 密钥只读权限拒绝；用户确认开启写权限后，再次 pull --ff-only origin master 成功，再次 push 成功，工作区干净。统筹配置与私人资料在 main 同样提交、再次 pull 后 push。正矿仅提供参照，feature-v1.8.5 / f152a42 保持干净。
+本轮业务已提交并推送 master / 7e1a00a，作者 dh。首次 push 被远端 SSH 密钥只读权限拒绝；用户确认开启写权限后，再次 pull --ff-only origin master 成功，再次 push 成功，工作区干净。统筹配置与私人资料在 main 同样提交、再次 pull 后 push。正矿仅提供参照，feature-v1.8.5 / f152a42 保持干净。

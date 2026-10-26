@@ -31,8 +31,8 @@
 
 ## SSH 服务器（2026-10-26 接入）
 
-- 用户在 ssh 环境引入 `/home/cc/dh/tq-plus`，称「超级泰乾-qianrong」。核实：Git 根目录、master 与 origin/master 一致（9975d7f，44 个提交），本目录日志记录的多个提交号均在其历史中，含合并公司 Codeup front 的提交，确认是同一 front 仓库，复用 taiqian-front 和本私人目录，不新建项目。
-- 本机 origin 是用户 GitHub 上的 tq-plus 仓库，不是公司 Codeup；ssh 上 pull/push 按规则走该 origin 的同名分支，代码要进 Codeup 需在 home/work 侧另行同步。
+- 用户在 ssh 环境引入 `/home/cc/dh/tq-plus`，称「超级泰乾-qianrong」。核实：Git 根目录、master 与 origin/master 一致（9975d7f，44 个提交），本目录日志记录的多个提交号均在其历史中，确认是同一 front 仓库，复用 taiqian-front 和本私人目录，不新建项目。
+- 远端一直是用户 GitHub 上的 tq-plus 仓库，ssh 与 home/work 的 origin 相同；pull/push 按规则走 origin 的同名分支。
 - 本机无 node，setup-links.mjs 无法运行；按脚本同样的规则手动建立五项绝对路径软链接（目录、文件均为普通 symlink），`.git/info/exclude` 追加五条忽略。`git check-ignore -v` 五项全部命中，业务 `git status --short` 干净。
 - 本机无 codegraph CLI，索引未初始化；装好后在业务根目录执行 `codegraph init .`。本机也无法运行 pnpm 构建，验证边界需在后续任务里如实说明。
 

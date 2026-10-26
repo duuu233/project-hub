@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜更正泰乾超级远端为GitHub
+
+main干净先显式同名pull已最新（27fbf1b）。用户确认泰乾超级远端一直是GitHub，去掉Context、ssh README、迭代记录与私人资料里的「企业Codeup仓库」错误口径；正矿相关Codeup记录不动。按main提交，push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
 
 main干净先显式同名pull已最新（d087782）。用户引入/home/cc/dh/tq-plus称「超级泰乾-qianrong」：核实即已有taiqian-front的front仓库（qianrong为子应用），复用ID与私人目录，登记environments/ssh/projects.local.yaml；ssh README、environments README、configuration、AGENTS当前映射与context同步，context写明私人配置为硬要求。本机无node，按setup-links规则手动建五项软链接与本地忽略，核验通过；无codegraph未建索引。按main提交，push前再次显式同名pull。

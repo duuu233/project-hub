@@ -2,10 +2,11 @@
 
 - 用户要求：ssh 环境新接入「超级泰乾-qianrong」，和正矿一样开启私人配置，文档更新不在业务项目中生成。
 - 身份判定：注册表已有泰乾超级（taiqian-front），qianrong 是其 `apps/qianrong/` 子应用（Context 约定不登记独立仓库）。`/home/cc/dh/tq-plus` 为 Git 根目录、结构与 front monorepo 一致，Hub 私人日志里的多个提交号都在其历史中，确认同一项目，复用 ID 与 `private/taiqian-front/`，不新建项目。
-- 同步：Hub main/d087782、tq-plus master/9975d7f 均干净，显式同名 pull 均已最新。tq-plus 的 origin 是用户 GitHub 的 tq-plus 仓库，不是公司 Codeup。
+- 同步：Hub main/d087782、tq-plus master/9975d7f 均干净，显式同名 pull 均已最新。tq-plus 的 origin 是用户 GitHub 的 tq-plus 仓库（远端一直是 GitHub）。
 - 登记：`environments/ssh/projects.local.yaml` 增 taiqian-front（`/home/cc/dh/tq-plus`，master）；ssh README、environments README、configuration、AGENTS 当前映射、context/taiqian-front.md（别名、ssh、私人配置硬要求）同步；私人 workspace-association 与日志补 ssh 段。
 - 挂载：本机无 node，按 setup-links 规则手动建立五项软链接并写 `.git/info/exclude`；check-ignore 五项命中，业务 `git status` 干净，业务仓库没有提交。
-- 剩余：本机无 codegraph、pnpm/node，索引未建、构建不能跑，是否安装由用户决定；ssh 上推送只到 GitHub tq-plus，进 Codeup 需在 home/work 侧同步。
+- 剩余：本机无 codegraph、pnpm/node，索引未建、构建不能跑，是否安装由用户决定。
+- 更正（同日）：用户确认泰乾超级远端一直是 GitHub，之前「企业 Codeup 仓库」的记录是写错的，已从 Context、ssh 说明与私人资料中去掉。
 
 ---
 
@@ -1190,7 +1191,7 @@
 ## 2026-10-11 home｜接入泰乾前端及正矿分支同步
 
 - 用户要求接入新位置并将正矿切到 feature-v1.8.5；home 初始未映射正矿，用户补充其本机仓库位置后继续，未猜测路径或套用其他环境。
-- Hub main / 72dd5b7 开始前工作区干净，先 pull 同名 main 成功。新增 taiqian-front，名称依据 README 和 package.json 确认为「泰乾德邦数字金融管理系统」，与正矿是不同的企业 Codeup 仓库；新增注册表、Context、home 映射及 README 入口。
+- Hub main / 72dd5b7 开始前工作区干净，先 pull 同名 main 成功。新增 taiqian-front，名称依据 README 和 package.json 确认为「泰乾德邦数字金融管理系统」，与正矿是不同的仓库（远端为 GitHub，2026-10-26 更正）；新增注册表、Context、home 映射及 README 入口。
 - 新项目接入仅只读核查，不改源码、不安装依赖、不创建项目内文档或索引；保留 master / 8d2a8f0，核实远端默认 master 和仓库根目录，工作区干净。
 - 正矿复用 minerals-admin，补 home 映射。原分支 1.8.4-deep-space-theme / aa7d6d8 干净；核实远端已有 feature-v1.8.5 后 fetch、建立同名本地分支并切换，不设置 upstream；显式 pull --ff-only origin feature-v1.8.5 成功，当前 f152a42 与 origin 同名分支一致。原主题分支保留，未合并、rebase 或修改源码。
 - 根据正矿现有规则和 private_mounts，先预览无实体冲突，再恢复五项链接并核实目标及本地忽略。sync / index 因本机未初始化而不能执行，随后按项目缺失恢复规则和 CLI 提示 init，重建 662 文件 / 11,304 节点 / 38,381 边，status 最新；索引配置、数据库和运行产物均未进入受控改动。

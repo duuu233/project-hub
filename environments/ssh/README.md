@@ -20,7 +20,7 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 泰乾超级是企业团队仓库，和正矿一样走私人配置：`AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/`、`.codegraph/` 的真实文件在 `private/taiqian-front/`，业务根目录只放本地忽略的软链接；文档、日志更新一律写进私人目录，不在业务仓库里生成。
 
-- 2026-10-26 接入时核实：tq-plus 是 Git 根目录，当前 master 与 origin/master 一致（9975d7f），Hub 私人日志里记录的多个提交号均在该仓库历史中，确认与 home/work 的 front 仓库为同一项目。本机 origin 指向用户 GitHub 上的 tq-plus 仓库（不是公司 Codeup），pull/push 按规则走这个 origin 的同名分支。
+- 2026-10-26 接入时核实：tq-plus 是 Git 根目录，当前 master 与 origin/master 一致（9975d7f），Hub 私人日志里记录的多个提交号均在该仓库历史中，确认与 home/work 的 front 仓库为同一项目。origin 为用户 GitHub 上的 tq-plus 仓库（与 home/work 相同），pull/push 按规则走 origin 的同名分支。
 - 本机没有 `node`，`scripts/setup-links.mjs` 无法运行；按脚本同样的规则手动建立五项绝对路径软链接，并在 `.git/info/exclude` 追加 `/.codegraph`、`/docs`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/logs`。`git check-ignore -v` 五项全部命中，业务 `git status` 干净。
 - 本机没有 `codegraph`，索引未初始化；装好 CLI 后在业务根目录执行 `codegraph init .`（之后用 `codegraph sync .`）。是否安装由用户决定。
 

@@ -132,3 +132,7 @@ master/d08dab3干净同名pull后修复菜单表单缓存监听：限定活动�
 ## 2026-10-26 ssh｜SSH 服务器私人关联
 
 用户称「超级泰乾-qianrong」，核实 `/home/cc/dh/tq-plus` 即 front 仓库（master / 9975d7f，pull 已最新，origin 为用户 GitHub 的 tq-plus），复用 taiqian-front 与本私人目录。本机无 node，按 setup-links 规则手动建立五项软链接与本地忽略，check-ignore 全部命中、业务工作区干净；无 codegraph，索引未建。未改业务源码、未构建。用户再次明确：本项目和正矿一样走私人配置，文档更新只写本目录，不在业务仓库生成。详见 docs/workspace-association.md。
+
+## 2026-10-26 ssh｜远端口径更正
+
+用户确认本项目远端一直是 GitHub 上的 tq-plus 仓库，之前记录的「企业 Codeup 仓库」是写错的；已从 Hub Context、ssh 说明、关联文档与历史记录中去掉。
