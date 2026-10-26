@@ -1056,3 +1056,7 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 ## 2026-10-26 ssh｜新服务器私人关联
 
 用户在 ssh 引入 `/home/cc/dh/zk`。核实为同一正矿仓库（feature-v1.8.5 / 1c9e465，pull 已最新；私人日志 152 个提交号中 115 个在其历史中；origin 为用户 GitHub 的 zk，远端仅此分支）。本机无 node，按 setup-links 规则手动建立五项软链接与本地忽略，check-ignore 命中、业务工作区干净；无 codegraph，索引未建，构建与类型检查不能运行。未改业务源码。旧服务器 2026-09-09 的 ssh 挂载记录已作废，仅供追溯。
+
+## 2026-10-26 ssh｜提单 Tab 条遮挡页签修复 + 缓存失效排查
+
+提单详情 `el-affix` offset 由写死 84 改为取本页滚动区顶边，固定后不再压住页签条；未构建、未浏览器验证。页面缓存失效只做分析：菜单 2.0（baf8a3a）去掉路由拍平导致 keep-alive 只包到 ParentView，详见 docs/maintenance.md 与 logs/2026-10-26-bill-affix-keepalive-analysis.md。

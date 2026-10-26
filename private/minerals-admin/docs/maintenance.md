@@ -162,6 +162,22 @@
 - 页面依赖的全局组件、自动导入和类型声明是否仍存在。
 - AppMain/KeepAlive 是否因 name 不一致缓存了错误实例。
 
+### 页面缓存（KeepAlive）不生效
+
+2026-10-26 ssh 源码排查结论（未运行、未改代码，待修复）：
+
+- **主因：菜单 2.0 改写（baf8a3a，2026-09-18）去掉了路由拍平。** 之前 `filterAsyncRouter(rdata, false, true)` 经 `filterChildren` 把 `ParentView` 层的子页拍平到顶层 `Layout` 下；现在 `normalizeMenuTree` 保留「模块 → 分组 → 页面」三层，分组（非根 `Layout` 也会被换成 `ParentView`）下的页面实际渲染链是 `Layout → ParentView → 页面`。`AppMain` 的 `<keep-alive :include="cachedViews">` 只包住它自己那层 `router-view` 渲染出的组件，即 `ParentView`；`cachedViews` 里是页面路由名，`ParentView` 不在其中，于是整个分组子树每次切走都被销毁。`ParentView/index.vue` 只有一个裸 `<router-view />`，内部也没有缓存。只有直接挂在模块下的页面才可能被缓存。
+- **次因（个别页面）**：
+  - 22 个页面组件没有 `<script setup name>`（如 access/concentrator、billing/items、billing/protocol、import-manage/list、sales-pickup/list 及其两个详情、system/all-system、system/bank），名称推断为文件名，永远匹配不上路由名。
+  - 组件名重复：Service-provider-list（4）、Enterprise-users/add·detail·edit（5~6）、Invoicing-list/add/edit/detail、Attr/*、Cope-list/index、MarketData、Stock-query、Yard-replenish 等。后端路由名若同样重复，`resolveRouteName` 会改写为 `名称-menuId`（控制台「菜单数据存在重复项」警告），被改名的路由与组件名对不上；关闭页签按名称删缓存时也会波及同名页面。
+  - 后端菜单「是否缓存」（`meta.noCache`）设为不缓存的页面本来就不进 `cachedViews`，需以实际 getRouters 数据核对。
+- **不是原因**：`AppMain` 是 `<transition>` 包 `<router-view>`（与 RuoYi 标准顺序相反），历史一直如此，只影响切换动画；`:key="route.path"` 使新增 / 编辑 / 详情同路径不同 id 共用一个实例，是既有设计。
+- **修复方向（待定）**：注册路由前恢复拍平（只拍平 `routeTree` 用于 `addRoute`，`menuTree` 仍按三层给侧栏）；或给 `ParentView` 也加同一套 `keep-alive`（需让 `ParentView` 自身被缓存，嵌套缓存的关闭 / 刷新要一并处理，不推荐）。改后补组件名、核对重复名与 `noCache`，并按 TagsView 打开 / 切换 / 关闭 / 刷新逐项人工回归。
+
+### 详情页固定 Tab 条
+
+页面自己有滚动区（如提单 `.flex-main`）时，`el-affix` 的 `offset` 不能写死：顶栏 + 页签条高度随断点变化（76+46 / 60+40）。提单已改为取滚动区在视口中的顶边（挂载、`activated`、窗口尺寸变化时重算）。资产（offset 60）、融资（offset 90）详情同样写死，若出现遮挡按同一方式处理。
+
 ### 刷新后页面丢失或回首页
 
 区分：

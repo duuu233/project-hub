@@ -2483,3 +2483,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | SSH接入与私有挂载
 
 核实/home/cc/dh/zk即正矿（feature-v1.8.5/1c9e465，pull已最新，origin为GitHub），复用minerals-admin；手动建立五项私有软链接与本地忽略，业务工作区干净，无业务提交。无node/codegraph，构建与索引未运行。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 提单Tab条遮挡修复+缓存排查
+
+55ea33a已提交、再次pull/push成功；提单详情affix偏移改按滚动区顶边，不再遮挡页签条（未构建/浏览器验证）。页面缓存失效仅分析：菜单2.0去掉路由拍平致keep-alive只包到ParentView，结论在私人维护文档。

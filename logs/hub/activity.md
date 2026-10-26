@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜登记正矿提单Tab条修复与缓存排查
+
+main干净先显式同名pull已最新。登记正矿55ea33a与缓存失效分析的迭代与跨项目流水，私人维护文档、日志随本次提交。按main提交，push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜接入正矿（zk）并恢复私有挂载
 
 main干净先显式同名pull已最新。用户引入/home/cc/dh/zk即正矿：核实Git根目录、GitHub origin、远端唯一分支feature-v1.8.5及提交号与私人日志一致后登记ssh映射（default_branch本机覆盖）；ssh README、environments README、configuration、AGENTS、context、私人日志同步；YAML与ID校验通过。按main提交，push前再次显式同名pull。

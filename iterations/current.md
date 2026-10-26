@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜正矿提单Tab条遮挡页签修复 + 页面缓存失效排查
+
+- 同步：Hub main、正矿 feature-v1.8.5/1c9e465 均干净，显式同名pull已最新；origin均为GitHub。无node/codegraph，源码分析。
+- 提单 feature-v1.8.5/55ea33a：bill-lading handleDetail 的 el-affix offset 写死84，而顶栏76+页签46（小屏60+40）且本页滚动区为 .flex-main，固定后压住 tags-view；改为取 .flex-main 视口顶边（挂载/activated/resize 重算），固定后贴滚动区顶部、页签之下，原毛玻璃固定样式不变。未type-check/构建/浏览器验证。资产(60)、融资(90)详情同样写死，未改。
+- 缓存失效（只分析）：主因 baf8a3a（2026-09-18 菜单2.0 automated sync）去掉 filterAsyncRouter 的 filterChildren 拍平，分组下页面经 ParentView（裸router-view）渲染，AppMain keep-alive 只包到 ParentView、不在 include 中→分组子树切走即销毁；次因22个页面无组件名、组件名重复与 resolveRouteName 改名、后端noCache；AppMain transition包router-view非原因。修复方向：注册路由前恢复拍平（侧栏仍三层），待用户决定。结论写入私人 docs/maintenance.md 与 logs。
+
+---
+
 ## 2026-10-26 ssh｜接入正矿（zk）并恢复私有挂载
 
 - 用户要求：ssh 新增 zk 即正矿，按文档规则引入。
