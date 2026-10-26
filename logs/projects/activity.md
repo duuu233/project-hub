@@ -2551,3 +2551,7 @@ cc27c6e（规格查询去缓存、返回形状兼容与日志、白圈序号）�
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi配置页5G不回填、iOS列表入口
 
 8f6770f已提交、再次pull/push成功；只有确认2.4G才回填，5G/频段未知弹列表，去掉partialInfo，iOS补当前网络与获取附近入口。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi配置页统一先弹列表
+
+已提交、再次pull/push成功；进页面统一先弹WiFi列表、不自动回填，当前连接的网络标注排第一。未运行测试，未真机。

@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序WiFi配置页统一先弹列表（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/8f6770f 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 用户拍板：统一先弹列表选择 WiFi（取代按当前连接 2.4G 自动回填，iOS 判不了频段）。
+- photo-album main-wifi：进页面读当前 WiFi 只用来在列表标「当前连接」并排第一，然后统一弹列表、不回填；安卓仍只列 2.4G，iOS 规则不变；wifi-search 测试改写 2.4G 用例；STEP2 变更记录、进度文档同步。
+- 验证：无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi配置页：5G不回填、iOS限制说明（main-wifi）
 
 - 同步：photo-album main-wifi/44d2014 已最新（同一轮内）；origin 为 GitHub。
