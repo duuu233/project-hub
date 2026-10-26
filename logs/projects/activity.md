@@ -2491,3 +2491,7 @@ c44a8c4已提交、再次pull/push成功；docs/reports五项改动说明改为�
 ## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 恢复路由拍平修复缓存
 
 357085c已提交、再次pull/push成功；注册路由前拍平为模块-页面两层，keep-alive重新命中页面组件，侧栏三层与URL不变。未type-check/构建/回归；无组件名等次因未改。
+
+## 2026-10-26 | minerals-admin | ssh | feature-v1.8.5 | 列表缓存名称对齐
+
+728aa1d已提交、再次pull/push成功；toList刷新名与列表组件名对齐5处（车辆、提货、仓库、场地、内贸销售），其余不一致待后端路由名确认。未type-check/浏览器验证。

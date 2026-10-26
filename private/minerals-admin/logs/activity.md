@@ -1064,3 +1064,7 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 ## 2026-10-26 ssh｜恢复路由拍平修复页面缓存
 
 permission.ts 新增 flattenRouteTree，注册路由前拍平为「模块 → 页面」，keep-alive 直接包住页面组件；侧栏 / 顶栏三层与 resRoutes 不变，URL 不变。未 type-check / 构建 / 浏览器回归；次因（无组件名、重复名、noCache）未改。详见 logs/2026-10-26-keepalive-route-flatten.md。
+
+## 2026-10-26 ssh｜列表缓存名称对齐
+
+核对 `proxy.toList` 强制刷新机制（exclude 600ms）与列表缓存的名称耦合；53 处 toList 中 8 处不一致，按证据修正 5 处（车辆、提货、仓库、场地列表组件名，内贸销售 listName），销售收货 / 未开票 / 码头库存等待后端路由名确认。未 type-check / 浏览器验证。详见 docs/maintenance.md「页面缓存（KeepAlive）不生效」。

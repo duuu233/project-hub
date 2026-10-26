@@ -175,6 +175,10 @@
 - **已采用的修复**：只拍平 `routeTree` 用于 `addRoute`，`menuTree` 仍三层给侧栏；分组不再注册为路由（与原 filterChildren 一致），模块根保留 redirect 到首个页面。未采用「给 ParentView 加 keep-alive」（嵌套缓存的关闭 / 刷新难处理）。
 - **回归要点**：列表页填搜索条件 / 翻页 → 切到别的页签 → 切回仍保留；关闭页签后重开为新页面；页签右键刷新、关闭其他 / 全部；新增 / 编辑 / 详情经 `toList` 返回列表后列表刷新；侧栏高亮（隐藏详情页按 activeMenu）、首页跳转首个可访问页面、刷新浏览器后路由恢复、切换系统后菜单与路由正确。
 - **仍待处理**：上面三条次因（无组件名页面、重复组件名 / 路由改名、noCache）需要后端实际路由名才能逐页修正，未改。
+- **列表缓存与 `proxy.toList` 强制刷新（2026-10-26 核对）**：列表靠 keep-alive 缓存；新增 / 编辑成功后 `proxy.toList({ path, listName })` 关掉当前页签、跳回列表，并把 `listName` 放进 exclude 600ms，丢掉列表缓存后重新挂载（新数据可见），之后恢复缓存。三者必须一致：后端路由名（进 cachedViews）＝列表组件 `<script setup name>`＝`listName`。后端路由名按菜单 path 命名（列表 `Xxx-list`、子页 `Xxx-list/add|edit|detail`，`openNewTagsView` 按此名比对）。
+  - 已按「toList + 子页名」一致证据修正：车辆列表、提货列表组件名（原复制成 Service-provider-list）→ Car-list / Pick-up-goods-list；仓库、场地列表 Store / Site → Store-list / Site-list；内贸销售 toList 的 listName Domestic-sales-list → Domestic-sales（列表与三个子页均为 Domestic-sales）。
+  - 待后端菜单数据确认：销售收货列表组件名 Sales-pickup 与 toList 的 Receipt 不一致、子页名复制成 Enterprise-users/*；未开票列表与开票列表同名 Invoicing-list；码头库存四页均复制成 Service-provider-list；提货 / 码头库存保存逻辑是商品属性的复制（attributeAdd / 跳 goods-library/attr）；审批分派 / 审批日志保存后跳出口商列表（疑似复制）。
+  - 审核工具：逐个 `toList` 调用按 path 找到目标列表，比对 listName 与组件名（50 / 53 一致，剩余 3 条为上述待确认与无组件名的 sales-pickup/list）。
 
 ### 详情页固定 Tab 条
 

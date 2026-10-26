@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜正矿列表缓存名称对齐（proxy.toList）
+
+- 同步：Hub main、正矿 feature-v1.8.5/357085c 均已最新。
+- 核对：列表靠 keep-alive 缓存，新增/编辑成功后 proxy.toList({path,listName}) 关当前页签、跳回列表、exclude listName 600ms 强制重挂载（自 init 起即有）。路由名（cachedViews）＝列表组件名＝listName 才生效；后端路由名按菜单 path（Xxx-list、Xxx-list/add…）。脚本 .codex-tmp/audit_tolist.py 审 53 处 toList：45 一致、8 不一致。
+- 正矿 728aa1d：按 toList+子页名一致证据修 5 处——车辆/提货列表组件名（原复制为 Service-provider-list）→Car-list/Pick-up-goods-list，仓库/场地 Store/Site→Store-list/Site-list，内贸销售 listName Domestic-sales-list→Domestic-sales。用户要求 22 个无组件名页面不管。
+- 待后端路由名确认：销售收货（Sales-pickup vs Receipt，子页复制 Enterprise-users/*）、未开票列表与开票同名 Invoicing-list、码头库存四页复制 Service-provider-list、提货/码头库存保存逻辑复制商品属性、审批分派/日志保存后跳出口商列表。私人 maintenance 与日志已记。未 type-check/浏览器验证。
+- 用户追加「出库计划单新增编辑页时间筛选器转时间戳」：该页无日期选择器，已询问范围（出库单新增编辑的出库日期/装运时间、出库计划列表创建时间筛选或整个仓储模块）与单位，待用户澄清。
+
+---
+
 ## 2026-10-26 ssh｜正矿恢复路由拍平修复页面缓存
 
 - 同步：Hub main、正矿 feature-v1.8.5/55ea33a 均干净，显式同名pull已最新；origin均为GitHub。
