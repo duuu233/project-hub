@@ -2,13 +2,17 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜去掉正矿Codeup说法
+
+main干净先显式同名pull已最新（5028e8f）。用户确认正矿也推GitHub：context/minerals-admin.md远端改为GitHub，AGENTS信息隔离段去掉「公司Codeup团队仓」，正矿邮箱说明与旧归档里的Codeup改为中性表述；Hub现仅剩泰乾超级更正说明中引用的Codeup字样。按main提交，push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜去掉泰乾超级「企业团队仓库」说法并规定SSH一律推送GitHub
 
 main干净先显式同名pull已最新（f72123b）。按用户要求去掉泰乾超级「企业团队仓库」口径（README、configuration、ssh README、私人关联文档及两处旧流水），私有化理由改为用户要求；README私有化段同步补泰乾超级。AGENTS「任务完成后的默认动作」新增第0条全局规则：所有环境、所有仓库的提交只推送GitHub，提交前核对origin，不是GitHub即暂停询问、不提交不推送；ssh README引用该条。核实五个业务仓与Hub的origin均为GitHub。按main提交，push前再次显式同名pull。
 
 ## 2026-10-26｜ssh｜更正泰乾超级远端为GitHub
 
-main干净先显式同名pull已最新（27fbf1b）。用户确认泰乾超级远端一直是GitHub，去掉Context、ssh README、迭代记录与私人资料里的「企业Codeup仓库」错误口径；正矿相关Codeup记录不动。按main提交，push前再次显式同名pull。
+main干净先显式同名pull已最新（27fbf1b）。用户确认泰乾超级远端一直是GitHub，去掉Context、ssh README、迭代记录与私人资料里的「企业Codeup仓库」错误口径。按main提交，push前再次显式同名pull。
 
 ## 2026-10-26｜ssh｜接入泰乾超级（超级泰乾-qianrong）并恢复私有挂载
 

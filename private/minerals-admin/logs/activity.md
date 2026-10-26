@@ -299,7 +299,7 @@
 ### 2026-09-09：ssh 环境提交作者名改为 dh
 - **环境**：ssh（仅本机配置，无代码改动、无提交到团队仓库）
 - **实施**：`git config --local user.name dh`，只动正矿仓库的 `.git/config`；全局仍是 `pg-dh`，同机的花盆、相册、Hub 各仓库不受影响。核对 `git var GIT_AUTHOR_IDENT` = `dh <xxxxx.com>`，committer 同步生效。
-- **邮箱**：随后按用户要求一并改为 `duun235@163.com`（仓库级）。先实测过「留空」这条路——Git 允许，提交对象里是 `author dh <>`，但托管平台靠邮箱认账号，空邮箱在 Codeup 上归属不到人且可能被推送规则拦，故用真实邮箱。
+- **邮箱**：随后按用户要求一并改为 `duun235@163.com`（仓库级）。先实测过「留空」这条路——Git 允许，提交对象里是 `author dh <>`，但托管平台靠邮箱认账号，空邮箱在托管平台上归属不到人且可能被推送规则拦，故用真实邮箱。
 - **未改**：已推送的历史提交（`08dfce1`、`6b7d0ae`、`ad31f92`、`a909a1a` 及 2026-09-01 那批）作者仍是 `pg-dh`——`feature-v1.8.3` 与团队共用，改写要强推，没做。
 - **口径**：`.git/config` 不随 Git 同步，work / home 需各自再配一次；写入 `docs/development.md` 新增的「11. 提交身份」。
 
@@ -1048,3 +1048,7 @@ Element 的 `updateColumnsWidth` 只在「存在没写死宽度的列」时才�
 - 推送目标尚待用户确认，不设置 upstream。
 
 - 最终交付：0eaf6014 / f152a424 已显式推送 origin/feature-v1.8.5。用户确认今后默认显式同步当前同名分支，不设置 upstream，不擅自合并。
+
+## 2026-10-26 ssh｜远端口径更正
+
+用户确认正矿远端是 GitHub，之前记录的「企业 Codeup 仓库」说法已从 Hub Context、AGENTS 与本目录说明中去掉。
