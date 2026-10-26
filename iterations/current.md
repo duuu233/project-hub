@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜相册小程序信号格与文字对齐（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/6596d9f 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 原因：signal-bars 组件外层节点默认行内，撑出行高并把竖条落在基线上，与「信号」二字中线错开。
+- photo-album main-wifi：组件 :host inline-flex + align-items center + line-height 0，内层 flex；测试补断言，变更记录同步。无 Node 测试未跑，未真机确认视觉。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi密码小眼睛（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/c1989f9 均已最新，origin/main 无未合入；origin 为 GitHub。
