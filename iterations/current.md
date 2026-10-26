@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜相册小程序设备WiFi列表字段打印（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/4aaac95 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 问：设备查询返回哪些字段、能否按频率过滤，要求把参数打印到对应 WiFi 上查看。
+- 结论：乐鑫标准 BluFi 0x11 每条只有 len|rssi|ssid，无信道/频率，协议层做不了频段过滤；ESP32 多为单 2.4G。
+- photo-album main-wifi：parseWifiList 每条带 len/raw，整包 rawHex/tailHex；WiFi 列表页非正式版（开发/体验）不去重、隐藏网络也列，每条打 SSID/RSSI/信道/频率（未返回）/长度/原始字节，顶部打整包与残尾；正式版不显示。测试与文档同步。
+- 验证：无 Node 测试未跑，未真机/固件联调。
+
+---
+
 ## 2026-10-26 ssh｜花盆APP涂鸦SDK在iOS能列附近WiFi的原因（仅分析）
 
 - 同步：Hub main 已最新；flowerpot main 快进到最新（拉下 6 个文件），origin 为 GitHub。

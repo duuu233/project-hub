@@ -2563,3 +2563,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | WiFi列表改由设备扫描
 
 4aaac95已提交、再次pull/push成功；蓝牙连设备后经BluFi让设备扫描附近WiFi（名称+信号强度），会话保留给配网复用。依赖固件支持；未运行测试，未真机/固件联调。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 设备WiFi列表字段打印
+
+已提交、再次pull/push成功；非正式版WiFi列表页每条打出设备回包字段与原始字节；标准BluFi无信道/频率，无法按频段过滤。未运行测试，未真机。
