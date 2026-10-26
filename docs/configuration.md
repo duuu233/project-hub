@@ -98,7 +98,7 @@ projects:
 
 ### 各环境挂载状态与冲突处理
 
-`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。归属口径：所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（`flowerpot-app`、`flowerpot-admin`、`album-app`、`album-admin`、`album-miniapp`）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 都提交在各自仓库里，`.codegraph/` 写在各自 `.gitignore` 中、每台机器本地生成，一律不进 Hub、不配 `private_mounts`。`minerals-admin`（正矿）与 `taiqian-front`（泰乾超级）是企业团队仓库，按用户要求将私人规则、文档、日志和索引存放于各自 `private/<project_id>/`，再以本地忽略的链接挂回业务根目录。面向同事的示例与使用说明仍提交业务仓库，例如 `apps/qianrong/LIST_PAGE_DEMO.md`；不把私人资料或其存放机制写进这些公开文件。各环境仓库物理路径分别写在自己的 `environments/<env>/projects.local.yaml`，复用同一挂载定义。
+`private_mounts` 定义在共享的 `projects.yaml` 里，三个环境读的是同一份，挂载点名称与 `private/<project_id>/` 内的目标路径天然一致；每台机器要做的只是本机执行一次 `setup-links` 把链接建出来。归属口径：所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（`flowerpot-app`、`flowerpot-admin`、`album-app`、`album-admin`、`album-miniapp`）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 都提交在各自仓库里，`.codegraph/` 写在各自 `.gitignore` 中、每台机器本地生成，一律不进 Hub、不配 `private_mounts`。`minerals-admin`（正矿）与 `taiqian-front`（泰乾超级）按用户要求走私人配置，将私人规则、文档、日志和索引存放于各自 `private/<project_id>/`，再以本地忽略的链接挂回业务根目录。面向同事的示例与使用说明仍提交业务仓库，例如 `apps/qianrong/LIST_PAGE_DEMO.md`；不把私人资料或其存放机制写进这些公开文件。各环境仓库物理路径分别写在自己的 `environments/<env>/projects.local.yaml`，复用同一挂载定义。
 
 | 环境 | 正矿仓库位置 | 挂载状态 |
 | --- | --- | --- |

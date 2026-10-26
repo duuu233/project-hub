@@ -7,6 +7,7 @@
 - 挂载：本机无 node，按 setup-links 规则手动建立五项软链接并写 `.git/info/exclude`；check-ignore 五项命中，业务 `git status` 干净，业务仓库没有提交。
 - 剩余：本机无 codegraph、pnpm/node，索引未建、构建不能跑，是否安装由用户决定。
 - 更正（同日）：用户确认泰乾超级远端一直是 GitHub，之前「企业 Codeup 仓库」的记录是写错的，已从 Context、ssh 说明与私人资料中去掉。
+- 再更正（同日）：「企业团队仓库」说法也去掉，私有化理由统一为用户要求。新增全局规则：所有环境、所有仓库的提交只推送 GitHub，提交前核对 origin，不是 GitHub 就暂停询问用户、不提交不推送（AGENTS「任务完成后的默认动作」第 0 条，ssh README 引用）；五个业务仓与 Hub 的 origin 已核实均为 GitHub。
 
 ---
 

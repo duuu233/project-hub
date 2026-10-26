@@ -18,7 +18,7 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 ## 私有挂载（泰乾超级）
 
-泰乾超级是企业团队仓库，和正矿一样走私人配置：`AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/`、`.codegraph/` 的真实文件在 `private/taiqian-front/`，业务根目录只放本地忽略的软链接；文档、日志更新一律写进私人目录，不在业务仓库里生成。
+泰乾超级按用户要求和正矿一样走私人配置：`AGENTS.md`、`AI_CONTEXT.md`、`docs/`、`logs/`、`.codegraph/` 的真实文件在 `private/taiqian-front/`，业务根目录只放本地忽略的软链接；文档、日志更新一律写进私人目录，不在业务仓库里生成。
 
 - 2026-10-26 接入时核实：tq-plus 是 Git 根目录，当前 master 与 origin/master 一致（9975d7f），Hub 私人日志里记录的多个提交号均在该仓库历史中，确认与 home/work 的 front 仓库为同一项目。origin 为用户 GitHub 上的 tq-plus 仓库（与 home/work 相同），pull/push 按规则走 origin 的同名分支。
 - 本机没有 `node`，`scripts/setup-links.mjs` 无法运行；按脚本同样的规则手动建立五项绝对路径软链接，并在 `.git/info/exclude` 追加 `/.codegraph`、`/docs`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/logs`。`git check-ignore -v` 五项全部命中，业务 `git status` 干净。
@@ -29,6 +29,12 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 **可写范围只有 `/home/cc/dh/` 这一个目录。** 目录之外只读：可以查看或只读借用已有工具，但不得新增、修改、删除、移动或清理文件，也不执行 `install` / `build` / `git gc` / `checkout` / `clean` 等有副作用的命令。磁盘告急也不构成清理目录外内容的理由，如实报告即可，处理与否由用户决定。
 
 临时产物写在 `/home/cc/dh/project-hub/.codex-tmp/`（已 gitignore）。
+
+## 远端：一律 GitHub（2026-10-26 用户明确）
+
+所有提交只推送到 GitHub，提交前核对 `git remote get-url origin`，不是 GitHub 就暂停询问用户，不提交、不推送。这是 Hub 的全局规则，见 AGENTS.md「任务完成后的默认动作」第 0 条。
+
+2026-10-26 核实：flowerpot、photo-album、flutter、web-ui-v2、tq-plus 与 Hub 的 origin 均为用户 GitHub 仓库。
 
 ## 本机工具状态（2026-10-21 接入时核实，2026-10-22 复核）
 
