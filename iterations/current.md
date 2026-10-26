@@ -1,3 +1,15 @@
+## 2026-10-26 ssh｜相册小程序分支整理、新建main-wifi并评审WiFi版对接文档
+
+- 用户要求：五仓先拉取；相册小程序只保留main、删多余分支；在main基础建main-wifi并切过去，阅读docs/前端对接文档_草稿.md给后端（Java）写详细建议。今后main修旧问题、main-wifi开发WiFi大版本并及时合并main。
+- 同步：五仓均干净在main，显式同名pull——Hub、花盆APP、相册APP、相册后台已最新；相册小程序快进b468393→5c7736b（用户提交，新增草稿v0.27）。
+- 分支清理：main-test（3f91803）、main-backup-20261022（e04198d）已全部包含于main；test-ai（8b813d6）比main多1个提交，内容只是删除assets/ai下22张图，不丢内容。删除远端三支与本地两支，删除前SHA存.codex-tmp/photo-album-branches-before-cleanup-20261026.txt（需要可按SHA恢复）。现远端只剩main、main-wifi。
+- 相册小程序main-wifi/fd61171（自5c7736b建并推送）：新增docs/前端对接文档_评审建议.md（21条P0/P1/P2、待后端答复清单、小程序端自身调整项，含Java/Spring/Nginx参考写法），docs/README Reference登记草稿与评审建议。P0要点：deviceNo与6字节设备ID/userProductId映射及WiFi/BLE类型区分；userToken与jwtToken口径；Asia/Shanghai写死对海外错时、iOS解析yyyy-MM-dd HH:mm:ss失败；HTTP状态与body.code混用、4041/4044一码多义；OTA url由客户端传（安全）；配网绑定前403、重配网online误判、mqtt_config来源；后台无鉴权、playlist可枚举、内网地址；投屏type/图片规格/相册记录与槽位；Long ID精度。
+- 小程序现状依据：请求层timeout 10s+网络失败静默重试2次、uploadTimeout 20s、错误信息只读message/retMsg、无WebSocket、无时区处理；设备ID为BLE读出6字节ID、记录主键userProductId；轮播以老服务carouselInterval为准；OTA地址来自getUserProductDetail。
+- 验证：纯文档，git diff --check与信息隔离自查通过；无代码改动、未跑测试。
+- 剩余：等后端答复第五章清单；main-wifi后续按分支约定合并main。
+
+---
+
 ## 2026-10-24 ssh｜花盆APP改动范围收窄：工作模式不动，只同步DP5、DP18与倒计时隐藏
 
 - 用户口径：根据文档再次确认，工作模式（DP3）不要动，只同步DP5、DP18，加上待机/休眠/关机/离线隐藏倒计时。两仓先显式同名pull均已最新（Hub main/8c0485f、花盆APP main/592111d）。

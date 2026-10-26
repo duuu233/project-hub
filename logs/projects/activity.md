@@ -2,6 +2,11 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-26｜album-miniapp｜ssh｜main→main-wifi｜分支整理与WiFi版对接文档评审建议
+
+- 删除main-test、main-backup-20261022、test-ai（远端与本地，前两支已含于main，test-ai仅删图提交）；自main 5c7736b新建main-wifi并推送。
+- main-wifi/fd61171：新增docs/前端对接文档_评审建议.md，docs/README登记草稿与评审建议；已推送，纯文档。
+
 ## 2026-10-24｜flowerpot-app｜ssh｜main｜割草机改动范围收窄为DP5、DP18与倒计时隐藏
 
 - e08d3e6：产品确认工作模式DP3不动；核实lib/test中DP3与13f856a一致，去掉592111d加的MowerMode注释；改动说明删DP3一节及DP3/DP116待确认、DP3验收项；AI_CONTEXT顺带修正DP18第10位标识符旧说法；已推送，未运行测试未真机。

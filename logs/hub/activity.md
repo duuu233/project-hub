@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜ssh｜登记相册小程序双分支约定与WiFi版评审迭代
+
+main干净先显式同名pull已最新（68d49e3）。用户确立相册小程序双长期分支：main修旧问题、main-wifi开发WiFi版并及时合并main，写入context/album-miniapp.md执行约定。登记分支清理、main-wifi创建与对接文档评审建议的迭代与跨项目流水。按main提交，push前再次显式同名pull。
+
 ## 2026-10-23｜ssh｜登记相册两端搜索列表sizeModel与抖动type口径
 
 main干净先显式同名pull已最新。登记相册两端搜索列表按广播名显示sizeModel、抖动type按原定义保持（后端对齐）的迭代与跨项目流水。按main提交，push前再次显式同名pull。
