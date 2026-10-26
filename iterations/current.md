@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜相册小程序选WiFi两步、密码默认加密、配网日志写清接口（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/ae66ec6 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：wifi-list 点行只选中（高亮 + 行尾「连接」），点连接 / 再点选中行才进账号密码页；「手动输入WiFi名称」回文字样式居中（去底部固定按钮）；wifi-config 密码默认 ****；配网日志每个调用记「接口【名称】方法 地址（出处）/ 参数 / 返回或失败」，名称按当日文档（IoT 2.1 在线状态、老服务电子纸设备列表/绑定电子纸设备、乐鑫 BluFi 标准帧名、协议 2.2.3 设置 MQTT 配置信息、wx.getNetworkType），api.bindWifiDevice 加 onLog；格式说明写在 run 注释。测试与文档同步。
+- 验证：无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序配网日志（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/72ce94a 均已最新，origin/main 无未合入；origin 为 GitHub。
