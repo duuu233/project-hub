@@ -6839,3 +6839,11 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 156项隔离断言、112项真实搜索/统计组件浏览器检查和9张两尺寸截图通过；快速构建57.5秒成功；类型检查前后同24项既有错误，无新增。未真实企业数据联调、业务写入或部署。
 - 具体契约与实施记录由正矿自身私人文档维护；统筹保留任务结果摘要，默认业务feature-v1.8.5与统筹main分别提交并在push前再次显式同名pull。
 - 业务feature-v1.8.5/4e21895f已提交，再次显式同名pull成功后push origin，真实远端SHA一致且工作区干净。索引最新、信息隔离检查通过。
+
+## 2026-10-26 work｜全项目同步与泰乾角色权限静态工作区
+
+- 状态：本轮按用户最终“先做好静态页面”交付，行级“已配置规则状态”整块不需要；不是待接口确认的未完成业务对接。
+- 同步：统筹main/cac19de→d087782；work七项目均先检查身份、干净状态和远端同名分支，再显式ff-only pull当前分支，无切换。taiqian-front master/8b163cd、flowerpot-app main/e08d3e6、flowerpot-admin main/7f53d3a、album-admin main/17da9a3、album-miniapp main-wifi/fd61171、album-app main/c415d92、minerals-admin feature-v1.8.5/1c9e4653。各已有索引同步，泰乾私人挂载dry-run正常。
+- 交付：角色列表新增四Tab静态配置工作区，行级五档范围无规则状态表，列级三态/批量/脱敏，权限树及合成数据预览；未暂存离开提示、取消查询确认及选项收窄、关闭重置。原有真实编辑/数据权限/列字段入口保留，新工作区不接业务接口或落盘草稿。
+- 验证：55项Node回归、21.20秒生产构建、CUA真实组件隔离交互与1280/600/390尺寸检查通过，演示流程请求记录为空；CodeGraph最新，无真实权限写入、网关联调或部署。业务细节见private/taiqian-front/docs/qianrong-role-permission-workspace.md及本轮history。
+- 默认业务master与统筹main分别提交，push前再显式同名pull；提交号与推送结果继续追加，保留此前全部迭代。

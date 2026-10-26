@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-26｜work｜七项目同步与角色静态工作区留痕
+
+统筹main干净先同名pull由cac19de至d087782；work七映射项目均核对身份、干净状态、origin及当前远端同名分支后pull，保留相册小程序main-wifi与正矿feature-v1.8.5，无分支切换。登记用户最终静态优先、行级删除规则状态表的要求、泰乾四Tab交付及55项/浏览器/构建验证，更新其私人当前说明、history、背景、索引和流水，保留旧迭代。按main提交并在push前再次显式同名pull。
+
 ## 2026-10-26｜ssh｜登记相册小程序双分支约定与WiFi版评审迭代
 
 main干净先显式同名pull已最新（68d49e3）。用户确立相册小程序双长期分支：main修旧问题、main-wifi开发WiFi版并及时合并main，写入context/album-miniapp.md执行约定。登记分支清理、main-wifi创建与对接文档评审建议的迭代与跨项目流水。按main提交，push前再次显式同名pull。

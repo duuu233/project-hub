@@ -1,5 +1,8 @@
 # 泰乾超级维护文档
 
+- [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)：2026-10-26角色配置权限四Tab静态版；按用户要求行级去掉规则状态表，演示暂存/批量/预览与真实入口隔离。
+- [history/2026-10-26-work-role-permission-workspace.md](history/2026-10-26-work-role-permission-workspace.md)：work七项目同步、最新原型及接口核查、静态交付与55项回归/浏览器/构建验证。
+
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)：菜单表单仅响应所属活动路由、ID校验、缓存草稿和在途响应失效。
 - [history/2026-10-23-work-menu-route-lifecycle.md](history/2026-10-23-work-menu-route-lifecycle.md)：跨列表 undefined 请求根因、修复及50项回归/隔离浏览器/构建验证。
 

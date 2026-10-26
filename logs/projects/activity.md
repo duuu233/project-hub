@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-26｜taiqian-front｜work｜master｜角色权限静态工作区
+
+先完成work七项目当前分支显式同名pull，未切分支；泰乾master/8b163cd同步成功。按用户最终要求交付四Tab静态交互，行级不含规则状态表，保留旧真实入口；55项回归、构建、隔离浏览器与多尺寸验证通过，静态流程零业务请求，无真实授权写入或部署。默认业务master与统筹main分别提交、push前再次同名pull；具体实施只在项目私人文档维护。
+
 ## 2026-10-26｜album-miniapp｜ssh｜main→main-wifi｜分支整理与WiFi版对接文档评审建议
 
 - 删除main-test、main-backup-20261022、test-ai（远端与本地，前两支已含于main，test-ai仅删图提交）；自main 5c7736b新建main-wifi并推送。
