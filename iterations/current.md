@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序设备扫描等待放宽到60秒（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/0bb0724 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：WiFi 列表页 SCAN_TIMEOUT_MS 12s→60s，blufi.scanWifi 默认超时同步 60s；设备报错仍立即结束。文档同步。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序设备扫描搜不到WiFi排查：先连设备+联调日志（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/a22a8a4 均已最新，origin/main 无未合入；origin 为 GitHub。
