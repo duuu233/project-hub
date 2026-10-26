@@ -1,3 +1,11 @@
+## 2026-10-26 ssh｜花盆APP涂鸦SDK在iOS能列附近WiFi的原因（仅分析）
+
+- 同步：Hub main 已最新；flowerpot main 快进到最新（拉下 6 个文件），origin 为 GitHub。
+- 结论：不是 iOS 手机在扫，是涂鸦双模（BLE+WiFi）配网让设备自己扫附近 WiFi、经蓝牙回传；iOS 无公开 API 扫附近 WiFi（只能读当前 SSID）。前提：BLE 扫到的设备 flag 带 SCAN_WIFI（TuyaOS ≥ 3.6.1）。本项目这条只在 Android 实现（MainActivity.bleQueryDeviceWifi → IMultiModeActivator.queryDeviceConfigState + MultiModeQueryBuilder）；iOS AppDelegate 无 BLE 双模，scanWifi 只回当前网络、列表恒空。与相册小程序同日改的 BluFi 0x09 同一原理。
+- 无代码改动。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi列表改由设备扫描（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/b04efc7 均已最新，origin/main 无未合入；origin 为 GitHub。
