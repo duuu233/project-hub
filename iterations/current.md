@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序手动输入提示改回（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/1770705 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：选择 WiFi 页灰字改回「若列表搜索不到您的wifi，请手动输入」（撤销 1770705 的文案部分，信号格分色保留）；测试、进度文档、变更记录同步。无 Node 测试未跑。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序信号格分色与提示文案（main-wifi）
 
 - 同步：photo-album main-wifi/1bc8bf9 已最新（同一轮内）；origin 为 GitHub。

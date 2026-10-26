@@ -2603,3 +2603,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 信号格分色与提示文案
 
 已提交、再次pull/push成功；信号格蓝牙版蓝色、WiFi版绿色，手动输入提示改「请点击此处手动输入」。未运行测试，未真机。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 手动输入提示改回
+
+已提交、再次pull/push成功；灰字改回「若列表搜索不到您的wifi，请手动输入」，信号格分色不变。
