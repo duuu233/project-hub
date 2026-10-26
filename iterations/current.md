@@ -1,3 +1,10 @@
+## 2026-10-26 ssh｜相册小程序选择WiFi页样式优化（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/130f7f2 均已最新，origin/main 无未合入；origin 为 GitHub。
+- photo-album main-wifi：「手动输入WiFi名称」改为底部固定居中次按钮（白底橙边橙字，同配网状态页取消、位置同下一步），内容区底部让位；列表卡片加标题分隔线、重新搜索图标、行间内缩分隔线与按下反馈、提示居中。测试补按钮断言，文档同步。无 Node 测试未跑，未真机看样式。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序手动输入提示改回（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/1770705 均已最新，origin/main 无未合入；origin 为 GitHub。

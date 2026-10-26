@@ -2607,3 +2607,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 手动输入提示改回
 
 已提交、再次pull/push成功；灰字改回「若列表搜索不到您的wifi，请手动输入」，信号格分色不变。
+
+## 2026-10-26 | album-miniapp | ssh | main-wifi | 选择WiFi页样式优化
+
+已提交、再次pull/push成功；手动输入改为底部居中次按钮，列表卡片样式优化。未运行测试，未真机。
