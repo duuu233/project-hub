@@ -1,3 +1,12 @@
+## 2026-10-26 ssh｜相册小程序接设备WiFi列表真实格式、2.4G过滤（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/b51f70d 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 真机日志：设备不走乐鑫 0x11，用自定义数据 0x13 回文本行 `ssid:..,rssi:..,ch:..`，含 5G 信道（双频芯片）；此前只等 0x11 故列表出不来。另反馈「5~6 秒就关了」要长一点；确认 ch≤14 为 2.4G 国内外通用（已答：正确，6G 也从 1 编号但芯片不支持）。
+- photo-album main-wifi：blufi.parseCustomWifiList（逗号安全、带 frequency）、channelFrequency/is24GChannel，自定义数据认出即作 WiFi 列表；scanWifi 分批累计 + onBatch、最后一批后静默 5s 结束、60s 总上限，已收到列表后报错只记日志/断开即用已收到；列表页按信道只留 2.4G、边收边显示，联调统计加过滤 5G 条数、日志记批次与断开。测试与文档同步。
+- 「5~6 秒关闭」具体指什么未确认（推测为设备收尾报错或断开导致扫描提前结束，已兜住）。无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序设备扫描等待放宽到60秒（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/0bb0724 均已最新，origin/main 无未合入；origin 为 GitHub。
