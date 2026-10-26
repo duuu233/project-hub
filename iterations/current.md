@@ -1,3 +1,13 @@
+## 2026-10-26 ssh｜相册小程序配网先进WiFi列表、尺寸loading与蓝牙尺寸（main-wifi）
+
+- 同步：Hub main、photo-album main-wifi/022824d 均已最新，origin/main 无未合入；origin 为 GitHub。
+- 反馈：界面样式以 e484452 为准，不要后加的交互/样式；流程改为先进 WiFi 列表、选中后进账号密码；「规格查询中」改小圆圈 loading；问为何 WiFi 版有尺寸、蓝牙版没有。
+- photo-album main-wifi/b04efc7：新增 wifi-list 页（2.4G 列表沿用原弹层列表项样式、可刷新、底部手动输入；iOS 只列当前网络），搜索页改进列表页；wifi-config 回到 e484452 表单版式，名称由列表带入，切换图标回列表，去掉自动弹层/当前连接标记/iOS 获取附近入口/频段提示；WiFi 行查询中显示小圆圈；蓝牙行尺寸改 sizeModel||'--寸'，并打 `[搜索尺寸]` 产品列表 broadcastId=sizeModel 日志。测试重写配网前两页用例；变更记录/进度/AI_CONTEXT 同步。
+- 尺寸差异原因：两边来源与口径不同——WiFi 版走 getProductByDevice、没配显示 --寸；蓝牙版按广播名匹配 getProductList，10-23 口径没配不显示。现已统一；若蓝牙行仍是 --寸，看日志判断是后台没配还是产品列表没返回 sizeModel。
+- 验证：无 Node 测试未跑，未真机。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序WiFi配置页统一先弹列表（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/8f6770f 均已最新，origin/main 无未合入；origin 为 GitHub。
