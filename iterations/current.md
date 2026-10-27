@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜花盆APP 纪念日编辑改为详情回填，文字/图片二选一统一校验
+
+- 同步：flowerpot main/8d19cf3、Hub main 均已最新。
+- 前两轮只读分析：编辑页切换逻辑本身符合 §4.24；风险在回填来源用的是列表那一行（缺 contentType 会把图片 URL 当文字），以及停用时空内容也能保存。用户确认停用同样走保存接口、同样按二选一校验，并要求编辑先回显详情、新增也确认二选一。
+- 接口核对：线上 swagger（`/v2/api-docs`，原件放 `.codex-tmp/swagger/`，不提交）显示列表和详情是同一个模型（contentType 0/1 + content + verify），新增/编辑只有一组 contentType + content，新增只回 boolean，没有拆分字段或清空接口，所以二选一只能靠 App 来保证。上传 `setFileUpload` 返回 string，是否为完整 URL 未核实。
+- 改动：state 新增 loadMemorialDetail（按 id 拉详情并替换列表那一行，查不到抛 ANNIVERSARY_NOT_FOUND）；saveMemorial 拒绝空内容（含停用）。编辑页对已有自定义条目进页先拉详情，加载中/失败时显示加载状态、无保存按钮，失败可重试；回填来源统一为 _source；非空校验去掉 enabled 条件；混入 NetworkRetryAware（只在失败时重拉）。补 7 组测试，§4.24、AI_CONTEXT、history 记录同步。
+- flowerpot main/e014f7e：已提交，再次同名 pull 后 push。
+- 验证：无 Flutter，test/analyze/format 未运行；未真机、未用真实账号；git diff --check、信息隔离自查通过。待用户本地运行 `flutter analyze` 和 `flutter test test/features/devices/memorial_page_test.dart`。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 对接休眠状态
 
 - 同步：photo-album main-wifi 快进到 ba77113（同事推了 `docs/wifi/休眠状态对接说明.md`），origin/main 无未合入；Hub main 已最新。
