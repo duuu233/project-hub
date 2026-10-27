@@ -1,3 +1,18 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 首页设备卡居中、默认昵称取完整广播名、显示尺寸
+
+- 同步：Hub main/a6fa5f3、photo-album main-wifi/f336637 均已最新，origin/main 无未合入。本机无 node / codegraph，源码检索定位。
+- 前一问（只答复未改代码）：WiFi 版「刷新状态」只读 IoT /api/device/info（Redis 在线标记 + 心跳影子），不触达设备；断电 / 断网时慢在 MQTT keepalive 发现断连，非前端可解。建议：列表页订阅 device.status + onShow 自动查、显示「最后通讯 X 分钟前」/超时显示待确认；请后端确认 keepalive（与 600 秒心跳分开）或加探测指令；文档第三章另有刷新屏幕、轮播、TF、休眠、国家码、OTA 可做按钮（除 OTA 外不回执行结果）。
+- 本轮三项（用户：先改首页）：
+  1. 偏左：.device-carousel 由 space-around 改 center + gap 44rpx + 左右 padding 40rpx；设备图 flex 不收缩，文字区 min-width:0，名称上限 320→364rpx。原因推断为 space-around 按内容宽度分摊空白，未真机确认。
+  2. 昵称：理解为绑定时传给 addUserProduct 的默认昵称（首页显示的就是它）。broadcast-match 新增 fullBroadcastName（name/localName 取较长）；蓝牙版 payload.name 用它；WiFi 版配网交接 name 用它，bindWifiDevice productName 改广播名优先（原产品名优先）。已绑定设备名不动。
+  3. 尺寸：首页 normalizeDevice 透传 sizeModel，名称下加「WiFi版/蓝牙版·尺寸」标签（同搜索列表样式，没配 --寸）；文字区 min-height 220→256rpx。
+- 新增 tests/home-card-name-size.test.js；变更记录 docs/changes/2026-10-27-首页设备卡居中与昵称尺寸.md，README / AI_CONTEXT 同步。
+- photo-album main-wifi/5989e93：已提交，再次同名 pull 后 push。
+- 验证：无 Node，全量测试未运行；未真机看版式；git diff --check、信息隔离自查通过。
+- 待用户确认：「偏左」修正效果；昵称理解是否对（若指首页展示也要用广播名而非用户改的名，需另改）；我的设备 / 详情 / 选设备弹层是否也加尺寸标签。
+
+---
+
 ## 2026-10-27 ssh｜相册APP 新建 main-wifi，WiFi 版功能对齐相册小程序 main-wifi
 
 - 用户要求：相册APP 也建 main-wifi；main 为线上版本、保持稳定、与小程序 main 对齐；main-wifi 对齐小程序 main-wifi 的 WiFi 版功能。
