@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi WiFi 投屏日志可复制；预览横竖向反了（分析，待定）
+
+- 同步：Hub main/0a05722、photo-album main-wifi/de12dbf 均已最新，origin/main 无未合入。
+- 横竖向（只分析未改）：preview-page getViewSize 竖向 = 接口 width×height、横向对调；_bakeToFile 画布固定 width×height，竖向默认 verticalRotation 0、横向 rotationDegree 270，几何要求「导出角为 90/270 时取景框与画布宽高对调」。WiFi 产品接口宽 > 高（用户确认按接口尺寸展示）→ 竖横反。只换取景框会与画布对不上；方案：竖/横按长短边定框，导出角按取景与屏幕方向是否一致选（不一致 90/270，一致 0/180，有配置用配置），蓝牙产品宽 < 高结果不变。待用户给 WiFi 产品宽高与旋转配置或真机确认 90/270 方向后再改。
+- 投屏日志（用户：和配网的类似、可复制）：参照 20b688e 删掉的配网日志面板。wifi-result 页开发版/体验版显示「投屏日志」+「复制日志」（500 行，重试不清空）；页面记 IoT 地址、设备宽高 / rotationDegree / verticalRotation / 尺寸、每张图路径 / 取景方向 / 导出角 / 导出记录与实际像素和大小；projectOne 新增 onLog：开始概要、接口【投屏】参数 / 返回 / 失败（HTTP、code、服务端原文、耗时）、上传 25% 档位、阶段变化、WS 状态与 play.result 原文、接口【投屏状态】、TIMEOUT 修正窗口、90 秒兜底、结论；不记 token。预览页出图在图片记录带 exportOrientation / exportRotation（只供日志）。
+- 测试 wifi-projection.test.js 追加两组；变更记录追加「投屏日志」与「已知问题：横竖向」两节，README / AI_CONTEXT 同步。
+- photo-album main-wifi/fcfffed：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 首页蓝牙卡连接状态与电量同一行
 
 - 同步：Hub main/38519bc、photo-album main-wifi/3a6afa1 均已最新，origin/main 无未合入。
