@@ -2723,3 +2723,7 @@ de12dbf已提交、再次pull/push成功；首页蓝牙卡连接状态与电量�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | WiFi投屏日志可复制；预览横竖向反了待定
 
 fcfffed已提交、再次pull/push成功；WiFi投屏结果页加可复制投屏日志（开发/体验版），记设备宽高与旋转、图片尺寸与导出角、接口参数返回、WS推送、状态查询。预览横竖向反了已定位（WiFi产品接口宽>高），待确认旋转方向后改。未运行测试，未真机。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 新增WiFi版删除指定照片方案文档
+
+9c3abcc已提交、再次pull/push成功；docs/wifi/删除指定照片方案.md（无TF卡删图：删云端记录、屏上那张补发play、不能用clean_tf/refresh、待确认项），docs/README索引同步。纯文档。
