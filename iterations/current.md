@@ -1,3 +1,21 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 按协议 V1.4 对接 + 全页面联调日志浮窗
+
+- 同步：photo-album main-wifi 快进到 012544c（同事推了 `docs/wifi/XT相框通讯协议_V1.4.md` 与 `_V1.4_更新说明.md`），origin/main 无未合入；Hub main 已最新。
+- 依据：更新说明 v1.1（前端要改的）为主，协议 V1.4（104 子码 200～212、字段修正）作参考，后者全在设备 / 服务端侧，前端无需处理。
+- 投屏：wifi-projection 重写为返回 SENT 即结束（不查 /play/status、不等 WS、去掉 TIMEOUT 修正与 90 秒兜底）；iot-api.play 加 refresh（false 才带）；结果页多张时本轮最后一张 refresh=true、其余 UPLOADED 只上传，重试同规则；4041 补查 SHUTDOWN 提示开机后可操作。
+- 我的上传：每张拿 binUrl → api.addWifiAlbumRecord（setFileUpload 拿 img + addUserProductImgRecord 写 img/imgBle/deviceUploadState=1，无槽位）；写失败只注明「未存入我的上传」。⚠️ addUserProductImgRecord 不带 upirId/taskId 能否新建、能否按 userProductId 查回，待老服务联调确认。
+- 轮播：新页 wifi-slideshow（逻辑在 utils/wifi-strategy.js）：GET/POST /api/device/strategy、stop；间隔（timingTime 秒，档位 1 分钟～24 小时）/ 固定时间（1～365 天 + 时间点去重排序 ≤24）；顺序 / 随机；轮播后休眠；从「我的上传」只取带 imgBle 的记录，单选 / 多选 / 全选，角标显示顺序，按选择顺序作 imgUrls（≤200）；不选不带 imgUrls（避免 4000）；回显 []/部分失效给提示。我的设备 WiFi 卡、WiFi 详情「刷新状态」→「轮播设置」。说明里「设备内页：蓝牙设备保留投屏、连接改轮播设置」按 WiFi 详情理解，蓝牙详情未动（报告里列为待产品确认）。
+- 删除：相册页按照片所属设备分流（ownerIfWifi 静默判定，蓝牙 / 跨设备 / 找不到都交回原链路）；WiFi：删老服务记录 → 只把真删掉的 imgBle 交 POST /api/device/photo/delete（每批 200）+ nextImageUrl=剩下第一张；按 deviceNotified/部分失败/云端失败分别提示。WiFi 再次投屏不连蓝牙、ensureOnline 后带 isWifi 进预览。deleteProjectionRecords 多返回 failedIds。
+- 状态：wifi-status 认 SHUTDOWN「已关机」（灰，同离线不显示电量信号）。
+- 日志浮窗（用户：每个页面都要、可一键复制，参照花盆APP 左下角点开 / 关闭）：utils/debug-log（500 行内存、token/密码入库前打码，正则用 Python 等价式验证过）+ components/debug-log（全局注册，35 页都插了 <debug-log>，preview-demo 复用 preview 模板）；app.js 最先 install 包装 console；request/iot-request/iot-ws 各记一行摘要。正式版整套不生效。
+- 未做：休眠一次性模式（无 WiFi 休眠页）、消息中心 PLAY_SUCCESS 等（无消息页）。
+- 文档：变更记录 docs/changes/2026-10-27-WiFi版V1.4对接.md、分析报告 docs/wifi/V1.4对接分析报告.md（用户要的「简单明了」版）、docs/README、对接开发进度、AI_CONTEXT 同步。
+- 测试：改写 wifi-projection.test.js（含结果页 vm 行为测试），新增 wifi-strategy / album-wifi-delete / debug-log 三个，device-list-wifi-group、wifi-sleeping-status 跟改。
+- photo-album main-wifi/4362372：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机、未联调；git diff --check、信息隔离自查通过。待用户本地跑全量 `for f in tests/*.test.js; do node "$f" || echo "FAILED: $f"; done`。
+
+---
+
 ## 2026-10-27 ssh｜花盆APP 核查两项改动 + 今日改动简报
 
 - 同步：flowerpot main/e014f7e、Hub main 均已最新。
