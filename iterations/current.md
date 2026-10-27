@@ -1,3 +1,15 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 配网密码不记录、响应不缓存
+
+- 同步：Hub main、photo-album main-wifi/9172aff 均已最新。
+- 用户要求：千万不记录密码；响应不缓存。
+- 核查：Hub 全部记录无密码明文；业务工作树已无明文；运行时配网日志原已打码，wifi-list 页不监听帧。仍在 photo-album git 历史 8a324eb（10-26 写入 config），未改写历史。
+- 改动：blufi.txFrameHex——手机发的 WiFi 密码帧与自定义数据帧（mqtt_config）frame 事件不带 hex（redacted），日志源头拿不到密码；getProvisioningMqtt 请求头 Cache-Control no-cache,no-store / Pragma no-cache；wifi-provision 中 MQTT 参数只存 run() 局部，mqtt_config 发出或失败后 finally 置空。测试：blufi 带密码帧不出 hex、iot-foundation 不缓存请求头。变更记录、对接开发进度、AI_CONTEXT 同步。
+- photo-album main-wifi/969b99d：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行，未真机；git diff --check 通过。
+- 待定：服务端响应头是否返回 Cache-Control: no-store（待后端）；历史中的密码是否轮换 / 是否改写历史由用户决定。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 配网 MQTT 参数改调接口
 
 - 同步：Hub main、photo-album main-wifi/d9546b8 均已最新，origin/main 无未合入。

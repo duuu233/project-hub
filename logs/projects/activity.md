@@ -2671,3 +2671,7 @@ d9546b8已提交、再次pull/push成功；绑定deviceId改回带冒号、搜�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网MQTT参数改调接口
 
 9172aff已提交、再次pull/push成功；配网第2步先调 IoT /api/device/provisioning/mqtt 取参数（失败/不完整/401不动设备），config删除设备账号密码。未运行测试，未真机。密码仍在git历史，轮换待后端定。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网密码不记录、响应不缓存
+
+969b99d已提交、再次pull/push成功；带密码的蓝牙帧不出原始字节，MQTT参数请求no-cache/no-store、发完即置空。未运行测试，未真机。git历史8a324eb仍含旧密码，处置待用户定。
