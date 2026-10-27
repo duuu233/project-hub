@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-web-login.md](qianrong-web-login.md)末节：2026-10-27 ssh dev 分支登录背景铺满（覆盖规则根因、仿正矿 img+cover 改法）。
+
 - [qianrong-menu-column-entry.md](qianrong-menu-column-entry.md)：2026-10-27 ssh 菜单管理“列字段设置”只给名称含“列表”的页面菜单显示，覆盖10-16全部C页面口径。
 
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)：角色配置权限页；2026-10-26 ssh 起行级/列级复用列表“数据权限”“列字段配置”同一接口（行级去本企业），预览按 previewRoleId 调列表接口取最全3条；功能权限仍为前端模型。下方 work 静态版为历史。

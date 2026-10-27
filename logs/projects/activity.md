@@ -2731,3 +2731,7 @@ fcfffed已提交、再次pull/push成功；WiFi投屏结果页加可复制投屏
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 选择WiFi页去掉2.4G字样
 
 f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi 配网」，标题改「设备附近的WiFi」；过滤逻辑与其他页提示未动。未运行测试，未真机。
+
+## 2026-10-27 | taiqian-front | ssh | dev | 新建dev分支；qianrong登录页背景铺满
+
+987df92已推送（远端无dev，按用户确认从master新建）；背景改img+object-fit cover、外层最小高度不低于视口，根因为后一style块height:auto覆盖100vh。未构建，未浏览器。

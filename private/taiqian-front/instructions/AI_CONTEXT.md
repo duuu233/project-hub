@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-27 ssh 用户要求切到 dev：远端无 dev，从 master/7ef890f 本地新建，按用户确认推送新建 origin/dev。登录背景没铺满：第二个 style 块 min-height 720px + height auto 覆盖 100vh；改为仿正矿 img+object-fit cover、min-height max(720px,100vh)。未构建/浏览器。详见 docs/qianrong-web-login.md 末节。
+
 2026-10-27 ssh企业用户管理列表：去掉“所属用户组”列；“企业用户类型”改按字典org_type映射（原org_user_type）。未构建/测试。详见docs/qianrong-enterprise-contract-audit.md末节。
 
 2026-10-27 ssh菜单管理“列字段设置”入口收窄：只有C页面菜单且菜单名称含“列表”才显示（showColumnSettings），覆盖10-16全部C页面口径；跳转、权限与七接口不变。未构建/测试。详见docs/qianrong-menu-column-entry.md。

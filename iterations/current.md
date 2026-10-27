@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜泰乾超级-qianrong 切 dev 分支；登录页背景铺满
+
+- 分支：tq-plus 远端只有 master；master/7ef890f 同名 pull 已最新 → 本地新建 dev → `pull origin dev` 报远端无此分支 → 按用户确认（从 master 新建）推送新建 origin/dev。
+- 根因：GeneralLogin.vue 第二个 style 块 `.auth-wrapper { min-height: 720px; height: auto }` 覆盖了 `height: 100vh`，外层只有内容高（≈720px），高屏下方露白。
+- 改法仿正矿 login.vue：import 图片 + 绝对定位 img（inset 0、object-fit cover），外层 min-height max(720px,100vh)，兜底底色 #edf4ff，卡片 / 页脚 z-index 1。正矿超宽屏限宽 + 两侧渐隐未搬（会改变卡片靠右布局）。
+- tq-plus dev/987df92 已推送（新建远端分支）；私人 docs / AI_CONTEXT / logs 同步。
+- 验证：无 Node，未构建、未浏览器；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 选择WiFi页去掉 2.4G 字样
 
 - 同步：Hub main/48c9146、photo-album main-wifi/9c3abcc 均已最新，origin/main 无未合入。

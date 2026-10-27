@@ -174,3 +174,9 @@ column-model.js 新增 showColumnSettings（C 类型且 menuName 含“列表”
 ## 2026-10-27 ssh｜企业用户管理列表去掉用户组列、类型改按 org_type 字典
 
 enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“企业用户类型”dict-tag 改用 org_type。表单、接口不变。无 Node，未构建/浏览器验证。详见 docs/qianrong-enterprise-contract-audit.md。
+
+## 2026-10-27 ssh｜切 dev 分支；登录页背景铺满
+
+- **分支**：远端只有 master；master 7ef890f 同名 pull 已最新，本地 `checkout -b dev`，`pull origin dev` 报远端无此分支；按用户确认从 master 新建并推送 origin/dev。
+- **改动**：GeneralLogin.vue 背景改 import 图片 + 绝对定位 img（object-fit cover），外层 min-height max(720px,100vh)，卡片/页脚 z-index 1。根因是后一 style 块 height:auto 覆盖 100vh。
+- **验证**：无 Node，未构建/浏览器。详见 docs/qianrong-web-login.md 末节。
