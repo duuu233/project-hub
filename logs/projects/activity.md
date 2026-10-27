@@ -2675,3 +2675,7 @@ d9546b8已提交、再次pull/push成功；绑定deviceId改回带冒号、搜�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网密码不记录、响应不缓存
 
 969b99d已提交、再次pull/push成功；带密码的蓝牙帧不出原始字节，MQTT参数请求no-cache/no-store、发完即置空。未运行测试，未真机。git历史8a324eb仍含旧密码，处置待用户定。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | WiFi列表页手动输入提示改文案
+
+a991453已提交、再次pull/push成功；灰字改为「若搜索不到您的wifi，请手动输入」，测试断言与文档同步。未运行测试。

@@ -1,3 +1,12 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi WiFi 列表页手动输入提示改文案
+
+- 同步：Hub main、photo-album main-wifi/969b99d 均已最新，origin/main 无未合入。
+- 改动：wifi-list.wxml 灰字「若列表搜索不到您的wifi，请手动输入」→「若搜索不到您的wifi，请手动输入」；同步文件头注释、tests/wifi-search.test.js 断言、对接开发进度描述，10-26 STEP2 变更记录追加一句。
+- photo-album main-wifi/a991453：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；git diff --check 通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 配网密码不记录、响应不缓存
 
 - 同步：Hub main、photo-album main-wifi/9172aff 均已最新。
