@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 对接休眠状态
+
+- 同步：photo-album main-wifi 快进到 ba77113（同事推了 `docs/wifi/休眠状态对接说明.md`），origin/main 无未合入；Hub main 已最新。
+- 改动：wifi-status 新增 deviceState（status ONLINE/SLEEPING/OFFLINE，缺 status 按 online 回退）与 blockedTip；首页卡 / 我的设备卡 / 详情页显示蓝色（#2f80ed）「休眠中」，电量信号同离线不显示；投屏入口休眠中提示「设备休眠中，唤醒后可操作」；wifi-projection 4041 时补查 online，SLEEPING 改同一提示。配网轮询原本只认 online=true，未动；休眠设置接口（STEP 5）未接。
+- 测试：新增 wifi-sleeping-status.test.js，wifi-projection.test.js 加 4041 补查一组；变更记录、docs/README、对接开发进度、AI_CONTEXT 同步。
+- photo-album main-wifi/28c6cb4：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机、未联调真实休眠设备；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜泰乾超级-qianrong 切 dev 分支；登录页背景铺满
 
 - 分支：tq-plus 远端只有 master；master/7ef890f 同名 pull 已最新 → 本地新建 dev → `pull origin dev` 报远端无此分支 → 按用户确认（从 master 新建）推送新建 origin/dev。

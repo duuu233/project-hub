@@ -2735,3 +2735,7 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-10-27 | taiqian-front | ssh | dev | 新建dev分支；qianrong登录页背景铺满
 
 987df92已推送（远端无dev，按用户确认从master新建）；背景改img+object-fit cover、外层最小高度不低于视口，根因为后一style块height:auto覆盖100vh。未构建，未浏览器。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | WiFi版对接休眠状态
+
+28c6cb4已提交、再次pull/push成功；按休眠状态对接说明接 status：设备卡与详情显示休眠中（缺status按online回退），投屏入口及4041按休眠提示「唤醒后可操作」。未运行测试，未真机。
