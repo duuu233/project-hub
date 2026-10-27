@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 选择WiFi页去掉 2.4G 字样
+
+- 同步：Hub main/48c9146、photo-album main-wifi/9c3abcc 均已最新，origin/main 无未合入。
+- 改动：wifi-list 删顶部「设备仅支持 2.4G WiFi 配网」提示条及 .wifi-tip 样式；标题「设备附近的2.4G WiFi」→「设备附近的WiFi」。列表仍按信道只留 2.4G；搜不到时的提示「设备附近没有搜到2.4G WiFi…」、账号密码页 wifi-config 的同款提示未动（用户只点名选择WiFi页这两处）。
+- 测试 wifi-search.test.js 标题断言改写 + 断言模板无 2.4G；变更记录追加、docs/README 同步。
+- photo-album main-wifi/f049ed4：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 WiFi 版无 TF 卡时怎么删指定照片（问答，只分析）
 
 - 同步：Hub main/00ae011、photo-album main-wifi/fcfffed 均已最新；未改业务仓。

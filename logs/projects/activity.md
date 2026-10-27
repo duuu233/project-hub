@@ -2727,3 +2727,7 @@ fcfffed已提交、再次pull/push成功；WiFi投屏结果页加可复制投屏
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 新增WiFi版删除指定照片方案文档
 
 9c3abcc已提交、再次pull/push成功；docs/wifi/删除指定照片方案.md（无TF卡删图：删云端记录、屏上那张补发play、不能用clean_tf/refresh、待确认项），docs/README索引同步。纯文档。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 选择WiFi页去掉2.4G字样
+
+f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi 配网」，标题改「设备附近的WiFi」；过滤逻辑与其他页提示未动。未运行测试，未真机。
