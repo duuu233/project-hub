@@ -1,3 +1,17 @@
+## 2026-10-27 ssh｜相册APP 新建 main-wifi，WiFi 版功能对齐相册小程序 main-wifi
+
+- 用户要求：相册APP 也建 main-wifi；main 为线上版本、保持稳定、与小程序 main 对齐；main-wifi 对齐小程序 main-wifi 的 WiFi 版功能。
+- 同步：Hub main、flutter main/399e8c7、photo-album main-wifi/f336637 均已最新。核对 main：小程序 main 最新 96cb17b 已由 APP 399e8c7 同步（5c7736b / 3f91803 / 6bb1a96 为文档与素材提交），main 无待同步改动、未动。
+- 建分支：flutter main 干净，`git checkout -b main-wifi`（自 399e8c7）后显式 `git push origin main-wifi`，远端此前无同名分支；本地工作区现停在 main-wifi。
+- 移植范围（小程序 main...main-wifi 共 47 提交 / 89 文件）：广播名 `*` 模板与 IJ_* 识别、扫描 includeWifi、信号格；BluFi 协议与会话；IoT HTTP（错误码表、401 登出 / 503 不登出、上传进度）与 WebSocket（心跳、退避、补订）；getProductByDevice 规格查询与空壳判定；bindWifiDevice；搜索列表（标签包尺寸、信号格、未知设备拦截、立即配网先 BluFi 连接）；配网三页（WiFi 列表 / 账号密码 / 四步状态，失败按钮上下排）；我的设备分组 + WiFi 卡；WiFi 设备详情（路由分流）；WiFi 投屏结果页（WS + 3 秒兜底、TIMEOUT 修正、90 秒未知）；首页 WiFi 卡与投屏入口、图库详情、选设备弹层角标；退出 / 失效 / 注销关 WS。新增 test/wifi_protocol_test.dart。文案 AppL10n 扩展（英日新译）。
+- 业务仓文档：docs/history/2026-10/2026-10-27-wifi-version-sync.md 新建，docs/README、PROJECT_STRUCTURE、APP_VS_MINIPROGRAM（新增 2.1 WiFi 版矩阵）、AI_CONTEXT 同步。
+- flutter main-wifi/cb44b1d：已提交，再次同名 pull 后 push。
+- 验证：本机无 Flutter，analyze / test / 编译均未运行；未真机、未与 IoT 联调。用 Dart SDK 3.12.2（下载到 .codex-tmp/dart）对全部改动文件跑 dart format --output=none 解析通过（仅语法）；文案 key 引用核对、git diff --check、信息隔离自查通过。尝试下载 Flutter 3.44.6 到 .codex-tmp 跑 analyze，被权限拦下，未执行。
+- ⚠️ 越界：首次运行下载的 dart 时，Dart 自动在家目录建了 ~/.dart-tool/（遥测配置 5 个小文件，14:17），属 /home/cc/dh 之外写入，未自行删除，待用户决定。.codex-tmp 下留有 dart-sdk 与 flutter SDK（约 2.6G）及仓库副本 flutter-check，可删。
+- 未做 / 差异：IoT 联调卡未移植；AI 对话与我的相册再次投屏未接 WiFi（两端一致）；配网不保持常亮（无 wakelock 依赖）；手机网络判断改为解析 IoT 域名；图标用 Material 代替 svg；新简中文案繁中转换表缺字待复核。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 搜索列表类型标签合并尺寸、信号格上提
 
 - 同步：Hub main/c726a02、photo-album main-wifi/22375c6 均已最新，origin/main 无未合入。本机无 node / codegraph，源码检索定位。

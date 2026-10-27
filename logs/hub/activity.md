@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-27｜ssh｜相册APP登记双长期分支并留痕WiFi版对齐
+
+context/album-app.md 增加双长期分支约定（main 线上蓝牙版对齐小程序 main，main-wifi 对齐小程序 main-wifi，开工先合 origin/main）。登记 flutter main-wifi/cb44b1d。.codex-tmp 下载 Dart / Flutter SDK 做语法检查，首次运行 dart 在家目录生成 ~/.dart-tool（越界，已报告待用户决定）。main 提交后再次显式同名 pull/push。
+
 ## 2026-10-27｜work｜全项目同步与登记相册后台IoT交付
 
 统筹main先从309dd1f快进至9651350；work六个可同步业务仓库均从既有GitHub远端pull当前同名分支，泰乾test无GitHub同名分支，停止并报告，不改用其他来源。登记相册后台main/9f03b48及验证摘要，保留此前迭代。统筹main提交后再次显式同名pull/push；不保存鉴权参数。

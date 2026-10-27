@@ -2703,3 +2703,7 @@ e93bae2已提交、再次pull/push成功；重新配网整行主按钮在上，�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 搜索列表类型标签合并尺寸、信号格上提
 
 f336637已提交、再次pull/push成功；搜索设备列表「WiFi版/蓝牙版」标签挪到第二行包住尺寸（如WiFi版·5.89寸），信号格上提约3px。未运行测试，未真机。
+
+## 2026-10-27 | album-app | ssh | main-wifi（新建） | WiFi版功能对齐小程序main-wifi
+
+自 main/399e8c7 新建 main-wifi 并推送；cb44b1d 已提交、再次pull/push成功。移植小程序 main-wifi 的 IoT 客户端与推送、BluFi 配网三页、搜索列表标签合并尺寸与信号格、我的设备分组、WiFi 设备详情与 WiFi 投屏、首页/图库入口。main 已与小程序 main 对齐、未改。无 Flutter，未编译未测试未真机；dart format 语法解析通过。
