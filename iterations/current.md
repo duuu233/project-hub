@@ -1,3 +1,12 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 配网状态页失败按钮改上下布局
+
+- 同步：Hub main、photo-album main-wifi/a991453 均已最新，origin/main 无未合入。
+- 改动：wifi-provision.wxml/wxss 失败态「重新配网」「取消」由左右并排改上下排；重新配网保留橙色渐变主按钮、占满整行；取消去掉底框描边，仅橙色文字（.provision-cancel，88rpx 点击区）；内容区底部留白 200→280rpx；删除不再使用的 .provision-secondary / --pair 规则。10-26 STEP2 变更记录追加说明。
+- photo-album main-wifi/e93bae2：已提交，再次同名 pull 后 push。
+- 验证：无 Node，版式测试与全量测试未运行（AGENTS 要求动 wxss 跑全量）；未真机看效果；无测试引用被删的类名。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi WiFi 列表页手动输入提示改文案
 
 - 同步：Hub main、photo-album main-wifi/969b99d 均已最新，origin/main 无未合入。

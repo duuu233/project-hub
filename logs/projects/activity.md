@@ -2679,3 +2679,7 @@ d9546b8已提交、再次pull/push成功；绑定deviceId改回带冒号、搜�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | WiFi列表页手动输入提示改文案
 
 a991453已提交、再次pull/push成功；灰字改为「若搜索不到您的wifi，请手动输入」，测试断言与文档同步。未运行测试。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网状态页失败按钮改上下布局
+
+e93bae2已提交、再次pull/push成功；重新配网整行主按钮在上，取消改橙色文字在下。未运行测试，未真机看效果。
