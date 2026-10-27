@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 配网 MQTT 参数改调接口
+
+- 同步：Hub main、photo-album main-wifi/d9546b8 均已最新，origin/main 无未合入。
+- 用户提供 GET /api/device/provisioning/mqtt（Header userToken，{code,msg,data:{host,port,usr,pwd}}），按 IoT 服务口径走 iot-request。
+- 改动：iot-api.getProvisioningMqtt；wifi-provision.getMqttConfig 每次配网现取、四项缺一按失败，取参数放第 2 步最前、连设备前，失败/不完整/401 停在第 2 步不动设备；删除「config 为空跳过 mqtt_config」分支；config.js 删除 iotMqttConfig（含密码）；日志 pwd 打码。测试按新顺序调整并补失败用例；顺带修正上轮 vm 跨 realm 对象 deepEqual 会失败的断言。文档：2026-10-27 变更记录追加小节，对接开发进度、AI_CONTEXT、docs/README 同步。
+- photo-album main-wifi/9172aff：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行，未真机；工作树已无该密码明文，git diff --check 通过。
+- 提醒：密码仍在仓库历史提交（10-26 起），是否轮换由后端决定；未改写历史。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 配网待确认项落地（设备ID冒号口径）
 
 - 同步：Hub main、photo-album main-wifi/100aaff 均已最新，origin/main 无未合入。

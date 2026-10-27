@@ -2667,3 +2667,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 设备ID冒号口径
 
 d9546b8已提交、再次pull/push成功；绑定deviceId改回带冒号、搜索列表显示带冒号；getProductByDevice与IoT在线/信息查询只传不带冒号（取消带冒号补查）。未运行测试，未真机。MQTT密码接口待接入。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网MQTT参数改调接口
+
+9172aff已提交、再次pull/push成功；配网第2步先调 IoT /api/device/provisioning/mqtt 取参数（失败/不完整/401不动设备），config删除设备账号密码。未运行测试，未真机。密码仍在git历史，轮换待后端定。
