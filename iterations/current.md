@@ -1,3 +1,15 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 我的设备分组、删配网日志、WiFi 投屏与设备详情
+
+- 同步：Hub main、photo-album main-wifi/e93bae2 均已最新，origin/main 无未合入。用户本轮先后提出：我的设备按 WiFi/蓝牙分组（WiFi 按钮按实际情况定）→ 追加“包括设备详情页，再按文档对接 WiFi 投屏”→ 追加“删除配网日志”。
+- 7f82e1c 分组：broadcast-match.isWifiBroadcastId（产品 broadcastId 为 * 模板或 IJ_ 前缀）；列表 WiFi版/蓝牙版两组，蓝牙卡不变；WiFi 卡状态取 IoT /api/device/info（在线/离线/状态未知、信号格、电量），按钮「投屏」「刷新状态」（没有连接/断开：WiFi 不经手机蓝牙，App 也无重新配网/删除操作）。
+- 20b688e 删配网日志：配网状态页日志面板与 wifi-provision.run 逐步记录、bindWifiDevice 的 onLog 去掉，流程行为不变；测试去掉日志断言。
+- 870ab09 WiFi 投屏 + 详情：契约按 docs 草稿 v0.27 + 评审回复 v0.32（不传 userNo、初始 SENT、reason）。iot-request.upload、iot-api.play/getPlayStatus；utils/wifi-projection.projectOne（上传进度→处理中→SENT→WS play.result 按 msgid 缓存+3 秒状态查询兜底→终态，TIMEOUT 3 秒修正、90 秒结果未知、4044 过期）；预览页对 WiFi 不预热蓝牙、导出后 redirect 新页 projection/wifi-result（逐张、重试未成功的）；新页 device/wifi-detail（设备信息行、device.status 自动重查、投屏/刷新状态），蓝牙 detail 遇 WiFi 版 redirect；列表 WiFi 卡投屏改真实、点卡进 WiFi 详情，选相框模式仍拦 WiFi 版。新增 tests/wifi-projection.test.js，调整 device-list-wifi-group 测试；变更记录、投屏流水线、对接进度（STEP 3 已实现待联调、STEP 4 部分）、AI_CONTEXT、README 同步。
+- 三次均已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机、未与 IoT 联调；git diff --check 与模板标签配对检查通过。
+- 待定：WiFi 投屏不写投屏记录（相册归属待产品）；首页/图库/AI 投屏入口与 device-picker-sheet 未接 WiFi；后台需加 iot.boltfox.cn 为 uploadFile 合法域名。
+
+---
+
 ## 2026-10-27 ssh｜泰乾超级-qianrong 菜单列字段入口收窄、企业用户列表调整
 
 - 同步：Hub main、tq-plus master/3063971 均已最新；origin 为 GitHub。本机无 codegraph CLI / node，源码检索定位。
