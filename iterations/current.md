@@ -1,3 +1,16 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 按服务端反馈补齐休眠设置 / 消息中心 / 轮播立即切图
+
+- 同步：photo-album main-wifi 快进到 412dfaa（同事推了 `docs/wifi/V1.4对接实现报告反馈.md`，文中引用的「V1.4对接实现报告.md」实为 `V1.4对接分析报告.md`），origin/main 无未合入；Hub main 已最新。
+- 休眠：新页 wifi-sleep（utils/wifi-sleep.js）：GET 回显（未设置 / 周期跨午夜写次日 / 一次性 / 已关闭）；关闭先确认 mode=0，周期两 HH:mm 不能相同，一次性日期+时间开始早于结束且结束未过；只传本地时间；4041 补查提示、4000 显示服务端文案；保存后重查回显。WXML 不比字符串，次日标记在 JS 算。
+- 消息中心：新页 wifi-messages（utils/wifi-messages.js）：20 条分页、下拉刷新、触底加载按 id 去重、只看未读、type 翻译（含 PLAY_*）+ payload 关键参数、未知 type 通用文案；单条已读回传原始 id（Long 可能为字符串）失败回滚，全部已读 ids=[]；订阅设备，notification.new / 重连成功 500ms 合并刷新；403 单独提示。WiFi 详情加两入口，消息中心未读角标（进页查 + notification.new 再查，99+）。
+- 轮播：imgUrls=null 回显全选；[] 提示重新选择；不选不让存；按相册顺序全选不带 imgUrls（保持全部相册）；保存成功后下载第一张（选中第一张 / 全部相册取相册第一张）→ projectOne refresh=true 立即切屏，不写新相册记录（服务端 lastplay 会是这张新 bin，已在变更记录注明）。
+- 删除：deviceAction=PLAY_NEXT 提示「已切换到下一张」；nextImageUrl 仍取剩下第一张。确认项 1/2/5 按用户要求不展开；idle=0 断开判离线待固件。
+- 测试：新增 wifi-sleep / wifi-messages（页面 vm 行为），wifi-strategy 按新口径改写，album-wifi-delete 加 PLAY_NEXT；变更记录 2026-10-27-WiFi版休眠设置与消息中心.md、docs/README、对接开发进度（STEP 5/7）、AI_CONTEXT 同步。
+- photo-album main-wifi/c53cebd：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机、未联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 首页与列表订阅 WiFi 状态推送
 
 - 同步：photo-album main-wifi/0cc1aea、Hub main 均已最新。
