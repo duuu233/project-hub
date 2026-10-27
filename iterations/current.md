@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 首页与图库投屏入口接 WiFi 版
+
+- 同步：Hub main、photo-album main-wifi/870ab09 均已最新，origin/main 无未合入。
+- 新增 utils/wifi-status.js（statusFields / fetchFields / ensureOnline），我的设备页改用它。首页：轮播卡 isWifi 标记，WiFi 卡显示云端状态与电量、无「连接蓝牙」，refreshWifiCards 后台刷新；拍照/相册 ensureCanProject 对 WiFi 只 ensureOnline（明确离线拦，查不到放行），openPreview 带 isWifi。图库详情：弹层行带 isWifi、device-picker-sheet 挂 WiFi版角标；connectForProjection 对 WiFi 不连蓝牙、ensureOnline 后带 isWifi 进预览。
+- 新增 tests/home-wifi-entry.test.js，gallery-connect-before-preview 加 WiFi 用例，list 测试装配真实 wifi-status；变更记录追加小节，README / AI_CONTEXT / 对接进度同步。
+- photo-album main-wifi 已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、首页模板标签配对通过。
+- 未做：AI 对话投屏入口（共用弹层，选 WiFi 版仍走蓝牙会失败）；首页 WiFi 卡不订阅 device.status。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 我的设备分组、删配网日志、WiFi 投屏与设备详情
 
 - 同步：Hub main、photo-album main-wifi/e93bae2 均已最新，origin/main 无未合入。用户本轮先后提出：我的设备按 WiFi/蓝牙分组（WiFi 按钮按实际情况定）→ 追加“包括设备详情页，再按文档对接 WiFi 投屏”→ 追加“删除配网日志”。
