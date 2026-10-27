@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 配网按设备入网流程补齐
+
+- 同步：Hub main 已最新；photo-album 本就在 main-wifi，同名 pull 拉到 a8317c7（新增 docs/wifi/设备入网流程.md），origin/main 无未合入提交；origin 为 GitHub。本机无 codegraph / node。
+- 用户给的 MQTT 密码与 utils/config.js 里 10-26 已写入的 iotMqttConfig.pwd 一致，未改；Hub 侧不记录该密码。
+- 对照文档补的缺口：① 第 2 步缺国家码 → mqtt_config 后发 wifi_set_country_code {country:'01'}，pending=1 优先、result≠0 换新 msgid 重试一次、超时不重试，始终不阻塞；② msgid 13 位 → 16 位（13 毫秒 + 3 随机），blufi.newMsgid；③ 回执超时 10s → 5s；④「连接 WiFi」挪到三条指令之后、第 2 步末尾，随即释放蓝牙，不再等 30s WiFi 状态报告；⑤ 顺序改回先绑定（第 3 步，失败不轮询）后轮询在线（第 4 步），10-26「上线后再绑定」作废（文档约束 1：未绑定在线接口 403）；⑥ 一直 503 超时提示「服务暂时不可用，请稍后重试」；⑦ addUserProduct.deviceId 由带冒号改 12 位大写不带冒号（约束 7）。日志【流程N】按新编号 ③④⑤⑥⑭⑮。
+- photo-album main-wifi/100aaff：已提交，再次同名 pull 后 push。新增 docs/changes/2026-10-27-WiFi版配网按入网流程补齐.md，docs/README（含入网流程文档入口）、对接开发进度、AI_CONTEXT 同步；tests/wifi-provision.test.js 按新顺序重写，blufi.test.js 加 msgid 用例。
+- 验证：无 Node，测试未运行；未真机、未与固件联调；git diff --check 通过。
+- 待确认：文档 3.1 说 MQTT 凭据「不写入仓库」，与 10-26 产品同意写进 config 冲突；文档表格 opmode=0x00(STA) 与乐鑫定义不符（0x01 才是 STA），继续发 0x01；「WiFi 信息回执」现按三帧写入成功算，未开 BluFi 帧 ACK；绑定改不带冒号后在线接口权限待联调。相册APP 是否同样调整未处理。
+
+---
+
 ## 2026-10-27 ssh｜正矿出库单已出库货物信息去掉出库单号、新增页不显示查看详情
 
 - 同步：Hub main、zk feature-v1.8.5/a2d0779 均已最新；origin 均为 GitHub。本机无 codegraph CLI（不得在 /home/cc/dh 外安装），改用源码检索定位。
