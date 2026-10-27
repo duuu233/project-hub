@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 搜索列表类型标签合并尺寸、信号格上提
+
+- 同步：Hub main/c726a02、photo-album main-wifi/22375c6 均已最新，origin/main 无未合入。本机无 node / codegraph，源码检索定位。
+- 定位：「昨天加的信号图标」= 10-26 504ef17 搜索设备列表（bind 页）信号格对齐；「设备上的 WiFi版/蓝牙版」= 同页设备名后的通信类型标签。
+- 改动：bind.wxml 设备名行只留名字；第二行标签把尺寸包进来（「WiFi版·5.89寸」「蓝牙版·--寸」），后接电量（蓝牙版）与「信号」+ 信号格，标签后不再写「·」；WiFi loading 放进标签尺寸位，「未知设备」在标签里用警示色（替代整行红的 .nearby-sub--unknown）。bind.wxss 标签高 32→28rpx、margin-left→margin-right，删 .nearby-title；.nearby-signal 加 position:relative; top:-6rpx（约 3px），只动搜索列表。变更记录（10-27 搜索列表尺寸文档追加小节）、docs/README、对接开发进度同步。
+- photo-album main-wifi/f336637：已提交，再次同名 pull 后 push。
+- 验证：无 Node，全量测试未运行（AGENTS 要求动 wxss 跑全量；相关用例引用的选择器均保留）；未真机，上提幅度待肉眼确认；模板标签配对、git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 首页与图库投屏入口接 WiFi 版
 
 - 同步：Hub main、photo-album main-wifi/870ab09 均已最新，origin/main 无未合入。
