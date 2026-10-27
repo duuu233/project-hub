@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 首页蓝牙卡连接状态与电量同一行
+
+- 同步：Hub main/38519bc、photo-album main-wifi/3a6afa1 均已最新，origin/main 无未合入。
+- 首页蓝牙卡：连接状态（蓝牙图标 + 已连接/未连接）与电量（仅已连接显示）包进同一行容器；未连接时「连接蓝牙」按钮仍在下一行，间距由按钮 margin-top 22rpx 承担（原状态下边距 22 + 按钮 22）。容器与 WiFi 卡共用，.wifi-meta-row 更名 .status-meta-row。
+- 测试改类名并补蓝牙卡断言；变更记录追加小节，README / AI_CONTEXT 同步。
+- photo-album main-wifi/de12dbf：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 首页 WiFi 卡状态电量同行、我的设备设备ID前加尺寸
 
 - 同步：Hub main/36bbeaf、photo-album main-wifi/5989e93 均已最新，origin/main 无未合入。
