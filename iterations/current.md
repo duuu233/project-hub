@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜泰乾超级-qianrong 菜单列字段入口收窄、企业用户列表调整
+
+- 同步：Hub main、tq-plus master/3063971 均已最新；origin 为 GitHub。本机无 codegraph CLI / node，源码检索定位。
+- 菜单管理：column-model.js 新增 showColumnSettings（C 页面且 menuName 含“列表”），行按钮“列字段设置”改用它，覆盖 10-16“全部 C 页面显示”口径；跳转、权限、独立页与七接口不变，独立页直达仍只校验 C 类型。新增 tests/menu-column-entry.test.mjs。master/8ee8dd4。
+- 企业用户管理列表（用户追加）：按“列表没有用户组这一列”理解为去掉“所属用户组”列；“企业用户类型”dict-tag 由 org_user_type 改 org_type（与表单同字典、Swagger 注明 org_type）。master/7ef890f。
+- 两次均已提交，再次同名 pull 后 push。私人 docs（新增 qianrong-menu-column-entry.md、enterprise-contract-audit 末节、README 索引）、AI_CONTEXT、logs/activity 同步。
+- 验证：无 Node，测试 / 构建 / 浏览器均未运行；信息隔离自查通过。
+- 待确认：用户组列若本意是“缺了要补上 / 显示为空”而非删除，需回改。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 配网状态页失败按钮改上下布局
 
 - 同步：Hub main、photo-album main-wifi/a991453 均已最新，origin/main 无未合入。

@@ -46,3 +46,9 @@ Swagger body 本身声明 required，但模型没有 required 数组；这不等
 ## 实际操作与边界
 
 首次核对无源码改动；本轮获明确修复授权后重新pull两仓并sync索引，CodeGraph定位目标后改3个qianrong企业文件，不改qianlian/共享包。49项隔离回归、7项真实浏览器隔离场景、双尺寸和生产构建通过；未调用真实企业新增/编辑、未登录读取业务资料、未部署。业务按当前master提交、再次pull后push；维护记录按统筹main同样提交同步。真实落库和大ID绑定边界见同日实施记录，不宣称已完成真实联调。
+
+## 2026-10-27 ssh 列表调整
+
+- 企业用户管理列表去掉“所属用户组”列（原读 `userGroups[].userGroupsName` 拼接），用户组仍在新增/编辑/详情维护，接口与请求参数不变。
+- “企业用户类型”列改按字典 `org_type` 映射 `orgType`（与新增/编辑表单同一字典，Swagger 字段说明亦为“参考字典org_type”），不再用 `org_user_type`。OrgSelect 的 `type` 筛选仍按 `org_user_type`，未改。
+- 本机无 Node，未构建、未浏览器验证；字典值与真实 `orgType` 的对应以联调为准。

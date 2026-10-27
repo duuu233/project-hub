@@ -166,3 +166,11 @@ permissions.vue 改用 DetailHeaderCard 头卡 + 白底区块卡包住四个标�
 - **改动**：抽出 RoleDataScopeForm、RoleColumnConfig 供列表弹窗与配置页共用；行级去掉选择列表/五档预设并去掉本企业；列级复用列字段配置；预览新增 preview-sources.js（组件路径→列表接口）与 preview-model.js，调接口带 previewRoleId 取最全 3 条；三标签用本页记录的 roleId；演示模型只留功能权限；README 与测试改写。
 - **验证**：无 Node，未跑测试/构建/浏览器；previewRoleId 后端是否生效未核实。详见 docs/qianrong-role-permission-workspace.md。
 
+
+## 2026-10-27 ssh｜菜单管理列字段设置只给名称含“列表”的页面菜单
+
+column-model.js 新增 showColumnSettings（C 类型且 menuName 含“列表”），菜单管理行按钮改用它；新增 tests/menu-column-entry.test.mjs。跳转、权限、独立页与接口不变。无 Node，未跑测试/构建/浏览器。详见 docs/qianrong-menu-column-entry.md。
+
+## 2026-10-27 ssh｜企业用户管理列表去掉用户组列、类型改按 org_type 字典
+
+enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“企业用户类型”dict-tag 改用 org_type。表单、接口不变。无 Node，未构建/浏览器验证。详见 docs/qianrong-enterprise-contract-audit.md。
