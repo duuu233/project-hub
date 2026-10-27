@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 首页 WiFi 卡状态电量同行、我的设备设备ID前加尺寸
+
+- 同步：Hub main/36bbeaf、photo-album main-wifi/5989e93 均已最新，origin/main 无未合入。
+- 首页 WiFi 卡：在线状态与电量包进 .wifi-meta-row 横排（gap 28rpx，状态 margin-bottom 收为 0），蓝牙卡不变。
+- 我的设备：两类卡「设备ID」行改为「{sizeModel || --寸} · 设备ID …」，按用户要求只显示尺寸、不带 WiFi版/蓝牙版；行由 text 改 view 包两段 text，样式不变。首页名称下的「WiFi版/蓝牙版·尺寸」标签保留（用户此次只就列表页说不带类型）。
+- tests/home-card-name-size.test.js 追加断言；变更记录追加小节，README / AI_CONTEXT 同步。
+- photo-album main-wifi/3a6afa1：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 首页设备卡居中、默认昵称取完整广播名、显示尺寸
 
 - 同步：Hub main/a6fa5f3、photo-album main-wifi/f336637 均已最新，origin/main 无未合入。本机无 node / codegraph，源码检索定位。

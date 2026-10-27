@@ -2711,3 +2711,7 @@ f336637已提交、再次pull/push成功；搜索设备列表「WiFi版/蓝牙�
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 首页设备卡居中、默认昵称取完整广播名、显示尺寸
 
 5989e93已提交、再次pull/push成功；首页设备卡图文居中（space-around→center+gap）；两类设备绑定默认昵称传完整蓝牙广播名（WiFi版原传产品名）；名称下加「WiFi版/蓝牙版·尺寸」标签。未运行测试，未真机。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 首页WiFi卡状态电量同行、我的设备设备ID前加尺寸
+
+3a6afa1已提交、再次pull/push成功；首页WiFi卡在线状态与电量一行；我的设备设备ID前显示尺寸（不带类型，没配--寸）。未运行测试，未真机。
