@@ -8,6 +8,7 @@
 - 删除：相册页按照片所属设备分流（ownerIfWifi 静默判定，蓝牙 / 跨设备 / 找不到都交回原链路）；WiFi：删老服务记录 → 只把真删掉的 imgBle 交 POST /api/device/photo/delete（每批 200）+ nextImageUrl=剩下第一张；按 deviceNotified/部分失败/云端失败分别提示。WiFi 再次投屏不连蓝牙、ensureOnline 后带 isWifi 进预览。deleteProjectionRecords 多返回 failedIds。
 - 状态：wifi-status 认 SHUTDOWN「已关机」（灰，同离线不显示电量信号）。
 - 追加（用户问状态怎么更新）：首页 / 我的设备只在进页（onShow）调 IoT `/api/device/info` 查一次，无轮询、无下拉刷新、未订阅 WS；只有 WiFi 详情页订阅 WS `device.status`，收到推送再调接口重查（推送只带信号）。上轮注释与变更记录误写「下拉刷新」，已更正（photo-album main-wifi/df84364）。撤掉「刷新状态」后，列表页停留期间状态不会变，是否给首页 / 列表订阅推送待用户定。
+- 追加（用户实测：首页 → 熄屏 10 分钟 → 回来首页电量没变 → 进列表变了 → 回首页也变了，问长连接是否失效）：只读分析。首页根本没用长连接（iot-ws 只有 WiFi 详情页和调试台会 subscribe），所以不是长连接失效；回前台时首页 onShow → loadHomeState 会先等老服务 getDevices，再调 IoT /api/device/info。推测是解锁刚回前台网络未就绪，getDevices（静默重试 2 次、单次 10s 超时）拖慢，IoT 查询还没回来用户就进了列表页；也不排除当时服务端影子本身还是旧值。未验证，请用户开日志浮窗复现后复制日志，看首页那次 [HTTP] getUserProductList 与 [IoT] /api/device/info 的时间与返回。长连接：熄屏后微信会断掉 socket，回前台 onAppShow 立刻重连并补订阅（前提是之前连过）。
 - 日志浮窗（用户：每个页面都要、可一键复制，参照花盆APP 左下角点开 / 关闭）：utils/debug-log（500 行内存、token/密码入库前打码，正则用 Python 等价式验证过）+ components/debug-log（全局注册，35 页都插了 <debug-log>，preview-demo 复用 preview 模板）；app.js 最先 install 包装 console；request/iot-request/iot-ws 各记一行摘要。正式版整套不生效。
 - 未做：休眠一次性模式（无 WiFi 休眠页）、消息中心 PLAY_SUCCESS 等（无消息页）。
 - 文档：变更记录 docs/changes/2026-10-27-WiFi版V1.4对接.md、分析报告 docs/wifi/V1.4对接分析报告.md（用户要的「简单明了」版）、docs/README、对接开发进度、AI_CONTEXT 同步。
