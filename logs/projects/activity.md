@@ -2,6 +2,14 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-27｜album-miniapp｜ssh｜main｜搜索列表尺寸同步到main
+
+按用户指定从 main-wifi 切到 main，只同步尺寸（不含 WiFi）：搜索列表尺寸 sizeModel || --寸、[搜索尺寸] 日志、搜索页测试桩补 scanSizeModel。96cb17b 已 pull 后 push。无 Node 测试未跑，未真机。
+
+## 2026-10-27｜album-app｜ssh｜main｜搜索列表尺寸没配显示--寸
+
+同步小程序口径：绑定搜索列表副标题尺寸为空显示 --寸（l10n 三语）。399e8c7 已 pull 后 push。无 Flutter 未 analyze/test，未真机。
+
 ## 2026-10-26｜album-admin｜work｜main｜产品设备模块
 
 业务348bcc3已提交、再次pull GitHub同名main成功并push，工作区干净。完成五项接口页面、WiFi产品限定及版本筛选，按用户授权创建五个菜单节点；4项专项+3项FPGA回归、23.95秒构建、合成数据浏览器交互、线上只读检查与CodeGraph通过。未部署前端，真实设备写入未执行；具体实施记录在业务仓库自身文档中。

@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序尺寸同步到main（不含WiFi）、相册APP同步搜索列表尺寸
+
+- 同步：Hub main、photo-album main-wifi/8a324eb、flutter main/c415d92 均已最新；origin 均为 GitHub。用户指定：photo-album 切到 main（同名 pull 已最新 5c7736b），只同步尺寸、WiFi 功能不同步。
+- 依据 docs/wifi/对接开发进度.md「搜索列表尺寸：WiFi 版、蓝牙版同一口径，直接显示 sizeModel，没配显示 --寸」；main-wifi 上与蓝牙版尺寸相关的只有 b04efc7 的蓝牙行 `sizeModel || '--寸'` 与 `[搜索尺寸]` 日志，另有 bb1596f 里 search-device-id 测试桩补 scanSizeModel（10-23 起缺桩会抛错）。scanSizeModel 匹配口径两支相同，详情页两支相同。
+- photo-album main/96cb17b：bind.wxml 尺寸改 `sizeModel || '--寸'`（保留原「信号 强/弱」文字，未带 main-wifi 的信号格组件、WiFi/蓝牙标签）；bind.js loadProductCatalog 加 `[搜索尺寸]` 日志；测试桩补 scanSizeModel；新增变更记录，AI_CONTEXT、docs/README、client-api-matrix 同步。工作区停在 main。
+- flutter main/399e8c7：bind_device_flow `_entryOf` 尺寸为空显示 `l10n.bindSizeUnknown`（中 `--寸`/英 `-- in`/日 `--インチ`），其余不变；未加尺寸日志；新增 history 记录，AI_CONTEXT、docs/README 同步。
+- 验证：无 Node/Flutter，测试与 analyze 未运行，未真机；git diff --check 通过。
+- 提醒：main-wifi 下次开工需 `git merge origin/main`，bind.wxml/bind.js 这两处预计与 main-wifi 版本冲突，按 main-wifi 现有写法保留即可。
+
+---
+
 ## 2026-10-26 ssh｜相册小程序下发mqtt_config（main-wifi）
 
 - 同步：Hub main、photo-album main-wifi/a4a41f1 均已最新，origin/main 无未合入；origin 为 GitHub。
