@@ -1,3 +1,12 @@
+## 2026-10-27 ssh｜花盆APP 核查两项改动 + 今日改动简报
+
+- 同步：flowerpot main/e014f7e、Hub main 均已最新。
+- 核查：纪念日编辑（e014f7e）已在 origin/main，详情回填、加载失败重试、切换类型按详情回填、启停一律非空校验均已落地，固定两条在校验前提前返回不受影响；OTA 一项为只读核查不改代码，备份分支 backup/mower-ota-2026-10-27 远端存在且指向 e014f7e。两项均已完成。
+- 简报：按用户要求（简单明了、不写代码和技术栈）新增 docs/reports/2026-10-27-花盆APP今日改动说明.md，docs/README 登记。flowerpot main/506e876 已推送。
+- 验证：只改文档；git diff --check、信息隔离自查通过。纪念日改动仍未跑 test/analyze、未真机。
+
+---
+
 ## 2026-10-27 ssh｜花盆APP 花盆 OTA 同步割草机逻辑（核查结论：App 侧本就共用，未改代码）+ 割草机 OTA 备份
 
 - 同步：flowerpot main/e014f7e、Hub main 均已最新。

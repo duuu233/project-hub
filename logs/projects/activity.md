@@ -2747,3 +2747,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | WiFi版对接休眠状态
 
 28c6cb4已提交、再次pull/push成功；按休眠状态对接说明接 status：设备卡与详情显示休眠中（缺status按online回退），投屏入口及4041按休眠提示「唤醒后可操作」。未运行测试，未真机。
+
+## 2026-10-27 | flowerpot-app | ssh | main | 核查纪念日/OTA两项+今日简报
+- 两项确认已完成并在远端；新增今日改动简报（无代码/技术描述），main/506e876 已推送。
