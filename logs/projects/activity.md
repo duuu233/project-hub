@@ -2753,3 +2753,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 协议 V1.4 对接 + 全页面联调日志浮窗
 - 投屏不等 ack、多张只刷最后一张、写我的上传；新增 WiFi 轮播设置页（imgUrls 选图）；WiFi 照片删除；已关机状态；35 页左下角可复制日志浮窗。main-wifi/4362372 已推送。未运行测试，未真机、未联调。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 首页与列表订阅 WiFi 状态推送
+- 新增 wifi-watch：推送只重查那一台、长连接重连成功全部重查、隐藏退订；不做定时轮询。main-wifi/052e015 已推送。未运行测试，未真机。

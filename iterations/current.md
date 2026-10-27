@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 首页与列表订阅 WiFi 状态推送
+
+- 同步：photo-album main-wifi/0cc1aea、Hub main 均已最新。
+- 改动：新增 utils/wifi-watch.js（页面级订阅器：update 按 deviceNo 去冒号订阅、多余退订；stop 退订摘监听；device.status 推送只重查那一台，state open 且 reconnect 时全部重查，首次连上不重查；只退订自己订阅的、已被详情页订阅的不重复订阅；无 WiFi 设备不订阅不建连）。首页 onShow 先按已有设备卡订阅再 loadHomeState，列表回来后再 update；onHide/onUnload 退订；refreshWifiCards(deviceNos) 可只查指定几台。我的设备列表同样 onShow + loadDevices 后订阅、onHide/onUnload 退订，推送走 refreshWifiStatus(id)。详情页不动。不做定时轮询。
+- 已知：页面切换时若新页 onShow 早于旧页 onUnload，可能出现「新页看到已订阅不订、旧页随后退订」，靠列表接口返回后的再次 update 自愈；长连接没断时回前台，首页查询仍排在老服务列表接口后面；电量推送待后端。
+- 测试：device-list-wifi-group 加 ⑤（订阅 / 推送重查一台 / 重连全部重查 / 隐藏退订 / 纯蓝牙不订阅），home-wifi-entry 加一组；变更记录 2026-10-27-WiFi版首页与列表订阅状态推送.md、分析文档当前状态、docs/README、AI_CONTEXT 同步。
+- photo-album main-wifi/052e015：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 按协议 V1.4 对接 + 全页面联调日志浮窗
 
 - 同步：photo-album main-wifi 快进到 012544c（同事推了 `docs/wifi/XT相框通讯协议_V1.4.md` 与 `_V1.4_更新说明.md`），origin/main 无未合入；Hub main 已最新。
