@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-27｜album-admin｜work｜main｜IoT只读监控
+
+业务2d3451c、9f03b48已提交、各自再次pull GitHub同名main成功并push。完成需求四页、四个只读接口及演示场景，菜单174–178经本轮单独授权创建。IoT10项+既有11项回归、26.70秒构建、真实只读接口/浏览器验收与CodeGraph通过；原需求未跟踪文件保留原字节。未部署、未写设备数据、未绑定角色；具体维护资料在业务仓库自身文档。
+
 ## 2026-10-27｜album-miniapp｜ssh｜main→main-wifi｜main 合入 main-wifi
 
 main-wifi/80d88df 已再次显式同名 pull 后 push origin。合入 main 的 96cb17b（搜索列表尺寸 --寸），4 处冲突均为同一改动重复：代码取 main-wifi 写法，文档两边合并。无 Node 测试未跑。
