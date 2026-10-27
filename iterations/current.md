@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜花盆APP 花盆 OTA 同步割草机逻辑（核查结论：App 侧本就共用，未改代码）+ 割草机 OTA 备份
+
+- 同步：flowerpot main/e014f7e、Hub main 均已最新。
+- 核查：Dart 侧 `runFirmwareUpgrade`（firmware_upgrade_flow.dart）、`FlowerpotState.upgradeFirmware` / 进度 / 核验 / 接回 / 停滞阈值（state.dart），以及 Android `startFirmwareUpgrade`（Service API + 3 秒轮询，MainActivity.kt）都是花盆和割草机共用一份，原生两端都没有按产品分支。割草机独有的只有三处，都和速度无关：发起前要在桩充电、DP116 ota_status 7/20 判失败、版本 DP 用 112（花盆用 148）。超时与阈值（准备 2 分钟、停滞 10 分钟、核验 2 分钟）也都通用，花盆没有单独的等待或延时。
+- 结论：割草机快不是 App 逻辑带来的，App 侧没有可以搬给花盆的东西。差异应在设备侧（模组 / 固件方案、包大小、是否差分、进度上报方式）或平台部署。用户的约束是「别动割草机 OTA」，所以本轮不改代码。建议各拿一份同版本链路的「OTA日志」（[ota-timing]）对比，看慢在哪一段。
+- 备份：按用户要求在 e014f7e 新建分支 backup/mower-ota-2026-10-27 并推送到 origin（没有切分支，main 不变）。
+- 验证：只读代码，没有改动。
+
+---
+
 ## 2026-10-27 ssh｜花盆APP 纪念日编辑改为详情回填，文字/图片二选一统一校验
 
 - 同步：flowerpot main/8d19cf3、Hub main 均已最新。

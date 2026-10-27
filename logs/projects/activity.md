@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-27｜flowerpot-app｜ssh｜main｜OTA 核查与割草机 OTA 备份
+
+未改代码。核实花盆和割草机的 App 侧 OTA（Dart 与 Android 原生）本就共用一份，割草机独有的只有充电门禁、DP116 失败码和版本 DP 号，与速度无关，所以没有可同步的逻辑。按用户要求在 e014f7e 新建并推送备份分支 backup/mower-ota-2026-10-27。
+
 ## 2026-10-27｜flowerpot-app｜ssh｜main｜纪念日详情回填与二选一校验
 
 main/e014f7e 已再次同名 pull 后 push。编辑已有条目进页先拉 getProductAnniversaryDetail 回填，加载中或失败时没有保存按钮；新增与编辑共用切换规则；所选类型必须有内容，停用也校验（页面和状态层两处）。核对 swagger，没有拆分字段。无 Flutter，测试未运行，未真机。
