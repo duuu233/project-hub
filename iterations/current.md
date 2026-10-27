@@ -7,6 +7,7 @@
 - 删除：deviceAction=PLAY_NEXT 提示「已切换到下一张」；nextImageUrl 仍取剩下第一张。确认项 1/2/5 按用户要求不展开；idle=0 断开判离线待固件。
 - 测试：新增 wifi-sleep / wifi-messages（页面 vm 行为），wifi-strategy 按新口径改写，album-wifi-delete 加 PLAY_NEXT；变更记录 2026-10-27-WiFi版休眠设置与消息中心.md、docs/README、对接开发进度（STEP 5/7）、AI_CONTEXT 同步。
 - photo-album main-wifi/c53cebd：已提交，再次同名 pull 后 push。
+- 追加：按用户要求写成报告 `docs/wifi/服务端反馈对接报告.md`（一句话、前后对比表、各功能说明、注意事项、对照反馈第九节验收清单、验证情况），docs/README 登记；photo-album main-wifi/29deb69 已推送。只写文档，信息隔离自查通过。
 - 验证：无 Node，测试未运行；未真机、未联调；git diff --check、信息隔离自查通过。
 
 ---
