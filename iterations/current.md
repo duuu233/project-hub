@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜正矿出库单已出库货物信息去掉出库单号、新增页不显示查看详情
+
+- 同步：Hub main、zk feature-v1.8.5/a2d0779 均已最新；origin 均为 GitHub。本机无 codegraph CLI（不得在 /home/cc/dh 外安装），改用源码检索定位。
+- 用户说“已出库货物信息列表下面的货物单号”，表内并无此列名，最接近为「出库单号」列，按此处理。出库单新增/编辑/详情共用 out-warehouse-list/template/handleDetail.vue，删该列三页一并生效；操作列「查看出库单详情」加 `v-if="pageType !== 1"`，仅新增页隐藏。出库计划详情的同名表未动。
+- zk feature-v1.8.5/4b54a20：已提交，再次同名 pull 后 push。私有 docs/warehouse-figma-ui.md 与 logs/activity.md 已补记录。
+- 验证：无 Node / node_modules，type-check、build 未跑，未浏览器验证；信息隔离自查通过。
+- 待确认：若“货物单号”指的不是出库单号列，需用户指明。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main 合入 main-wifi
 
 - 用户指定把 main 合到 main-wifi。photo-album 由 main 切到 main-wifi（同名 pull 已最新 8a324eb），origin/main 未合入仅 96cb17b（搜索列表尺寸 --寸）。

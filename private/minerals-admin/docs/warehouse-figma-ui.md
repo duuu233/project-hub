@@ -81,3 +81,9 @@
 - 接口日期字段要毫秒时间戳。新增 `src/utils/dateTimestamp.ts`：`datesToTimestamp` 递归把字段名以 Date / Time 结尾、值为 `YYYY-MM-DD[ HH:mm[:ss]]` 的文本按本地时区转成毫秒时间戳，数字、空值、非日期文本不变，返回新对象。出库单提交（新增、编辑两个分支）整包经它转换：覆盖实际出库日期 `stockOut.stockOutDate`、车辆装货日期 `stockOutCars[].shipmentTime`，以及随计划 / 详情带回的 `stockOutPlanDate`、`createTime` 等日期文本。日期选择器仍按文本显示与回填，只在提交时转换。
 - 出库附件原只写 `required` 属性，校验失败显示校验器英文默认提示「stockOutFileList is required」；改为 rules 中 `{ required: true, type: 'array', message: '请上传出库附件' }`，去掉属性。
 - 未构建、未联调，后端对各日期字段的实际口径以接口为准。
+
+## 出库单新增 / 编辑 / 详情：已出库货物信息列调整（2026-10-27 ssh）
+
+- 「已出库货物信息」表去掉「出库单号」列（用户口头称“货物单号”，表内无此列名，按出库单号处理），新增、编辑、详情三页共用同一模板，一并生效。
+- 「查看出库单详情」所在操作列在新增页（`pageType === 1`）不渲染；编辑、详情保留，按钮仍在行无 `stockOutId` 时禁用。出库计划详情的同名表不变。
+- 未构建、未浏览器验证（本机无 Node / node_modules）。

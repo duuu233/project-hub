@@ -2655,3 +2655,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-26 | album-miniapp | ssh | main-wifi | 下发mqtt_config
 
 8a324eb已提交、再次pull/push成功；config写入EMQX设备账号（mqtt.boltfox.cn:11883），配网第2步下发mqtt_config，日志打码凭据。未运行测试，未真机。
+
+## 2026-10-27 | minerals-admin | ssh | feature-v1.8.5 | 出库单已出库货物信息去掉出库单号、新增页不显示查看详情
+
+4b54a20已提交、再次pull/push成功；共用模板删「出库单号」列（新增/编辑/详情），操作列「查看出库单详情」新增页不渲染。未构建、未浏览器验证。

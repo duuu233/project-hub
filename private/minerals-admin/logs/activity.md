@@ -1080,3 +1080,7 @@ WarehouseAttachment 可编辑态的格式提示与「拖放到此处或单击上
 ## 2026-10-26 ssh｜出库单日期转时间戳 + 附件必填中文提示
 
 新增 utils/dateTimestamp.ts；出库单提交前把 …Date / …Time 日期文本统一转毫秒时间戳（实际出库日期、装货日期及带回的计划 / 详情日期）；出库附件必填改规则 + 中文提示。未构建、未联调。详见 docs/warehouse-figma-ui.md。
+
+## 2026-10-27 ssh｜出库单已出库货物信息去掉出库单号、新增页不显示查看详情
+
+out-warehouse-list/template/handleDetail.vue：已出库货物信息表删「出库单号」列（用户称“货物单号”，按此列处理）；操作列「查看出库单详情」加 `v-if="pageType !== 1"`，新增页不显示，编辑/详情保留。未构建、未浏览器验证。详见 docs/warehouse-figma-ui.md。
