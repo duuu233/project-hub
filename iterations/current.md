@@ -1,3 +1,13 @@
+## 2026-10-27 ssh｜核对相册两端投屏抖动出帧已改调后端接口（只核对，无代码改动）
+
+- 同步：Hub main、photo-album main/96cb17b、flutter main/399e8c7 均已最新；origin 均为 GitHub。
+- 用户要求按文档核对：投屏原调第三方接口，现应调我方后端接口；小程序 main 没有就从 main-wifi 搬，APP 没改就照小程序改。
+- 小程序 main：utils/dithering.js 已调 /Client/Basic/imageDitheringBinDownload（公共参数 + 用户 userToken，前缀「接口-」），getXTYUserToken/seekink 代码已删，tests/dithering-backend.test.js 在；与 origin/main-wifi 在 dithering.js 及 subpackages/projection 下无差异（两支 59 个差异文件全为 WiFi 配网/搜索），无需搬运。
+- APP main：lib/src/network/dithering_api.dart 已走 ApiClient.postMultipartForBytes 调同一接口，projection_service 经 DitheringApi 出帧，getXTYUserToken/seekink 无代码引用，test/dithering_api_test.dart 在（10-23 的 5889f5f 已改）。
+- 结论：两端均已是后端接口逻辑，本轮未改业务仓。仍待：小程序后台 request 合法域名里 cloud.seekink.cn:8443 由用户自行删除（仓库无该配置）；type 数值与后端对齐、真机投屏未验证。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序尺寸同步到main（不含WiFi）、相册APP同步搜索列表尺寸
 
 - 同步：Hub main、photo-album main-wifi/8a324eb、flutter main/c415d92 均已最新；origin 均为 GitHub。用户指定：photo-album 切到 main（同名 pull 已最新 5c7736b），只同步尺寸、WiFi 功能不同步。
