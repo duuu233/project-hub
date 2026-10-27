@@ -7,7 +7,7 @@
 - 业务仓文档：docs/history/2026-10/2026-10-27-wifi-version-sync.md 新建，docs/README、PROJECT_STRUCTURE、APP_VS_MINIPROGRAM（新增 2.1 WiFi 版矩阵）、AI_CONTEXT 同步。
 - flutter main-wifi/cb44b1d：已提交，再次同名 pull 后 push。
 - 验证：本机无 Flutter，analyze / test / 编译均未运行；未真机、未与 IoT 联调。用 Dart SDK 3.12.2（下载到 .codex-tmp/dart）对全部改动文件跑 dart format --output=none 解析通过（仅语法）；文案 key 引用核对、git diff --check、信息隔离自查通过。尝试下载 Flutter 3.44.6 到 .codex-tmp 跑 analyze，被权限拦下，未执行。
-- ⚠️ 越界：首次运行下载的 dart 时，Dart 自动在家目录建了 ~/.dart-tool/（遥测配置 5 个小文件，14:17），属 /home/cc/dh 之外写入，未自行删除，待用户决定。.codex-tmp 下留有 dart-sdk 与 flutter SDK（约 2.6G）及仓库副本 flutter-check，可删。
+- ⚠️ 越界：首次运行下载的 dart 时，Dart 自动在家目录建了 ~/.dart-tool/（遥测配置 5 个小文件，14:17），属 /home/cc/dh 之外写入；同日按用户指示删除 ~/.dart-tool，并清掉 .codex-tmp 下的 dart / flutter SDK、仓库副本 flutter-check 与临时 home/tmp（约 3G），家目录核对无其它残留。
 - 未做 / 差异：IoT 联调卡未移植；AI 对话与我的相册再次投屏未接 WiFi（两端一致）；配网不保持常亮（无 wakelock 依赖）；手机网络判断改为解析 IoT 域名；图标用 Material 代替 svg；新简中文案繁中转换表缺字待复核。
 
 ---

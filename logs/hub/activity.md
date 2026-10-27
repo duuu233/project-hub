@@ -4,7 +4,7 @@
 
 ## 2026-10-27｜ssh｜相册APP登记双长期分支并留痕WiFi版对齐
 
-context/album-app.md 增加双长期分支约定（main 线上蓝牙版对齐小程序 main，main-wifi 对齐小程序 main-wifi，开工先合 origin/main）。登记 flutter main-wifi/cb44b1d。.codex-tmp 下载 Dart / Flutter SDK 做语法检查，首次运行 dart 在家目录生成 ~/.dart-tool（越界，已报告待用户决定）。main 提交后再次显式同名 pull/push。
+context/album-app.md 增加双长期分支约定（main 线上蓝牙版对齐小程序 main，main-wifi 对齐小程序 main-wifi，开工先合 origin/main）。登记 flutter main-wifi/cb44b1d。.codex-tmp 下载 Dart / Flutter SDK 做语法检查，首次运行 dart 在家目录生成 ~/.dart-tool（越界），经用户同意已删除，SDK 与副本一并清出 .codex-tmp。main 提交后再次显式同名 pull/push。
 
 ## 2026-10-27｜work｜全项目同步与登记相册后台IoT交付
 
