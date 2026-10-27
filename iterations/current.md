@@ -1,3 +1,12 @@
+## 2026-10-27 ssh｜相册小程序 main 合入 main-wifi
+
+- 用户指定把 main 合到 main-wifi。photo-album 由 main 切到 main-wifi（同名 pull 已最新 8a324eb），origin/main 未合入仅 96cb17b（搜索列表尺寸 --寸）。
+- `git merge origin/main` 冲突 4 处，均为同一改动两边各写一遍（main 的 96cb17b 本就是从 main-wifi 搬过去的）：bind.wxml/bind.js 取 main-wifi 版本（已含蓝牙行 `sizeModel || '--寸'`，并保留信号格与 WiFi/蓝牙标签）；docs/README 两边变更记录都保留；AI_CONTEXT 合成一句，注明 main-wifi 10-26、main 10-27 起，并引用两份变更记录。search-device-id 测试、client-api-matrix、10-27 变更记录自动合入。合并后代码与测试同 main-wifi 原样，只有文档多了 main 的记录。
+- photo-album main-wifi/80d88df：合并提交，再次同名 pull 后 push；origin/main 已全部合入。工作区停在 main-wifi。
+- 验证：无 Node 测试未跑；git diff --check 通过、无冲突标记残留。
+
+---
+
 ## 2026-10-27 ssh｜核对相册两端投屏抖动出帧已改调后端接口（只核对，无代码改动）
 
 - 同步：Hub main、photo-album main/96cb17b、flutter main/399e8c7 均已最新；origin 均为 GitHub。

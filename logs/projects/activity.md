@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-27｜album-miniapp｜ssh｜main→main-wifi｜main 合入 main-wifi
+
+main-wifi/80d88df 已再次显式同名 pull 后 push origin。合入 main 的 96cb17b（搜索列表尺寸 --寸），4 处冲突均为同一改动重复：代码取 main-wifi 写法，文档两边合并。无 Node 测试未跑。
+
 ## 2026-10-27｜album-miniapp｜ssh｜main｜搜索列表尺寸同步到main
 
 按用户指定从 main-wifi 切到 main，只同步尺寸（不含 WiFi）：搜索列表尺寸 sizeModel || --寸、[搜索尺寸] 日志、搜索页测试桩补 scanSizeModel。96cb17b 已 pull 后 push。无 Node 测试未跑，未真机。
