@@ -2663,3 +2663,7 @@ b04efc7已提交、再次pull/push成功；新增WiFi列表页（选中后进账
 ## 2026-10-27 | album-miniapp | ssh | main-wifi | 配网按设备入网流程补齐
 
 100aaff已提交、再次pull/push成功；第2步补国家码01（pending优先、失败换msgid重试一次、不阻塞），连接WiFi后释放蓝牙；改回先绑定后轮询在线；msgid 16位、回执5秒；绑定deviceId改12位不带冒号。未运行测试，未真机。
+
+## 2026-10-27 | album-miniapp | ssh | main-wifi | 设备ID冒号口径
+
+d9546b8已提交、再次pull/push成功；绑定deviceId改回带冒号、搜索列表显示带冒号；getProductByDevice与IoT在线/信息查询只传不带冒号（取消带冒号补查）。未运行测试，未真机。MQTT密码接口待接入。

@@ -1,3 +1,14 @@
+## 2026-10-27 ssh｜相册小程序 main-wifi 配网待确认项落地（设备ID冒号口径）
+
+- 同步：Hub main、photo-album main-wifi/100aaff 均已最新，origin/main 无未合入。
+- 用户答复上一轮四个待确认：① MQTT 密码改由后端接口获取，稍后接入（本轮不做）；② opmode 维持 0x01；③ 不要求 BluFi 帧 ACK；④ 设备ID 统一加冒号，但传给后端查询的不加冒号。
+- 改动：bindWifiDevice 的 addUserProduct.deviceId 改回带冒号；搜索列表 WiFi 行 deviceCode 显示加冒号，另存 wifiDeviceNo（不带冒号）用于规格查询、配网交接与 url；lookupProductByDevice 只传不带冒号，取消 10-26 的带冒号补查（按「查询不加冒号」理解，需确认后台登记都是不带冒号写法，否则这类设备会显示未知设备）；iot-api 在线/设备信息查询统一去冒号。测试：wifi-search、wifi-product-lookup、iot-foundation 相应调整。变更记录 2026-10-27 文档追加「同日产品确认」，对接开发进度、AI_CONTEXT、docs/README 同步。
+- photo-album main-wifi/d9546b8：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行，未真机；git diff --check 通过。
+- 剩余：MQTT 密码接口待用户提供后接入（届时从 config 移除 pwd，改 wifi-provision.getMqttConfig）。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 配网按设备入网流程补齐
 
 - 同步：Hub main 已最新；photo-album 本就在 main-wifi，同名 pull 拉到 a8317c7（新增 docs/wifi/设备入网流程.md），origin/main 无未合入提交；origin 为 GitHub。本机无 codegraph / node。
