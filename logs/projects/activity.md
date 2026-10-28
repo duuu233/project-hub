@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜flowerpot-app｜ssh｜main｜编辑纪念日图片保存后变成地址排查
+
+只排查未改代码。App 的 contentType（0=文字/1=图片）读写与 swagger 一致；保存传 1 + 图片地址，再进详情回的不是 1，于是 URL 落进文字框并触发 15 字校验。疑为后端编辑未更新 contentType，待后端核对。
+
 ## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜账户用户密码 Base64
 
 dev/5ad9753 已同名 pull 后 push。账户新增/编辑加用户密码 password，提交 Base64、回填解码供眼睛切换明文，编辑留空不传。无 node，未构建、未联调。

@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜花盆APP 编辑纪念日图片保存后变成「地址」排查
+
+- 同步：flowerpot main/8ede53c、Hub main 均已最新。只排查，未改代码。
+- 反馈：删掉内容、改传图片、保存后再进，图片没了，只显示一串地址；此时关开关保存不了，只能删地址打一个字才能保存退出。
+- swagger（api.yikaltd.com /v2/api-docs）核对：新增/编辑入参 ClientProductAnniversaryAddApiIn 与列表/详情出参 ClientProductAnniversaryDetailApiOut 都是 contentType「0=文字,1=图片」+ 一个 content。App 写入 `_anniversaryBody` 选图片传 1、文字传 0；读取 `_anniversary` 按 contentType==1 判图片，字符串 "1" 也认；编辑页按详情的类型决定显示文字框还是图片框，只显示同类型的 content。参数和用法与接口一致。
+- 结论：现象说明保存时 App 传了 contentType=1 + 图片地址，但再拉详情回来 contentType 不是 1（0 或缺失），content 却是图片地址 → 页面按文字类型把 URL 填进文字框（「只有地址」）。后续关开关保存走文字校验，URL 超过 15 字被「文字内容最多 15 个字」挡住，所以只能删掉地址打一个字。「删了再上传」即原来是文字的条目改成图片，最可能是后端编辑接口只更新 content、没更新 contentType（新增若同样默认 0 也会这样）。
+- 待确认：后端查这条记录库里的 contentType；或抓一次 editUserProductAnniversary 请求体与随后 getProductAnniversaryDetail 返回。未用真实账号调接口、未真机。
+- 可选 App 兜底（未做，待用户决定）：详情 contentType=0 但 content 是 http(s) 地址时按图片处理。
+
+---
+
 ## 2026-10-28 ssh｜泰乾超级-qianrong 账户新增/编辑用户密码 Base64
 
 - 同步：tq-plus dev 同名 pull 快进至 66f66ab（同事合并，12 文件），Hub main 已最新。
