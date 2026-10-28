@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜WiFi 版投屏画质问题分析报告
+
+新增 docs/wifi/WiFi版投屏画质问题分析.md：服务端转 bin 缺颜色 / 抖动参数、type 一律 0、缺宽高回退 480×720 且无铁闸、横竖向、色序五类可疑点及定位步骤。静态分析，未真机。
+
 ## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜蓝牙版与 WiFi 版投屏流程对比文档
 
 main-wifi/ddd3116 已同名 pull 后 push。新增 docs/wifi/蓝牙版与WiFi版投屏流程对比.md：进入照片预览后两条主线的 mermaid 流程图与区别速查表；流水线文档 WiFi 段按 V1.4 更正。纯文档。

@@ -1,3 +1,12 @@
+## 2026-10-28 ssh｜相册小程序 main-wifi WiFi 版投屏画质问题定位报告
+
+- 同步：photo-album main-wifi/ddd3116、Hub main 均已最新，origin/main 无未合入。
+- 需求：WiFi 版投到设备上效果很不理想，定位可能原因并出报告。
+- 静态分析结论（未真机）：两版导出相同，分叉在转换。①play 只传 type，蓝牙版出帧带 color=BWRYGB、imageDitheringModes=2，服务端「调老服务转 bin」接口与参数不明，可能是 07-22 蓝牙版已弃用的老转码；②typeForDevice 对 WiFi 屏一律 0（5.89 寸策略），协议屏 1200×1600、文档示例 type=3；③WiFi 产品缺宽高时导出回退 480×720，且 WiFi 链路无帧长铁闸，出图静默回退原图也会直接上传；④横竖向 / 旋转按蓝牙口径（已知宽>高反向）；⑤bin 色序 / 扫描与 ESP32 固件约定未知。附日志核对、测试图、同图两种转换对照的定位步骤与后端确认清单。
+- 产出：docs/wifi/WiFi版投屏画质问题分析.md（draft），docs/README 加索引。photo-album main-wifi 已提交，再次同名 pull 后 push。纯文档，无代码改动。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 main-wifi 蓝牙版 / WiFi 版投屏流程对比文档
 
 - 同步：photo-album main-wifi/25699db 已最新，origin/main 无未合入。
