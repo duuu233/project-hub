@@ -60,3 +60,13 @@ Swagger body 本身声明 required，但模型没有 required 数组；这不等
 - 注册资本（万元）：`el-input-number` 加 `precision: 2`，输入四舍五入到两位小数，显示也为两位。
 - 列表恢复「所属用户组」列（10-27 曾按 `userGroups` 去掉）：现取列表返回的 `userGroupNames` 字符串数组，用「、」拼接，空显示「—」，放在企业名称后。
 - 本机无 node，未构建、未浏览器、未联调。
+
+
+## 2026-10-28 ssh dev/56e5aa6：银行信息 bankList
+
+- 参照正矿 `system/enterprise-users` 的「银行信息」区块：折叠卡右上「添加银行信息」，表格三列 银行名称 / 开户行 / 银行账号 + 删除；详情只读、无按钮与操作列。新组件 `components/EnterpriseBankList.vue`。
+- 与正矿的差别：银行名称取字典 `sys_bank`（正矿是银行管理列表 + 开户行联动下拉），开户行、银行账号都是手动输入。选中银行时 `bankName` = 字典标签、`bankCode` = 字典值。
+- 提交 `bankList`：每行只传 `bankCode`、`bankName`、`bankBranchName`、`bankAccount`，已有行再带 `id`、`orgId`；空值不传，整行空的忽略；有内容的行必须选银行、填账号，开户行可空；账号去空白。
+- 接口口径「编辑时不传保留，空列表清除」：编辑时详情回了 `bankList`（数组）就按当前表格整份提交（删光即传空数组清除）；详情没回 `bankList` 且没新增则不传，避免误清后台已有账户。新增无行时不传。
+- ⚠️ `bankCode` 接口文档暂未列出，用户说明后续接口补上，前端先传。详情回填若只有 `bankName` 没有 `bankCode`，按字典标签反查补上以便下拉回显。
+- 本机无 node，未构建、未浏览器、未联调。

@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-28 ssh dev/56e5aa6：企业用户新增/编辑/详情加银行信息（仿正矿区块），银行取字典 sys_bank（bankName=标签、bankCode=值，bankCode 接口待补），开户行、账号手输；bankList 每行只传四字段 + 已有 id/orgId，编辑时详情回了才整份提交。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。
+
 2026-10-28 ssh dev/4de0886：企业用户成立日期不晚于当天（禁选 + 校验）、注册资本两位小数；列表恢复所属用户组列，取 userGroupNames 数组用「、」拼接。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。
 
 2026-10-28 ssh dev/787dbff 四项修正：企业用户类型为监管仓库时不显示/不提交银行类型（按 org_type 标签判断）；操作/登录日志由 el-table+ListTablePanel 改为与其它列表一致的 vxe-grid，分页常驻；角色所属企业进页调 /system/org/list 下拉（列表主键 id，原按 orgId 过滤导致选不了）；账号表单加账户类型 userType（00/01/02/03）。未构建/联调。详见 docs/qianrong-four-fixes-2026-10-28.md。

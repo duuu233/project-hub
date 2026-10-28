@@ -1,3 +1,13 @@
+## 2026-10-28 ssh｜泰乾超级-qianrong 企业用户银行信息
+
+- 同步：tq-plus dev、正矿 zk feature-v1.8.5（只读参考）、Hub main 均已最新。
+- 改动：新组件 EnterpriseBankList（仿正矿银行信息区块：添加按钮 + 表格 银行名称 / 开户行 / 银行账号 + 删除），银行取字典 sys_bank，开户行、账号手输；接入企业新增/编辑/详情。bankList 每行传 bankCode、bankName、bankBranchName、bankAccount（已有行带 id、orgId）；必须选银行、填账号；编辑时详情回了 bankList 才整份提交（空数组即清除），否则不传保留。
+- 用户中途补充：bankCode 接口还没补，先传上。
+- tq-plus dev/56e5aa6：已提交，再次同名 pull 后 push。私人文档、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建、未浏览器、未联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜泰乾超级-qianrong 企业成立日期、注册资本、所属用户组列
 
 - 同步：tq-plus dev 同名 pull 快进至 dcdf9ff（同事合并，7 文件），Hub main 已最新。

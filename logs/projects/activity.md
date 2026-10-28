@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜企业用户银行信息
+
+dev/56e5aa6 已同名 pull 后 push。新增/编辑/详情加银行信息（仿正矿，银行取 sys_bank，开户行与账号手输），bankList 传 bankCode / bankName / bankBranchName / bankAccount；bankCode 待接口补。无 node，未构建、未联调。
+
 ## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜企业成立日期、注册资本、所属用户组列
 
 dev/4de0886 已同名 pull 后 push。成立日期不晚于当天（禁选 + 校验）、注册资本两位小数；列表恢复所属用户组列（userGroupNames、分隔）。无 node，未构建、未联调。
