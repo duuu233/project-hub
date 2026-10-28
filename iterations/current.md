@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜花盆APP 编辑纪念日文字回填超长直接截断
+
+- 同步：flowerpot main/8ede53c、Hub main 均已最新。
+- 用户口径：「关开关只能删地址打一个字才能保存」与 contentType 是否更新是两个问题；前者回填直接截断，输入框最多 15 字超过不让输入。contentType 用户另与接口确认。
+- 改动：memorial_edit_page `_sourceText()`，文字框三处回填（初始、详情拉到后、切回文字）先截到 15 字，再按 UTF-8 去尾到 ≤45 字节，不切半个字符；TextField maxLength 15 原已挡手动输入（只管输入不管程序赋值，这是原问题所在）。图片回填、保存校验不变。测试补 URL 回填截 15 字后停用直接保存、15 个 emoji 截成 11 个。PRODUCT_RULES §4.24、AI_CONTEXT、10-27至10-28 改动说明第五节、docs/README、history 记录已更新。
+- flowerpot main/e6ea357：已提交，再次同名 pull 后 push。
+- 验证：无 Flutter/Dart，未跑 analyze/test，未真机；git diff --check 通过。需本地 `flutter test test/features/devices/memorial_page_test.dart`。
+- 遗留：若后端确实没更新 contentType，图片条目再进仍会显示成截断后的文字，需后端修。
+
+---
+
 ## 2026-10-28 ssh｜花盆APP 编辑纪念日图片保存后变成「地址」排查
 
 - 同步：flowerpot main/8ede53c、Hub main 均已最新。只排查，未改代码。
