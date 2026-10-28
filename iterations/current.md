@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜花盆APP 显示页亮度滑条节流防抖 + 光照状态页周 / 月补日期 + 改动说明改名
+
+- 同步：flowerpot main/506e876、Hub main 均已最新。
+- 亮度（用户：操作快了操作值和回显冲突，滑条来回晃，加节流防抖）：原页面已有 120ms 限频和 10-21 的回显保护。分析：`updateSetting` 下发成功且期间没收到 DP 上报时会把下发值写进快照（乐观值），页面松手后只看「快照 == 最终值」稳定 500ms 就交还，紧接着迟到的中间值真实上报把滑块拉回、再拉回最终值。改动：`FlowerpotState.dpReportRevision(id, dp)` 只读公开上报计数；页面拖动限频 120→300ms、同次调节同值不重发；记本次成功下发次数与 DP168 上报基线，等上报次数够且最新值等于最终值再稳定 500ms 交还，最长 5 秒、失败即恢复不变。测试 7 处 120ms 时点改 300ms（119→299），判据不变；新增乐观值 + 迟到中间值、拖回同值不重发两条。⚠️ 120ms 是 10-20 记在 PRODUCT_RULES 的口径，本轮按用户「节流防抖」改为 300ms 并在规则里标 10-28，如需保持更跟手可改回。
+- 光照页（用户：周与月没有日期显示，需要补充）：原做法依据设备文档 §4.5-3「周 / 月不标具体日期」。按用户要求：日期条写首尾日期区间、柱状图「N天前」改 `M/d`（位置不变），日期按最后一点 = 昨天逐天回推（与原「N天前」同算法；帧头日期含义未说明，未采用）。只改光照页，水位 / 土壤湿度页未动。新增 HistoryPeriod 日期辅助及 3 条单测。PRODUCT_RULES 记 10-28 口径。
+- 文档：报告 `docs/reports/2026-10-27-花盆APP今日改动说明.md` git mv 为 `2026-10-27至10-28-花盆APP改动说明.md`，追加第三节（亮度）、第四节（光照日期），docs/README 索引同步；history 记录 `2026-10-28-brightness-throttle-light-dates.md`、history/README、UI 两份说明、AI_CONTEXT 同步。
+- flowerpot main/cb18726：已提交，再次同名 pull 后 push。
+- 验证：无 Flutter，analyze/test 未运行，未真机；人工核对了原有显示页用例在新逻辑下的时序；git diff --check、信息隔离自查通过。待用户本地：`flutter analyze`、`flutter test test/features/devices/display_settings_page_test.dart test/features/devices/status_history_date_window_test.dart test/features/devices/light_status_page_test.dart`。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 main-wifi 按服务端反馈追加内容开发 + 相册APP main-wifi 同步最近改动
 
 - 同步：photo-album main-wifi 快进到 7f6de67（同事推了 `docs/wifi/V1.4对接实现报告反馈追加内容.md`），origin/main 无未合入；flutter main-wifi/cb44b1d 已最新、origin/main 无未合入；Hub main 已最新。
