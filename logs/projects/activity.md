@@ -2,6 +2,14 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜蓝牙版与 WiFi 版投屏流程对比文档
+
+main-wifi/ddd3116 已同名 pull 后 push。新增 docs/wifi/蓝牙版与WiFi版投屏流程对比.md：进入照片预览后两条主线的 mermaid 流程图与区别速查表；流水线文档 WiFi 段按 V1.4 更正。纯文档。
+
+## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜企业银行类型、日志分页、角色所属企业、账户类型
+
+dev/787dbff 已同名 pull 后 push。监管仓库不显示/不提交银行类型；操作/登录日志改 vxe-grid 分页常驻、样式与其它列表一致；角色所属企业进页调 /system/org/list 下拉（修列表主键 id 被按 orgId 滤掉）；账号加账户类型 userType。无 node，未构建、未联调。
+
 ## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜配网去掉 2.4G 提示，WiFi 列表取消频段过滤
 
 main-wifi/25699db 已同名 pull 后 push。WiFi 账号密码页删「设备仅支持 2.4G WiFi 配网」提示条（表单上方间距改由表单自留），选择 WiFi 页搜不到时的提示去掉 2.4G；列表不再按信道只留 2.4G，5G、2.4G 都列出。入网流程文档仍写仅支持 2.4G，选 5G 能否配网需真机确认。无 node，测试未运行，未真机。

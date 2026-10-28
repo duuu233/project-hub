@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-28 ssh｜企业银行类型、日志分页、角色所属企业、账户类型
+
+dev 干净先同名 pull 已最新。四项：监管仓库去银行类型；操作/登录日志改 vxe-grid 补分页与样式；角色所属企业进页加载 /system/org/list 下拉（修主键 id 被按 orgId 滤掉）；账号加账户类型 userType。dev/787dbff 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。详见 docs/qianrong-four-fixes-2026-10-28.md。
+
 ## 2026-10-28 ssh｜负责模块日期统一传时间戳
 
 dev 干净先同名 pull 已最新。按 git 重命名追踪把 13 模块映射到 config-audit/、organization/ 新路径后逐个核对提交体：企业成立日期选择器改 value-format x 并回填/提交转时间戳；菜单、用户整份回传的 Time/Date 字段提交前转；操作/登录/接口日志查询 beginTime/endTime 转时间戳。新增 utils/timestamp.js。dev/ffeb87b 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。详见 docs/qianrong-date-timestamp.md。

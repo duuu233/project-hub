@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-28 ssh dev/787dbff 四项修正：企业用户类型为监管仓库时不显示/不提交银行类型（按 org_type 标签判断）；操作/登录日志由 el-table+ListTablePanel 改为与其它列表一致的 vxe-grid，分页常驻；角色所属企业进页调 /system/org/list 下拉（列表主键 id，原按 orgId 过滤导致选不了）；账号表单加账户类型 userType（00/01/02/03）。未构建/联调。详见 docs/qianrong-four-fixes-2026-10-28.md。
+
 2026-10-28 ssh dev/ffeb87b：菜单结构调整后（system/monitor → config-audit/organization）核对 dh 负责模块，表单提交日期统一转毫秒时间戳：企业成立日期、菜单与用户整份回传的 Time/Date 字段、操作/登录/接口日志查询范围。新增 utils/timestamp.js，不动公共 addDateRange。未构建/联调。详见 docs/qianrong-date-timestamp.md。
 
 2026-10-28 ssh 用户明确：默认都在 dev 上开发（各环境一致）。tq-plus 本就在 dev 且干净，同名 pull 由 987df92 快进到 1b930cd（含 master 合入 dev 的合并提交）。

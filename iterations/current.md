@@ -1,3 +1,22 @@
+## 2026-10-28 ssh｜相册小程序 main-wifi 蓝牙版 / WiFi 版投屏流程对比文档
+
+- 同步：photo-album main-wifi/25699db 已最新，origin/main 无未合入。
+- 需求：生成 .md，用简洁流程图把进入照片预览后两版的接口调用与处理逻辑按两条主线画出、便于看区别。
+- 产出：docs/wifi/蓝牙版与WiFi版投屏流程对比.md（mermaid 两个 subgraph：蓝牙预热→0x01→出帧+建记录并行→选槽→BLE 图传→记账→收尾 0x24；WiFi 查轮播→play 逐张 refresh 末张→相册记录→重试/轮播提示 + 区别速查表），按源码核对；docs/README 加索引；image-projection-pipeline.md 的 WiFi 段原写「跟 WS play.result / 轮询到终态」已过期，按 V1.4 更正。
+- photo-album main-wifi/ddd3116：已提交，再次同名 pull 后 push。纯文档，未运行测试。
+
+---
+
+## 2026-10-28 ssh｜泰乾超级-qianrong 企业银行类型、日志分页、角色所属企业、账户类型
+
+- 同步：tq-plus dev/ffeb87b、Hub main 均已最新。本机无 codegraph 命令，直接读源码定位。
+- 改动：①企业用户 handleDetail 银行类型显示条件加「org_type 标签≠监管仓库」（原 orgType=='3'，10-27 改 org_type 后 3 推测即监管仓库），隐藏时不提交 bankType；②操作/登录日志 el-table+ListTablePanel（分页 v-show total>0）改为与角色等列表一致的 vxe-grid，分页常驻，保留搜索/导出/详情/排序参数，去掉「筛选」开关；③角色所属企业根因：org/list 行主键是 id，表单按 orgId 过滤全滤掉，编辑时详情也按 orgId 比对；改为进页加载 org/list（pageSize 1000）普通下拉，enterpriseOption 统一字段，已选不在列表补查详情；④账号表单加账户类型 userType 必填（00/01/02/03），详情头卡显示。
+- 待确认：org_type 中监管仓库的实际值；企业列表 pageSize 1000 后端是否截断；若日志接口本身缺 total，分页仍只一页。
+- tq-plus dev/787dbff：已提交，再次同名 pull 后 push。私人 docs/qianrong-four-fixes-2026-10-28.md、docs/README、AI_CONTEXT、logs/activity 已更新。
+- 验证：无 node / node_modules，未构建、未浏览器、未联调；标签括号配对、git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 main-wifi 配网去掉 2.4G 提示，WiFi 列表取消频段过滤
 
 - 环境：用户未声明，按全部映射中只有 ssh 能解析（home/work 为 D:/ 路径）继续。
