@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜相册后台 + 相册小程序 产品渲染模式 renderMode
+
+- 同步：web-ui-v2 main 同名 pull 快进至 d2b0b78（同事 IoT / 产品设备 / 需求文档等）；photo-album main-wifi/165fc80 已最新，origin/main 无未合入；Hub main 已最新。
+- 契约：公开 Swagger（api.boltfox.cn）ProductAddApiIn / ProductDetailApiOut / ProductApiOut 与用户端 ClientProductApiOut（getProductList、getProductByDevice）、ClientUserProductDetailApiOut（getUserProductDetail）均已有 string renderMode「渲染模式：esp32,fpga16」；用户端设备列表 ClientUserProductApiOut 没有。
+- 相册后台：DetailForm.vue 版本类型下加「渲染模式」el-select（esp32 / fpga16，值即标签），v-if 仅 versionType=2 渲染，必选；隐藏时不参与校验；提交非 wifi 版删掉 renderMode（含 wifi 改蓝牙时回填的旧值）；详情只读原值，缺值「未设置」。interface-list、api-integration-progress、AI_CONTEXT、docs/README、history 记录已更新。web-ui-v2 main/8e9ddfc 已提交，再次同名 pull 后 push。
+- 相册小程序：首页 / 图库 / AI / 记录等入口交给投屏页的设备来自列表接口，不带 renderMode，所以新增 api.resolveRenderMode：设备自带 → productId 查产品列表（会话缓存，最多等 3 秒）→ getProductByDevice，取不到返回空串、不传。iot-api.play 有值才带 renderMode；projectOne 透传并记日志；wifi-result 一次进页查一次、重试复用；wifi-slideshow 投第一张也带。新增 tests/wifi-render-mode.test.js，补 wifi-projection / wifi-strategy 用例；changes 记录、docs/README、AI_CONTEXT、对接开发进度、流程对比图已更新。photo-album main-wifi/d168bef 已提交，再次同名 pull 后 push。
+- 验证：无 node，web-ui-v2 未 build、未浏览器；photo-album 测试未跑、未真机、未联调；两仓 git diff --check、信息隔离自查通过。需本地跑小程序全量测试与后台 npm run build。
+- 待确认：取不到 renderMode 时不传（服务端默认）还是应拦截投屏；蓝牙版改不提交，后端是否保留旧值（对蓝牙版无影响）。
+
+---
+
 ## 2026-10-28 ssh｜花盆APP 编辑纪念日文字回填超长直接截断
 
 - 同步：flowerpot main/8ede53c、Hub main 均已最新。
