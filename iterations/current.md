@@ -1,3 +1,15 @@
+## 2026-10-28 ssh｜相册小程序 main-wifi 按服务端反馈追加内容开发 + 相册APP main-wifi 同步最近改动
+
+- 同步：photo-album main-wifi 快进到 7f6de67（同事推了 `docs/wifi/V1.4对接实现报告反馈追加内容.md`），origin/main 无未合入；flutter main-wifi/cb44b1d 已最新、origin/main 无未合入；Hub main 已最新。
+- 小程序（追加内容三节）：① 轮播上限 200→100：`wifi-strategy.MAX_IMG_URLS`、「已选 X/100」（选满橙色）、选满未选置灰并提示「最多选择 100 张，请先取消部分照片」、已选可取消、全选超 100 只选前 100 提示「最多选择 100 张」、选满时全选按钮变「取消全选」；回显 null 且相册 >100 只选前 100 并提示「保存后只轮播所选」（会把全部相册变成前 100，已在页面说明）；保存前超 100 拦截，4000 时已满给上限提示、否则带服务端原文。② 同时加入轮播：预览页 WiFi 版进页查 strategy，running 才显示开关（默认关，查询失败不显示）→ pendingProjection.addToCarousel → 结果页每张（含 refresh=false）带 addToCarousel，有一张 carouselUpdated=false 追加「未成功加入轮播，请前往轮播设置添加」；iot-api.play 只在 true 时带字段。③ 删除：确认弹窗 WiFi 照片多一行「删除后相框可能需手动切换才会更新。」，没切图的成功提示改「已删除；若相框未更新，请手动切换或重新设置轮播」，PLAY_NEXT / 离线 / 失败提示不变。
+- 小程序测试：wifi-strategy、wifi-projection、album-wifi-delete 跟改，新增 preview-carousel-toggle；变更记录 `docs/changes/2026-10-28-WiFi版轮播上限100与同时加入轮播.md`，docs/README、对接开发进度、AI_CONTEXT 同步。photo-album main-wifi/2ea6572：已提交，再次同名 pull 后 push。无 node，测试未运行；未真机、未联调。
+- 相册APP（用户：查看最近改动同步给 APP main-wifi，功能一致，APP 先不测试）：APP 上次同步到小程序 f336637，本轮把之后的改动整体移植——IotClient.post 与轮播 / 删除 / 休眠 / 消息接口；play 加 refresh / addToCarousel；addWifiAlbumRecord、deleteCastRecords 返回 failedIds、fetchSuccessCastRecords（不改相册列表）；休眠中 / 已关机状态与 blockedTip、4041 补查；WifiWatch 首页 / 我的设备可见时订阅（RouteAware didPushNext 退订、didPopNext 重订）；投屏重写为 V1.4（SENT 即结束、最后一张刷屏、写相册记录、非正式包投屏日志）；预览页「同时加入轮播」；新页轮播设置（含今天的 100 上限）/ 休眠设置 / 消息中心；WiFi 详情「轮播设置」+ 两个入口与未读角标；我的设备按钮改轮播设置、两类卡「尺寸 · 设备ID」；首页卡类型·尺寸标签、状态电量同行；我的相册 WiFi 删除 / 再次投屏；绑定默认昵称完整广播名；选择 WiFi 页去 2.4G 提示。App 原本没有选择器组件，用 Material 时间 / 日期选择与底部列表。
+- APP 未移植：全页面日志浮窗与请求摘要（App 无对应组件）；首页 / 列表不随前后台退订（回前台由 IotWs 重连全部重查）。首页卡居中 APP 本就是 space-around，未改。
+- 相册APP 文档：`docs/history/2026-10/2026-10-28-wifi-v14-sync.md`，docs/README、APP_VS_MINIPROGRAM、AI_CONTEXT、PROJECT_STRUCTURE 同步。flutter main-wifi/57b5f07：已提交，再次同名 pull 后 push。
+- 验证：两仓 git diff --check、信息隔离自查通过；小程序无 node 未跑测试；APP 按用户要求不测试，本机也无 Flutter，未编译（新代码只做了静态自查：文案 key 全部存在、引用逐个核对），未真机。
+
+---
+
 ## 2026-10-27 ssh｜相册小程序 main-wifi 按服务端反馈补齐休眠设置 / 消息中心 / 轮播立即切图
 
 - 同步：photo-album main-wifi 快进到 412dfaa（同事推了 `docs/wifi/V1.4对接实现报告反馈.md`，文中引用的「V1.4对接实现报告.md」实为 `V1.4对接分析报告.md`），origin/main 无未合入；Hub main 已最新。
