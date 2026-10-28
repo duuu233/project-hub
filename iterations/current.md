@@ -1,3 +1,13 @@
+## 2026-10-28 ssh｜花盆APP 需水状态页（水位 / 土壤湿度）周 / 月补日期
+
+- 同步：flowerpot main 先快进到 b9a2b22（用户精简了改动说明：删掉全部「验收要点」与末尾「说明」），Hub main 已最新；用户中途要求再拉一次，已是最新。
+- 改动：水位与土壤湿度同在需水状态页（页内切换），周 / 月日期条改 `windowDateLabel`，折线横轴改新增的 `HistoryPeriod.dateTicks`（取点同 `relativeTicks`，文字 M/d，最后一点 = 昨天回推）；日视图、报表页未改。新增 dateTicks 单测一条。
+- 文档：改动说明第四节扩为「光照、需水状态页」，按用户要求不写验收与其他附加内容（已存为记忆）；docs/README 索引去掉「验收要点」字样；history 新记录 `2026-10-28-water-history-dates.md`、history/README、PRODUCT_RULES、光照页 UI 说明、AI_CONTEXT 同步。
+- flowerpot main/8ede53c：已提交，再次同名 pull 后 push。
+- 验证：无 Flutter，测试未运行，未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜花盆APP 显示页亮度滑条节流防抖 + 光照状态页周 / 月补日期 + 改动说明改名
 
 - 同步：flowerpot main/506e876、Hub main 均已最新。
