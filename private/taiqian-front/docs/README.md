@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-date-timestamp.md](qianrong-date-timestamp.md)：2026-10-28 ssh dev 负责模块日期统一传时间戳；含菜单结构调整后 13 模块新路径对照。
+
 - [qianrong-web-login.md](qianrong-web-login.md)末节：2026-10-27 ssh dev 分支登录背景铺满（覆盖规则根因、仿正矿 img+cover 改法）。
 
 - [qianrong-menu-column-entry.md](qianrong-menu-column-entry.md)：2026-10-27 ssh 菜单管理“列字段设置”只给名称含“列表”的页面菜单显示，覆盖10-16全部C页面口径。

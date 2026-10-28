@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜泰乾超级-qianrong 负责模块日期统一传时间戳
+
+- 同步：tq-plus dev/1b930cd、Hub main 均已最新。
+- 定位：同事 4257369 把 views/system、views/monitor 拆到 config-audit/ 与 organization/（R090–R100 原样搬迁）；用 git 重命名追踪把 dh / duu233 负责的 13 模块对到新路径，对照表在私人 qianrong-date-timestamp.md。
+- 改动：新增 utils/timestamp.js；企业成立日期选择器 value-format x，回填与提交转时间戳；菜单、用户整份回传的 Time/Date 字段提交前转；操作/登录日志查询与导出、接口日志查询的 beginTime/endTime 转时间戳。其他模块提交体不含日期，未改；公共 addDateRange、SearchField 与同事 dateText.js 未动。
+- 待确认：日志查询属搜索表单，一并改了；若后端日志查询仍要字符串需回退该部分。
+- tq-plus dev/ffeb87b：已提交，再次同名 pull 后 push。
+- 验证：无 node，未构建、未浏览器、未联调；信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜花盆APP 需水状态页（水位 / 土壤湿度）周 / 月补日期
 
 - 同步：flowerpot main 先快进到 b9a2b22（用户精简了改动说明：删掉全部「验收要点」与末尾「说明」），Hub main 已最新；用户中途要求再拉一次，已是最新。

@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-28 ssh｜负责模块日期统一传时间戳
+
+dev 干净先同名 pull 已最新。按 git 重命名追踪把 13 模块映射到 config-audit/、organization/ 新路径后逐个核对提交体：企业成立日期选择器改 value-format x 并回填/提交转时间戳；菜单、用户整份回传的 Time/Date 字段提交前转；操作/登录/接口日志查询 beginTime/endTime 转时间戳。新增 utils/timestamp.js。dev/ffeb87b 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。详见 docs/qianrong-date-timestamp.md。
+
 ## 2026-10-28 ssh｜默认开发分支改为 dev
 
 用户明确今后默认在 dev 开发。tq-plus 当前即 dev、工作区干净，显式 pull --ff-only origin dev 由 987df92 快进至 1b930cd，无本地改动。规则已写入 AGENTS.md 与 Hub 项目上下文。

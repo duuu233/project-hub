@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-28 ssh dev/ffeb87b：菜单结构调整后（system/monitor → config-audit/organization）核对 dh 负责模块，表单提交日期统一转毫秒时间戳：企业成立日期、菜单与用户整份回传的 Time/Date 字段、操作/登录/接口日志查询范围。新增 utils/timestamp.js，不动公共 addDateRange。未构建/联调。详见 docs/qianrong-date-timestamp.md。
+
 2026-10-28 ssh 用户明确：默认都在 dev 上开发（各环境一致）。tq-plus 本就在 dev 且干净，同名 pull 由 987df92 快进到 1b930cd（含 master 合入 dev 的合并提交）。
 
 2026-10-27 ssh 用户要求切到 dev：远端无 dev，从 master/7ef890f 本地新建，按用户确认推送新建 origin/dev。登录背景没铺满：第二个 style 块 min-height 720px + height auto 覆盖 100vh；改为仿正矿 img+object-fit cover、min-height max(720px,100vh)。未构建/浏览器。详见 docs/qianrong-web-login.md 末节。

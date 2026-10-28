@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-28｜ssh｜登记qianrong负责模块日期转时间戳
+
+main干净先显式同名pull已最新。登记tq-plus dev/ffeb87b，私人 qianrong-date-timestamp 文档（含13模块新路径）、owned-modules、AI_CONTEXT 与日志随本次提交。按main提交，push前再次显式同名pull。
+
 ## 2026-10-28｜ssh｜泰乾超级默认开发分支改为 dev
 
 main干净先显式同名pull已最新。用户明确泰乾超级默认在 dev 开发：context/taiqian-front.md 执行约定、私人 AGENTS.md / AI_CONTEXT.md / 日志与 ssh README 登记 dev 为开发分支，master 仍只记作远端默认分支，projects.yaml 与映射的 default_branch 不改。按main提交，push前再次显式同名pull。

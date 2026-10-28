@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜负责模块日期统一传时间戳
+
+dev/ffeb87b 已同名 pull 后 push。菜单结构调整后（system/monitor → config-audit/organization）按 13 模块新路径核对：企业成立日期、菜单与用户回传的 Time/Date 字段、操作/登录/接口日志查询范围改传毫秒时间戳，新增 utils/timestamp.js，公共 addDateRange 未动。无 node，未构建、未联调。
+
 ## 2026-10-28｜taiqian-front｜ssh｜dev｜默认开发分支改为 dev 并同步
 
 用户明确今后默认在 dev 开发。tq-plus 已在 dev 且干净，显式同名 pull 由 987df92 快进至 1b930cd（7 个提交，含 master 合入 dev），无业务改动、无需提交。

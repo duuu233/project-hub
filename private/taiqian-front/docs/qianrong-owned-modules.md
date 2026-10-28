@@ -1,5 +1,9 @@
 # qianrong 负责模块与当前实施口径
 
+## 2026-10-28 菜单结构调整（路径变化）
+
+同事把 system/、monitor/ 拆到 config-audit/ 与 organization/，13 模块现路径见 [日期时间戳说明](qianrong-date-timestamp.md) 首表；下文旧路径按该表对应。
+
 ## 2026-10-22 菜单继承更正（覆盖旧“用户组仅关联系统”）
 
 用户明确恢复用户组菜单模块，数据范围按系统→用户组→角色依次收窄。当前实现、契约和真实联调边界见 [菜单继承说明](qianrong-group-menu-inheritance.md)，旧10-15迁移与不push仅作历史快照；本轮按默认规则交付。
