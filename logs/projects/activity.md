@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜投屏 type 改取产品屏幕方向
+
+main-wifi/5d35774 已同名 pull 后 push。抖动出帧 / WiFi play / 轮播投第一张的 type 改取产品 screenType（产品列表 → getProductByDevice），没配回退旧分辨率口径；不用设备对象上同名的固件型号字节。无 node，测试未跑，未真机；真实设备 type 值因接口需登录未查到。
+
 ## 2026-10-28｜album-admin + album-miniapp｜ssh｜main / main-wifi｜产品渲染模式 renderMode
 
 相册后台 main/8e9ddfc：产品新增/编辑/详情在版本类型下加必选下拉「渲染模式」esp32 / fpga16，仅 wifi 版显示，蓝牙版隐藏且不提交。相册小程序 main-wifi/d168bef：WiFi 投屏取产品 renderMode 原样带给 POST /api/device/play（设备记录 → 产品列表 → getProductByDevice，取不到不传）。两仓均同名 pull 后 push；无 node，未构建、未跑测试、未联调。

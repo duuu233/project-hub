@@ -1,3 +1,14 @@
+## 2026-10-28 ssh｜相册小程序 投屏 type 改取产品屏幕方向 screenType
+
+- 需求（用户）：产品列表接口返回 screenType（屏幕方向 0=竖屏 1=横屏），投屏 type 直接用它传给接口，不再写死；改完后按真实设备列出各设备 type。
+- 同步：photo-album main-wifi 同名 pull 已最新（d168bef），origin/main 无未合入；Hub main 已最新。环境未声明，按 environments/README 第 6 条：只有 ssh 映射在本机能解析，按 ssh 执行。
+- 改动：新增 api.resolveScreenType（productId 查产品列表 → getProductByDevice，0 合法，取不到返回空串）；只认产品接口字段，不用设备对象上同名的固件 / 广播型号字节（result.js 的 info.screenType 是 0x01 型号字节，同名不同义，是最大的坑）。三处接入：蓝牙 result.js ditherTypeFor（一轮投屏查一次，预取共用，控制台记来源）、wifi-result（一次进页查一次、重试复用、投屏日志记来源）、wifi-slideshow 投第一张。产品没配 / 查不到回退旧 typeForDevice（自行决定，见待确认）。调试台无产品上下文未改。新增 tests/projection-screen-type.test.js，补 wifi-projection / wifi-strategy；changes 记录、docs/README、AI_CONTEXT、投屏流水线、流程对比已更新。photo-album main-wifi/5d35774 已提交，再次同名 pull 后 push。
+- 验证：本机无 node，测试未跑；未真机、未联调；信息隔离自查通过。
+- 真实设备 type 列表：未拿到。getProductList 不带登录态返回 406「请重新登录」，本机没有可用的用户 token（也不应记录）；需用户提供产品列表返回或在开发版投屏日志里看 type=…。
+- 待确认：① 产品没配 screenType 时回退旧分辨率口径还是拦截投屏；② 语义变化——3.7 寸产品若配竖屏 0，蓝牙出帧 type 由 1 变 0，需真机看出帧；③ 只改了 main-wifi，蓝牙 main 是否同步。
+
+---
+
 ## 2026-10-28 ssh｜相册后台 + 相册小程序 产品渲染模式 renderMode
 
 - 同步：web-ui-v2 main 同名 pull 快进至 d2b0b78（同事 IoT / 产品设备 / 需求文档等）；photo-album main-wifi/165fc80 已最新，origin/main 无未合入；Hub main 已最新。
