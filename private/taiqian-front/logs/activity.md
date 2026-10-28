@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-28 ssh｜企业成立日期、注册资本、所属用户组列
+
+dev 干净同名 pull 快进（同事 7 文件）。EnterpriseBusinessFields 成立日期禁选未来并加校验、注册资本 precision 2；列表加所属用户组列取 userGroupNames 用「、」拼接。dev/4de0886 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。
+
 ## 2026-10-28 ssh｜企业银行类型、日志分页、角色所属企业、账户类型
 
 dev 干净先同名 pull 已最新。四项：监管仓库去银行类型；操作/登录日志改 vxe-grid 补分页与样式；角色所属企业进页加载 /system/org/list 下拉（修主键 id 被按 orgId 滤掉）；账号加账户类型 userType。dev/787dbff 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。详见 docs/qianrong-four-fixes-2026-10-28.md。

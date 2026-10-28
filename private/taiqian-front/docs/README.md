@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)末节：2026-10-28 ssh dev 企业成立日期≤当天、注册资本两位小数、列表恢复所属用户组（userGroupNames、分隔）。
+
 - [qianrong-four-fixes-2026-10-28.md](qianrong-four-fixes-2026-10-28.md)：2026-10-28 ssh dev 企业用户监管仓库去银行类型、操作/登录日志改 vxe-grid 补分页、角色所属企业进页加载企业下拉（主键 id 根因）、账号加账户类型 userType。
 
 - [qianrong-date-timestamp.md](qianrong-date-timestamp.md)：2026-10-28 ssh dev 负责模块日期统一传时间戳；含菜单结构调整后 13 模块新路径对照。

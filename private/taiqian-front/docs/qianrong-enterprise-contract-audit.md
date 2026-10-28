@@ -52,3 +52,11 @@ Swagger body 本身声明 required，但模型没有 required 数组；这不等
 - 企业用户管理列表去掉“所属用户组”列（原读 `userGroups[].userGroupsName` 拼接），用户组仍在新增/编辑/详情维护，接口与请求参数不变。
 - “企业用户类型”列改按字典 `org_type` 映射 `orgType`（与新增/编辑表单同一字典，Swagger 字段说明亦为“参考字典org_type”），不再用 `org_user_type`。OrgSelect 的 `type` 筛选仍按 `org_user_type`，未改。
 - 本机无 Node，未构建、未浏览器验证；字典值与真实 `orgType` 的对应以联调为准。
+
+
+## 2026-10-28 ssh dev/4de0886：成立日期、注册资本、所属用户组列
+
+- 成立日期（`EnterpriseBusinessFields` 的 `notAfterToday`）：日期选择器禁选今天之后；另加表单校验「成立日期不能晚于当前日期」，挡住详情回填或带入的未来日期。新增 / 编辑生效，详情只读。
+- 注册资本（万元）：`el-input-number` 加 `precision: 2`，输入四舍五入到两位小数，显示也为两位。
+- 列表恢复「所属用户组」列（10-27 曾按 `userGroups` 去掉）：现取列表返回的 `userGroupNames` 字符串数组，用「、」拼接，空显示「—」，放在企业名称后。
+- 本机无 node，未构建、未浏览器、未联调。

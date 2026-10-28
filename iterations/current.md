@@ -1,3 +1,12 @@
+## 2026-10-28 ssh｜泰乾超级-qianrong 企业成立日期、注册资本、所属用户组列
+
+- 同步：tq-plus dev 同名 pull 快进至 dcdf9ff（同事合并，7 文件），Hub main 已最新。
+- 改动：EnterpriseBusinessFields 成立日期 disabled-date 禁选今天之后 + 校验「不能晚于当前日期」；注册资本 el-input-number precision 2；企业用户列表在企业名称后加「所属用户组」，取 userGroupNames 数组「、」拼接，空为「—」。
+- tq-plus dev/4de0886：已提交，再次同名 pull 后 push。私人 enterprise-contract-audit 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建、未浏览器、未联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 后端答复 WiFi 转 bin 口径，回复蓝牙版流处理
 
 - 同步：photo-album main-wifi/bf89a27、Hub main 均已最新。
