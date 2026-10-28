@@ -1,3 +1,13 @@
+## 2026-10-28 ssh｜相册小程序 后端答复 WiFi 转 bin 口径，回复蓝牙版流处理
+
+- 同步：photo-album main-wifi/bf89a27、Hub main 均已最新。
+- 后端答复：play 转 bin 即 /Client/Basic/imageDitheringBinDownload，color/imageDitheringModes 写死同蓝牙版，只需 type；反问横竖配置、蓝牙版收流是存 bin 还是直推、有无特殊要求。
+- 核对源码后回复要点：蓝牙版 arraybuffer 收在内存不落文件、不改字节；只校验字节数=宽×高÷2；整段 CRC32-MPEG2 后按 ≤489 字节 0x21 分包，0x22 校验；宽高/格式 0x01/长度/CRC32 走 0x20 帧头，bin 本身无头；前端不读后台横竖配置，导出恒为设备 width×height 并按 verticalRotation/rotationDegree 转好；type 是出帧策略（480×720→1，其余 0）不是方向。
+- WiFi 待确认：服务端是否原样存 bin；WiFi 固件 play 只拿 URL，宽高/格式/CRC 从何来（bin 无头）；服务端是否按横竖或 type 再转；屏物理分辨率与后台宽高是否一致。原分析第 1 项降为低。
+- photo-album main-wifi：分析报告追加「后端答复与更新」节，已提交，再次同名 pull 后 push。纯文档。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 main-wifi WiFi 版投屏画质问题定位报告
 
 - 同步：photo-album main-wifi/ddd3116、Hub main 均已最新，origin/main 无未合入。
