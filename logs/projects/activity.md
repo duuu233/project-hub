@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜配网去掉 2.4G 提示，WiFi 列表取消频段过滤
+
+main-wifi/25699db 已同名 pull 后 push。WiFi 账号密码页删「设备仅支持 2.4G WiFi 配网」提示条（表单上方间距改由表单自留），选择 WiFi 页搜不到时的提示去掉 2.4G；列表不再按信道只留 2.4G，5G、2.4G 都列出。入网流程文档仍写仅支持 2.4G，选 5G 能否配网需真机确认。无 node，测试未运行，未真机。
+
 ## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜负责模块日期统一传时间戳
 
 dev/ffeb87b 已同名 pull 后 push。菜单结构调整后（system/monitor → config-audit/organization）按 13 模块新路径核对：企业成立日期、菜单与用户回传的 Time/Date 字段、操作/登录/接口日志查询范围改传毫秒时间戳，新增 utils/timestamp.js，公共 addDateRange 未动。无 node，未构建、未联调。

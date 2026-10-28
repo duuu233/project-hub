@@ -1,3 +1,16 @@
+## 2026-10-28 ssh｜相册小程序 main-wifi 配网去掉 2.4G 提示，WiFi 列表取消频段过滤
+
+- 环境：用户未声明，按全部映射中只有 ssh 能解析（home/work 为 D:/ 路径）继续。
+- 同步：Hub main/776d141、photo-album main-wifi/2ea6572 均已最新，origin/main 无未合入。
+- 需求：「设备仅支持2.4GWiFi配网」的文案都删；中途追加：WiFi 列表的过滤也取消，5G、2.4G 都显示。
+- 改动：wifi-config 删提示条及 .wifi-tip/.wifi-tip__icon 样式，原提示条撑出的间距改由 .wifi-form margin-top 36rpx 留；wifi-list 搜不到提示「设备附近没有搜到2.4G WiFi…」→「设备附近没有搜到WiFi…」（按「都要删」一并改）；toWifiList 去掉 is24GChannel 过滤。utils/blufi 的信道解析与 is24GChannel 保留未动。
+- 测试 wifi-search.test.js：分批用例改为 5G、2.4G 都列出；新增空列表提示不含 2.4G；断言 wifi-config 模板 / 样式无 2.4G 提示；桩去掉 is24GChannel。变更记录新增 2026-10-28-WiFi配网去掉2.4G提示与频段过滤.md，docs/README、对接开发进度同步。
+- 风险：设备入网流程.md 仍写「设备只支持 2.4GHz … App 需提示仅支持 2.4G」，与本次口径冲突；选 5G 能否配网成功需真机确认。
+- photo-album main-wifi/25699db：已提交，再次同名 pull 后 push。
+- 验证：无 Node，测试未运行；未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜泰乾超级-qianrong 负责模块日期统一传时间戳
 
 - 同步：tq-plus dev/1b930cd、Hub main 均已最新。
