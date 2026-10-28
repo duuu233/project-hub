@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜taiqian-front｜ssh｜dev｜默认开发分支改为 dev 并同步
+
+用户明确今后默认在 dev 开发。tq-plus 已在 dev 且干净，显式同名 pull 由 987df92 快进至 1b930cd（7 个提交，含 master 合入 dev），无业务改动、无需提交。
+
 ## 2026-10-28｜flowerpot-app｜ssh｜main｜需水状态页周 / 月补日期
 
 main/8ede53c 已同名 pull 后 push。需水状态页（水位 / 土壤湿度同页）周 / 月日期条写起止日期，折线横轴等距刻度由「N天前」改为 M/d（新增 HistoryPeriod.dateTicks），口径同光照页；报表页未改。无 Flutter，测试未运行。

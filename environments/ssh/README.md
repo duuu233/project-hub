@@ -12,7 +12,7 @@
 | 相册小程序 | album-miniapp | `/home/cc/dh/photo-album` | main |
 | 相册APP | album-app | `/home/cc/dh/flutter` | main |
 | 相册后台 | album-admin | `/home/cc/dh/web-ui-v2` | main |
-| 泰乾超级（含子应用 qianrong） | taiqian-front | `/home/cc/dh/tq-plus` | master |
+| 泰乾超级（含子应用 qianrong） | taiqian-front | `/home/cc/dh/tq-plus` | master（远端默认；开发分支为 dev，2026-10-28 用户明确） |
 | 正矿 | minerals-admin | `/home/cc/dh/zk` | feature-v1.8.5（本机远端只有此分支，共享配置记 master） |
 
 Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（Hub 与项目同在服务器内）。

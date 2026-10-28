@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-28｜ssh｜泰乾超级默认开发分支改为 dev
+
+main干净先显式同名pull已最新。用户明确泰乾超级默认在 dev 开发：context/taiqian-front.md 执行约定、私人 AGENTS.md / AI_CONTEXT.md / 日志与 ssh README 登记 dev 为开发分支，master 仍只记作远端默认分支，projects.yaml 与映射的 default_branch 不改。按main提交，push前再次显式同名pull。
+
 ## 2026-10-27｜ssh｜相册APP登记双长期分支并留痕WiFi版对齐
 
 context/album-app.md 增加双长期分支约定（main 线上蓝牙版对齐小程序 main，main-wifi 对齐小程序 main-wifi，开工先合 origin/main）。登记 flutter main-wifi/cb44b1d。.codex-tmp 下载 Dart / Flutter SDK 做语法检查，首次运行 dart 在家目录生成 ~/.dart-tool（越界），经用户同意已删除，SDK 与副本一并清出 .codex-tmp。main 提交后再次显式同名 pull/push。

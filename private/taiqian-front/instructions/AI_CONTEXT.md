@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-28 ssh 用户明确：默认都在 dev 上开发（各环境一致）。tq-plus 本就在 dev 且干净，同名 pull 由 987df92 快进到 1b930cd（含 master 合入 dev 的合并提交）。
+
 2026-10-27 ssh 用户要求切到 dev：远端无 dev，从 master/7ef890f 本地新建，按用户确认推送新建 origin/dev。登录背景没铺满：第二个 style 块 min-height 720px + height auto 覆盖 100vh；改为仿正矿 img+object-fit cover、min-height max(720px,100vh)。未构建/浏览器。详见 docs/qianrong-web-login.md 末节。
 
 2026-10-27 ssh企业用户管理列表：去掉“所属用户组”列；“企业用户类型”改按字典org_type映射（原org_user_type）。未构建/测试。详见docs/qianrong-enterprise-contract-audit.md末节。
