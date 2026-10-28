@@ -1,3 +1,13 @@
+## 2026-10-28 ssh｜泰乾超级-qianrong 账户新增/编辑用户密码 Base64
+
+- 同步：tq-plus dev 同名 pull 快进至 66f66ab（同事合并，12 文件），Hub main 已最新。
+- 改动：organization/user/template/handleDetail.vue 在用户名称后加「用户密码」（type password + show-password，maxlength 20）；提交 js-base64 encode 传 password，编辑留空不传；回填 getUser data.password 经 isValid 后 decode 成明文，眼睛切换即看到原密码，非 Base64（如哈希）丢弃；详情有值才显示，用 readonly 保留眼睛；新增必填，5–20 位、非法字符同重置密码口径。覆盖 v08「创建不手输密码、编辑不发 password」旧口径。
+- 待确认：详情是否返回 Base64 password；编辑带 password 后端是否按改密处理。
+- tq-plus dev/5ad9753：已提交，再次同名 pull 后 push。私人 docs/qianrong-user-password-base64.md、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建、未浏览器、未联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-28 ssh｜泰乾超级-qianrong 企业用户银行信息
 
 - 同步：tq-plus dev、正矿 zk feature-v1.8.5（只读参考）、Hub main 均已最新。

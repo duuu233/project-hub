@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-28 ssh｜账户用户密码 Base64
+
+dev 干净同名 pull 快进至 66f66ab（同事合并 12 文件）。user/template/handleDetail.vue 加用户密码输入框，password 提交 Base64、回填解码、编辑留空不传，详情 readonly 保留眼睛。dev/5ad9753 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。
+
 ## 2026-10-28 ssh｜企业用户银行信息
 
 dev 干净同名 pull 已最新；正矿 feature-v1.8.5 同名 pull 已最新（只读参考 system/enterprise-users 银行信息）。新增 EnterpriseBankList 组件并接入新增/编辑/详情，bankList 提交四字段。dev/56e5aa6 提交后再次同名 pull 并 push。bankCode 待接口补。无 node 未构建、未联调；信息隔离自查通过。

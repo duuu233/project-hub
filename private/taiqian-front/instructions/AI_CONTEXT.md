@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-28 ssh dev/5ad9753：账户新增/编辑/详情加用户密码 password（show-password 眼睛），提交 js-base64 encode，回填 isValid 后 decode 成明文，非 Base64 丢弃；编辑留空不传，新增必填 5–20 位。未构建/联调。详见 docs/qianrong-user-password-base64.md。
+
 2026-10-28 ssh dev/56e5aa6：企业用户新增/编辑/详情加银行信息（仿正矿区块），银行取字典 sys_bank（bankName=标签、bankCode=值，bankCode 接口待补），开户行、账号手输；bankList 每行只传四字段 + 已有 id/orgId，编辑时详情回了才整份提交。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。
 
 2026-10-28 ssh dev/4de0886：企业用户成立日期不晚于当天（禁选 + 校验）、注册资本两位小数；列表恢复所属用户组列，取 userGroupNames 数组用「、」拼接。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。

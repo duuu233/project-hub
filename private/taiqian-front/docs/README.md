@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-user-password-base64.md](qianrong-user-password-base64.md)：2026-10-28 ssh dev 账户新增/编辑加用户密码，password 按 Base64 提交、回填解码供眼睛切明文，编辑留空不传。
+
 - [qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)末节：2026-10-28 ssh dev 企业银行信息 bankList（sys_bank 字典、bankCode 待接口补、编辑保留/清除口径）。
 
 - [qianrong-enterprise-contract-audit.md](qianrong-enterprise-contract-audit.md)末节：2026-10-28 ssh dev 企业成立日期≤当天、注册资本两位小数、列表恢复所属用户组（userGroupNames、分隔）。

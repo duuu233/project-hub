@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜账户用户密码 Base64
+
+dev/5ad9753 已同名 pull 后 push。账户新增/编辑加用户密码 password，提交 Base64、回填解码供眼睛切换明文，编辑留空不传。无 node，未构建、未联调。
+
 ## 2026-10-28｜taiqian-front/qianrong｜ssh｜dev｜企业用户银行信息
 
 dev/56e5aa6 已同名 pull 后 push。新增/编辑/详情加银行信息（仿正矿，银行取 sys_bank，开户行与账号手输），bankList 传 bankCode / bankName / bankBranchName / bankAccount；bankCode 待接口补。无 node，未构建、未联调。
