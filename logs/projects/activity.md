@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi配网「重新配网」按钮高度
+
+main-wifi/0d1bc5f 已同名 pull 后 push。失败态上下排主按钮去掉伸缩（flex:none），恢复 112rpx 高。无 node，测试未跑、未真机。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi投屏进度条涵盖上传与图片处理
 
 main-wifi/76487ba 已同名 pull 后 push。上传占 0~50%，图片处理中按时间爬向 99%，只有 SENT / UPLOADED 到 100%，失败停在原处；写相册记录不再改文案。无 node，测试未跑、未真机。

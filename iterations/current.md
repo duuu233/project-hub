@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜相册小程序 WiFi配网失败「重新配网」按钮高度
+
+- 需求（用户）：设备配网页下方「重新配网」按钮高度不对，调整样式。
+- 同步：photo-album main-wifi、Hub main 同名 pull 均已最新，origin/main 无未合入。
+- 原因：失败态 .provision-actions--stack 为 column，.provision-primary 沿用成功态横排的 flex:1，列方向 flex-basis 覆盖 height:112rpx。对照 wifi-result 同款上下排主按钮无 flex:1、高度正常。
+- 改动：wifi-provision.wxss 加 .provision-actions--stack .provision-primary { flex: none }，成功态「立即体验」不动。变更记录 docs/changes/2026-10-29-WiFi配网重新配网按钮高度.md、docs/README 已更新。
+- photo-album main-wifi/0d1bc5f：已提交，再次同名 pull 后 push。
+- 验证：本机无 node，测试未运行（动了 wxss，需本地跑全量）；未真机，无版式用例引用该样式。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 WiFi投屏进度条涵盖上传与图片处理
 
 - 需求（用户）：先对比 WiFi 版与蓝牙版投屏进度条状态（只读梳理，已答复）；随后要求 WiFi 版 1~100% 包含「图片上传中」「图片处理中」，100% 只显示「已发送，屏幕即将刷新」。
