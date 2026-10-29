@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜相册小程序 WiFi版设备分享（简化版：微信卡片）
+
+- 需求（用户）：服务端给出 getUserInfo.userId、addUserProduct 新增 isToHave / shareUserId、getShareUserProductList、移除成员沿用 delUserProduct；先问能否用上（已答：能做无邀请码的简化版，列了安全风险与待确认项），随后要求按简化版接、先用微信卡片分享。
+- 同步：photo-album main-wifi、Hub main 同名 pull 均已最新，origin/main 无未合入。Swagger 复核：四个接口与字段都在；分享列表出参仍只有 avatar/userName/isToHave/userProductId。
+- 改动：api 读出数字 userId（normalizeUserProfile 原来 id 优先 userNo，不能拿来当 shareUserId）；addUserProduct 默认 isToHave=1/shareUserId=0，bindWifiDevice 显式带；acceptSharedDevice / removeShareUser。分享列表 open-type=share 卡片（d/p/u/n/o 参数），拿不到 userId 或 productId 置灰；新页 wifi-share-accept（自己分享的拒绝、已绑定直接进详情、接受后进 WiFi 详情、未登录存 pendingShareAccept 10 分钟，登录页成功后 reLaunch 回来）；移除成员 showModal 确认。
+- photo-album main-wifi/564e4b3：已提交，再次同名 pull 后 push。变更记录 docs/changes/2026-10-29-WiFi版设备分享简化版.md、docs/README、AI_CONTEXT、设备分享方案状态说明已更新；新增 tests/wifi-share.test.js。
+- 待服务端确认：shareUserId 是否校验为真实所有者、已有所有者时拒绝他人 isToHave=1；owner 能否 delUserProduct 删成员记录、是否踢 IoT 订阅；删设备是否连带成员；checkPermission 是否放行成员；getShareUserProductList 的 deviceId 是否带冒号。未做：列表「共享」标签（列表无 isToHave）、加入时间（无字段）。
+- 验证：本机无 node，测试未运行、未真机、未联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 WiFi版 TF卡本地模式 + 设备详情改版
 
 - 需求（用户）：对接新文档 docs/wifi/前端对接20261029.md（TF 卡本地播放）+ 产品清单：投屏进度页图标、详情页重排（投屏/轮播上移、电量进状态栏、功能栏 设备信息/休眠/消息/TF卡/分享(owner)/解绑/删除(owner)）、设备信息二级页（去国家码）、分享列表、TF 卡设置与本地模式限制、各投屏入口过滤离线/本地模式/未知、TF 消息类型。中途补充：解绑 / 删除照蓝牙版做，删图片只处理云端（WiFi 设备端不存图）。

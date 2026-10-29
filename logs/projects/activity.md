@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi版设备分享简化版（微信卡片）
+
+main-wifi/564e4b3 已同名 pull 后 push。绑定带 isToHave=1；分享列表发微信卡片，新接受页以 isToHave=0 + shareUserId 绑定，未登录登录后回接受页；移除成员走 delUserProduct。无邀请码，待服务端校验。无 node，测试未跑、未真机。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi版TF卡本地模式与设备详情改版
 
 main-wifi/e4e1372、39fefd0 已同名 pull 后 push。按 docs/wifi/前端对接20261029.md + 产品口径：投屏进度页中间图片改状态图标、LOCAL_TF「本地模式」及操作限制、投屏入口过滤 / 拦截、详情页改版（设备信息 / TF卡 / 分享 / 解绑 / 删除先删云端图片）、TF 卡设置页（play-tf + command.result）、分享列表页（邀请 / 移除接口待服务端）。无 node，测试未跑、未真机、未联调。
