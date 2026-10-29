@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜相册小程序 分享设备页成员加入时间取 joinTime（main-wifi）
+
+- 需求（用户）：根据文档，分享设备页「加入时间」接口已返回 joinTime，取这个。
+- 环境：用户未声明；三份映射中只有 ssh 路径能解析（home/work 为 Windows 路径），按 ssh 执行。
+- 同步：photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；Hub main 已最新。
+- 核对：BoltFox Swagger（/v2/api-docs）ClientShareUserProductApiOut 有 joinTime（string，加入时间），示例无具体格式。
+- 改动（main-wifi/d3e14ed）：utils/wifi-share.js toMember 的 joinedAt 由 createTime || joinTime || addTime 改为只取 joinTime（原先 createTime 优先，若接口同时带会被顶掉）；api.js、wifi-share.js 注释去掉「暂无加入时间」；tests/wifi-tf-local-mode 补两条断言；变更记录补「加入时间」节，设备分享方案、docs/README、AI_CONTEXT 各补一句。
+- 未做格式化：joinTime 原样显示，若后端给的是带秒或 T 分隔的格式需再定显示口径。
+- 验证：本机无 node，测试未运行；未联调 / 真机。git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜Hub 规则：只推 GitHub 改为 work 例外
 
 - 需求（用户）：ssh 只管 GitHub；work 保存原样不改；写入规则，只有 work 保持不变。

@@ -2932,3 +2932,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-10-29 | taiqian-front | ssh | dev | 部门、用户、角色所属企业按账户类型
 - 平台账户（00/01）新增部门、用户须选所属企业，按企业取上级部门/归属部门/角色/岗位；非平台（02/03）不选、后端取登录企业；角色非平台按登录企业取用户组，用户组仍必选。dev/4df38d0 已推送。未构建、未联调。
+
+## 2026-10-29 | album-miniapp | ssh | main-wifi | 分享列表成员加入时间取 joinTime
+- getShareUserProductList 出参新增 joinTime（Swagger 已核），成员「加入时间」改取 joinTime 原样显示，空则「--」，不再用 createTime 等顶替。main-wifi/d3e14ed 已推送。未运行测试，未联调/真机。
