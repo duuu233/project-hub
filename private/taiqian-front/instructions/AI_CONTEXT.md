@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev：角色新增/编辑不再阻断「上级用户组菜单暂不可读取」，menuTreeList 读不到的已关联系统保存时把原 menuIds 原样带回，不清空也不进撤权确认。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
+
 2026-10-29 ssh dev：用户组新增/编辑/详情放行两处阻断。详情缺 groupsSystemMenuDTOList 时 groupGrants 返回 null，跳过关联一致性核对，按系统授权默认勾选并在页顶提示；系统 menuIds 中菜单列表读不到的编号不再报错，不进树，原授权里的这类编号保存时原样带回。测试断言已改但未运行，也未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
 2026-10-28 ssh dev/5ad9753：账户新增/编辑/详情加用户密码 password（show-password 眼睛），提交 js-base64 encode，回填 isValid 后 decode 成明文，非 Base64 丢弃；编辑留空不传，新增必填 5–20 位。未构建/联调。详见 docs/qianrong-user-password-base64.md。

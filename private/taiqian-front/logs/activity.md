@@ -210,3 +210,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：用户组新增/编辑页面不再被「用户组详情未返回菜单授权，已停止保存」和「系统授权菜单暂不可读取，已停止配置」卡住。
 - **改动**：group-menu-model.js 中 groupGrants 缺字段时返回 null；systemPermissionScope 把读不到的编号拆成 hiddenIds，不再抛错。handleDetail.vue 在缺授权时跳过一致性核对、默认勾选并显示 warning；hiddenMenuIds 保存时原样追加，并且不进撤权确认。group-menu-contract.test.mjs 断言同步更新。
 - **验证**：无 Node，测试与构建未运行，未浏览器/联调；git diff --check 通过。详见 docs/qianrong-group-menu-inheritance.md 末节。
+
+## 2026-10-29 ssh｜角色新增/编辑放行上级用户组菜单不可读
+
+- **需求**：角色新增/编辑的同类阻断也放行。
+- **改动**：handleDetail.vue 提交时去掉 unavailable 系统阻断，这类系统原 menuIds 原样提交、不算撤权；提示文案改为原样保留。
+- **验证**：无 Node，未构建/浏览器/联调；git diff --check 通过。
