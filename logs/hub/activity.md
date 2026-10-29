@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-29｜ssh｜「只推GitHub」规则改为work例外
+
+main干净先显式同名pull已最新。用户明确：ssh只管GitHub，work保持原样不改，只有work例外。AGENTS.md第0条与SSH段、ssh README远端节、泰乾/正矿context的远端口径同步改为「work以外只推GitHub，work沿用该机原有remote、不检查不改」。未改任何环境映射与业务仓库；同日work会话已按旧规则把泰乾、正矿origin改为GitHub，是否恢复由用户在work机决定。按main提交，push前再次显式同名pull。
+
 ## 2026-10-29｜work｜七项目拉取与远端来源统一留痕
 
 统筹main干净先显式pull，从c726a02快进到5023fa4。按映射核对七业务仓身份、当前分支、工作区及来源；用户确认将泰乾与正矿origin改为已配置GitHub地址，并确认保留小程序本地配置、验证远端未改后再拉取。七仓pull与索引成功，记录正矿领先12项及小程序配置哈希不变边界。仅追加迭代和两类流水，保留全部历史，不改映射或业务源码。按main提交，核实GitHub来源并再次同名pull后push。

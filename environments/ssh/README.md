@@ -39,9 +39,9 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 临时产物写在 `/home/cc/dh/project-hub/.codex-tmp/`（已 gitignore）。
 
-## 远端：一律 GitHub（2026-10-26 用户明确）
+## 远端：一律 GitHub（2026-10-26 用户明确，2026-10-29 再次明确 ssh 只管 GitHub）
 
-所有提交只推送到 GitHub，提交前核对 `git remote get-url origin`，不是 GitHub 就暂停询问用户，不提交、不推送。这是 Hub 的全局规则，见 AGENTS.md「任务完成后的默认动作」第 0 条。
+所有提交只推送到 GitHub，提交前核对 `git remote get-url origin`，不是 GitHub 就暂停询问用户，不提交、不推送。规则见 AGENTS.md「任务完成后的默认动作」第 0 条；该条只有 work 环境例外（work 保持各仓库原有 remote 不变），ssh 不适用该例外。
 
 2026-10-26 核实：flowerpot、photo-album、flutter、web-ui-v2、tq-plus 与 Hub 的 origin 均为用户 GitHub 仓库。
 
