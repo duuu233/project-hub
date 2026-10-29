@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev/4df38d0：部门、用户、角色按当前登录账户类型处理所属企业——平台（00/01）必选企业，非平台（02/03）不显示、后端取登录企业；用户的部门/角色/岗位按企业取（deptTree、GET /system/user/ 带 orgId）；角色非平台按登录企业取用户组，用户组仍必选。store 新增 loginOrgId（授权/切换身份的 orgId，getInfo 兜底）。未构建/联调。详见 docs/qianrong-org-scope-forms.md。
+
 2026-10-29 ssh dev/80cfcf6：企业用户新增/编辑「实控人身份证号」选填，填了须为 18 位身份证格式（地区码+出生日期+顺序码+数字或X，未算校验位），maxlength 18。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。
 
 2026-10-29 ssh dev：账户管理列表加「用户类型」列，userType 按后端枚举 00 平台管理员 / 01 平台用户 / 02 企业管理员 / 03 企业用户映射，复用 utils/userProfile 的 userTypeLabel，不调字典。未构建。详见 docs/qianrong-four-fixes-2026-10-28.md 末节。

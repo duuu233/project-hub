@@ -239,3 +239,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：新增/编辑企业用户的实控人身份证号校验 18 位身份证格式。
 - **改动**：EnterpriseBusinessFields.vue 给 actualControllerIdNumber 加 blur 校验与 maxlength 18；字段仍选填，留空不校验；模板 rules 兼容 field.rules。
 - **验证**：无 Node，未构建/浏览器/联调；正则 python 样例核对、git diff --check、信息隔离自查通过。详见 docs/qianrong-enterprise-contract-audit.md 末节。dev/80cfcf6 已推送。
+
+## 2026-10-29 ssh｜部门、用户、角色所属企业按账户类型
+
+- **需求**：后端口径——部门、用户、角色必须有所属企业，非平台账户取默认登录企业可不选；角色必须选用户组；role/optionselect、GET /system/user/ 新增可选 orgId。
+- **改动**：isPlatformUserType；auth/store 新增 loginOrgId；共用 org-options.js；部门、用户表单平台账户加必填所属企业并按企业取上级部门/归属部门/角色/岗位；角色表单非平台隐藏企业、按登录企业取用户组。
+- **验证**：无 Node，未构建/测试/浏览器/联调；git diff --check、信息隔离自查通过。dev/4df38d0 已推送。详见 docs/qianrong-org-scope-forms.md。

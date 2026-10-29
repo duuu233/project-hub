@@ -7901,3 +7901,15 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - photo-album main-wifi/5a0be2d：已提交，再次同名 pull 后 push。
 - 验证：本机无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；新断言的正则用 python 对源码核对命中；未真机。git diff --check、信息隔离自查通过。
 - 提醒：只改 main-wifi（WiFi 版专属页面），不需同步 main。
+
+---
+
+## 2026-10-29 ssh｜泰乾超级-qianrong 部门、用户、角色所属企业按账户类型
+
+- 需求（用户转后端）：部门、用户、角色都必须选企业，非平台账户取默认登录企业可不选；角色必须选用户组；GET /system/role/optionselect、GET /system/user/ 加可选 orgId。平台 = 00/01，非平台 = 02/03。
+- 同步：tq-plus dev/80cfcf6、Hub main 同名 pull 均已最新。无 codegraph CLI，直接读源码；dev Swagger 只读拉取核对（SysDept/SysUser/SysRole 有 orgId，dept/list、deptTree 已有 orgId 参数，另两个接口的 orgId 尚未体现）。
+- 判断：「平台/非平台」按当前登录账户 userType，不是表单账户类型。非平台角色要按企业取用户组，前端需知道登录企业：存默认授权 context.orgId / 切换身份 payload.orgId 到 sessionStorage，getInfo user.orgId 兜底。
+- 改动：见私人 docs/qianrong-org-scope-forms.md。角色平台侧原有企业 + 用户组必选不变；role/optionselect 未用上。
+- tq-plus dev/4df38d0：已提交，再次同名 pull 后 push。私人文档、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建/测试/浏览器/联调；git diff --check、信息隔离自查通过。
+- 待确认：getInfo 是否回 user.orgId；GET /system/user/?orgId 与 deptTree?orgId 是否按企业过滤。
