@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜相册APP main-wifi 补齐与小程序 main-wifi 的全部差异
+
+- 需求（用户）：main-wifi 分支的功能都要和小程序一致，都同步过来。
+- 同步：photo-album / flutter main-wifi 同名 pull 均已最新，两边 origin/main 无未合入；Hub main 已最新。
+- 盘点：APP 上次全量同步（10-28）到小程序 2ea6572；之后除本会话已同步的一批外，代码改动为 25699db+5a0be2d（2.4G 去掉又恢复，净为恢复）、d168bef renderMode、5d35774 screenType、76487ba 进度条、0d1bc5f 按钮高度；另查前两轮 APP 记录的「未做 / 差异」。
+- 改动：选择 WiFi 页恢复 2.4G 提示条与「设备附近的2.4G WiFi」标题；state 新增 resolveScreenType / resolveRenderMode（产品列表缓存 → getProductByDevice）；蓝牙出帧（castImages 新参 screenType，并行查、整轮共用）、WiFi 结果页（新增 state 参数，首轮查一次重试复用并记日志）、轮播投首张三处 type 取产品 screenType，没配回退分辨率；IotApi.play / projectOne 带 renderMode；进度条上传 0~50、处理每 200ms 渐近 99、成功才 100、失败停住，结果页不再显示「正在存入我的上传」、说明改「进度含图片上传与处理」；原生通道新增 setKeepScreenOn（Kotlin FLAG_KEEP_SCREEN_ON / Swift isIdleTimerDisabled），配网页开始时开、离开关；WifiWatch 跟随 App 前后台（paused 退订、resumed 重订并全部重查）。按钮高度问题 APP 不存在。
+- 有意保留：小程序 IoT 联调卡与全页面联调日志浮窗（开发版 / 体验版工具）未移植，待用户决定；手机网络判断、消息中心触底阈值为平台差异。
+- flutter main-wifi/52219bb：已提交，再次同名 pull 后 push。docs/history/2026-10/2026-10-29-wifi-full-alignment.md、docs/README、APP_VS_MINIPROGRAM、AI_CONTEXT 已更新；新增 test/wifi_projection_progress_test.dart。
+- 验证：本机无 Flutter，未 analyze / test / 编译（含 Kotlin / Swift）/ 真机；git diff --check、信息隔离自查通过；未带工具链产物。
+
+---
+
 ## 2026-10-29 ssh｜相册APP main-wifi 同步小程序：TF卡本地模式、详情改版、分享、进度页图标
 
 - 需求（用户）：小程序本轮 WiFi 改动同步给相册APP，在 main-wifi 分支。范围按本会话小程序需求：e4e1372 / 39fefd0 / 564e4b3 / a8ce496 + 删除 / 解绑二次确认同蓝牙版。

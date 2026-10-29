@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-app｜ssh｜main-wifi｜补齐与小程序 main-wifi 的全部差异
+
+main-wifi/52219bb 已同名 pull 后 push。2.4G 提示、type 取产品 screenType（蓝牙 / WiFi / 轮播）、renderMode、进度条含处理阶段、配网常亮（原生通道）、后台退订。仅剩两个开发调试工具未移植。无 Flutter，未 analyze / test / 编译。
+
 ## 2026-10-29｜album-app｜ssh｜main-wifi｜同步小程序 TF卡本地模式、详情改版、分享、进度页图标
 
 main-wifi/526c217 已同名 pull 后 push。本地模式与入口拦截、AI 对话接 WiFi、详情改版（设备信息 / TF卡 / 分享 / 解绑 / 删除，弹窗同蓝牙版）、TF 页、分享页（fluwx 小程序卡片，需配 gh_ 原始 ID）、绑定带所有者标记。无 Flutter，未 analyze / test / 编译。
