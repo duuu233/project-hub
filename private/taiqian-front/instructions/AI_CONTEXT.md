@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev：角色新增/编辑在所属企业后加必选「用户组」下拉，选项按企业调 getUserGroupsListByOrgId（先选企业才能选），保存走 userGroupId；权限菜单树改为 menuTreeList 传 userGroupsId=所选组 id，未选组为空树。dev Swagger 里 menuTreeList 尚无该参数，待联调。未构建。详见 docs/qianrong-group-menu-inheritance.md 末节。
+
 2026-10-29 ssh dev：角色「管理关联系统」弹窗所有系统可选（不再按 menuTreeList/停用置灰），上级读不到的系统为空树，新关联时 menuIds 传 []。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
 2026-10-29 ssh dev：角色新增/编辑不再阻断「上级用户组菜单暂不可读取」，menuTreeList 读不到的已关联系统保存时把原 menuIds 原样带回，不清空也不进撤权确认。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。

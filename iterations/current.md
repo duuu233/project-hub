@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 角色新增/编辑用户组下拉
+
+- 需求（用户）：角色新增/编辑加用户组下拉，数据来自 getUserGroupsListByOrgId（按企业 id 查），先选企业才能选用户组；选中用户组的 id 用 userGroupsId 传给 /api-qianrong/user/groups/menuTreeList 取菜单。
+- 同步：tq-plus dev 同名 pull 由 2c9ea2e 快进至 0b12e0f（同事版本对比等 22 文件）；Hub main 已最新。无 codegraph CLI，直接读源码定位。
+- 契约（dev 公开 Swagger 只读）：getUserGroupsListByOrgId 必填 query orgId，返回 SysUserGroups[]（id / userGroupsName / status）；角色保存 SysRoleAddOrUpdateDTO 已有单值 userGroupId（rolePayload 原本透传）；menuTreeList 在 dev Swagger 里还没声明参数，userGroupsId 按用户口径传。
+- 改动：api/system/user-group.js 新增 getUserGroupsListByOrgId。role handleDetail.vue 所属企业后加「用户组」下拉，必选；未选企业禁用并提示，换企业清空用户组并重查；停用组置灰（已选的仍回显）。menuTreeList 改为传 userGroupsId，未选组不调用、各系统空树并提示先选组；换组时重建菜单树，手动改过的系统保留新范围内勾选、未动的按原授权回显；加载中禁用勾选和提交；读取失败按空树处理（原授权原样带回）。详情页头加用户组；本机草稿多记 userGroupId。
+- tq-plus dev/3923932：已提交，再次同名 pull 后 push。私人 qianrong-group-menu-inheritance.md 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建、未浏览器/联调；git diff --check、信息隔离自查通过。
+- 待确认：用户组按必选处理（没选就没有菜单可配）；如果允许不选，告知即可。后端 menuTreeList 是否已支持 userGroupsId 需联调确认。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 角色管理关联系统全部可选
 
 - 需求（用户）：角色页「管理关联系统」中所有系统都放开可选；随后又问选系统时为什么会被禁用。

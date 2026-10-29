@@ -84,3 +84,12 @@ menuTreeList是**登录用户用户组**范围，不是按任意目标用户组�
 - 选中上级读不到的系统后，权限配置为空树，并显示「上级用户组菜单暂不可读取…」提示。新关联的这类系统没有原授权，保存时 menuIds 为 `[]`；后端是否接受只关联系统、不带菜单，尚未联调确认。
 - 用户组页的可选规则未改。
 - 验证：无 Node，未构建/浏览器/联调。
+
+## 2026-10-29 ssh dev：角色按所选用户组取菜单（用户明确，覆盖上文「角色只用登录用户 menuTreeList」口径）
+
+- 基本信息「所属企业」后新增「用户组」下拉（必选）。选项来自 GET `/api-qianrong/user/groups/getUserGroupsListByOrgId?orgId=`（Swagger：返回 `SysUserGroups[]`，取 `id` / `userGroupsName`，`status=1` 停用置灰，已选的停用组仍可回显）。未选企业时禁用并提示「请先选择所属企业」；换企业清空用户组，并重新查该企业的用户组。
+- 权限配置的菜单范围改为 GET `/api-qianrong/user/groups/menuTreeList?userGroupsId=<所选用户组 id>`。未选用户组时不调接口，所有系统为空树并提示先选用户组。注意：dev 环境 Swagger 中 menuTreeList 还没有声明参数，`userGroupsId` 按用户口径传，后端是否已支持待联调。
+- 保存仍用 `SysRoleAddOrUpdateDTO.userGroupId`（单值，`rolePayload` 原本就透传），编辑页按详情 `userGroupId` 回显，并用它读取菜单。
+- 换用户组：手动改过勾选的系统保留仍在新菜单范围内的勾选，没动过的按原授权重新回显；新组读不到的已关联系统沿用「原授权原样带回」。菜单加载中禁用勾选和提交；读取失败视为空树并提示。
+- 本机草稿多记 userGroupId；恢复时若该组仍可选，先按它读取菜单再恢复勾选。
+- 验证：无 Node，未构建/浏览器/联调；role-contract 测试不覆盖页面加载，未改断言。

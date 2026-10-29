@@ -1,6 +1,6 @@
 # 泰乾超级维护文档
 
-- [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)末节：2026-10-29 ssh dev 用户组「详情未返回菜单授权」「系统授权菜单暂不可读取」两处阻断改为放行（缺授权按默认勾选并提示，读不到的编号原样保留）；角色新增/编辑「上级用户组菜单暂不可读取」同样放行（原授权原样带回），角色「管理关联系统」所有系统可选。
+- [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)末节：2026-10-29 ssh dev 用户组「详情未返回菜单授权」「系统授权菜单暂不可读取」两处阻断改为放行（缺授权按默认勾选并提示，读不到的编号原样保留）；角色新增/编辑「上级用户组菜单暂不可读取」同样放行（原授权原样带回），角色「管理关联系统」所有系统可选；角色新增/编辑加「用户组」下拉（按企业 getUserGroupsListByOrgId），菜单树改按所选用户组 menuTreeList?userGroupsId 读取。
 
 - [qianrong-user-password-base64.md](qianrong-user-password-base64.md)：2026-10-28 ssh dev 账户新增/编辑加用户密码，password 按 Base64 提交、回填解码供眼睛切明文，编辑留空不传。
 

@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-29 ssh｜角色新增/编辑用户组下拉
+
+dev 干净同名 pull 由 2c9ea2e 快进至 0b12e0f（同事版本对比等 22 文件）。api 加 getUserGroupsListByOrgId；role handleDetail.vue 所属企业后加用户组下拉（必选、按企业加载、换企业清空），menuTreeList 改传 userGroupsId，换组重建菜单树并保留范围内勾选，草稿多记 userGroupId。无 node 未构建、未联调；信息隔离自查通过。
+
 ## 2026-10-28 ssh｜账户用户密码 Base64
 
 dev 干净同名 pull 快进至 66f66ab（同事合并 12 文件）。user/template/handleDetail.vue 加用户密码输入框，password 提交 Base64、回填解码、编辑留空不传，详情 readonly 保留眼睛。dev/5ad9753 提交后再次同名 pull 并 push。无 node 未构建、未联调；信息隔离自查通过。
