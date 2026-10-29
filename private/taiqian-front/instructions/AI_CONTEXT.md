@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev/80cfcf6：企业用户新增/编辑「实控人身份证号」选填，填了须为 18 位身份证格式（地区码+出生日期+顺序码+数字或X，未算校验位），maxlength 18。未构建/联调。详见 docs/qianrong-enterprise-contract-audit.md 末节。
+
 2026-10-29 ssh dev：账户管理列表加「用户类型」列，userType 按后端枚举 00 平台管理员 / 01 平台用户 / 02 企业管理员 / 03 企业用户映射，复用 utils/userProfile 的 userTypeLabel，不调字典。未构建。详见 docs/qianrong-four-fixes-2026-10-28.md 末节。
 
 2026-10-29 ssh dev：配置权限页「数据权限·列级」输入框无限变宽——RoleColumnPanel 的 grid 没有列模板，表格 / 搜索栏按自身宽度调整的内容反过来撑宽列；改为 grid-template-columns:minmax(0,1fr)。公共组件未改（加 contain:inline-size 的建议见文档）。未构建/浏览器。详见 docs/qianrong-role-permission-workspace.md 末节。

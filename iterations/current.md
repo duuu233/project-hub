@@ -7876,3 +7876,14 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 交付：业务main/2d3451c与9f03b48均已提交，分别再次pull GitHub origin/main成功后push；受控工作区干净。完成IoT概览、设备列表、详情、日志、演示模式及四项独立只读接口，按单独授权创建菜单174–178；未改角色绑定、未发设备控制或部署。具体契约与验证由业务docs/iot-admin.md和本轮history维护。
 - 验证：IoT10项及既有11项回归通过，最终生产构建26.70秒；真实四接口、浏览器跨域统计与合成数据交互核验通过，CodeGraph最新，信息隔离/凭证/链接/diff检查通过。普通角色仍需管理员授权；服务端上线安全配置与前端发布待用户安排。
 - 统筹只追加同步及交付摘要，保留此前迭代和未完成事项；main提交后再次显式同名pull/push。
+
+---
+
+## 2026-10-29 ssh｜泰乾超级-qianrong 企业用户实控人身份证号 18 位格式校验
+
+- 需求（用户）：根据文档，新增/编辑企业用户的实控人身份证号要校验身份证格式 18 位。
+- 同步：tq-plus dev/c228adb、Hub main 同名 pull 均已最新。无 codegraph CLI，直接读源码。
+- 契约：Swagger 中 actualControllerIdNumber 为 string、非必填，保持选填，留空不校验。
+- 改动：organization/enterprise-users/components/EnterpriseBusinessFields.vue 加 blur 校验（地区码首位非 0 + 18/19/20 年份 + 合法月日 + 3 位顺序码 + 数字或 X/x）与 maxlength 18；未计算校验位，避免虚构测试号码被拦。法人证件号不动（证件类型含护照、港澳通行证）。
+- tq-plus dev/80cfcf6：已提交，再次同名 pull 后 push。私人 qianrong-enterprise-contract-audit.md 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建/浏览器/联调；正则 python 样例核对、git diff --check、信息隔离自查通过。

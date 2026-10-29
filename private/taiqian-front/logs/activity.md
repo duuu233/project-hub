@@ -233,3 +233,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 
 - **改动**：role handleDetail.vue 系统选项 disabled 固定 false；menuTreeList 外和停用的系统都可勾，上级读不到的系统为空树。
 - **验证**：无 Node，未构建/浏览器/联调；git diff --check 通过。待确认后端是否接受只关联系统、menuIds 为空。
+
+## 2026-10-29 ssh｜企业用户实控人身份证号格式校验
+
+- **需求**：新增/编辑企业用户的实控人身份证号校验 18 位身份证格式。
+- **改动**：EnterpriseBusinessFields.vue 给 actualControllerIdNumber 加 blur 校验与 maxlength 18；字段仍选填，留空不校验；模板 rules 兼容 field.rules。
+- **验证**：无 Node，未构建/浏览器/联调；正则 python 样例核对、git diff --check、信息隔离自查通过。详见 docs/qianrong-enterprise-contract-audit.md 末节。dev/80cfcf6 已推送。

@@ -70,3 +70,13 @@ Swagger body 本身声明 required，但模型没有 required 数组；这不等
 - 接口口径「编辑时不传保留，空列表清除」：编辑时详情回了 `bankList`（数组）就按当前表格整份提交（删光即传空数组清除）；详情没回 `bankList` 且没新增则不传，避免误清后台已有账户。新增无行时不传。
 - ⚠️ `bankCode` 接口文档暂未列出，用户说明后续接口补上，前端先传。详情回填若只有 `bankName` 没有 `bankCode`，按字典标签反查补上以便下拉回显。
 - 本机无 node，未构建、未浏览器、未联调。
+
+
+## 2026-10-29 ssh dev/80cfcf6：实控人身份证号 18 位格式校验
+
+- 需求（用户）：新增 / 编辑企业用户时，实控人身份证号要校验 18 位身份证格式。
+- 契约：`actualControllerIdNumber` 为 string、非必填（见 qianrong-v08-contract-matrix.md），因此仍选填，留空不校验；填了才校验。
+- 改法：`EnterpriseBusinessFields.vue` 给该字段加 `rules`（blur 触发）与 `maxlength: 18`。格式为 6 位地区码（首位非 0）+ 出生日期（18/19/20 开头年份、01–12 月、01–31 日）+ 3 位顺序码 + 末位数字或 X/x，去首尾空白后判断，错误提示「请输入18位有效身份证号」。未做 ISO 7064 校验位计算和月份天数精确判断，避免测试用的虚构号码被拦；如需更严再加。
+- 模板 `:rules` 改为 `field.notAfterToday ? notAfterTodayRules : field.rules`，其余字段 `rules` 为空，行为不变；`maxlength` 只透传给普通 el-input。提交走父表单 `formRef.validate()`，校验失败不提交。详情只读走脱敏显示，不受影响。
+- 法人证件号未改（证件类型含护照 / 港澳通行证，不能一律按身份证校验）。
+- 本机无 node，未构建、未浏览器、未联调；正则用 python 对 9 个样例核对（合法 / 末位 x / 位数不对 / 月份 13 / 日期 32 / 首位 0 / 末位 Y）结果符合预期。
