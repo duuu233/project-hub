@@ -1,3 +1,12 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 角色 / 部门所属企业下拉是否按 esignAuthStatus 过滤（只读核查，未改代码）
+
+- 问题（用户）：角色新增编辑、部门新增编辑的企业选择是否按 esignAuthStatus 过滤；不要过滤，接口返回多少显示多少。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 结论：前端没有按 esignAuthStatus 过滤（qianrong src 全文无该字段）。角色表单与部门表单（org-options.js loadOrgOptions，用户表单同）都调 GET /system/org/list?pageNum=1&pageSize=1000，只去掉 id 缺失 / 非法的行（这类选了也提交不了）；已选企业不在列表时补查详情放进选项。dev Swagger：/system/org/list 无 esignAuthStatus 入参（返回体有 esignAuthStatus 0未认证/1已认证），另有 previewRoleId「不传时使用当前登录身份」——下拉条数若少于预期，应是服务端按登录身份 / 内部条件过滤或超过 1000 条，需后端确认。
+- 未改代码、未提交业务仓。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 抖动出帧接口改调 api.yikaltd.com（main + main-wifi）
 
 - 需求（用户）：只改小程序；投屏抖动出帧由内部接口改为 https://api.yikaltd.com/api/Client/Basic/imageDitheringBinDownload，参数不变；main 与 main-wifi 都改，main-wifi 代码不得进 main。
