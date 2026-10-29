@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 打包失败排查 + 账户类型平台大于企业
+
+- 需求（用户）：1. 打包发布报错（贴出 DEP0169 url.parse 弃用警告）；2. 账户新增编辑：登录的是企业账号不能选平台类型（平台大于企业），平台新增可选企业类型。
+- 同步：tq-plus dev 同名 pull 由 d2a01cf 快进至 ea81b0f（同事 test 合并）；Hub main 快进至 d6aae7f。
+- 1 结论：DEP0169 是 Node 警告，不致构建失败，源码无 url.parse，来自依赖（无 node_modules 未定位）。真正问题：同事合并 ea81b0f 解坏账户表单模板（用户密码项未闭合、丢账户类型/性别/状态/岗位、角色/头像/地区重复），Vue 编译必报缺结束标签。按 merge-base 重算三方合并修复，该合并其余 10 文件核对无误。
+- 2 改动：userProfile 新增 assignableUserTypes（平台四种、企业仅 02/03），表单 userTypeOptions 改 computed，编辑已是平台类型的账号置灰回显；企业管理员/企业用户之间未限制。
+- tq-plus dev/9613bb3：已提交，再次同名 pull 后 push。私人 qianrong-org-scope-forms.md 末节、docs/README、AI_CONTEXT、logs 已更新；user-profile 测试加用例与模板配平断言。
+- 验证：无 node，测试未运行、未构建/浏览器；Python 按同规则核过模板配平；git diff --check、信息隔离自查通过。需用户重新跑一次打包确认。
+
+---
+
 ## 2026-10-29 work｜全部项目当前分支拉取与GitHub来源统一
 
 - 用户要求根据文档拉取各项目；沿用本会话明确的work环境。统筹main先由c726a02快进到5023fa4，复核注册表、映射、项目Context和业务规则。没有切分支、合并或rebase。

@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-29 ssh｜打包失败（账户表单合并冲突）+ 账户类型平台大于企业
+
+dev 干净同名 pull 由 d2a01cf 快进至 ea81b0f（同事 test 合并，45 文件）。定位打包失败为 ea81b0f 解坏 user/template/handleDetail.vue 模板，merge-file 重算修复；userProfile 加 assignableUserTypes，账户类型按登录账户过滤。dev/9613bb3 提交后再次同名 pull 并 push。无 node 未构建、未跑测试；信息隔离自查通过。
+
 ## 2026-10-29 ssh｜账户管理列表用户类型列
 
 dev 干净同名 pull 已最新。user/index.vue 加用户类型列（userTypeLabel 映射，映射不到显示原值），列显隐追加 key 7。无 node 未构建、未联调；信息隔离自查通过。

@@ -33,3 +33,10 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 改动：`role-model.js` 新增 `validOrgId`（0 有效，只排除空值 / 非整数 / 丢精度），所有企业主键判断改用它：`org-options.js`（部门、用户共用下拉与补查已选）、角色表单（下拉、补查、用户组按企业加载、非平台取登录企业、编辑时锁定所属企业——原 `!!originalOrgId` 对 0 不成立）、`rolePayload` 校验、角色列表 / 权限页企业名兜底、部门表单（上级部门树、锁定、提示）、用户表单（锁定、部门 / 角色 / 岗位按企业加载）；`utils/auth.js` 登录企业读写正则放行 0；准入页 `EnterpriseSections.vue` 已选企业回显与 `handleDetail.vue` 补查企业附件改为判空而非真值判断。
 - 不变：部门上级 0（一级部门）、角色、用户组、系统、菜单等其它主键仍用 `validId`，0 表示「没有」。
 - 测试：`tests/role-contract.test.mjs` 加 `validOrgId` 用例与 orgId=0 可保存。无 Node，未运行、未构建 / 浏览器 / 联调。
+
+## 2026-10-29 ssh dev/9613bb3：账户类型平台大于企业 + 账户表单合并冲突修复
+
+- 打包失败根因：同事合并提交 ea81b0f（test 分支 fc0cd17 合 dev d2a01cf）在 `user/template/handleDetail.vue` 有两处冲突，解冲突时把「用户密码」`el-form-item` 截断未闭合，丢了账户类型 / 用户性别 / 状态 / 岗位四个字段，角色 / 头像 / 地区重复了一份（模板 el-col 14 开 13 闭）。Vue 模板编译会因缺结束标签报错，`vite build` 失败。用户贴出的 `DEP0169 url.parse()` 只是 Node 运行时的弃用警告，不会让构建失败；项目源码里没有调用 `url.parse`（全仓 grep 只有 `node:url` 的 `fileURLToPath`），来自依赖，本机无 node_modules 未定位到具体包。想去掉可在流水线设 `NODE_OPTIONS=--disable-warning=DEP0169`（Node ≥ 21.3），未改构建脚本。
+- 修复：按 merge-base 3e150bd 用 `git merge-file --ours` 重算三方合并（冲突取 test 侧，即同事的格式化版本），再把 d2a01cf 的 `validId→validOrgId` 三处补回；脚本部分与 ea81b0f 完全一致，只差模板。该合并其余 10 个文件逐个重算，与 ea81b0f 一致，无问题。本次拉下来的其它 .vue 粗查标签配平，差异均为 prettier 的 `</el-button\n>` 写法，不是错误。
+- 账户类型：`utils/userProfile.js` 新增 `assignableUserTypes(loginUserType)`，平台账户（00/01）四种都能选，非平台（02/03）及未知类型只能选 02 企业管理员 / 03 企业用户。账户表单 `userTypeOptions` 改为 computed，编辑的账号已是平台类型而登录的是企业账户时，把该项追加为置灰选项只回显；详情头改用 `userTypeLabel`。企业管理员与企业用户之间未做高低限制（用户只提了平台大于企业）。
+- 测试：`tests/user-profile.test.mjs` 加 `assignableUserTypes` 用例，以及账户表单各字段只出现一次、主要标签配平的源码断言（用 Python 按同样规则对修复后的文件核过：配平；对 ea81b0f：el-col / el-form-item 各少一个闭合）。无 node，测试未运行、未构建 / 浏览器 / 联调。
