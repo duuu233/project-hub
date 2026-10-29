@@ -2,6 +2,12 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-10-29｜work｜七项目拉取与远端来源统一留痕
+
+统筹main干净先显式pull，从c726a02快进到5023fa4。按映射核对七业务仓身份、当前分支、工作区及来源；用户确认将泰乾与正矿origin改为已配置GitHub地址，并确认保留小程序本地配置、验证远端未改后再拉取。七仓pull与索引成功，记录正矿领先12项及小程序配置哈希不变边界。仅追加迭代和两类流水，保留全部历史，不改映射或业务源码。按main提交，核实GitHub来源并再次同名pull后push。
+
+---
+
 ## 2026-10-28｜ssh｜登记qianrong负责模块日期转时间戳
 
 main干净先显式同名pull已最新。登记tq-plus dev/ffeb87b，私人 qianrong-date-timestamp 文档（含13模块新路径）、owned-modules、AI_CONTEXT 与日志随本次提交。按main提交，push前再次显式同名pull。

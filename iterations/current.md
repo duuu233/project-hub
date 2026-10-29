@@ -1,3 +1,13 @@
+## 2026-10-29 work｜全部项目当前分支拉取与GitHub来源统一
+
+- 用户要求根据文档拉取各项目；沿用本会话明确的work环境。统筹main先由c726a02快进到5023fa4，复核注册表、映射、项目Context和业务规则。没有切分支、合并或rebase。
+- 泰乾超级及正矿origin仍为Codeup，另有mygithub为GitHub；经用户明确同意，将origin分别改为git@github.com:duuu233/tq-plus.git、git@github.com:duuu233/zk.git，核实fetch/push均为GitHub，不设置upstream。
+- 七仓显式同名pull --ff-only结果：泰乾dev/ea81b0f已最新；花盆APP main由8d19cf3快进到e6ea357；花盆后台main/7f53d3a已最新；相册后台main由d2b0b78快进到8e9ddfc；相册小程序main-wifi/6468f04已最新；相册APP main/399e8c7已最新；正矿feature-v1.8.5/cace46ae已包含远端最新4b54a204，但本地领先12项，未自动推送或回退这些既有提交。
+- 相册小程序检查期间出现project.private.config.json未提交修改。按用户确认保留，先fetch并确认远端与HEAD对该文件无差异，再pull；本地文件SHA256前后一致。该文件仍为本地未提交状态，不stash、不提交。main-wifi相对最新origin/main没有遗漏提交，未额外合并。
+- 七仓CodeGraph同步成功；除上述小程序配置外工作区干净。仅同步仓库与索引，没有业务源码修改、构建或测试，没有业务提交/推送。统筹追加简要留痕，按main提交并再次显式同名pull后push。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 分享卡片「页面不存在」排查 + 开发版「复制测试参数」（main-wifi）
 
 - 问题（用户）：分享卡片点开提示页面不存在，要配置什么？→ 有没有开发版能用的方式（只管小程序）→ 加开发版复制测试参数按钮。
