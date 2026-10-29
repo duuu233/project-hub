@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜相册小程序 + 相册APP 设备分享方案修订（APP 通用链接 + 一次性链接）
+
+- 需求（用户）：小程序按原方案；APP 端按第二期的通用链接做；是否要一次性链接；据此修改文档并给出实现方案。
+- 同步：photo-album / flutter main-wifi 同名 pull 均已最新，origin/main 无未合入；Hub main 已最新。
+- 核查：flutter iOS 已配 applinks:badmin.boltfox.cn（仅微信登录 /app/），FlutterDeepLinkingEnabled=false 有意关闭，SceneDelegate 只转发 URL Scheme，UL 由 fluwx 接；Android 无 https intent-filter；PayPal 回跳用透明中转 Activity + device_api 通道交 Dart。实测 badmin.boltfox.cn 的 AASA、assetlinks.json 均返回 SPA HTML（未部署）。
+- 结论：一次性链接要上——接受成功才消耗（打开 / 预览 / 登录不消耗），24h，可撤回，≥128 位随机码只存哈希，原子 PENDING→ACCEPTED；多人分别生成。链接 https://badmin.boltfox.cn/share/d/<code>，与微信 /app/ 分开。APP：iOS SceneDelegate 覆写 continue / willConnectTo 拦 /share/，Android 新增 ShareLinkActivity（autoVerify，同 PayPal 中转），device_api 加 consumeShareLink / onShareLink，不加插件、不开 Flutter 深链；落地页按微信内（小程序 URL Link / 浏览器打开）、浏览器（boltstar scheme、Smart Banner）、未安装（下载 + 复制链接）分支。小程序口令即同一链接。
+- photo-album main-wifi/e8ca6ed：docs/wifi/设备分享方案.md 重写 + docs/README 索引，再次同名 pull 后 push。flutter 未改。
+- 验证：纯文档；信息隔离自查通过。
+- 待确认：两端账号是否同一用户；AASA / assetlinks / 落地页部署与各渠道签名指纹；链接域名；有效期与成员上限；微信内直接拉起 APP 需服务号。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 + 相册APP WiFi 版设备分享方案报告
 
 - 需求（用户）：WiFi 版设备分享（A 配网即所有者，可分享给 B/C；A 有分享列表；B 接受后直接用、不配网、不能再分享），出小程序端与 APP 端可行方案报告并给推荐。
