@@ -1,3 +1,13 @@
+## 2026-10-29 ssh｜相册小程序 分享卡片「页面不存在」排查 + 开发版「复制测试参数」（main-wifi）
+
+- 问题（用户）：分享卡片点开提示页面不存在，要配置什么？→ 有没有开发版能用的方式（只管小程序）→ 加开发版复制测试参数按钮。
+- 排查：卡片路径 /subpackages/device/wifi-share-accept/wifi-share-accept?d&p&u&n&o 与 app.json 分包注册、页面文件均正确；接受页只在 main-wifi（564e4b3），正式版没有。判断为开发版发出的卡片被对方以正式版打开所致，无需配置。给出的测法：自定义编译 + 预览二维码（推荐）/ 明文 URL Scheme env_version=develop（需后台登记路径，能否登记未发布页面未核实）/ 服务端 wxacode.get、urllink.generate；全流程用体验版。
+- 同步：main-wifi 同名 pull 已最新、origin/main 无未合入；Hub main 已最新。
+- 改动（main-wifi/6468f04）：wifi-share 页开发版且能分享时显示「复制测试参数（开发版）」，复制卡片 path 中 ? 后参数（抽出 acceptPath() 与卡片共用）；体验版 / 正式版不显示。tests/wifi-share 补用例；变更记录补「开发版测试入口」节，AI_CONTEXT、docs/README 各补一句。
+- 验证：本机无 node，测试未运行；未在开发者工具 / 真机验证。信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 企业 ID=0 视为有效（所属企业下拉放行 0）
 
 - 需求（用户）：ID=0 是后端初始化的，0 也算有效 ID，不要过滤，都改下放行（接上一条 esignAuthStatus 核查：前端未按该字段过滤，只滤掉了 id 无效的行，其中包括 0）。
