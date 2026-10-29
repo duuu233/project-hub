@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜相册小程序 抖动出帧接口改调 api.yikaltd.com（main + main-wifi）
+
+- 需求（用户）：只改小程序；投屏抖动出帧由内部接口改为 https://api.yikaltd.com/api/Client/Basic/imageDitheringBinDownload，参数不变；main 与 main-wifi 都改，main-wifi 代码不得进 main。
+- 同步：main-wifi 同名 pull 已最新、origin/main 无未合入；按用户指定切到 main，同名 pull 已最新（96cb17b）。
+- 改动（main/cfd3d19）：dithering.js 新增 DITHERING_BASE_URL，clientRequestParts 新增可选 { baseURL }（不直接传绝对地址：公共参数只对 /Client/ 相对路径拼，传绝对地址会丢 userToken 等）；form 字段、头、报错、重试不变。tests/dithering-backend 断言地址改新域名；AI_CONTEXT、pipeline / client-api-matrix、docs/README、变更记录 docs/changes/2026-10-29-抖动出帧接口改调yikaltd.md。
+- main-wifi：切回后按项目双分支规则 git merge origin/main（main→main-wifi，未反向），代码自动合并；docs/README 变更记录列表头部冲突（两边都在顶部加了条目），按「保留 main-wifi 列表 + 补上新条目、去掉 main 那条旧措辞的重复项」解决，merge 550e8e3 已 push。核对：origin/main 不含任何 main-wifi 提交（main-wifi 领先 85，main 领先 0）。
+- 提醒：小程序后台需加 request 合法域名 https://api.yikaltd.com，否则真机请求被拦。相册APP 未改（用户要求只改小程序）。
+- 验证：本机无 node，测试未运行、未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜相册APP main-wifi 补齐与小程序 main-wifi 的全部差异
 
 - 需求（用户）：main-wifi 分支的功能都要和小程序一致，都同步过来。

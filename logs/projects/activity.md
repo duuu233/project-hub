@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main + main-wifi｜抖动出帧接口改调 api.yikaltd.com
+
+main/cfd3d19 push；main-wifi 合入 origin/main（550e8e3，docs/README 列表冲突已解）push，main 未含 wifi 代码。地址换 https://api.yikaltd.com/api，参数不变；需加 request 合法域名。无 node，未跑测试。
+
 ## 2026-10-29｜album-app｜ssh｜main-wifi｜补齐与小程序 main-wifi 的全部差异
 
 main-wifi/52219bb 已同名 pull 后 push。2.4G 提示、type 取产品 screenType（蓝牙 / WiFi / 轮播）、renderMode、进度条含处理阶段、配网常亮（原生通道）、后台退订。仅剩两个开发调试工具未移植。无 Flutter，未 analyze / test / 编译。
