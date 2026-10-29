@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜设备分享方案补落地页说明
+
+main-wifi/8d62c88 已同名 pull 后 push。落地页部分补「在小程序中接受」的含义、跳转方式与账号前提。纯文档。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜设备分享方案修订（APP 通用链接 + 一次性链接）
 
 main-wifi/e8ca6ed 已同名 pull 后 push。APP 改走通用链接（原生拦截 /share/，不加插件），一次性链接接受才消耗、24h、可撤回，补服务端邀请表、落地页与两端实现方案。纯文档，flutter 未改。
