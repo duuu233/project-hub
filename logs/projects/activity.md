@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi 版设备分享方案报告
+
+main-wifi/4dace25 已同名 pull 后 push。新增 docs/wifi/设备分享方案.md：推荐服务端邀请码模式，含两端改动、权限表、分期与待确认项；覆盖相册APP端，flutter 未改。纯文档。
+
 ## 2026-10-29｜taiqian-front｜ssh｜dev｜角色新增/编辑用户组下拉
 
 dev/3923932 已同名 pull 后 push。角色表单加用户组下拉（按企业 getUserGroupsListByOrgId，先选企业），菜单树改为 menuTreeList 传 userGroupsId。无 node，未构建/联调。

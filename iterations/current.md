@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜相册小程序 + 相册APP WiFi 版设备分享方案报告
+
+- 需求（用户）：WiFi 版设备分享（A 配网即所有者，可分享给 B/C；A 有分享列表；B 接受后直接用、不配网、不能再分享），出小程序端与 APP 端可行方案报告并给推荐。
+- 同步：photo-album main-wifi/5d35774、flutter main-wifi 同名 pull 均已最新，origin/main 无未合入；web-ui-v2 main、Hub main 已最新。只读 BoltFox 公开 Swagger（/v2/api-docs）。
+- 发现：老服务已有 addUserProduct/editUserProduct 入参 isToHave、shareUserId，详情出参 isToHave/shareUserId，getShareUserProductList（avatar/userName/isToHave/userProductId）、getUserNoList、checkPermission；列表出参缺 isToHave；两端均未使用。IoT 9.2 踢订阅已为「移除分享者 / 删除设备」设计。APP 已有 fluwx（仅登录）、applinks、boltstar scheme。
+- 推荐：服务端邀请码（一次性、限时）+ 接受接口，不让客户端直接传 isToHave/shareUserId 调 addUserProduct（可伪造）；addUserProduct 对已有所有者设备拒绝他人绑定。第一期微信卡片（小程序 onShareAppMessage promise / APP fluwx 小程序卡片）+ 复制口令；第二期二维码、扫码、通用链接、subscription.revoked。附成员权限表与分期。
+- photo-album main-wifi/4dace25：docs/wifi/设备分享方案.md + docs/README 索引，再次同名 pull 后 push。flutter 未改（报告覆盖 APP 端，放小程序仓）。
+- 验证：纯文档，无代码改动；信息隔离自查通过。
+- 待确认（见报告末节）：小程序手机号账号与 APP 邮箱/微信账号是否同一用户；addUserProduct 遇他人已绑设备的现状返回；checkPermission 对成员；邀请码有效期/次数/成员上限；成员权限 ★ 项；APP 与小程序是否同一开放平台账号；BluFi 未加密可被他人改配网。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 角色新增/编辑用户组下拉
 
 - 需求（用户）：角色新增/编辑加用户组下拉，数据来自 getUserGroupsListByOrgId（按企业 id 查），先选企业才能选用户组；选中用户组的 id 用 userGroupsId 传给 /api-qianrong/user/groups/menuTreeList 取菜单。
