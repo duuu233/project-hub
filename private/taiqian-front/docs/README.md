@@ -16,7 +16,7 @@
 
 - [qianrong-menu-column-entry.md](qianrong-menu-column-entry.md)：2026-10-27 ssh 菜单管理“列字段设置”只给名称含“列表”的页面菜单显示，覆盖10-16全部C页面口径。
 
-- [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)：角色配置权限页；2026-10-26 ssh 起行级/列级复用列表“数据权限”“列字段配置”同一接口（行级去本企业），预览按 previewRoleId 调列表接口取最全3条；功能权限仍为前端模型。下方 work 静态版为历史。
+- [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)：末节 2026-10-29 列级标签页输入框无限变宽的原因（grid auto 列被内容撑宽）与修复；角色配置权限页；2026-10-26 ssh 起行级/列级复用列表“数据权限”“列字段配置”同一接口（行级去本企业），预览按 previewRoleId 调列表接口取最全3条；功能权限仍为前端模型。下方 work 静态版为历史。
 - [history/2026-10-26-work-role-permission-workspace.md](history/2026-10-26-work-role-permission-workspace.md)：work七项目同步、最新原型及接口核查、静态交付与55项回归/浏览器/构建验证。
 
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)：菜单表单仅响应所属活动路由、ID校验、缓存草稿和在途响应失效。

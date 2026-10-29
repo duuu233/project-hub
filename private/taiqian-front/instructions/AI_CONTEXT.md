@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev：配置权限页「数据权限·列级」输入框无限变宽——RoleColumnPanel 的 grid 没有列模板，表格 / 搜索栏按自身宽度调整的内容反过来撑宽列；改为 grid-template-columns:minmax(0,1fr)。公共组件未改（加 contain:inline-size 的建议见文档）。未构建/浏览器。详见 docs/qianrong-role-permission-workspace.md 末节。
+
 2026-10-29 ssh dev：角色新增/编辑在所属企业后加必选「用户组」下拉，选项按企业调 getUserGroupsListByOrgId（先选企业才能选），保存走 userGroupId；权限菜单树改为 menuTreeList 传 userGroupsId=所选组 id，未选组为空树。dev Swagger 里 menuTreeList 尚无该参数，待联调。未构建。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
 2026-10-29 ssh dev：角色「管理关联系统」弹窗所有系统可选（不再按 menuTreeList/停用置灰），上级读不到的系统为空树，新关联时 menuIds 传 []。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。

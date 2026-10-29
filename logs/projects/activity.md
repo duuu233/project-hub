@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜taiqian-front｜ssh｜dev｜配置权限列级输入框无限变宽
+
+dev/67927a3 已同名 pull 后 push。RoleColumnPanel 的 grid 加 minmax(0,1fr)，阻止表格 / 搜索栏按宽度调整的内容撑宽列。公共组件未改。无 node，未构建/浏览器。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜设备分享方案补落地页说明
 
 main-wifi/8d62c88 已同名 pull 后 push。落地页部分补「在小程序中接受」的含义、跳转方式与账号前提。纯文档。

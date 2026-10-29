@@ -37,3 +37,18 @@
 - qianrong生产构建通过，既有Sass弃用/包体积提示保留，无独立lint/typecheck脚本。
 - 真实Vue组件隔离浏览器验证四Tab、范围暂存、未保存提示、批量脱敏及预览联动、取消查询确认与选项收窄、关闭重置；合成环境请求记录始终为空。1280桌面、600与390宽度检查，窄屏卡片换列、Tab滚动、字段表横向滚动。
 - 未真实权限写入、业务数据查询、网关联调或部署。详细交付见本轮history。
+
+## 2026-10-29 ssh dev：列级标签页输入框无限变宽
+
+- 现象：配置权限页「数据权限·列级」打开后，搜索栏输入框一直变宽，宽度有时来回跳。
+- 原因：`RoleColumnPanel` 的外层是 `display:grid`，没有写列模板，隐式列按 `auto` 计算，宽度至少等于内容的最小宽度；这一层的 grid 子项也没有 `min-width:0`。而这一层里面有两个按自身宽度调整内容的公共组件：
+  - `el-table` 按根元素宽度设定内部表格的像素宽度，这个宽度又成了内容的最小宽度；
+  - `TableSearch` 用 ResizeObserver 按卡片宽度算列数，只有一个搜索项，所以输入框占 1/N 行。
+  内容一变宽，这一列就跟着变宽，再也缩不回来；列数在阈值处跳变，所以宽度会来回变。
+- 对照：同页「权限预览」也是 grid 包 `el-table`，但 grid 子项 `.permission-preview-card` 写了 `min-width:0`，不受影响；列表页和 `RoleColumnDialog` 里的同一组件，祖先都是普通块级元素，宽度不随内容变化。
+- 修复：`.role-column-panel` 加 `grid-template-columns:minmax(0,1fr)`，列宽只由容器决定。公共组件和全局样式未改。
+- 公共组件与全局样式的检查结论：
+  - `TableSearch` 和 `ListTablePanel` 自身的样式没问题（`min-width:0`、`minmax(0,1fr)`、按钮宽度测量不回写自身），但它们都依赖「祖先宽度不随内容变化」。放进 grid 的 auto 列、没写 `min-width:0` 的 flex 子项、`inline-block` / `fit-content` 容器时，都会出现同样的问题。
+  - `detail-page.scss` 的 `.qr-detail-page .el-table`（加边框、`width:100% !important`）也会作用到详情页里的列表组件；不是这次问题的原因，但列表样式会与列表页不一致。
+  - 如要在公共组件里彻底防住，可以给 `.qr-search-card`、`.qr-native-table-panel` 加 `contain: inline-size`。代价是放进收缩包裹（shrink-to-fit）的容器时宽度会变成 0。共 30 处 / 8 处调用需要逐页确认，未做。
+- 验证：无 Node、无浏览器，未构建、未复现；依据是上面的布局推理和同页预览标签的对照。

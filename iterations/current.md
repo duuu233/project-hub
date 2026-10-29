@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 配置权限「数据权限·列级」输入框无限变宽
+
+- 需求（用户）：/organization/role-permission/index/149 列级标签下的输入框打开后一直变宽、有时来回变；检查公共组件与全局设置。
+- 同步：tq-plus dev/3923932、Hub main 同名 pull 均已最新。无 codegraph CLI，直接读源码。
+- 原因：RoleColumnPanel `.role-column-panel{display:grid}` 没有列模板，隐式 auto 列至少等于内容最小宽度，grid 子项（RoleColumnConfig 根）也没有 min-width:0。里面 el-table（EP 2.7.7 按根 clientWidth 设内部表格像素宽度，ResizeObserver 触发）与 TableSearch（ResizeObserver 按卡片宽度算列数，单个搜索项占 1/N）都按宽度调整内容，内容撑宽列后缩不回来，列数在阈值处跳变 → 来回变。祖先链里只有这一层随内容变宽。对照：同页预览标签同样 grid 包 el-table，但 grid 子项有 min-width:0，不受影响；RoleColumnDialog / 列表页的祖先是块级元素，不受影响。EP 源码（jsdelivr 只读）确认 updateColumnsWidth 用 clientWidth，且 EP 自带 flexible 属性专门给父级设 min-width:0。没能精确定位每一轮增量从哪来（无浏览器）。
+- 改动：RoleColumnPanel.vue 加 grid-template-columns:minmax(0,1fr)。公共组件 / 全局样式未改。
+- 公共组件 / 全局结论：TableSearch、ListTablePanel 自身样式正常，但依赖祖先宽度不随内容变化；如需在组件内防住，可加 contain:inline-size（放进收缩包裹容器时宽度会变成 0，30 / 8 处调用要逐页确认，未做）。detail-page.scss `.qr-detail-page .el-table` 加边框 / width 100% important 会作用到详情页内的列表组件（样式差异，非本次原因）。
+- tq-plus dev/67927a3：已提交，再次同名 pull 后 push。私人 qianrong-role-permission-workspace.md 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node、无浏览器，未构建、未复现；git diff --check、信息隔离自查通过。需本地打开该页确认不再变宽。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 设备分享方案补落地页「在小程序中接受」说明
 
 - 需求（用户）：把「在小程序中接受」的解释补进文档落地页部分。

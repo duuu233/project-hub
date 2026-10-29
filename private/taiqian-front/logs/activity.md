@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-29 ssh｜配置权限列级输入框无限变宽
+
+dev 干净同名 pull 已最新。定位到 RoleColumnPanel 的 grid 没有列模板、grid 子项没有 min-width:0，el-table 与 TableSearch 按宽度调整的内容撑宽列；改为 minmax(0,1fr)。公共组件、全局样式未改，只给出建议。无 node / 浏览器，未构建、未复现；信息隔离自查通过。
+
 ## 2026-10-29 ssh｜角色新增/编辑用户组下拉
 
 dev 干净同名 pull 由 2c9ea2e 快进至 0b12e0f（同事版本对比等 22 文件）。api 加 getUserGroupsListByOrgId；role handleDetail.vue 所属企业后加用户组下拉（必选、按企业加载、换企业清空），menuTreeList 改传 userGroupsId，换组重建菜单树并保留范围内勾选，草稿多记 userGroupId。无 node 未构建、未联调；信息隔离自查通过。
