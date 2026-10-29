@@ -245,3 +245,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：后端口径——部门、用户、角色必须有所属企业，非平台账户取默认登录企业可不选；角色必须选用户组；role/optionselect、GET /system/user/ 新增可选 orgId。
 - **改动**：isPlatformUserType；auth/store 新增 loginOrgId；共用 org-options.js；部门、用户表单平台账户加必填所属企业并按企业取上级部门/归属部门/角色/岗位；角色表单非平台隐藏企业、按登录企业取用户组。
 - **验证**：无 Node，未构建/测试/浏览器/联调；git diff --check、信息隔离自查通过。dev/4df38d0 已推送。详见 docs/qianrong-org-scope-forms.md。
+
+## 2026-10-29 ssh｜用户组「关联系统与菜单授权不一致」放行
+
+- **需求**：新增/编辑用户组不再被「关联系统与菜单授权不一致，已停止保存，请重新加载」拦住；有删除也没事。
+- **改动**：group-menu-model.js 加 reconcileGrants，以关联系统列表为准；handleDetail.vue 去掉 throw，缺授权系统置空待勾选、多出的授权不保留，页顶 warning。
+- **验证**：无 Node，测试已加未运行，未构建/浏览器/联调；git diff --check、信息隔离自查通过。

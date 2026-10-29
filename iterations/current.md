@@ -1,3 +1,23 @@
+## 2026-10-29 ssh｜相册小程序 设备分享：服务端答复对齐
+
+- 答复（用户转述）：owner 删除设备时所有分享者记录一并删除、分享者看不到设备、图片也没了；解除绑定不删图片；删除设备只有 owner 有，分享者只有解绑。
+- 同步：photo-album main-wifi 同名 pull 已最新，origin/main 无未合入。
+- 结论：现有实现已一致（删除仅 isOwner、成员只解绑且只删自己记录、解绑不删图）。只把删除设备一级确认文案补上「已分享的成员也将同时失去这台设备及其照片」，变更记录补「服务端答复」节、待确认项删去「删设备是否连带成员」，AI_CONTEXT、docs/README 同步。
+- photo-album main-wifi/a8ce496：已提交，再次同名 pull 后 push。验证：仅文案与文档，无 node 未跑测试；信息隔离自查通过。
+
+---
+
+## 2026-10-29 ssh｜泰乾超级-qianrong 用户组「关联系统与菜单授权不一致」放行
+
+- 需求（用户）：新增/编辑用户组放开「关联系统与菜单授权不一致，已停止保存，请重新加载」；若是菜单删除导致的拦截就放行，有删除也没事。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。无 codegraph CLI，直接读源码。
+- 判断：该阻断比较详情 groupsSystemMenuDTOList 的系统与 getSystemsByUserGroup 的关联系统；菜单删光 / 系统删除或解除关联后两边易对不上，属删除残留一类（后端未核实，无真实会话）。
+- 改动：group-menu-model.js 加 reconcileGrants，以关联系统为准：关联但无授权的系统置空（不默认全勾，避免扩权），需重新勾选才能保存；不在关联里的授权保存时不带。handleDetail.vue 去掉 throw，页顶 warning 列出系统。其余阻断（部分关联系统暂不可读取等）保留。
+- tq-plus dev/3e150bd：已提交，再次同名 pull 后 push。私人 qianrong-group-menu-inheritance.md 末节、docs/README、AI_CONTEXT、logs 已更新；group-menu-contract 测试加用例。
+- 验证：无 node，测试未运行、未构建/浏览器/联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 WiFi版设备分享（简化版：微信卡片）
 
 - 需求（用户）：服务端给出 getUserInfo.userId、addUserProduct 新增 isToHave / shareUserId、getShareUserProductList、移除成员沿用 delUserProduct；先问能否用上（已答：能做无邀请码的简化版，列了安全风险与待确认项），随后要求按简化版接、先用微信卡片分享。

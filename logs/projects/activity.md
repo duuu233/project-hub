@@ -2,6 +2,14 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜设备分享对齐服务端答复
+
+main-wifi/a8ce496 已同名 pull 后 push。实现已符合（删设备仅 owner、成员只解绑、解绑不删图）；删除确认文案补充成员同时失去设备，文档记录答复。无 node，未跑测试。
+
+## 2026-10-29｜taiqian-front｜ssh｜dev｜用户组关联系统与菜单授权不一致放行
+
+dev/3e150bd 已同名 pull 后 push。reconcileGrants 以关联系统为准：缺授权系统置空待勾选，多出的授权不保留，页顶提示。无 node，未构建/联调。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi版设备分享简化版（微信卡片）
 
 main-wifi/564e4b3 已同名 pull 后 push。绑定带 isToHave=1；分享列表发微信卡片，新接受页以 isToHave=0 + shareUserId 绑定，未登录登录后回接受页；移除成员走 delUserProduct。无邀请码，待服务端校验。无 node，测试未跑、未真机。
