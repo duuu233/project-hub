@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜taiqian-front｜ssh｜dev｜账户管理列表用户类型列
+
+dev/c228adb 已同名 pull 后 push。列表加用户类型列，userType 按后端枚举（复用 userTypeLabel）映射。无 node，未构建/联调。
+
 ## 2026-10-29｜taiqian-front｜ssh｜dev｜配置权限列级输入框无限变宽
 
 dev/67927a3 已同名 pull 后 push。RoleColumnPanel 的 grid 加 minmax(0,1fr)，阻止表格 / 搜索栏按宽度调整的内容撑宽列。公共组件未改。无 node，未构建/浏览器。

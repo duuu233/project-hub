@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-29 ssh｜账户管理列表用户类型列
+
+dev 干净同名 pull 已最新。user/index.vue 加用户类型列（userTypeLabel 映射，映射不到显示原值），列显隐追加 key 7。无 node 未构建、未联调；信息隔离自查通过。
+
 ## 2026-10-29 ssh｜配置权限列级输入框无限变宽
 
 dev 干净同名 pull 已最新。定位到 RoleColumnPanel 的 grid 没有列模板、grid 子项没有 min-width:0，el-table 与 TableSearch 按宽度调整的内容撑宽列；改为 minmax(0,1fr)。公共组件、全局样式未改，只给出建议。无 node / 浏览器，未构建、未复现；信息隔离自查通过。

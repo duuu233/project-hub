@@ -27,3 +27,10 @@
 ## 验证
 
 - 本机无 node / node_modules，未构建、未浏览器、未联调；改动文件标签与括号配对、`git diff --check`、信息隔离自查通过。
+
+## 2026-10-29 ssh dev：账户管理列表加「用户类型」列
+
+- 列表（`organization/user/index.vue`，vxe-grid）在「用户昵称」后加「用户类型」列，取行内 `userType`（如 `"00"`），按用户给的后端枚举映射：`PLATE_ADMIN 00 平台管理员` / `PLATE_USER 01 平台用户` / `ORG_ADMIN 02 企业管理员` / `ORG_USER 03 企业用户`。
+- 映射复用 `utils/userProfile.js` 的 `USER_TYPES` / `userTypeLabel`，与登录资料一致；没有调用字典接口（字典类型名在代码和 Swagger 里都查不到，用户直接给了枚举）。映射不到时显示原值。
+- 列显隐沿用该页按下标的 `columns` 数组：新列追加为 key 7，原有下标不变。
+- 验证：无 Node，未构建/浏览器/联调。

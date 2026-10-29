@@ -1,3 +1,13 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 账户管理列表用户类型列
+
+- 需求（用户）：账户管理列表新增用户类型，按 userType（如 "00"）和字典映射。字典类型名查不到、字典接口要登录，询问后用户给出后端枚举 PLATE_ADMIN 00 平台管理员 / PLATE_USER 01 平台用户 / ORG_ADMIN 02 企业管理员 / ORG_USER 03 企业用户。
+- 同步：tq-plus dev/67927a3、Hub main 同名 pull 均已最新。
+- 改动：organization/user/index.vue 在用户昵称后加「用户类型」列，复用 utils/userProfile.js 的 userTypeLabel（与该枚举一致），映射不到显示原值；列显隐追加 key 7，不动原下标。
+- tq-plus dev/c228adb：已提交，再次同名 pull 后 push。私人 qianrong-four-fixes-2026-10-28.md 末节、AI_CONTEXT、logs 已更新。
+- 验证：无 node，未构建/浏览器/联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 配置权限「数据权限·列级」输入框无限变宽
 
 - 需求（用户）：/organization/role-permission/index/149 列级标签下的输入框打开后一直变宽、有时来回变；检查公共组件与全局设置。
