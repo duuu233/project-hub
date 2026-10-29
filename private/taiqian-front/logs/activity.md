@@ -216,3 +216,8 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：角色新增/编辑的同类阻断也放行。
 - **改动**：handleDetail.vue 提交时去掉 unavailable 系统阻断，这类系统原 menuIds 原样提交、不算撤权；提示文案改为原样保留。
 - **验证**：无 Node，未构建/浏览器/联调；git diff --check 通过。
+
+## 2026-10-29 ssh｜角色管理关联系统全部可选
+
+- **改动**：role handleDetail.vue 系统选项 disabled 固定 false；menuTreeList 外和停用的系统都可勾，上级读不到的系统为空树。
+- **验证**：无 Node，未构建/浏览器/联调；git diff --check 通过。待确认后端是否接受只关联系统、menuIds 为空。

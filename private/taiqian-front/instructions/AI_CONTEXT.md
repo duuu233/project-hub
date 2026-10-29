@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-29 ssh dev：角色「管理关联系统」弹窗所有系统可选（不再按 menuTreeList/停用置灰），上级读不到的系统为空树，新关联时 menuIds 传 []。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
+
 2026-10-29 ssh dev：角色新增/编辑不再阻断「上级用户组菜单暂不可读取」，menuTreeList 读不到的已关联系统保存时把原 menuIds 原样带回，不清空也不进撤权确认。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
 2026-10-29 ssh dev：用户组新增/编辑/详情放行两处阻断。详情缺 groupsSystemMenuDTOList 时 groupGrants 返回 null，跳过关联一致性核对，按系统授权默认勾选并在页顶提示；系统 menuIds 中菜单列表读不到的编号不再报错，不进树，原授权里的这类编号保存时原样带回。测试断言已改但未运行，也未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。

@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 角色管理关联系统全部可选
+
+- 需求（用户）：角色页「管理关联系统」中所有系统都放开可选；随后又问选系统时为什么会被禁用。
+- 同步：tq-plus dev/9c3b66a、Hub main 同名 pull 均已最新。
+- 改动：role handleDetail.vue 中系统选项 disabled 固定为 false，不再按 menuTreeList 缺失或停用状态置灰；共享 systemSources 与用户组页不变。上级读不到的系统显示空树，新关联时 menuIds 传 []。
+- tq-plus dev/2c9ea2e：已提交，再次同名 pull 后 push。私人 docs/AI_CONTEXT/logs 已更新。
+- 「为什么被禁用」：2c9ea2e 之前的规则是 menuTreeList 中没有的系统、停用且原本未关联的系统置灰；新代码中弹窗选项已无禁用条件，用户需更新到 dev/2c9ea2e 后重新构建或重启。若仍不可点，多半是页面加载失败（loaded=false）导致整个「管理」按钮被禁用，页面会有报错提示。
+- 验证：无 node，未构建/浏览器/联调。待确认后端是否接受只关联系统、menuIds 为空。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 角色新增/编辑同类阻断放行
 
 - 需求（用户）：角色新增/编辑中与用户组类似的阻断也放行；同时问「管理关联系统」里的系统为什么不能选。
