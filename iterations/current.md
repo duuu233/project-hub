@@ -1,3 +1,11 @@
+## 2026-10-29 ssh｜Hub 规则：只推 GitHub 改为 work 例外
+
+- 需求（用户）：ssh 只管 GitHub；work 保存原样不改；写入规则，只有 work 保持不变。
+- 改动（fea6354）：AGENTS.md「任务完成后的默认动作」第 0 条改为 work 以外（ssh、home）只推 GitHub、不是 GitHub 就暂停；work 不检查、不改任何仓库 remote，沿用现有 origin。SSH 段、environments/ssh/README.md 远端节、context/taiqian-front.md 与 minerals-admin.md 远端口径同步。
+- 未改映射、业务仓库。提醒：同日 work 会话（见下条）已按旧规则把泰乾、正矿 origin 从 Codeup 改为 GitHub，原 Codeup 地址未记录在 Hub；是否恢复需用户在 work 机自行决定，本机无法操作。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 打包失败排查 + 账户类型平台大于企业
 
 - 需求（用户）：1. 打包发布报错（贴出 DEP0169 url.parse 弃用警告）；2. 账户新增编辑：登录的是企业账号不能选平台类型（平台大于企业），平台新增可选企业类型。
