@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜taiqian-front｜ssh｜dev｜用户组两处阻断放行
+
+dev/478a525 已同名 pull 后 push。用户组新增/编辑不再被「详情未返回菜单授权」「系统授权菜单暂不可读取」卡住：缺授权按系统授权默认勾选并提示，菜单列表读不到的原授权编号保存时原样保留。无 node，测试/构建未运行，未联调。
+
 ## 2026-10-28｜album-miniapp｜ssh｜main-wifi｜投屏 type 改取产品屏幕方向
 
 main-wifi/5d35774 已同名 pull 后 push。抖动出帧 / WiFi play / 轮播投第一张的 type 改取产品 screenType（产品列表 → getProductByDevice），没配回退旧分辨率口径；不用设备对象上同名的固件型号字节。无 node，测试未跑，未真机；真实设备 type 值因接口需登录未查到。

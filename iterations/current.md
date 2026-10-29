@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 用户组两处阻断放行
+
+- 需求（用户）：用户组新增/编辑页面不再校验「用户组详情未返回菜单授权，已停止保存，请确认接口响应」和「系统授权菜单暂不可读取，已停止配置，请重新加载」，不卡住。
+- 同步：tq-plus dev/5ad9753、Hub main 同名 pull 均已最新。无 codegraph CLI，直接读源码定位。
+- 改动：groupGrants 缺 groupsSystemMenuDTOList 时返回 null，页面跳过「关联系统与菜单授权不一致」核对，已关联系统按新关联口径默认勾选系统授权内全部可用菜单，并在页顶加 warning 提示核对。systemPermissionScope 把菜单列表读不到的编号拆成 hiddenIds，不进树也不报错；用户组原授权里的这类编号存入 hiddenMenuIds，保存时原样带回，不进撤权确认，新关联也不默认授出。系统详情缺 menuIds、非法编号、返回了授权但与关联不一致等仍阻断。tests/group-menu-contract.test.mjs 断言同步更新。
+- tq-plus dev/478a525：已提交，再次同名 pull 后 push。私人 qianrong-group-menu-inheritance.md 末节、docs/README、AI_CONTEXT、logs/activity 已更新。
+- 验证：无 node，测试/构建未运行，未浏览器/联调；git diff --check、信息隔离自查通过。
+- 风险/待确认：详情缺授权时默认全选后保存会把组授权扩到系统全量；如希望改为默认不勾、让操作人手选，告知即可。
+
+---
+
 ## 2026-10-28 ssh｜相册小程序 投屏 type 改取产品屏幕方向 screenType
 
 - 需求（用户）：产品列表接口返回 screenType（屏幕方向 0=竖屏 1=横屏），投屏 type 直接用它传给接口，不再写死；改完后按真实设备列出各设备 type。
