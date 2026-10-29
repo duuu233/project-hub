@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜album-miniapp｜ssh｜main-wifi｜WiFi投屏进度条涵盖上传与图片处理
+
+main-wifi/76487ba 已同名 pull 后 push。上传占 0~50%，图片处理中按时间爬向 99%，只有 SENT / UPLOADED 到 100%，失败停在原处；写相册记录不再改文案。无 node，测试未跑、未真机。
+
 ## 2026-10-29｜taiqian-front｜ssh｜dev｜账户管理列表用户类型列
 
 dev/c228adb 已同名 pull 后 push。列表加用户类型列，userType 按后端枚举（复用 userTypeLabel）映射。无 node，未构建/联调。

@@ -1,3 +1,15 @@
+## 2026-10-29 ssh｜相册小程序 WiFi投屏进度条涵盖上传与图片处理
+
+- 需求（用户）：先对比 WiFi 版与蓝牙版投屏进度条状态（只读梳理，已答复）；随后要求 WiFi 版 1~100% 包含「图片上传中」「图片处理中」，100% 只显示「已发送，屏幕即将刷新」。
+- 同步：photo-album main-wifi、Hub main 同名 pull 均已最新，origin/main 无未合入。无 .codegraph，直接读源码。
+- 原状：进度条 = 真实上传进度，上传完即 100%，随后「图片处理中」（服务端最长约 8 秒）一直停在 100%；成功后写相册记录时文案又变成「正在存入我的上传」；接口 FAILED 也先置 100%。
+- 改动：wifi-projection.projectOne 上传折算到 0~50%，处理阶段 200ms 一拍按 1-e^(-t/3s) 从 50 渐近爬向 99；SENT / UPLOADED 才置 100，失败停在原处，返回 / 报错即停表。结果页写相册记录不再改文案，进度条下说明改「进度含图片上传与处理」。多张时中间几张（refresh=false）100% 仍显示「已上传」（不会刷屏，未改成「已发送」）。完成后进度条照旧隐藏。
+- photo-album main-wifi/76487ba：已提交，再次同名 pull 后 push。变更记录 docs/changes/2026-10-29-WiFi投屏进度条含处理阶段.md、docs/README、AI_CONTEXT 已更新；测试 tests/wifi-projection.test.js 已补。
+- 验证：本机无 node，测试未运行、未真机；信息隔离自查通过。需本地跑全量测试。
+- 提醒：仅 main-wifi 改动（WiFi 版专属），不需同步 main。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 账户管理列表用户类型列
 
 - 需求（用户）：账户管理列表新增用户类型，按 userType（如 "00"）和字典映射。字典类型名查不到、字典接口要登录，询问后用户给出后端枚举 PLATE_ADMIN 00 平台管理员 / PLATE_USER 01 平台用户 / ORG_ADMIN 02 企业管理员 / ORG_USER 03 企业用户。
