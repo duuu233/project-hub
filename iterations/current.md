@@ -1,3 +1,14 @@
+## 2026-10-29 ssh｜相册APP main-wifi 同步小程序：TF卡本地模式、详情改版、分享、进度页图标
+
+- 需求（用户）：小程序本轮 WiFi 改动同步给相册APP，在 main-wifi 分支。范围按本会话小程序需求：e4e1372 / 39fefd0 / 564e4b3 / a8ce496 + 删除 / 解绑二次确认同蓝牙版。
+- 同步：flutter main-wifi 同名 pull 已最新，origin/main 无未合入；Hub main 已最新。无 .codegraph，直接读源码。
+- 改动：wifi_status 加 local / 未知状态降级 / wifiProjectBlockedTip / wifiQueryBlockedTip / filterPickableDevices；首页、我的设备、详情紫色本地模式；官方图库与 AI 对话选设备过滤（AI 对话补接 WiFi 投屏，跳过蓝牙电量提醒）；我的相册再次投屏、预览页开始投屏严格拦；轮播保存前查状态；轮播入口收口 openWifiSlideshow（本地模式提示）。详情重写（状态 + 电量同栏、投屏 / 轮播上移、设备信息 / 休眠 / 消息 / TF卡 / 分享(owner) / 解绑，页底删除(owner)），owner 由 getUserProductDetail 判定、查不到按否。新页 wifi_device_info / wifi_tf（WifiCommandResultWaiter 等 command.result）/ wifi_share；wifi_remove_flow 复用 showAppConfirmDialog（解绑一次、删除两道，文案同小程序），删除 = clearUserProductImg → IoT all=true → state.deleteDevice。结果页中间图改 upload-icon01/03/02。addUserProduct 带 isToHave/shareUserId（默认 1/0），UserProfile.userId；getShareUserProductList；分享用 fluwx WeChatShareMiniProgramModel 发小程序卡片（路径同小程序接受页），需 dart-define WECHAT_MINI_PROGRAM_USERNAME（gh_ 原始 ID，未配置按钮置灰），兜底网页默认 badmin.boltfox.cn。三语文案。fluwx 6.0.0 源码只读核对过 API（临时下载在 .codex-tmp，已删）。
+- flutter main-wifi/526c217：已提交，再次同名 pull 后 push。docs/history/2026-10/2026-10-29-wifi-tf-local-detail-share-sync.md、docs/README、APP_VS_MINIPROGRAM、AI_CONTEXT 已更新；新增 test/wifi_tf_share_test.dart。
+- 验证：本机无 Flutter，未 analyze / test / 编译 / 真机；git diff --check、信息隔离自查通过；未带工具链产物。需用户本地 flutter analyze + flutter test。
+- 待用户：小程序原始 ID（gh_…）及 App 与小程序是否同一开放平台账号；兜底网页地址。未同步：小程序 10-29 投屏进度条含处理阶段、10-28 渲染模式 / 屏幕方向。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 设备分享：服务端答复对齐
 
 - 答复（用户转述）：owner 删除设备时所有分享者记录一并删除、分享者看不到设备、图片也没了；解除绑定不删图片；删除设备只有 owner 有，分享者只有解绑。
