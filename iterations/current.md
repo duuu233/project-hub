@@ -1,3 +1,17 @@
+## 2026-10-29 ssh｜相册小程序 WiFi版 TF卡本地模式 + 设备详情改版
+
+- 需求（用户）：对接新文档 docs/wifi/前端对接20261029.md（TF 卡本地播放）+ 产品清单：投屏进度页图标、详情页重排（投屏/轮播上移、电量进状态栏、功能栏 设备信息/休眠/消息/TF卡/分享(owner)/解绑/删除(owner)）、设备信息二级页（去国家码）、分享列表、TF 卡设置与本地模式限制、各投屏入口过滤离线/本地模式/未知、TF 消息类型。中途补充：解绑 / 删除照蓝牙版做，删图片只处理云端（WiFi 设备端不存图）。
+- 同步：photo-album main-wifi 同名 pull 快进到 ff6c4e6（新文档），origin/main 无未合入；Hub main 已最新。无 .codegraph，直接读源码。
+- 核查：Swagger 有 getShareUserProductList（avatar/userName/isToHave/userProductId，无加入时间）、getUserProductDetail 有 isToHave/shareUserId；没有邀请 / 移除成员接口。蓝牙版删除设备 = 设备清空 + clearUserProductImg（级联删投屏记录）+ delUserProduct。
+- 改动要点：wifi-status 加 local（LOCAL_TF）、不认识的 status → unknown（原按 online 回退，测试同步改）、projectBlockedTip / queryBlockedTip / filterPickable；WiFi 详情重写；新页 wifi-info / wifi-tf / wifi-share；utils/wifi-tf.js（command.result 按 msgid，推送早到也认，30s 超时后补查 online）；wifi-share.js（isToHave=1 或无 shareUserId 的老记录算 owner）；删除设备 = clearUserProductImg → IoT photo/delete all=true → delUserProduct，任一步失败不删设备；AI 生图补接 WiFi 投屏（原未接，会去连蓝牙）。TF 开关不存本地，只看状态（恢复入网自然关闭）。
+- 口径取舍：「过滤离线/本地模式/未知」严格按字面，休眠 / 关机设备仍留在选择列表、沿用原提示；预览页 / 我的上传：休眠 / 关机给原提示，其余非在线提示「设备不在线」。本地模式提示文案用「当前设备状态：本地模式，请恢复设备网络再试」。
+- 投屏进度页：wifi-result 中间图片改为状态图标，复用蓝牙版结果页 upload-icon01/03/02（进行中 / 全成功 / 有失败）；多张时列表缩略图保留（main-wifi/39fefd0）。
+- 遗留：① 分享「分享设备」「移除」按钮只提示即将上线（服务端无接口），加入时间显示「--」；② WiFi 版无 OTA 入口，本地模式拦 OTA 无从谈起；③ TF 卡清除本期不做。
+- photo-album main-wifi/e4e1372、39fefd0：已提交，再次同名 pull 后 push。变更记录 docs/changes/2026-10-29-WiFi版TF卡本地模式与详情页改版.md、docs/README、docs/wifi/对接开发进度.md、AI_CONTEXT 已更新；新增 tests/wifi-tf-local-mode.test.js，调整 3 个用例（口径变更，断言判据保留）。
+- 验证：本机无 node，测试未运行、未真机、未联调；git diff --check、信息隔离自查通过。需本地跑全量。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 WiFi配网失败「重新配网」按钮高度
 
 - 需求（用户）：设备配网页下方「重新配网」按钮高度不对，调整样式。
