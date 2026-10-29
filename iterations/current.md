@@ -1,3 +1,13 @@
+## 2026-10-29 ssh｜泰乾超级-qianrong 企业 ID=0 视为有效（所属企业下拉放行 0）
+
+- 需求（用户）：ID=0 是后端初始化的，0 也算有效 ID，不要过滤，都改下放行（接上一条 esignAuthStatus 核查：前端未按该字段过滤，只滤掉了 id 无效的行，其中包括 0）。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 改动：role-model 新增 validOrgId（0 有效）；企业主键判断全部改用——org-options（部门 / 用户下拉与补查）、角色表单（下拉、补查、按企业加载用户组、非平台取登录企业、编辑锁定原 `!!originalOrgId` 对 0 失效）、rolePayload、角色列表 / 权限页企业名兜底、部门 / 用户表单（锁定、提示、按企业加载）；utils/auth.js 登录企业读写正则放行 0；准入页两处 orgId 真值判断改判空。部门上级 0、角色、用户组等其它主键仍用 validId（0 = 没有），不全局改。
+- tq-plus dev/d2a01cf：已提交，再次同名 pull 后 push。私人 qianrong-org-scope-forms.md 末节、docs/README、AI_CONTEXT、logs 已更新；role-contract 测试加用例。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜泰乾超级-qianrong 角色 / 部门所属企业下拉是否按 esignAuthStatus 过滤（只读核查，未改代码）
 
 - 问题（用户）：角色新增编辑、部门新增编辑的企业选择是否按 esignAuthStatus 过滤；不要过滤，接口返回多少显示多少。

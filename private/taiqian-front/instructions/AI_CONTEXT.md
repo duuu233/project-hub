@@ -14,6 +14,8 @@
 
 2026-10-29 ssh dev：角色新增/编辑不再阻断「上级用户组菜单暂不可读取」，menuTreeList 读不到的已关联系统保存时把原 menuIds 原样带回，不清空也不进撤权确认。未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
+2026-10-29 ssh dev：企业 id=0 是后端初始化的有效企业：所属企业相关判断改用 role-model 的 validOrgId（0 有效），角色 / 部门 / 用户下拉、锁定、按企业加载、rolePayload、登录企业 sessionStorage、准入页回显都放行 0；其它主键仍用 validId（0 = 没有）。所属企业下拉不按 esignAuthStatus 过滤。未运行测试 / 构建。详见 docs/qianrong-org-scope-forms.md 末节。
+
 2026-10-29 ssh dev：用户组「关联系统与菜单授权不一致，已停止保存」改为放行：reconcileGrants 以 getSystemsByUserGroup 为准对齐，关联但无授权的系统置空需重新勾选，不在关联里的授权保存时丢弃，页顶 warning 列出系统。未运行测试/构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。
 
 2026-10-29 ssh dev：用户组新增/编辑/详情放行两处阻断。详情缺 groupsSystemMenuDTOList 时 groupGrants 返回 null，跳过关联一致性核对，按系统授权默认勾选并在页顶提示；系统 menuIds 中菜单列表读不到的编号不再报错，不进树，原授权里的这类编号保存时原样带回。测试断言已改但未运行，也未构建/联调。详见 docs/qianrong-group-menu-inheritance.md 末节。

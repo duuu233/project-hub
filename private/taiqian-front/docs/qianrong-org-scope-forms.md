@@ -26,3 +26,10 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - getInfo 是否返回 `user.orgId`、是否等于当前身份企业：只作兜底，未核实。sessionStorage 按标签页，新开标签页只能靠 getInfo 兜底。
 - `GET /system/user/?orgId` 返回的 roles/posts 是否按企业过滤、`/system/user/deptTree?orgId` 是否生效，待联调。
 - 本机无 node，未构建、未跑测试（新增 `isPlatformUserType` 用例在 tests/user-profile.test.mjs）、未浏览器、未联调。
+
+## 2026-10-29 ssh dev：企业 id=0 视为有效（用户明确）
+
+- 背景：后端初始化的企业 id=0，原先所属企业相关判断沿用 `validId`（0 = 没有），id=0 的企业在角色 / 部门 / 用户的「所属企业」下拉里被过滤掉，登录企业为 0 时也存不进 sessionStorage。下拉本身从未按 `esignAuthStatus` 过滤（`/system/org/list` 也没有该入参）。
+- 改动：`role-model.js` 新增 `validOrgId`（0 有效，只排除空值 / 非整数 / 丢精度），所有企业主键判断改用它：`org-options.js`（部门、用户共用下拉与补查已选）、角色表单（下拉、补查、用户组按企业加载、非平台取登录企业、编辑时锁定所属企业——原 `!!originalOrgId` 对 0 不成立）、`rolePayload` 校验、角色列表 / 权限页企业名兜底、部门表单（上级部门树、锁定、提示）、用户表单（锁定、部门 / 角色 / 岗位按企业加载）；`utils/auth.js` 登录企业读写正则放行 0；准入页 `EnterpriseSections.vue` 已选企业回显与 `handleDetail.vue` 补查企业附件改为判空而非真值判断。
+- 不变：部门上级 0（一级部门）、角色、用户组、系统、菜单等其它主键仍用 `validId`，0 表示「没有」。
+- 测试：`tests/role-contract.test.mjs` 加 `validOrgId` 用例与 orgId=0 可保存。无 Node，未运行、未构建 / 浏览器 / 联调。

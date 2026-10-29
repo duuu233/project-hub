@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-10-29｜taiqian-front｜ssh｜dev｜企业 ID=0 视为有效
+
+dev/d2a01cf 已同名 pull 后 push。新增 validOrgId，角色 / 部门 / 用户所属企业下拉与相关判断、登录企业存储、准入页回显放行 0；其它主键不变。无 node，未构建/联调。
+
 ## 2026-10-29｜album-miniapp｜ssh｜main + main-wifi｜抖动出帧接口改调 api.yikaltd.com
 
 main/cfd3d19 push；main-wifi 合入 origin/main（550e8e3，docs/README 列表冲突已解）push，main 未含 wifi 代码。地址换 https://api.yikaltd.com/api，参数不变；需加 request 合法域名。无 node，未跑测试。
