@@ -7887,3 +7887,17 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 改动：organization/enterprise-users/components/EnterpriseBusinessFields.vue 加 blur 校验（地区码首位非 0 + 18/19/20 年份 + 合法月日 + 3 位顺序码 + 数字或 X/x）与 maxlength 18；未计算校验位，避免虚构测试号码被拦。法人证件号不动（证件类型含护照、港澳通行证）。
 - tq-plus dev/80cfcf6：已提交，再次同名 pull 后 push。私人 qianrong-enterprise-contract-audit.md 末节、docs/README、AI_CONTEXT、logs 已更新。
 - 验证：无 node，未构建/浏览器/联调；正则 python 样例核对、git diff --check、信息隔离自查通过。
+
+---
+
+## 2026-10-29 ssh｜相册小程序 WiFi配网恢复2.4G提示与频段过滤
+
+- 需求（用户）：前面删掉的 2.4G 要补回来，只针对 WiFi 版；WiFi 版设备的提示都改回只支持 2.4G。
+- 同步：photo-album main-wifi、Hub main 同名 pull 均已最新，origin/main 无未合入。无 .codegraph，直接读源码与变更记录。
+- 依据：项目变更记录 2026-10-28「WiFi配网去掉2.4G提示与频段过滤」（25699db）与 10-27 f049ed4「选择WiFi页去掉2.4G字样」。两次源码改动按 git apply -R 原样撤回，无冲突。
+- 改动：选择WiFi页顶部恢复提示条与样式、标题「设备附近的2.4G WiFi」、搜不到提示含 2.4G、toWifiList 恢复按信道只留 2.4G（没回信道照常列）；账号密码页恢复提示条，去掉 10-28 补的表单 margin-top。判断：用户说「删掉的补回来」且设备只支持 2.4G，频段过滤一并恢复，避免提示只支持 2.4G 却列出 5G。
+- 测试：tests/wifi-search.test.js 的对应断言改回 2.4G 口径（保留 10-28 新增的空列表用例，改断言不删），不整段反向套用。
+- 文档：新增 docs/changes/2026-10-29-WiFi配网恢复2.4G提示与频段过滤.md，docs/README、10-28 变更记录（标注已撤回）、docs/wifi/对接开发进度.md 同步。
+- photo-album main-wifi/5a0be2d：已提交，再次同名 pull 后 push。
+- 验证：本机无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；新断言的正则用 python 对源码核对命中；未真机。git diff --check、信息隔离自查通过。
+- 提醒：只改 main-wifi（WiFi 版专属页面），不需同步 main。
