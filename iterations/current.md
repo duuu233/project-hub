@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 编辑列字段放开字段名称
+
+- 需求（用户）：菜单和角色的配置权限的编辑列字段弹框，放开字段名称编辑。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 核对：菜单 MenuColumnForm 字段名称本就可编辑，未改；角色 RoleColumnForm 原 disabled。
+- 改动（tq-plus dev/8d1b2e5）：RoleColumnForm 字段名称可输入（必填、≤30 字）；roleColumnPayload 去空格并校验；测试补断言。私人 role-permission-workspace 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试未运行、未构建；Python 核过正则；git diff --check、信息隔离自查通过。后端是否接受改 fieldName 以接口为准。
+
+---
+
 ## 2026-10-30 ssh｜花盆APP 割草机首页手动计划 / 今日计划（DP121 计划类型）
 
 - 需求（用户）：按协议 V3.0 新增内容与《DP121 计划类型 App 对接说明 V1.0》开发；去掉顶部状态后倒计时；倒计时为 0 直接今日计划，否则按 DP121 类型：手动计划（日期星期读手机、起止取 DP121、修边改倒计时）/ 今日计划（修边改倒计时）；今日计划两时段统一为「下一任务」样式、去掉「下一任务」、加未开始 / 进行中 / 已结束、修边放到标题后（手动不显示）；生成简明报告。

@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/8d1b2e5：角色 RoleColumnForm 字段名称改为可编辑（必填、≤30 字，roleColumnPayload 去空格校验），编码 / 类型仍只读；菜单 MenuColumnForm 字段名称本就可编辑。未运行测试/构建。
+
 2026-10-30 ssh dev/308a36f：列表列按接口字段渲染——withListGridStyle 的 data 改为访问器，赋值时按行数据返回的 key 过滤 columns（utils/responseColumns.js；无行保持上次；type 列与操作列不参与；派生列 responseKey）。ListTablePanel 特殊列表与部门树（responseColumns: false）不接入。行数据须保持接口原样，派生展示放 formatter。未运行测试/构建。详见 docs/qianrong-list-style.md 末节。
 
 2026-10-30 ssh dev/253d116：用户明确「列表占位传父级 menuId」是错的——菜单管理列字段设置传 row.menuId，角色列级 roleListMenuOptions 也用列表菜单自身（自身或父级已授权即可选，父级停用跳过）；删除 columnTargetMenuId。以下 413c0ff / b07b507 中「父级生效」的说法作废。未运行测试/构建。
