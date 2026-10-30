@@ -1,3 +1,14 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 菜单管理新增全放开 + 部门上级校验误报
+
+- 需求（用户）：1. 菜单管理有些菜单没有新增按钮，不用限制都放开；2. 部门编辑「上级部门」已有有效值仍显示「上级只能选择一级部门」，rule 触发有问题。环境：用户声明 ssh。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 1 原因：列表按钮类（F/B）行 v-if 隐藏「新增」，handleAdd 也拦；新增表单上级树剔除按钮。改动：去掉条件，上级树只剔自身及下级，按钮可作上级。后端是否接受挂在按钮下未联调。
+- 2 原因：部门 handleDetail load() 先写 form（含 parentId）再取部门树；el-select 监听 modelValue 即按 change 校验，此时树为空 → 误报，树到后不重新校验，提示残留（缓存页换记录同理）。改动：先拼局部 next，树与企业选项返回后同刻赋值 form，nextTick clearValidate；校验规则不变。另记一种未改的可能：下拉列 tree.roots，校验要求上级 parentId=0，顶层部门 parentId 非 0 时会能选不能过。
+- tq-plus dev/7a16416：已提交，再次同名 pull 后 push。私人 qianrong-menu-route-lifecycle.md、qianrong-org-scope-forms.md 末节、docs/README、AI_CONTEXT、logs 已更新；新增 tests/menu-add-dept-parent.test.mjs。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；Python 模拟了测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-29 ssh｜相册小程序 分享设备页成员加入时间取 joinTime（main-wifi）
 
 - 需求（用户）：根据文档，分享设备页「加入时间」接口已返回 joinTime，取这个。

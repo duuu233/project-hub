@@ -19,3 +19,9 @@
 - 公共逻辑 `src/utils/ownRouteLoad.js` 的 `useOwnRouteLoad({ key, load, isReady })`：记创建时路由 path，仅当前路由仍是本页 path 且激活时加载；`key()` 与上次相同且 `isReady()` 时不重复加载；上次未成功时重新进入本页再读一次（视为再次触发）；停留在其它页面期间不重复请求、不重复报错。各页原有 load、编号校验和旧响应失效逻辑不变。
 - 已接入：系统（all-system）、部门（dept）、企业用户（enterprise-users）、角色（role）、用户组（user-group）、用户（user）的新增 / 编辑 / 详情共用表单，菜单列字段设置（menu/column-settings，key=query.menuId），字典数据（dict/data，key=params.dictId，原 onMounted 首次加载并入），角色配置权限页（role/permissions，key=params.roleId，分配用户等其它带 roleId 的页面不再触发）。菜单表单保留 10-23 的专用实现。
 - 回归：`node --test tests/own-route-load.test.mjs`（真实 Vue / Router / KeepAlive：点其它列表不加载、同编号返回不重载、换编号加载一次、失败仅再次进入时重试）。本机无 Node，未运行。
+
+## 2026-10-30 ssh dev：菜单管理所有行都显示「新增」
+
+- 需求：有些菜单没有新增按钮，不用限制，都放开。原先按钮类（F/B）行不显示「新增」，`handleAdd` 也直接返回，新增表单的上级菜单树会剔除按钮，选按钮作上级会被校验拦下。
+- 改动：`config-audit/menu/index.vue` 行内「新增」去掉 `isButtonMenu` 条件，`handleAdd` 不再按类型返回；`template/handleDetail.vue` 的 `menuOptions` 只剔除自身及其下级，按钮也可作为上级，校验提示改为「不能选择自身或下级作为上级菜单」。权限标识 `system:menu:add` 不变；后端是否接受挂在按钮下的菜单未联调。
+- 测试：`tests/menu-add-dept-parent.test.mjs` 源码断言。无 Node，未运行、未构建 / 浏览器。

@@ -1,5 +1,7 @@
 # 泰乾超级维护文档
 
+- [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-10-30 ssh dev 菜单管理所有行（含按钮）都显示「新增」，按钮也可作上级菜单。
+- [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-10-30 ssh dev 部门编辑误报「上级只能选择一级部门」——表单先于部门树赋值触发 change 校验，改为树就绪后同刻赋值并 clearValidate。
 - [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-10-29 ssh dev/9613bb3 账户类型平台大于企业（企业账户只能选 02/03）；打包失败根因为同事合并 ea81b0f 解坏账户表单模板（标签未闭合、丢四个字段），DEP0169 只是依赖触发的警告。
 - [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-10-29 ssh dev 企业 id=0 视为有效（validOrgId），角色 / 部门 / 用户所属企业下拉不再滤掉 0，登录企业 0 可存；所属企业下拉从未按 esignAuthStatus 过滤。
 - [qianrong-group-menu-inheritance.md](qianrong-group-menu-inheritance.md)末节：2026-10-29 ssh dev 用户组「关联系统与菜单授权不一致」放行（按关联系统对齐，缺授权置空待勾选、多出的不保留）；用户组「详情未返回菜单授权」「系统授权菜单暂不可读取」两处阻断改为放行（缺授权按默认勾选并提示，读不到的编号原样保留）；角色新增/编辑「上级用户组菜单暂不可读取」同样放行（原授权原样带回），角色「管理关联系统」所有系统可选；角色新增/编辑加「用户组」下拉（按企业 getUserGroupsListByOrgId），菜单树改按所选用户组 menuTreeList?userGroupsId 读取。

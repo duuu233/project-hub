@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/7a16416：菜单管理行内「新增」不再按类型隐藏，按钮（F/B）也能新增下级、作上级菜单；部门编辑「上级部门」有值仍报「上级只能选择一级部门」——load 先写 form 再取部门树，el-select 值变化时树为空即校验失败，改为树就绪后与 form 同刻赋值并 clearValidate。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md、docs/qianrong-org-scope-forms.md 末节。
+
 2026-10-29 ssh dev/9613bb3：同事合并 ea81b0f 解坏账户表单模板（用户密码项未闭合、丢账户类型/性别/状态/岗位、角色等重复），导致打包失败，已按三方合并重算修复；DEP0169 url.parse 只是依赖触发的警告。账户类型平台大于企业：assignableUserTypes，企业账户只能选 02/03，编辑已是平台类型的账号置灰回显。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
 
 2026-10-29 ssh dev/4df38d0：部门、用户、角色按当前登录账户类型处理所属企业——平台（00/01）必选企业，非平台（02/03）不显示、后端取登录企业；用户的部门/角色/岗位按企业取（deptTree、GET /system/user/ 带 orgId）；角色非平台按登录企业取用户组，用户组仍必选。store 新增 loginOrgId（授权/切换身份的 orgId，getInfo 兜底）。未构建/联调。详见 docs/qianrong-org-scope-forms.md。

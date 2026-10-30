@@ -2935,3 +2935,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-10-29 | album-miniapp | ssh | main-wifi | 分享列表成员加入时间取 joinTime
 - getShareUserProductList 出参新增 joinTime（Swagger 已核），成员「加入时间」改取 joinTime 原样显示，空则「--」，不再用 createTime 等顶替。main-wifi/d3e14ed 已推送。未运行测试，未联调/真机。
+
+## 2026-10-30 | taiqian-front | ssh | dev | 菜单管理新增全放开 + 部门上级校验误报
+- 菜单管理所有行（含按钮）显示「新增」，按钮也可作上级菜单；部门编辑表单先于部门树赋值导致 change 校验误报「上级只能选择一级部门」，改为树就绪后同刻赋值并清校验。dev/7a16416 已推送。未运行测试，未构建/联调。

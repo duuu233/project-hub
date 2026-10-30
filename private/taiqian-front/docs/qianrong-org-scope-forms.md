@@ -40,3 +40,10 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 修复：按 merge-base 3e150bd 用 `git merge-file --ours` 重算三方合并（冲突取 test 侧，即同事的格式化版本），再把 d2a01cf 的 `validId→validOrgId` 三处补回；脚本部分与 ea81b0f 完全一致，只差模板。该合并其余 10 个文件逐个重算，与 ea81b0f 一致，无问题。本次拉下来的其它 .vue 粗查标签配平，差异均为 prettier 的 `</el-button\n>` 写法，不是错误。
 - 账户类型：`utils/userProfile.js` 新增 `assignableUserTypes(loginUserType)`，平台账户（00/01）四种都能选，非平台（02/03）及未知类型只能选 02 企业管理员 / 03 企业用户。账户表单 `userTypeOptions` 改为 computed，编辑的账号已是平台类型而登录的是企业账户时，把该项追加为置灰选项只回显；详情头改用 `userTypeLabel`。企业管理员与企业用户之间未做高低限制（用户只提了平台大于企业）。
 - 测试：`tests/user-profile.test.mjs` 加 `assignableUserTypes` 用例，以及账户表单各字段只出现一次、主要标签配平的源码断言（用 Python 按同样规则对修复后的文件核过：配平；对 ea81b0f：el-col / el-form-item 各少一个闭合）。无 node，测试未运行、未构建 / 浏览器 / 联调。
+
+## 2026-10-30 ssh dev：部门编辑「上级部门」有值仍提示「上级只能选择一级部门」
+
+- 原因：`dept/template/handleDetail.vue` 的 `load()` 先把详情写进 `form`（含 parentId），再去请求部门树。el-select 监听 modelValue 变化即按 `change` 触发表单项校验，这时 `tree` 还是空的，`checkDepartmentParent` 在 map 里找不到上级，返回「上级只能选择一级部门」；树加载完不会再校验，提示一直挂着。页面被缓存时，换一条记录进入也会残留上一次的提示。
+- 改动：`fetchTree(orgId)` 改为传参；`load()` 先在局部 `next` 里拼好表单（详情、「新增下级」带入的企业与上级），树和企业选项返回后与 `form` 同一刻赋值，再 `nextTick` 后 `clearValidate()`。校验规则本身（只能挂一级部门、不能自身、含下级不能移、同企业等）不变。
+- 另一种可能未改：上级下拉列的是 `tree.roots`（在当前列表里找不到父级的部门），校验要求上级的 parentId 为 0。若某企业的顶层部门 parentId 不是 0（例如挂在列表外的部门下），会出现下拉能选、校验不过；需要时再按真实数据确认。
+- 测试：`tests/menu-add-dept-parent.test.mjs` 源码断言（树就绪前不写 form、同刻赋值、clearValidate）。无 Node，未运行、未构建 / 浏览器 / 联调。
