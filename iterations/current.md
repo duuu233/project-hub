@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 角色表单用户组 id=0 不再过滤
+
+- 需求（用户）：角色新增页「用户组」下拉里，id="0" 的平台运营组（YHZ01）被过滤掉了，这是有效数据，不要过滤。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。CodeGraph CLI 本机不可用，改用 grep 定位。
+- 原因：handleDetail.vue loadGroups 的 `.filter(item => validId(item.id))`，validId 把 0 视为「没有」；回显补选项、menuTreeList 取树、权限区提示也是同一判断。
+- 改动（tq-plus dev/e8bea29）：role-model 新增 validGroupId（同 validOrgId），四处改用；测试补用例与源码断言。私人 org-scope-forms 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；Python 核过测试正则；git diff --check、信息隔离自查通过。id=0 用户组能否作为角色归属保存以后端为准。
+
+---
+
 ## 2026-10-30 ssh｜qianrong 权限方案改为「底层通用、上层简单」（仅文档）
 
 - 需求（用户）：「业务方就这几类」不准确，后面可能有其它业务方和场景，要自由度和适配度高。

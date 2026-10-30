@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-30 ssh｜角色表单用户组 id=0 视为有效
+
+dev 干净同名 pull 已最新（ef20279）。角色表单 loadGroups 用 validId 滤掉了 id=0 的平台运营组；role-model 加 validGroupId，下拉 / 回显 / 菜单树 / 提示四处改用，测试补用例。dev/e8bea29 提交后再次同名 pull 并 push。无 node 未构建、未跑测试；信息隔离自查通过。
+
 ## 2026-10-30 ssh｜权限全景方案评审修订
 
 dev 同名 pull 至 ef20279，只读核对角色数据权限、菜单/角色列字段、预览与用户组继承实现后，修订 Hub private 下 qianrong 权限全景方案（结论见其第 0 节）。未改业务代码。

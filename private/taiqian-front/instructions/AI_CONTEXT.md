@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/e8bea29：角色新增「用户组」下拉滤掉了 id=0 的平台运营组——loadGroups 用 validId（0 = 没有）；新增 validGroupId（同 validOrgId，0 有效），下拉、编辑回显、menuTreeList 取树、权限区提示四处改用。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
+
 2026-10-30 ssh dev/7a16416：菜单管理行内「新增」不再按类型隐藏，按钮（F/B）也能新增下级、作上级菜单；部门编辑「上级部门」有值仍报「上级只能选择一级部门」——load 先写 form 再取部门树，el-select 值变化时树为空即校验失败，改为树就绪后与 form 同刻赋值并 clearValidate。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md、docs/qianrong-org-scope-forms.md 末节。
 
 2026-10-29 ssh dev/9613bb3：同事合并 ea81b0f 解坏账户表单模板（用户密码项未闭合、丢账户类型/性别/状态/岗位、角色等重复），导致打包失败，已按三方合并重算修复；DEP0169 url.parse 只是依赖触发的警告。账户类型平台大于企业：assignableUserTypes，企业账户只能选 02/03，编辑已是平台类型的账号置灰回显。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
