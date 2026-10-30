@@ -39,3 +39,13 @@
 颜色、尺寸与字体集中维护 design-tokens.scss，列表规则在 list-page.scss，详情布局及控件在 detail-page.scss；公开规范为 UI_DESIGN_SPEC.md。搜索内边距 13/14/12，卡头 52、分页 60，行操作 12px 常规，首数据列匹配重要编号时加粗；strong 可显式控制。接入新列表按公开说明使用原生组件，保留页面真实业务函数。框架升级后检查原生 DOM 类名和 setColumnWidth/getColumns 行为，特别是操作列测量、分页、列设置和全屏。
 
 推荐八种桌面验收尺寸：1280×720、1366×768、1440×900、1536×864、1920×1080、2560×1080、3440×1440、5120×1440。桌面检查主输入宽度、两栏右边缘、body 溢出、固定列按钮、侧栏状态和底栏遮挡；详情嵌入模式另核对 sticky 和原有隐藏按钮规则。
+
+## 列按接口返回字段渲染（2026-10-30 ssh dev/308a36f，用户明确）
+
+- 口径（用户）：所有列表有一份初始列配置；接口返回了某个 key，值为空（null / 空字符串 / 空数组）表示业务数据为空，照常展示；没有返回这个 key 表示该字段因权限被隐藏，该列直接不渲染。菜单管理这类特殊列表不需要遵循。
+- 范围：24 个用 `withListGridStyle` 的 vxe-grid 标准列表。按本文「系统模块的特殊列表」一节，保留原生 Element 表格、走 `ListTablePanel` 的 8 个特殊列表（菜单管理、第三方日志、日志清理、授权用户 / 待授权用户、用户分配角色、菜单 / 角色列字段工作区）不接入；同节的部门树（vxe 树表）也按特殊列表处理，写 `responseColumns: false` 关闭。详情页内嵌表格、弹窗表格不在范围。
+- 实现：`src/utils/responseColumns.js` 放判断（返回字段 = 当前行数据 Object.keys 的并集；无行返回 null 不判断；`type` 列、`active` / `__qr_actions` / 插槽 active 的操作列不参与；嵌套字段按首段判断；列可写 `responseKey` 字符串 / 数组 / false；分组表头子列全隐藏则整组去掉）。`withListGridStyle` 把 `data` 定义为访问器：页面照常 `gridOptions.data = rows`，setter 存到不可枚举的 `__qrRows` 并按返回字段重算 `columns`（隐藏集合不变时不重赋，避免每次重载列）；空数据保持上一次的列。被过滤的列不传给 vxe-grid，列设置里也没有。`listGrid` 指令测量操作列时比对列对象，列重新加载后重新设宽。
+- 为什么不在请求层打标：曾考虑在响应拦截器给每行挂 Symbol 记录原始 key（可穿透 `{...row}`），但会作用到全部接口、影响深比较；改为约束「行数据保持接口原样」，只有两个页面往行里补过字段，改成 formatter。
+- 页面改动：角色列表不再往行里补 orgName，「所属企业」改 formatter（null 仍显示「企业 {orgId}」，没返回 orgName 就整列隐藏，不拿 orgId 兜底）；准入列表不再补 areaName，「地区」改 formatter，`responseKey: ['provinceCode','cityCode','areaCode']`；企业链「阶段进度」来自另一个接口，`responseKey: false`；流程定义「结构」按 `nodeTypeSeq`。`updateTime || createTime` 这类兜底列按列自身字段严格判断，未加 responseKey。
+- 风险：列 field 与接口 key 不一致的列会被误隐藏（已逐页核对 24 页字段，只发现上述 4 处派生列，未对照真实响应）；首屏先显示全部列、数据回来后再收起；以后新页面若往行里补字段，补的字段会被当成已返回。
+- 公开说明写在 `apps/qianrong/README.md`「列表列按接口字段展示」。测试 `tests/response-columns.test.mjs`（规则、分组、withListGridStyle 赋值与透传、页面源码断言，Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调。

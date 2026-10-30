@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 列表列按接口返回字段渲染
+
+- 需求（用户）：所有列表有初始列配置；接口返回了 key 但值为空 / 空数组 / 空字符串是业务数据为空，没返回这个 key 表示因权限隐藏，该列不渲染。补充：菜单管理这类特殊列表不需要遵循。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 改动（tq-plus dev/308a36f）：utils/responseColumns.js + withListGridStyle 的 data 访问器，覆盖 24 个 vxe-grid 标准列表；ListTablePanel 的 8 个特殊列表不接入，部门树 responseColumns: false。角色 orgName、准入 areaName 改 formatter，派生列 responseKey（地区、阶段进度、结构）。README 公开说明、新增 tests/response-columns.test.mjs。私人 list-style 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 风险：列 field 与接口 key 不一致会被误隐藏（只按源码核对，未对照真实响应）；首屏先全列后收起。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；Python 核过测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 列字段设置改回传自身 menuId
 
 - 需求（用户）：菜单管理点列字段设置，之前说传父级 menuId 是错的，改为传自己的 menuId；角色列级经询问选择一起改为自身。

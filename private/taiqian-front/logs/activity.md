@@ -306,3 +306,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：菜单管理点列字段设置传父级 menuId 是错的，改传自身；角色列级经确认一起改。
 - **改动**：删除 columnTargetMenuId，openColumns 传 row.menuId；roleListMenuOptions 去掉 targetMenuId（自身或父级授权即可选，父级停用跳过），RoleColumnConfig 直接取选中菜单。dev 同名 pull 已最新，dev/253d116 提交后再次 pull 并 push。
 - **验证**：无 Node，测试已改未运行，未构建/浏览器；git diff --check、信息隔离自查通过。
+
+## 2026-10-30 ssh｜标准列表按接口返回字段渲染列
+
+- **需求**：列表初始列配置下，接口返回了 key（值空也算）就展示，没返回的列视为权限隐藏不渲染；菜单管理这类特殊列表不需要。
+- **改动**：新增 utils/responseColumns.js；withListGridStyle 的 data 访问器按返回字段重算 columns；listGrid 列重载后重设操作列宽；角色 orgName、准入 areaName 不再补进行数据改为 formatter；派生列 responseKey；部门树关闭；README 公开说明；新增测试。dev 同名 pull 已最新，dev/308a36f 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行，未构建/浏览器/联调；git diff --check、信息隔离自查通过。

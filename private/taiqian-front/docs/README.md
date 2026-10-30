@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-10-30 ssh dev/308a36f 标准列表按接口返回字段渲染列（未返回 = 权限隐藏不渲染，空值照常展示）；特殊列表与部门树不接入。
 - [qianrong-menu-column-entry.md](qianrong-menu-column-entry.md)末节：2026-10-30 ssh dev/253d116 列字段设置与角色列级都改为传列表菜单自身 menuId，「按钮类传父级」作废。
 - [qianrong-menu-column-entry.md](qianrong-menu-column-entry.md)：2026-10-30 ssh dev/413c0ff 列字段设置入口改为开启是否列表即显示，按钮类列表作用在父级页面，角色列级同口径。
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)末节：2026-10-30 ssh dev/b07b507 列级「列表」选项改为是否列表=是的「XX列表」占位，配置作用在父级页面；菜单管理列字段设置入口口径待确认。
