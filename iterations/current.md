@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 列级列表选项按是否列表过滤
+
+- 需求（用户）：角色列表进入的「数据权限·列级」选择页面菜单要按是否列表过滤，不列「XX管理」；真实列表页都叫「XX管理」，其下冗余一个类型为按钮的「XX列表」占位，就用它，实际生效的还是父级。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 改动（tq-plus dev/b07b507）：role-model 新增 roleListMenuOptions（isList=1、父级存在且父级或占位已授权）；RoleColumnConfig 改用，选中后按父级 getMenu 并传给工作区，去掉仅 C 校验，文案改「列表」。共用组件，列字段配置弹窗同样生效；权限预览未改。私人 role-permission-workspace 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 待确认：菜单管理「列字段设置」入口仍是「C 且名含列表」，与新命名可能对不上。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；Python 核过测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 菜单表单「是否列表」不限制按钮
 
 - 需求（用户）：菜单新增编辑页的「是否列表」不要加限制，按钮类型也允许切为是。

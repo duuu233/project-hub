@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/b07b507：角色列级（及列字段配置弹窗）的列表下拉改用 roleListMenuOptions——是否列表=是的占位（多为「XX列表」按钮），父级或占位已授权即可选，选中后按父级页面加载与保存列配置。权限预览未改；菜单管理「列字段设置」入口（C 且名含「列表」）与新命名可能不符，待确认。未运行测试/构建。详见 docs/qianrong-role-permission-workspace.md 末节。
+
 2026-10-30 ssh dev/09326e9：菜单表单「是否列表」不再按类型限制——去掉按钮禁用、切类型强制 0、回显/提交强制 0；列表页 isListMenu 不再排除按钮。onListChange（是→隐藏）与列字段设置入口不变。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md 末节。
 
 2026-10-30 ssh dev/2bfdd71：配置权限页报 validId is not defined、角色列表删除/启停无效——d2a01cf 把 index.vue、permissions.vue 的 validId 导入换成 validOrgId 却仍在用 validId。用户明确角色 id=0 有效：新增 validRoleId（同 validOrgId），所有角色编号校验改用它；菜单/系统/部门/字段仍用 validId。测试加漏导入守卫。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
