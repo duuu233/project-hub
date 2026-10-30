@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qianrong 数据权限设计思路</title>
+<style>
+  :root { --bg:#ffffff; --fg:#1f2329; --muted:#646a73; --line:#dee0e3; --soft:#f5f6f7; --accent:#3370ff; --accent-soft:#eef3ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.75 -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+  .page { max-width: 920px; margin: 0 auto; padding: 40px 16px 80px; }
+  h1 { font-size: 28px; line-height:1.3; margin: 0 0 24px; }
+  h2 { font-size: 22px; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+  h3 { font-size: 18px; margin: 32px 0 12px; }
+  p, ul, ol { margin: 10px 0; }
+  li { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  strong { color: #000; }
+  blockquote { margin: 16px 0; padding: 12px 16px; background: var(--accent-soft); border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0; }
+  blockquote p { margin: 4px 0; }
+  code { font-family: Menlo, Consolas, monospace; font-size: 13px; background: var(--soft); padding: 1px 5px; border-radius: 4px; }
+  pre { background: var(--soft); padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+  pre code { padding: 0; background: none; }
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); font-weight: 600; white-space: nowrap; }
+  .mermaid { margin: 18px 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; text-align: center; overflow-x: auto; background: #fff; }
+  .notice { padding: 12px 16px; border: 1px solid #f5a623; background: #fff8e6; border-radius: 6px; }
+  @media print {
+    .page { max-width: none; padding: 0; }
+    h2 { break-after: avoid; }
+    .mermaid, table, blockquote { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main class="page" id="content"><p class="notice">正在加载……如果一直停在这里，请检查网络（页面需要从 cdn.jsdelivr.net 加载渲染脚本）。</p></main>
+<script type="text/markdown" id="source"># qianrong 数据权限 · 设计思路
+
+> **一句话：底层通用，上层简单。**
+> 底层是一套通用的“条件规则”，任何业务方、任何场景都能表达；
+> 上层把常用规则包装成**快捷选项**和**规则模板**，运营日常只做选择，不碰条件。
+
+---
+
+## 一、设计出发点
+
+业务方不会只有今天这几类（后面可能有担保方、物流方、保险方……），场景也会不断变化。所以有两条原则：
+
+1. **不把业务方写死**：系统里没有“核心企业”“资金方”这类固定选项，它们都是配置出来的。
+2. **自由度和易用性分层**：复杂留给少数配置规则的人（平台管理员），简单留给大多数使用规则的人（企业管理员、运营）。
+
+---
+
+## 二、整体骨架
+
+```mermaid
+flowchart TB
+    subgraph L1["① 字段字典 · 平台维护"]
+        F["每个列表有哪些字段可用于过滤<br/>每个字段是什么类型：企业 / 人员 / 部门 / 普通值"]
+    end
+    subgraph L2["② 规则 · 通用条件"]
+        R["字段 + 条件 + 值<br/>多个条件可组合"]
+    end
+    subgraph L3["③ 使用方式 · 按人群分层"]
+        Q["快捷选项<br/>身份 × 人员范围"]
+        T["规则模板<br/>平台起好名字，大家直接选"]
+        A["高级条件<br/>少数特殊场景"]
+    end
+    F --> R
+    R --> Q & T & A
+```
+
+三种使用方式**生成的都是同一种规则**，只是入口难度不同。今天用快捷选项配的规则，明天需要更细时可以在高级条件里接着改，不用推倒重来。
+
+---
+
+## 三、核心设计
+
+### 1. 字段带“类型”，选项自动长出来
+
+字段字典直接复用现有“菜单列字段”，给每个字段多标一个类型。类型决定了这个字段**能和什么比**、**界面上出什么选项**：
+
+| 字段类型 | 例子 | 可选的值 |
+| --- | --- | --- |
+| 企业 | 核心企业、融资企业、买方、卖方、担保方 | 当前企业、我的关联企业、指定企业 |
+| 人员 | 经办人、创建人 | 当前用户 |
+| 部门 | 经办部门 | 当前部门、当前部门及下级、指定部门 |
+| 普通值 | 金额、状态、产品、日期 | 填写固定值或范围 |
+
+**“身份”选项就是这个列表里所有“企业”类型的字段。**
+以后新增一个业务方，例如担保方，只要单据上有“担保方”字段并登记为企业类型，所有配置界面就自动出现“作为担保方”，**不需要改功能**。
+
+类型还有一个好处：运营不会配出“金额 = 当前用户”这种无意义的条件，出错的空间小很多。
+
+### 2. 关系也可以扩展
+
+“我的关联企业”这个值，背后可以接不同的关系来源：
+
+```mermaid
+flowchart LR
+    V["我的关联企业"] --> S1["准入关系<br/>如：核心企业名下的融资企业"]
+    V --> S2["项目合作<br/>同一项目方案的参与方"]
+    V --> S3["以后新增的关系类型…"]
+```
+
+- 单据上直接写着的参与方，用“企业字段 = 当前企业”就够了，不需要关系；
+- 单据上没写、但业务上有关联的（如核心企业要看下游融资企业的档案），才用“我的关联企业”；
+- 新的关系类型作为新来源接入，规则的配置方式不变。
+
+### 3. 三种使用方式，各管一类人
+
+| 方式 | 谁用 | 长什么样 | 覆盖 |
+| --- | --- | --- | --- |
+| 快捷选项 | 所有管理员 | 勾身份 + 选人员范围 | 大多数日常场景 |
+| 规则模板 | 所有管理员 | 下拉选一个有名字的规则，如“资金方视角”“大额单据” | 常见的组合场景 |
+| 高级条件 | 平台管理员 | 字段 + 条件 + 值，组内“并且”、组间“或者” | 少数特殊场景 |
+
+模板由平台用高级条件搭好、起个业务名字。企业管理员看到的只是“选一个模板”，**复杂度被关在平台一侧**。
+
+### 4. 企业隔离是底线
+
+企业账户无论怎么配，都只能看到“本企业参与或被关联”的数据。这一条在所有规则之外由系统执行，不能被配置放宽。
+
+### 5. 用户组定默认，角色只管例外
+
+```mermaid
+flowchart TD
+    UG["用户组（如：核心企业组）<br/>默认：作为核心企业 × 全部"]
+    UG --> R1["业务主管<br/>不改，继承"]
+    UG --> R2["经办员<br/>例外：人员改为仅本人"]
+    UG --> R3["风控<br/>例外：合同列表选模板“大额单据”"]
+```
+
+- 新企业绑定用户组即可使用，**零配置**；
+- 改用户组默认值，没设例外的角色自动跟着变；
+- 默认规则对所有列表生效，个别列表可以单独设例外。
+
+### 6. 字段可见性也是“默认 + 例外”
+
+- 每个字段在菜单列字段上有默认值：可见 / 脱敏 / 隐藏；角色只记录与默认不同的字段。
+- **新上线的字段默认隐藏**，确认后才放开。
+- 列表、详情、导出用同一套设置。
+
+### 7. 多个角色时，按角色整体合并
+
+```mermaid
+flowchart LR
+    A["角色甲<br/>融资企业 且 仅本人"] --> M(("或"))
+    B["角色乙<br/>资金方 且 全部"] --> M
+    M --> R["能看：自己经办的融资单<br/>＋ 全部资金方单据"]
+```
+
+每个角色先各自算完，再合起来。不能把条件拆散后各自合并，否则会多看到不该看的数据。
+
+### 8. 字段变了怎么办
+
+规则引用的是字段字典里的字段，字段可能被改名或下线：
+
+```mermaid
+stateDiagram-v2
+    state "正常" as OK
+    state "需处理" as FIX
+    [*] --> OK
+    OK --> FIX: 引用的字段被下线或改类型
+    FIX --> OK: 平台管理员替换字段或删掉该条件
+    note right of FIX
+        处理前按“看不到”执行
+        列表顶部提示管理员
+    end note
+```
+
+- 字段被规则引用时，下线前提示“有 N 条规则在用”；
+- 需处理期间宁可少看，不能多看。
+
+---
+
+## 四、场景检验
+
+### 场景 1：多边订单（买方 / 卖方）
+
+四张订单，C 是核心企业，D 对 A 是买方、对 B 是卖方：
+
+```mermaid
+flowchart LR
+    O1["订单1<br/>A 卖给 D"]
+    O2["订单2<br/>A 卖给 X"]
+    O3["订单3<br/>D 卖给 B"]
+    O4["订单4<br/>Y 卖给 B"]
+    C(("C 核心")) -.-> O1 & O2 & O3 & O4
+```
+
+| 企业 | 配置方式 | 看到 |
+| --- | --- | --- |
+| A、B | 不用配（企业隔离） | 各自参与的订单 |
+| C | 快捷选项：作为核心企业 | 全部 4 张 |
+| D | 快捷选项：作为买方 + 作为卖方 | 订单 1、3 |
+
+### 场景 2：新增业务方
+
+后续接入担保公司 G。单据加“担保方”字段并登记为企业类型 → 所有列表的身份选项自动出现“作为担保方” → 新建“担保方组”勾上它。**没有功能改动。**
+
+### 场景 3：看单据上没有的关联方
+
+核心企业 C 要看名下融资企业的档案，档案上没有核心企业字段。
+→ 高级条件：“融资企业 属于 我的关联企业（准入关系）”，平台存成模板“核心企业穿透”，核心企业组选用。
+
+### 场景 4：按业务值过滤
+
+风控只看 1000 万以上的授信。
+→ 高级条件：“授信金额 ≥ 1000 万”，存成模板“大额单据”，需要的角色选用。
+
+### 场景 5：平台人员分管
+
+平台运营 A 只管产品甲、乙。
+→ 快捷选项选“全平台”，再加条件“产品 属于 甲、乙”；多人分管同样方式，可存成模板。
+
+---
+
+## 五、运营体验
+
+| 操作 | 怎么做 |
+| --- | --- |
+| 新企业入驻 | 绑定用户组，零配置 |
+| 经办员只看自己的 | 角色上改一项人员范围 |
+| 某列表特殊处理 | 给这个列表加一条例外，选模板或快捷选项 |
+| 新业务方 / 新字段 | 平台在字段字典登记一次，各处自动可用 |
+| 想知道某角色能看什么 | 每条规则标注来源（继承 / 例外 / 模板名），可预览真实数据 |
+
+另有一张**按列表看的总览**：一个列表下各用户组的范围和隐藏字段一屏看完（按用户组而不是角色，角色太多看不过来）。
+
+---
+
+## 六、和原方案相比
+
+| 原方案 | 现在 | 为什么 |
+| --- | --- | --- |
+| 管理员直接拼条件 | 保留条件能力，但只开放给平台；日常用快捷选项和模板 | 自由度不减，难度只落在少数人身上 |
+| 条件里字段随便选 | 字段来自字典且带类型，值的选项按类型给出 | 少出错，新业务方自动适配 |
+| 固定变量“我的下游企业” | “我的关联企业”可接多种关系来源 | 新关系类型直接接入 |
+| 独立策略包 + 多层继承 | 用户组定默认 + 模板复用 | 概念少，复用不打折 |
+| 每个角色整份配字段 | 默认 + 例外，新字段默认隐藏 | 不漏配、不重复配 |
+| 多角色“取宽松” | 按角色整体合并 | 防止多看 |
+
+---
+
+## 七、上线步骤
+
+1. **先能用**：字段字典标类型、快捷选项、企业隔离、角色默认 + 列表例外、字段默认 + 例外；先接核心列表。没配置的角色和今天行为一致。
+2. **再灵活**：高级条件、规则模板、用户组默认、按列表总览、预览。
+3. **再扩展**：关联企业的更多关系来源；其余列表全部接入。
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  (async () => {
+    const content = document.getElementById('content')
+    if (!window.marked || !window.mermaid) return
+    content.innerHTML = marked.parse(document.getElementById('source').textContent)
+    content.querySelectorAll('table').forEach(table => {
+      const wrap = document.createElement('div'); wrap.className = 'table-wrap'
+      table.replaceWith(wrap); wrap.appendChild(table)
+    })
+    content.querySelectorAll('pre > code.language-mermaid').forEach(code => {
+      const box = document.createElement('div'); box.className = 'mermaid'
+      box.textContent = code.textContent
+      code.parentElement.replaceWith(box)
+    })
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict', flowchart: { htmlLabels: true } })
+    await mermaid.run({ querySelector: '.mermaid' })
+  })()
+</script>
+</body>
+</html>
