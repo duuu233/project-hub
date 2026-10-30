@@ -300,3 +300,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **问题**：准入列表下的「列表」（按钮占位）没有列字段设置按钮——旧规则只认名称含「列表」的 C 页面。
 - **改动**：入口改为 isList=1 即显示；按钮类跳父级页面，其余跳自身；独立页不再只认 C；角色列级共用同一目标规则。dev 同名 pull 已最新，提交后再次 pull 并 push。
 - **验证**：无 Node，测试已改未运行，未构建/浏览器；git diff --check、信息隔离自查通过。
+
+## 2026-10-30 ssh｜列字段设置改回传自身 menuId
+
+- **需求**：菜单管理点列字段设置传父级 menuId 是错的，改传自身；角色列级经确认一起改。
+- **改动**：删除 columnTargetMenuId，openColumns 传 row.menuId；roleListMenuOptions 去掉 targetMenuId（自身或父级授权即可选，父级停用跳过），RoleColumnConfig 直接取选中菜单。dev 同名 pull 已最新，dev/253d116 提交后再次 pull 并 push。
+- **验证**：无 Node，测试已改未运行，未构建/浏览器；git diff --check、信息隔离自查通过。

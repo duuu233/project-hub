@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 列字段设置改回传自身 menuId
+
+- 需求（用户）：菜单管理点列字段设置，之前说传父级 menuId 是错的，改为传自己的 menuId；角色列级经询问选择一起改为自身。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。
+- 改动（tq-plus dev/253d116）：删除 columnTargetMenuId；openColumns 传 row.menuId；roleListMenuOptions 不再带 targetMenuId，自身或父级授权即可选、父级停用跳过；RoleColumnConfig 直接 getMenu(选中 id)。测试同步。私人 menu-column-entry、role-permission-workspace、docs/README、AI_CONTEXT、logs 已更新。
+- 风险：413c0ff 期间若在父级上配过字段，占位上看不到。
+- 验证：无 node，测试未运行、未构建 / 浏览器；Python 核过测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 列字段设置入口按是否列表显示
 
 - 需求（用户）：菜单管理「准入列表」下的「列表」没有列设置按钮；口径为只要开启了是否列表就显示。

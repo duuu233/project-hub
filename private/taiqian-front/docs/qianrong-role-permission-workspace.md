@@ -60,3 +60,7 @@
 - 影响：列级标签与角色列表 / 角色详情的「列字段配置」弹窗共用此组件，三处一致。权限预览仍用 `roleMenuOptions`（已授权 C 页面 + 对照表），未改。
 - 已处理（同日后续）：入口改为按是否列表显示，目标规则统一为 `columnTargetMenuId`（见 qianrong-menu-column-entry.md）。原待确认：菜单管理的「列字段设置」入口仍是「C 且名称含『列表』」（见 qianrong-menu-column-entry.md），按新的命名，父级「XX管理」不含「列表」、占位又是按钮，入口可能哪一行都不显示；字段定义若需挂在父级上，需另行调整该入口。
 - 测试：`tests/role-contract.test.mjs` 加 roleListMenuOptions 用例（授权父级 / 授权占位 / 停用父级 / 未授权）与源码断言（Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调。
+
+## 2026-10-30 ssh dev/253d116：列级改用列表菜单自身 menuId
+
+- 用户明确「父级生效」口径作废：列级下拉仍只列是否列表=是的菜单，选中后 `role/column/*` 的 menuId 就是该列表菜单自身（与菜单管理列字段设置一致）。上文 b07b507 节中「配置作用在父级 / targetMenuId」的描述不再适用。
