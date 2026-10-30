@@ -47,3 +47,11 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 改动：`fetchTree(orgId)` 改为传参；`load()` 先在局部 `next` 里拼好表单（详情、「新增下级」带入的企业与上级），树和企业选项返回后与 `form` 同一刻赋值，再 `nextTick` 后 `clearValidate()`。校验规则本身（只能挂一级部门、不能自身、含下级不能移、同企业等）不变。
 - 另一种可能未改：上级下拉列的是 `tree.roots`（在当前列表里找不到父级的部门），校验要求上级的 parentId 为 0。若某企业的顶层部门 parentId 不是 0（例如挂在列表外的部门下），会出现下拉能选、校验不过；需要时再按真实数据确认。
 - 测试：`tests/menu-add-dept-parent.test.mjs` 源码断言（树就绪前不写 form、同刻赋值、clearValidate）。无 Node，未运行、未构建 / 浏览器 / 联调。
+
+## 2026-10-30 ssh dev/e8bea29：角色表单用户组 id=0 视为有效（用户明确）
+
+- 现象：角色新增「用户组」下拉没有「平台运营组」（YHZ01，后端初始化数据，id="0"，status 0）。
+- 原因：`loadGroups` 用 `validId` 过滤下拉选项，validId 把 0 当「没有」；同样的判断还在编辑回显补选项、按用户组取菜单树（`menuTreeList`）和权限区提示文案三处，选了 0 也会被当成未选、菜单树为空。
+- 改动：`role-model.js` 新增 `validGroupId`（同 validOrgId，0 有效），角色表单上述四处改用它；validOrgId 注释同步，「用户组 0 = 没有」的旧说法删除。角色、部门上级等其余主键仍用 validId。
+- 核对：企业用户表单的 userGroupIds 走 `normalizeGroupId`，本就放行 0；用户组模块按 query.id 判断，"0" 为真值，不受影响。
+- 测试：`tests/role-contract.test.mjs` 加 validGroupId 用例与源码断言（Python 核过正则匹配）。无 Node，未运行、未构建 / 浏览器 / 联调；id=0 的用户组能否作为角色归属保存以后端为准。
