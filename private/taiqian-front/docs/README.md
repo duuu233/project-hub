@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-10-30 ssh dev/09326e9 菜单表单「是否列表」不限制菜单类型，按钮也可切为是；列表页列表标识不再排除按钮。
 - [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-10-30 ssh dev/2bfdd71 角色 id=0 视为有效（validRoleId）；修复 d2a01cf 漏导入 validId 导致配置权限页报错、列表删除/启停无效。
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-10-30 ssh dev 菜单管理所有行（含按钮）都显示「新增」，按钮也可作上级菜单。
 - [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-10-30 ssh dev/e8bea29 角色表单用户组 id=0（平台运营组）视为有效（validGroupId），下拉、回显、菜单树不再过滤。

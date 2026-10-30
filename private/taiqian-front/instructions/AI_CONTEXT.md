@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/09326e9：菜单表单「是否列表」不再按类型限制——去掉按钮禁用、切类型强制 0、回显/提交强制 0；列表页 isListMenu 不再排除按钮。onListChange（是→隐藏）与列字段设置入口不变。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md 末节。
+
 2026-10-30 ssh dev/2bfdd71：配置权限页报 validId is not defined、角色列表删除/启停无效——d2a01cf 把 index.vue、permissions.vue 的 validId 导入换成 validOrgId 却仍在用 validId。用户明确角色 id=0 有效：新增 validRoleId（同 validOrgId），所有角色编号校验改用它；菜单/系统/部门/字段仍用 validId。测试加漏导入守卫。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
 
 2026-10-30 ssh dev/e8bea29：角色新增「用户组」下拉滤掉了 id=0 的平台运营组——loadGroups 用 validId（0 = 没有）；新增 validGroupId（同 validOrgId，0 有效），下拉、编辑回显、menuTreeList 取树、权限区提示四处改用。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。

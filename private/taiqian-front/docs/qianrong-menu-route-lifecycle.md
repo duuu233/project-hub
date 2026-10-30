@@ -25,3 +25,11 @@
 - 需求：有些菜单没有新增按钮，不用限制，都放开。原先按钮类（F/B）行不显示「新增」，`handleAdd` 也直接返回，新增表单的上级菜单树会剔除按钮，选按钮作上级会被校验拦下。
 - 改动：`config-audit/menu/index.vue` 行内「新增」去掉 `isButtonMenu` 条件，`handleAdd` 不再按类型返回；`template/handleDetail.vue` 的 `menuOptions` 只剔除自身及其下级，按钮也可作为上级，校验提示改为「不能选择自身或下级作为上级菜单」。权限标识 `system:menu:add` 不变；后端是否接受挂在按钮下的菜单未联调。
 - 测试：`tests/menu-add-dept-parent.test.mjs` 源码断言。无 Node，未运行、未构建 / 浏览器。
+
+## 2026-10-30 ssh dev/09326e9：菜单表单「是否列表」不限制菜单类型
+
+- 需求（用户）：新增 / 编辑页的「是否列表」不要加限制，按钮类型也允许切为「是」。
+- 原先：按钮（F/B）时开关禁用；切到按钮类型的 watch 把 isList 强制置 0；编辑回显和提交也对按钮强制 0；列表页「是否列表」列的 `isListMenu` 同样排除按钮，按钮即使存了 1 也显示「—」。
+- 改动：`template/handleDetail.vue` 开关只在详情页（pageType 3）禁用，删掉强制置 0 的 watch，回显、提交按原值取 0/1；`components/column-model.js` 的 `isListMenu` 只看 isList，不再排除按钮。
+- 未改：开关切为「是」时把显示状态设为隐藏（`onListChange`，同事 10-26 加入）保持原样；列字段设置入口 `showColumnSettings`（C 且名称含「列表」）不受 isList 影响，仍不给按钮显示；按钮类型下路由地址等字段照旧隐藏。
+- 测试：`tests/menu-add-dept-parent.test.mjs` 加 isListMenu 用例与源码断言（Python 核过正则）。无 Node，未运行、未构建 / 浏览器；按钮 isList=1 后端是否接受以后端为准。

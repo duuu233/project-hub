@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 菜单表单「是否列表」不限制按钮
+
+- 需求（用户）：菜单新增编辑页的「是否列表」不要加限制，按钮类型也允许切为是。
+- 同步：tq-plus dev 同名 pull 带入同事 6 个提交（34d0743，未涉及菜单表单），Hub main 已最新。
+- 原因：handleDetail.vue 对按钮禁用开关、切类型 watch 强制 0、回显与提交强制 0；列表页 isListMenu 也排除按钮。
+- 改动（tq-plus dev/09326e9）：上述限制全部去掉，开关仅详情页禁用；isListMenu 只看 isList。onListChange（是→隐藏）、列字段设置入口不变。测试补用例。私人 menu-route-lifecycle 末节、contract-matrix 旧口径、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试未运行、未构建 / 浏览器；Python 核过测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 配置权限页 validId 报错、角色删除无效；角色 id=0 有效
 
 - 需求（用户）：角色列表进配置权限页报 `ReferenceError: validId is not defined`；角色列表删除也无效；角色编号 0 也算有效，现在修。
