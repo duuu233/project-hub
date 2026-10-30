@@ -275,3 +275,10 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：1. 菜单管理有些菜单没有新增按钮，不用限制都放开；2. 部门编辑「上级部门」已有有效值仍显示「上级只能选择一级部门」。
 - **改动**：菜单列表「新增」去掉按钮类型条件，表单上级树保留按钮；部门表单 load 改为部门树就绪后与 form 同刻赋值，nextTick 清校验。
 - **验证**：无 Node，测试已加未运行，未构建/浏览器/联调；git diff --check、信息隔离自查通过。
+
+## 2026-10-30 ssh｜角色 id=0 有效 + 修复 validId 未导入
+
+- **问题**：配置权限页 `ReferenceError: validId is not defined`；角色列表删除（及停用/启用）无效。
+- **原因**：d2a01cf 在角色列表与配置权限页把 validId 的导入换成 validOrgId，但仍调用 validId。
+- **改动**：用户明确角色 id=0 有效，新增 validRoleId，8 处角色编号校验改用；测试加用例与漏导入守卫。dev 同名 pull 已最新，dev/2bfdd71 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行、未构建/浏览器/联调；git diff --check、信息隔离自查通过。

@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/2bfdd71：配置权限页报 validId is not defined、角色列表删除/启停无效——d2a01cf 把 index.vue、permissions.vue 的 validId 导入换成 validOrgId 却仍在用 validId。用户明确角色 id=0 有效：新增 validRoleId（同 validOrgId），所有角色编号校验改用它；菜单/系统/部门/字段仍用 validId。测试加漏导入守卫。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
+
 2026-10-30 ssh dev/e8bea29：角色新增「用户组」下拉滤掉了 id=0 的平台运营组——loadGroups 用 validId（0 = 没有）；新增 validGroupId（同 validOrgId，0 有效），下拉、编辑回显、menuTreeList 取树、权限区提示四处改用。未运行测试/构建。详见 docs/qianrong-org-scope-forms.md 末节。
 
 2026-10-30 ssh dev/7a16416：菜单管理行内「新增」不再按类型隐藏，按钮（F/B）也能新增下级、作上级菜单；部门编辑「上级部门」有值仍报「上级只能选择一级部门」——load 先写 form 再取部门树，el-select 值变化时树为空即校验失败，改为树就绪后与 form 同刻赋值并 clearValidate。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md、docs/qianrong-org-scope-forms.md 末节。

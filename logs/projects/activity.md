@@ -2941,3 +2941,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-10-30 | taiqian-front | ssh | dev | 角色表单用户组 id=0 视为有效
 - 角色新增「用户组」下拉不再滤掉 id=0 的平台运营组（原按 validId 视 0 为空），编辑回显、按组取菜单树同步放行。dev/e8bea29 已推送。未运行测试，未构建/联调。
+
+## 2026-10-30 | taiqian-front | ssh | dev | 角色 id=0 有效，修复配置权限页报错与删除无效
+- d2a01cf 漏导入 validId，导致配置权限页报 ReferenceError、角色列表删除/启停无效；按用户口径角色 id=0 有效，新增 validRoleId 统一角色编号校验。dev/2bfdd71 已推送。未运行测试，未构建/联调。

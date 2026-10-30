@@ -55,3 +55,11 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 改动：`role-model.js` 新增 `validGroupId`（同 validOrgId，0 有效），角色表单上述四处改用它；validOrgId 注释同步，「用户组 0 = 没有」的旧说法删除。角色、部门上级等其余主键仍用 validId。
 - 核对：企业用户表单的 userGroupIds 走 `normalizeGroupId`，本就放行 0；用户组模块按 query.id 判断，"0" 为真值，不受影响。
 - 测试：`tests/role-contract.test.mjs` 加 validGroupId 用例与源码断言（Python 核过正则匹配）。无 Node，未运行、未构建 / 浏览器 / 联调；id=0 的用户组能否作为角色归属保存以后端为准。
+
+## 2026-10-30 ssh dev/2bfdd71：角色 id=0 视为有效；修复 validId 未导入（用户明确）
+
+- 现象：角色列表进「配置权限」页报 `Uncaught (in promise) ReferenceError: validId is not defined`；角色列表「删除」点了没反应（不弹确认、不发请求），「停用/启用」同样失效。
+- 原因：10-29 的 d2a01cf（企业 id=0 有效）在 `role/index.vue`、`role/permissions.vue` 把 import 里的 `validId` 直接换成了 `validOrgId`，但两处仍在用 `validId` 校验角色编号：permissions 的 `load()` 第一句、列表 `mutate()` 第一句（在确认框和 try 之前），一执行就抛 ReferenceError。全 qianrong 扫过，只有这两个文件漏导入。
+- 口径：用户明确角色编号 0 也有效。`role-model.js` 新增 `validRoleId`（同 validOrgId），所有角色编号校验改用它：列表删除/启停、配置权限页、角色表单 load 与 `rolePayload`、`RoleColumnConfig`、`RoleDataScopeForm`、`RolePermissionPreview`、`role-column-model.columnContext`。菜单、系统、部门、字段编号及部门上级（0 = 一级）仍用 validId。上一节「角色仍用 validId」的说法作废。
+- 未改：列表对 roleId=1（超级管理员）隐藏行内操作的判断不变；分配用户 / 用户分配角色页没有对角色编号做 0 判断。
+- 测试：`tests/role-contract.test.mjs` 加 validRoleId 用例，并对上述 7 个文件断言「用到哪个 valid* 就必须 import」，防止再次漏导入（Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调；角色 0 能否删除、启停以后端为准。

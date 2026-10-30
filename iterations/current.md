@@ -1,3 +1,13 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 配置权限页 validId 报错、角色删除无效；角色 id=0 有效
+
+- 需求（用户）：角色列表进配置权限页报 `ReferenceError: validId is not defined`；角色列表删除也无效；角色编号 0 也算有效，现在修。
+- 同步：tq-plus dev、Hub main 同名 pull 均已最新。CodeGraph CLI 本机不可用，改用 grep 定位。
+- 原因：10-29 d2a01cf（企业 id=0 有效）把 role/index.vue、role/permissions.vue 的 `validId` 导入换成 `validOrgId`，但两文件仍调用 validId（permissions load 首句、列表 mutate 首句，后者在确认框之前，删除与停用/启用都直接抛错）。全 qianrong 扫描只有这两处漏导入。
+- 改动（tq-plus dev/2bfdd71）：role-model 新增 validRoleId（同 validOrgId），8 处角色编号校验改用；菜单/系统/部门/字段仍用 validId。测试加用例与「用到 valid* 必须 import」守卫。私人 org-scope-forms 末节、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试未运行、未构建 / 浏览器 / 联调；Python 核过测试正则；git diff --check、信息隔离自查通过。角色 0 的删除/启停能否成功以后端为准。
+
+---
+
 ## 2026-10-30 ssh｜qianrong 权限设计思路导出 HTML
 
 - 需求（用户）：md 里的 Mermaid 在其查看工具中不渲染，要求转成 HTML 或 PDF。
