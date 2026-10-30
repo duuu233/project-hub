@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-10-30 ssh dev/413c0ff：菜单管理「列字段设置」入口改为 isList=1 即显示（不看类型、名称），按钮类列表跳父级页面、其余跳自身（columnTargetMenuId），独立页不再只认 C；角色列级 roleListMenuOptions 同用 columnTargetMenuId。menu-column-entry 测试原路径已失效，已重写。未运行测试/构建。详见 docs/qianrong-menu-column-entry.md。
+
 2026-10-30 ssh dev/b07b507：角色列级（及列字段配置弹窗）的列表下拉改用 roleListMenuOptions——是否列表=是的占位（多为「XX列表」按钮），父级或占位已授权即可选，选中后按父级页面加载与保存列配置。权限预览未改；菜单管理「列字段设置」入口（C 且名含「列表」）与新命名可能不符，待确认。未运行测试/构建。详见 docs/qianrong-role-permission-workspace.md 末节。
 
 2026-10-30 ssh dev/09326e9：菜单表单「是否列表」不再按类型限制——去掉按钮禁用、切类型强制 0、回显/提交强制 0；列表页 isListMenu 不再排除按钮。onListChange（是→隐藏）与列字段设置入口不变。未运行测试/构建。详见 docs/qianrong-menu-route-lifecycle.md 末节。

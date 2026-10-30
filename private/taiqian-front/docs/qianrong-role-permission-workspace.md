@@ -58,5 +58,5 @@
 - 口径（用户）：现在真实的列表页菜单都叫「XX管理」（C），其下会冗余一个类型为按钮、名为「XX列表」的占位菜单；列级下拉只列这些占位（是否列表=是），不要再列「XX管理」，但实际生效的仍是它的父级。
 - 改动：`role-model.js` 新增 `roleListMenuOptions`——取 `isList=1` 的启用菜单（不限类型），父级在启用菜单中存在，且父级或占位本身在角色该系统授权的 menuIds 里即可选；同一占位跨系统去重。选项显示「系统 / XX列表」，带 `targetMenuId`=父级。`RoleColumnConfig` 改用它，选中后 `getMenu(父级)` 并把父级交给 `RoleColumnWorkspace`，`role/column/*` 的 menuId 都是父级；去掉「仅支持 C」的校验。下拉标签、空状态文案改为「列表」。
 - 影响：列级标签与角色列表 / 角色详情的「列字段配置」弹窗共用此组件，三处一致。权限预览仍用 `roleMenuOptions`（已授权 C 页面 + 对照表），未改。
-- 待确认：菜单管理的「列字段设置」入口仍是「C 且名称含『列表』」（见 qianrong-menu-column-entry.md），按新的命名，父级「XX管理」不含「列表」、占位又是按钮，入口可能哪一行都不显示；字段定义若需挂在父级上，需另行调整该入口。
+- 已处理（同日后续）：入口改为按是否列表显示，目标规则统一为 `columnTargetMenuId`（见 qianrong-menu-column-entry.md）。原待确认：菜单管理的「列字段设置」入口仍是「C 且名称含『列表』」（见 qianrong-menu-column-entry.md），按新的命名，父级「XX管理」不含「列表」、占位又是按钮，入口可能哪一行都不显示；字段定义若需挂在父级上，需另行调整该入口。
 - 测试：`tests/role-contract.test.mjs` 加 roleListMenuOptions 用例（授权父级 / 授权占位 / 停用父级 / 未授权）与源码断言（Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调。

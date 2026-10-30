@@ -1,3 +1,12 @@
+## 2026-10-30 ssh｜泰乾超级-qianrong 列字段设置入口按是否列表显示
+
+- 需求（用户）：菜单管理「准入列表」下的「列表」没有列设置按钮；口径为只要开启了是否列表就显示。
+- 原因：showColumnSettings 只认「C 且名称含列表」，该行是按钮；独立页也只认 C。
+- 改动（tq-plus dev/413c0ff）：showColumnSettings = isListMenu；新增 columnTargetMenuId（按钮→父级，其余→自身），菜单管理跳转、角色列级选项共用；独立页去掉 C 校验；删除未用 isPageMenu。menu-column-entry 测试（原引用已删除的 system/menu 路径）重写，role-contract 补用例。私人 menu-column-entry、role-permission-workspace、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试未运行、未构建 / 浏览器；Python 核过测试正则；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 列级列表选项按是否列表过滤
 
 - 需求（用户）：角色列表进入的「数据权限·列级」选择页面菜单要按是否列表过滤，不列「XX管理」；真实列表页都叫「XX管理」，其下冗余一个类型为按钮的「XX列表」占位，就用它，实际生效的还是父级。
