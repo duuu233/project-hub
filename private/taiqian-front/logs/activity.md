@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-10-30 ssh｜权限全景方案评审修订
+
+dev 同名 pull 至 ef20279，只读核对角色数据权限、菜单/角色列字段、预览与用户组继承实现后，修订 Hub private 下 qianrong 权限全景方案（结论见其第 0 节）。未改业务代码。
+
 ## 2026-10-29 ssh｜打包失败（账户表单合并冲突）+ 账户类型平台大于企业
 
 dev 干净同名 pull 由 d2a01cf 快进至 ea81b0f（同事 test 合并，45 文件）。定位打包失败为 ea81b0f 解坏 user/template/handleDetail.vue 模板，merge-file 重算修复；userProfile 加 assignableUserTypes，账户类型按登录账户过滤。dev/9613bb3 提交后再次同名 pull 并 push。无 node 未构建、未跑测试；信息隔离自查通过。
