@@ -1,3 +1,16 @@
+## 2026-10-31 home｜全项目同步与花盆后台公用文件类型
+
+- 用户明确当前 home，要求拉取各项目并在花盆后台接入公用文件 fileType，下拉值直接传后端，同时自动补齐菜单页面。
+- 身份与同步：七项目目录、Git 根目录和干净状态核实。Hub main 11eae4c→1c91cf4；花盆APP main 8ede53c→1f85033；花盆后台 main 7f53d3a 已最新；相册APP main d845231→399e8c7；相册后台 main 8e9ddfc 已最新；相册小程序 main-wifi 5d35774→d3e14ed。全部显式同名 ff-only pull，不切分支或配置 upstream；四个既有业务 CodeGraph 索引已同步。
+- 泰乾超级 master/d08dab3、正矿 feature-v1.8.5/f24127b 的 origin 仍为 Codeup，与 home 只认 GitHub 的约定不符；已说明并取得用户“本次跳过这两个项目”的答复。两仓未访问远端、改 remote、切分支或修改文件。
+- 花盆后台结果：新增/编辑必选 fileType（表情动画.mjpeg、植物映射.json、节日素材.mjpeg），原字符串提交；编辑回填、新建重置、空值存量须补选；列表类型列与独立只读详情已完成。复用既有 commonFile 页面和菜单，未重复导航。
+- 契约与外部操作：最新官方 Swagger 已声明 fileType，但未列详情路径；真实 GET 列表/详情 retCode=200，确认详情 id=fileId。按用户授权先预览再 common-file --apply，仅新增详情非导航权限 id=157、parentId=153，更新0、复用5；复核模块五节点存在，左菜单导航仅一处，未绑定角色权限。
+- 验证：相关 JS 语法、生产构建20.03秒、真实页面隔离Chrome交互、1280×900目检、diff/文档链接/信息隔离/凭证扫描通过。覆盖三类新增和编辑负载、回显、必填/错误清除、失败保留、新建重置、列表及详情。浏览器写请求全部为本机模拟；未真实上传/增改删除文件，未部署。目标无 .codegraph/，未新建索引。
+- 交付：flowerpot-admin main/bb847ab 已提交，push前再次显式 pull origin main 成功，再 push GitHub 并核对远端SHA一致，工作区干净。目标 Active 文档与历史已更新，详细边界见目标 docs/common-file-management.md 与 docs/history/2026-10/2026-10-31-common-file-type.md。
+- 剩余：普通角色需管理员绑定新详情权限并重新登录；前端发布待用户安排，详情路径 Swagger 待后端补齐。Hub 仅追加本轮分发和两类流水，不覆盖此前迭代或未完成任务；main 提交并在push前再次同名pull。
+
+---
+
 ## 2026-10-30 ssh｜泰乾超级-qianrong 编辑列字段放开字段名称
 
 - 需求（用户）：菜单和角色的配置权限的编辑列字段弹框，放开字段名称编辑。
