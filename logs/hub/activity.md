@@ -814,3 +814,7 @@ ode --test 6 项全过，git diff --check 通过，正矿工作区干净。
 ## 2026-10-31｜home｜全项目同步与花盆后台文件类型交付留痕
 
 Hub main 已先同名pull至1c91cf4，七项目路径和分支核实，五业务项目同步成功，泰乾/正矿的Codeup来源经用户确认本轮跳过。登记花盆后台main/bb847ab的GitHub交付、隔离浏览器和真实只读验证，以及仅新增详情权限157的授权操作；仅追加iterations和两类流水，保留全部既有内容，不改映射、规则或项目实现说明。默认main提交后再次显式同名pull并push。
+
+## 2026-10-31｜ssh｜花盆APP自定义图片与DP169门禁留痕
+
+用户未声明环境，仅 ssh 映射可解析，按 ssh 执行。Hub main 先同名 pull 至 8396b52，登记 flowerpot main/08a3908 交付；仅追加 iterations 与两类流水，不改映射或规则。提交后再次显式同名 pull 并 push main。

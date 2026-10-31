@@ -1,3 +1,15 @@
+## 2026-10-31 ssh｜花盆APP 自定义图片改名、提示两条、DP169 首次校准门禁
+
+- 需求（用户）：「定制动画」统一改称「自定义图片」；提示列表在「长按文件可删除已选文件」下新增「设备中间按键可长按退出和进入」「左右触摸可以切换自定义图片」；DP169 first_calib（bool rw 默认 false，首用/恢复出厂配网后教程→自动水位校准，完成/跳过/退出即 true，恢复出厂清回 false）为 true 时 app 可进入界面；SD 卡更新类型三种。中途补充：改动写进最后一个报告文档。
+- 环境：用户未声明；home/work 映射为 D:/ 路径，本机只有 ssh 映射能解析，按 ssh 执行。
+- 同步：Hub main 1c91cf4→8396b52（带入 home 10-31 记录）；flowerpot main 1f85033 已最新。无 .codegraph / CLI，用 grep 定位。
+- 询问结果：DP169 拦**整个设备页**（不只水位校准页）；SD 卡类型 App 不改，只写进报告（花盆后台 10-31 已做 fileType）。
+- 改动（flowerpot main/08a3908）：tuya_config 登记 first_calib:169（旧 169 file_download 作废，App 未接过）；SmartPlanterDevice.firstCalibrated（构造默认 true 供 Mock，解析没报过按 false）；设备列表 _openDevice 花盆未完成时提示「请先在设备上完成使用教程与水位校准」不进设备页；页面标题/首页入口/联调日志改名；提示卡四条、高 126→176。测试：DP 表、新增 first_calib 解析、列表门禁、改名断言。10-30 报告追加第四节，history 记录、docs/README、history/README、AI_CONTEXT 已更新。
+- 风险：不带 169 的旧固件进不了设备页；平台功能点需改为 169 first_calib。已在设备页时 169 变 false 不踢出。
+- 验证：本机无 Flutter / Dart，analyze / test / 编译均未运行，未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-31 home｜全项目同步与花盆后台公用文件类型
 
 - 用户明确当前 home，要求拉取各项目并在花盆后台接入公用文件 fileType，下拉值直接传后端，同时自动补齐菜单页面。
