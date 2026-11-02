@@ -2,7 +2,13 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
-## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜纠正出帧地址 + 返回地址下载 + 设备列表连接后回顶
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜出帧基地址改由 download-endpoint 下发
+
+先 GET https://iot.boltfox.cn/api/device/download-endpoint 取 data 基地址（如 https://api.boltfox.cn/），再请求 基地址 + /Client/Basic/imageDitheringBinDownload，参数不变；取不到回落 api.boltfox.cn。撤回上条的「返回地址下载帧」（a0c76a4），设备列表回顶保留。main 6a2e6b5、main-wifi b00e6c6 已 push。无 node 测试未跑、未真机。
+
+---
+
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜纠正出帧地址 + 返回地址下载 + 设备列表连接后回顶（出帧部分已撤回，见上条；回顶保留）
 
 撤回上一条（出帧接口改回 api.yikaltd.com）；接口成功返回帧地址时拼 https://iot.boltfox.cn/api/device/download-endpoint 下载帧；「我的设备」蓝牙连接成功后页面平滑滚回顶部（原无此实现，新加）。main 2873ee3 / f8f52ac / 4df342f 已 push，main-wifi 合入 f59cb74 已 push。无 node 测试未跑、未真机；返回地址字段待联调。
 

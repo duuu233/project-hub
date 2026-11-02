@@ -1,3 +1,15 @@
+## 2026-11-02 ssh｜相册小程序 再纠正：出帧基地址由 download-endpoint 下发（main + main-wifi）
+
+- 需求（用户）：上一版仍理解错。download-endpoint 返回的是出帧服务基地址（如 https://api.boltfox.cn/ 或其它反代域名），最终请求 基地址 + Client/Basic/imageDitheringBinDownload；返回结构与原 IoT 接口一样，地址在 data 里。
+- 同步：main-wifi、main 同名 pull 均最新（main 4df342f）。
+- main：a0c76a4 revert 4df342f（去掉「返回地址拼 download-endpoint 下载帧」，文档一并还原）；6a2e6b5 dithering.js 先 GET download-endpoint（Header userToken，{code:0,data}，5 秒超时），data 去尾 / 作 baseURL 经 clientRequestParts 拼 /Client/Basic/imageDitheringBinDownload，参数不变；取不到（网络 / code≠0 / data 非 http 地址）回落 config.baseURL=https://api.boltfox.cn 且不缓存，成功缓存 10 分钟；不再写死 yikaltd。dithering-backend 改地址断言并补 ⑤ 缓存/反代/回落用例；AI_CONTEXT、pipeline、client-api-matrix、result.js 注释、docs/README、变更记录改为 2026-11-02-抖动出帧基地址下发与设备列表连接后回顶.md（含同日设备列表回顶 f8f52ac，保留）。已 push。
+- main-wifi：merge origin/main b00e6c6 已 push；main 不含 main-wifi 提交。
+- 自行决定（可改）：取不到基地址时回落 api.boltfox.cn 而不是直接报失败；缓存 10 分钟。
+- 提醒：request 合法域名需含 iot.boltfox.cn 及下发的基地址域名（含反代域名）。
+- 验证：本机无 node，测试未运行、未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 纠正：出帧接口改回 yikaltd、返回地址拼 download-endpoint 下载；设备列表连接后回顶（main + main-wifi）
 
 - 需求（用户）：上一条「地址改错了，改回去」——download-endpoint 不是出帧接口，而是接口返回的地址前面拼 https://iot.boltfox.cn/api/device/download-endpoint；另「少了之前加过的动效：蓝牙设备点连接后，设备列表当前位置要丝滑滚回顶部」。
