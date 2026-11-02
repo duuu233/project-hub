@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜抖动出帧接口改调 iot.boltfox.cn
+
+投屏抖动出帧地址由 api.yikaltd.com/api/Client/Basic/imageDitheringBinDownload 改为 https://iot.boltfox.cn/api/device/download-endpoint，参数不变（clientRequestParts 新增 clientQuery 让非 /Client/ 路径照带公共参数）。main/7236f4a 已 push；main-wifi 合入 origin/main 为 0fe239b 已 push。无 node 测试未跑、未真机；需确认小程序后台合法域名含 iot.boltfox.cn。
+
+---
+
 ## 2026-10-29｜taiqian-front｜ssh｜dev｜打包失败修复 + 账户类型平台大于企业
 
 同事合并 ea81b0f 解坏账户表单模板致打包失败（DEP0169 仅为依赖警告），重算三方合并修复；企业账户新增/编辑账户类型只能选企业管理员/企业用户。dev/9613bb3 已 push；无 node 未构建、未跑测试。

@@ -1,3 +1,14 @@
+## 2026-11-02 ssh｜相册小程序 抖动出帧接口改调 iot.boltfox.cn/api/device/download-endpoint（main + main-wifi）
+
+- 需求（用户）：切到 main，把 10-29 改成 api.yikaltd.com 的投屏抖动出帧接口再改为 https://iot.boltfox.cn/api/device/download-endpoint；随后补充「也同步给 main-wifi」。未提及参数变化，按上次口径参数全部不变。
+- 同步：仓库原停 main-wifi（干净），同名 pull 已最新、origin/main 无未合入；按用户指定切 main，同名 pull 已最新（cfd3d19）。origin 为 GitHub。
+- 改动（main/7236f4a）：dithering.js 改 DITHERING_BASE_URL=https://iot.boltfox.cn/api、DITHERING_PATH=/device/download-endpoint。新路径不在 /Client/ 下，原 clientRequestParts 只对 /Client/ 拼公共参数 query，会丢 userToken 等，故 options 新增 clientQuery:true 强制拼；header、form 字段、报错、重试不变。tests/dithering-backend 桩按 clientQuery 拼 query、地址断言改新地址并断言不再走 yikaltd；result.js 头注释、调试台说明文案（debug.wxml，纯文本）、AI_CONTEXT、pipeline、client-api-matrix、docs/README、变更记录 docs/changes/2026-11-02-抖动出帧接口改调iot-download-endpoint.md 同步。
+- main-wifi：切回后 git merge origin/main，全部自动合并，merge 0fe239b 已 push；main 不含 main-wifi 提交（main-wifi 领先 88，main 领先 0）。
+- 提醒：小程序后台 request 合法域名需含 https://iot.boltfox.cn（main-wifi 已用于 IoT 接口，main 正式版若未配需加）；新接口是否仍收 multipart 并回二进制 bin、是否认 userToken 公共参数未联调核实。
+- 验证：本机无 node，测试未运行、未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-10-31 ssh｜花盆APP 自定义图片改名、提示两条、DP169 首次校准门禁
 
 - 需求（用户）：「定制动画」统一改称「自定义图片」；提示列表在「长按文件可删除已选文件」下新增「设备中间按键可长按退出和进入」「左右触摸可以切换自定义图片」；DP169 first_calib（bool rw 默认 false，首用/恢复出厂配网后教程→自动水位校准，完成/跳过/退出即 true，恢复出厂清回 false）为 true 时 app 可进入界面；SD 卡更新类型三种。中途补充：改动写进最后一个报告文档。
