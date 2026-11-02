@@ -2,7 +2,13 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
-## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜抖动出帧接口改调 iot.boltfox.cn
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜纠正出帧地址 + 返回地址下载 + 设备列表连接后回顶
+
+撤回上一条（出帧接口改回 api.yikaltd.com）；接口成功返回帧地址时拼 https://iot.boltfox.cn/api/device/download-endpoint 下载帧；「我的设备」蓝牙连接成功后页面平滑滚回顶部（原无此实现，新加）。main 2873ee3 / f8f52ac / 4df342f 已 push，main-wifi 合入 f59cb74 已 push。无 node 测试未跑、未真机；返回地址字段待联调。
+
+---
+
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜抖动出帧接口改调 iot.boltfox.cn（已于同日撤回，见上条）
 
 投屏抖动出帧地址由 api.yikaltd.com/api/Client/Basic/imageDitheringBinDownload 改为 https://iot.boltfox.cn/api/device/download-endpoint，参数不变（clientRequestParts 新增 clientQuery 让非 /Client/ 路径照带公共参数）。main/7236f4a 已 push；main-wifi 合入 origin/main 为 0fe239b 已 push。无 node 测试未跑、未真机；需确认小程序后台合法域名含 iot.boltfox.cn。
 

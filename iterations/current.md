@@ -1,3 +1,16 @@
+## 2026-11-02 ssh｜相册小程序 纠正：出帧接口改回 yikaltd、返回地址拼 download-endpoint 下载；设备列表连接后回顶（main + main-wifi）
+
+- 需求（用户）：上一条「地址改错了，改回去」——download-endpoint 不是出帧接口，而是接口返回的地址前面拼 https://iot.boltfox.cn/api/device/download-endpoint；另「少了之前加过的动效：蓝牙设备点连接后，设备列表当前位置要丝滑滚回顶部」。
+- 理解：「那个接口」按上下文理解为 yikaltd 出帧接口 imageDitheringBinDownload（投屏上传文件那条）。返回地址的字段名用户未给，代码兼容 retData/data 字符串及 url/path/binUrl/fileUrl/downloadUrl/filePath/fileName。
+- 动效历史：小程序 git 全部历史（-S pageScrollTo/scroll-into-view/scroll-with-animation）、APP、Hub 记录均无设备列表回顶的实现，只有连接后重排 + device-card--promoted 上浮动效；本轮按需求新加。
+- 同步：仓库停 main-wifi，同名 pull 最新；切 main 同名 pull 最新（7236f4a）。
+- main：2873ee3 revert 7236f4a（地址、clientQuery、文档全部还原）；f8f52ac list.js applyConnectedDevice 重排后 scrollListToTop（wx.pageScrollTo scrollTop 0 / duration 300；本页是页面级滚动），新增 tests/device-list-scroll-top；4df342f dithering.js 成功 JSON 带地址 → GET download-endpoint+地址（直接拼接，arraybuffer，网络失败重试 3 次，回 JSON/非 200/空体失败），成功无地址按转化失败，直接回二进制照旧；dithering-backend 补 ⑤ 用例；AI_CONTEXT、pipeline、client-api-matrix、result.js 注释、docs/README、变更记录 2026-11-02-抖动出帧返回地址下载与设备列表连接后回顶.md。均已 push。
+- main-wifi：merge origin/main 自动合并 f59cb74 已 push；main 不含 main-wifi 提交。
+- 待确认：返回地址的真实字段与格式（是否带前导 /、是否已是完整 URL——完整 URL 也会被直接拼接）；下载是否需要鉴权头（现未带）；request 合法域名含 iot.boltfox.cn。
+- 验证：本机无 node，测试未运行、未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 抖动出帧接口改调 iot.boltfox.cn/api/device/download-endpoint（main + main-wifi）
 
 - 需求（用户）：切到 main，把 10-29 改成 api.yikaltd.com 的投屏抖动出帧接口再改为 https://iot.boltfox.cn/api/device/download-endpoint；随后补充「也同步给 main-wifi」。未提及参数变化，按上次口径参数全部不变。
