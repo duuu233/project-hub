@@ -1,3 +1,15 @@
+## 2026-11-02 ssh｜相册APP 同步小程序：出帧基地址由 download-endpoint 下发 + 我的设备连接后回顶（仅 main）
+
+- 需求（用户）：把今天小程序的改动同步给相册APP，只同步 main；包括前面那个动效，检查 APP 是否已有。
+- 同步：APP 原停 main-wifi（干净），同名 pull 最新；按用户指定切 main，同名 pull 最新（399e8c7）。origin 为 GitHub。未合入 main-wifi（用户只要 main），仓库现停 main。
+- 动效核查：APP my_devices_page 已有 _PromotionTransition（复刻小程序 devicePromoted 上移动效，promotedDeviceId 由 devices_page._notePromotion 在连接设备切换时设置 560ms），但没有滚回顶部——与小程序原状一致。
+- main/77d4df9：MyDevicesPage ListView 挂 ScrollController，promotedDeviceId 由空变为某台时下一帧 animateTo(0, 300ms, easeOutCubic)（覆盖列表连接、详情页连接、自动重连三条路径，已在顶不动）。未加 widget 测试。
+- main/31b20c3：DitheringApi.resolveBaseUrl GET download-endpoint（userToken 头、5 秒、走 ApiClient.httpClient 便于 MockClient），code=0 且 data 为 http(s) 地址则去尾 / 缓存 10 分钟，否则回落 ApiConfig.baseUrl 不缓存；ApiClient.postMultipartForBytes/_uri 加可选 baseUrl。说明：APP main 此前未跟 10-29 的 yikaltd 改动（当时用户要求只改小程序），本轮直接从固定 ApiConfig.baseUrl 改为下发基地址。dithering_api_test 改断言并补缓存 / 反代 / 回落用例；AI_CONTEXT、API_INTEGRATION、PROJECT_STRUCTURE、docs/README、history/2026-11/2026-11-02-dithering-endpoint-and-list-scroll-top.md。已 push。
+- 验证：本机无 Flutter/Dart，analyze/test 未运行、未真机；git diff --check、信息隔离自查通过。
+- 待用户决定：是否也合入 APP main-wifi。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 再纠正：出帧基地址由 download-endpoint 下发（main + main-wifi）
 
 - 需求（用户）：上一版仍理解错。download-endpoint 返回的是出帧服务基地址（如 https://api.boltfox.cn/ 或其它反代域名），最终请求 基地址 + Client/Basic/imageDitheringBinDownload；返回结构与原 IoT 接口一样，地址在 data 里。

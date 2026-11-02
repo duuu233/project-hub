@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-app｜ssh｜main｜同步小程序：出帧基地址下发 + 我的设备连接后回顶
+
+抖动出帧先取 https://iot.boltfox.cn/api/device/download-endpoint 的 data 作基地址，再请求 基地址 + /Client/Basic/imageDitheringBinDownload，取不到回落 ApiConfig.baseUrl；我的设备原有上移动效但无回顶，新加连接设备切换后平滑滚回顶部。main 77d4df9 / 31b20c3 已 push，未合 main-wifi。无 Flutter，analyze/test 未跑、未真机。
+
+---
+
 ## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜出帧基地址改由 download-endpoint 下发
 
 先 GET https://iot.boltfox.cn/api/device/download-endpoint 取 data 基地址（如 https://api.boltfox.cn/），再请求 基地址 + /Client/Basic/imageDitheringBinDownload，参数不变；取不到回落 api.boltfox.cn。撤回上条的「返回地址下载帧」（a0c76a4），设备列表回顶保留。main 6a2e6b5、main-wifi b00e6c6 已 push。无 node 测试未跑、未真机。
