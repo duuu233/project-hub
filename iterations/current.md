@@ -1,3 +1,15 @@
+## 2026-11-02 ssh｜相册小程序 WiFi 详情去掉顶部设备ID（main-wifi）；投屏进度页显示出帧地址（main → main-wifi）
+
+- 需求（用户）：① main-wifi 设备详情头部设备名下的设备ID去掉（与下面功能栏重复）；② 切 main，在投屏进度页把获取到的地址打印到页面上，方便调试。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新；切 main 同名 pull 带入本地落后的 076ea8c（用户的「合并」提交）。origin 为 GitHub。
+- ① main-wifi/e7a9d36：删 wifi-detail 顶部「设备ID xx」及 .wifi-detail-head__id 样式；wifi-tf-local-mode 补「顶部不再显示设备ID」断言；同日变更记录与 docs/README 追加说明。
+- ② main/46c3c86：dithering.js 记录最近一次取出帧地址 getLastEndpoint()（来源 endpoint 接口下发 / cache 缓存 / fallback 回落默认、baseURL、requestURL 不带公共参数不含 userToken、返回概要 HTTP/code/data 或网络失败原因）；蓝牙投屏进度页 fetchDitheringFrame 出帧后（finally，成功失败都显示）在说明下方显示虚线调试框，点击复制；仅开发版 / 体验版显示（envVersion develop/trial，取不到按正式版不显示）。dithering-backend 补 ⑥ 用例；变更记录 docs/changes/2026-11-02-投屏进度页显示出帧地址（调试）.md、docs/README。
+- main-wifi：merge origin/main f0b4997 已 push（result.js 冲突：保留 main-wifi 的 type: await this.ditherTypeFor(device, info) 并套上 try/finally 调试显示；docs/README 变更记录合并）。origin/main 无未合入。仓库现停 main-wifi。
+- 自行决定（可改）：调试框正式版不显示（main 是线上分支，避免地址暴露给用户）；如需正式版也显示需用户说明。上线前可整体去掉。
+- 验证：本机无 node，测试未运行，未开发者工具 / 真机目检；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 WiFi 版详情：设备ID、屏幕尺寸行（main-wifi）
 
 - 需求（用户）：第 7 点「设备信息下新增设备ID（同蓝牙样式）」、第 8 点「设备ID下新增屏幕尺寸（同蓝牙样式）」之前没改；原电量旁边（顶部卡片）的屏幕尺寸去掉，改为第 8 点显示。

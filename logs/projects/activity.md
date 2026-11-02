@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜投屏进度页显示出帧地址（调试）；WiFi 详情去掉顶部设备ID
+
+main-wifi/e7a9d36 去掉顶部设备ID；main/46c3c86 进度页显示出帧地址来源 / 基地址 / 请求地址 / 返回（仅开发版、体验版），merge 到 main-wifi f0b4997。均已 push；无 node，测试未跑、未目检。
+
+---
+
 ## 2026-11-02｜album-miniapp｜ssh｜main-wifi｜WiFi 详情设备ID、屏幕尺寸行
 
 功能栏设备信息下加设备ID、屏幕尺寸两行（同蓝牙），顶部卡片去掉屏幕尺寸。main-wifi/fc63897 已 push；无 node，测试未跑、未目检。
