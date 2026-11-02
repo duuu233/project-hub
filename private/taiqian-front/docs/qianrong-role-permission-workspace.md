@@ -1,6 +1,6 @@
 # 角色配置权限工作区
 
-当前口径：2026-10-26 ssh，用户明确行级、列级、预览三个标签不是新功能，改接现有接口；功能权限标签仍为前端模型。配置权限已是独立页面（`permissions.vue`，`/system/role-permission/index/:roleId`），下文 work 静态版描述中的“弹窗”“行级五档”“列级演示三态”“合成样例预览”均已被本节取代。
+当前口径：2026-10-26 ssh，用户明确行级、列级、预览三个标签不是新功能，改接现有接口；功能权限标签 2026-11-02 起也接真实数据（见文末节）。配置权限已是独立页面（`permissions.vue`，`/system/role-permission/index/:roleId`），下文 work 静态版描述中的“弹窗”“行级五档”“列级演示三态”“合成样例预览”均已被本节取代。
 
 ## 2026-10-26 ssh 接口化（当前有效）
 
@@ -71,3 +71,16 @@
 - 核对：菜单 `MenuColumnForm` 的字段名称本来就可编辑（只有详情模式整表只读），未改；角色 `RoleColumnForm`（配置权限页列级标签、角色列表 / 详情的列字段配置弹框共用）原为 disabled 展示。
 - 改动：`RoleColumnForm` 字段名称改为可输入（必填标记、maxlength 30、字数提示）；`roleColumnPayload` 提交前去首尾空格，空值报「请输入字段名称」、超 30 字报「字段名称最多30字」，规则同菜单列字段。字段编码、字段类型仍只读。
 - 测试：role-contract 补 payload 断言与源码断言（Python 核过正则）。无 Node，未运行、未构建 / 联调；后端 `PUT role/column` 是否接受修改 fieldName 以接口为准。
+
+## 2026-11-02 ssh dev：功能权限接真实数据（用户明确，取代「功能权限标签仍为前端模型」）
+
+- 问题：用户反馈配置权限里菜单没有按角色、按所属用户组展示。原因是功能权限标签（`RoleFunctionPanel`）一直用前端示例模型（示例系统 / 示例勾选，保存只写内存），不读角色详情、不调用户组菜单接口；与 `userGroupId=0` 无关（`validGroupId` 认 0）。
+- 改法：与角色编辑页 `handleDetail.vue` 同一套取数与保存口径，面板独立实现（未抽公共函数，编辑页不动）：
+  - 可选范围：GET `/user/groups/menuTreeList?userGroupsId=<角色 userGroupId>` ∩ `listMenu` 启用菜单；`systemSources` 合并系统列表；角色未设用户组时提示先在编辑角色中选择，不请求菜单树。
+  - 回显：详情 `roleSystems[].menuIds` 经 `pickCheckedLeaves` 勾选；关联系统可用「管理」（`SystemManageDialog`）增减。
+  - 保存：`updateRole(rolePayload(详情字段, grants, true))`，只替换 `roleSystems` / `menuIds`；用户组读不到的已关联系统原授权原样带回；超出用户组范围的原授权保存前确认移除。保存后 `permissions.vue` 重取详情（不切标签），面板按新授权重新回显。
+  - 「可选权限范围（只读）」折叠区改为展示所属用户组范围。
+- 删除 `permission-workspace-model.js`（示例模型，仅此处使用）；`role-permission-workspace` 用例改为断言真实取数 / 保存与不再引用示例模型，`role-contract` 主键检查纳入 `RoleFunctionPanel.vue`。
+- 风险：保存走整角色 `PUT /system/role`，与编辑页相同，会带上详情里的其余字段；同一角色同时在编辑页改基本信息可能互相覆盖（后保存者生效）。
+- 验证：ssh 无 Node，`node --test`、构建、浏览器、联调均未运行。
+

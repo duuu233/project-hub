@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜taiqian-front｜ssh｜dev｜配置权限功能权限接真实数据
+
+功能权限标签原为前端示例模型，改为按角色所属用户组取菜单范围、roleSystems 回显、updateRole 保存。dev/2f1f402 已 push；无 Node，测试 / 构建未跑。
+
+---
+
 ## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜撤回出帧地址调试显示
 
 联调通过后撤回进度页调试框，保留 data.endpoint 取址。main/7f28502、main-wifi/caf8e43 已 push；测试未跑。
