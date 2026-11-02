@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜flowerpot-app｜ssh｜main｜联调日志框拉高并常显滚动条
+
+日志区封顶由 180 拉到屏高 45%（不低于 180），滚动条常显。main/5f56e83 已 push；无 Flutter，analyze/test 未跑、未真机。
+
+---
+
 ## 2026-11-02｜album-app｜ssh｜main｜同步小程序：出帧基地址下发 + 我的设备连接后回顶
 
 抖动出帧先取 https://iot.boltfox.cn/api/device/download-endpoint 的 data 作基地址，再请求 基地址 + /Client/Basic/imageDitheringBinDownload，取不到回落 ApiConfig.baseUrl；我的设备原有上移动效但无回顶，新加连接设备切换后平滑滚回顶部。main 77d4df9 / 31b20c3 已 push，未合 main-wifi。无 Flutter，analyze/test 未跑、未真机。

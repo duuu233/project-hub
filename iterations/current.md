@@ -1,3 +1,12 @@
+## 2026-11-02 ssh｜花盆APP 联调日志框拉高并常显滚动条
+
+- 需求（用户）：花盆下方「联调日志」高度拉高一点，显示滚动条，方便查看日志。
+- 同步：flowerpot main 干净，同名 pull 最新（08a3908），origin 为 GitHub。
+- main/5f56e83：interaction_log_panel.dart 日志区 maxHeight 由 180 改为屏高 45%（不低于 180）；加 ScrollController + Scrollbar(thumbVisibility: true)，SingleChildScrollView 共用控制器、保留 reverse（新日志在底部），右侧留 10 给滑块。浮层、开关、门禁未动。小改动未写项目 history 记录。已 push。
+- 验证：本机无 Flutter，analyze/test 未运行、未真机；git diff --check 通过。
+
+---
+
 ## 2026-11-02 ssh｜相册APP 同步小程序：出帧基地址由 download-endpoint 下发 + 我的设备连接后回顶（仅 main）
 
 - 需求（用户）：把今天小程序的改动同步给相册APP，只同步 main；包括前面那个动效，检查 APP 是否已有。
