@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp｜ssh｜main-wifi｜WiFi 详情设备ID、屏幕尺寸行
+
+功能栏设备信息下加设备ID、屏幕尺寸两行（同蓝牙），顶部卡片去掉屏幕尺寸。main-wifi/fc63897 已 push；无 node，测试未跑、未目检。
+
+---
+
 ## 2026-11-02｜album-miniapp｜ssh｜main-wifi｜轮播设置轮播开启中标记
 
 我的设备 WiFi 卡与 WiFi 详情「轮播设置」在 strategy.running 时显示绿点 +「轮播中」（样式绘制，正式图标待替换）。main-wifi/c8d8bb9 已 push；无 node，测试未跑、未目检。
