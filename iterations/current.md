@@ -1,3 +1,13 @@
+## 2026-11-02 ssh｜相册小程序 WiFi 版「轮播设置」轮播开启中标记（main-wifi）
+
+- 需求（用户）：轮播开启中时，列表页 / 详情页「轮播设置」加图标辅助告知用户。用户提到「首页图标」，但终端未收到图片、首页也无此图标；经询问选「先用代码画的标记」「仅 WiFi 版」。
+- 同步：Hub main、photo-album main-wifi 同名 pull 均已最新，origin/main 无未合入。
+- main-wifi/c8d8bb9（已 push）：wifi-status.fetchSlideshowRunning（GET /api/device/strategy 的 running，查不到返回 null 保持原样）；我的设备 WiFi 卡与 WiFi 详情「轮播设置」开启中显示图标右上角绿点（呼吸光圈）+「轮播中」小标签（#0e9f87 同轮播设置色）；列表 onShow 重拉时每台查一次、沿用上次标记不闪，详情进页查一次。新增 tests/wifi-slideshow-on.test.js；变更记录 docs/changes/2026-11-02-WiFi版轮播开启中标记.md、docs/README、AI_CONTEXT。
+- 待办：正式图标到位后替换两处 .slideshow-on-dot。
+- 验证：本机无 node，测试未运行，未开发者工具 / 真机目检；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜相册APP main→main-wifi 同步；相册小程序 main-wifi 对接 WiFi 版 OTA 升级
 
 - 需求（用户）：① 确认相册小程序、相册APP 的 main 今天的改动已同步给 main-wifi（main 线上版、main-wifi 下一版本，main 改动要同步）；② 相册小程序切 main-wifi，按 docs/前端对接文档20261031.md 对接 OTA 升级模块。

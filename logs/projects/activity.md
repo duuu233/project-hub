@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp｜ssh｜main-wifi｜轮播设置轮播开启中标记
+
+我的设备 WiFi 卡与 WiFi 详情「轮播设置」在 strategy.running 时显示绿点 +「轮播中」（样式绘制，正式图标待替换）。main-wifi/c8d8bb9 已 push；无 node，测试未跑、未目检。
+
+---
+
 ## 2026-11-02｜album-app｜ssh｜main-wifi｜合入 main 的出帧基地址下发与列表回顶
 
 merge origin/main（77d4df9、31b20c3），README 与 my_devices_page 冲突手工解决（分组 ListView 挂 controller）。main-wifi/c79f9b4 已 push；无 Flutter，analyze/test 未跑。
