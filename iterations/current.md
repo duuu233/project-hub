@@ -1,3 +1,13 @@
+## 2026-11-02 ssh｜泰乾超级-qianrong 角色「配置权限」菜单未按角色 / 用户组展示：排查（未改代码）
+
+- 问题（用户）：角色管理 → 配置权限，菜单没有按角色正确展示（应继承角色所属用户组）；附 role 151 详情：userGroupId=0、orgId=0、roleSystems 1 个系统（1094155429781405696）191 个 menuIds。
+- 同步：tq-plus dev 同名 pull 已最新；本机无 codegraph CLI，按 grep 定位。
+- 结论：配置权限页 permissions.vue 的「功能权限」Tab（RoleFunctionPanel）完全是前端静态模型——系统/菜单取 permission-workspace-model 的 demoSystems，已选取 createPermissionDemo() 的固定 grants，「保存功能权限」只写回内存；不读详情的 roleSystems / menuIds / userGroupId，也不调 menuTreeList。属 10-26 口径「行级、列级、预览改接现有接口，功能权限标签仍为前端模型」的遗留，不是用户组 0 的问题。
+- 对照：角色编辑页 handleDetail.vue 已接真实数据——menuTreeList?userGroupsId=<userGroupId>（validGroupId 认 0）∩ 启用菜单，pickCheckedLeaves 回显 roleSystems，updateRole 保存。
+- 待用户决定：功能权限 Tab 改接真实数据（复用编辑页的取数与保存口径）或先隐藏 / 跳转编辑页。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 撤回投屏进度页出帧地址调试显示（main + main-wifi）
 
 - 需求（用户）：联调测试已通过（贴回调试框：来源接口下发、基地址 https://apirp.boltstar.net、返回 data={"region":"CN","endpoint":"https://apirp.boltstar.net"}），把调试日志的内容去掉、还原回来。
