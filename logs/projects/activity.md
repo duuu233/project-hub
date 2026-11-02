@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜撤回出帧地址调试显示
+
+联调通过后撤回进度页调试框，保留 data.endpoint 取址。main/7f28502、main-wifi/caf8e43 已 push；测试未跑。
+
+---
+
 ## 2026-11-02｜album-miniapp + album-app｜ssh｜main + main-wifi｜出帧基地址改取 data.endpoint
 
 download-endpoint 实际 data={region, endpoint}，两端改取 endpoint（字符串兼容）。小程序 main/610e71b、main-wifi/cddf5ab；APP main/ca8a96c、main-wifi/4a8ac89，均已 push；测试未跑。

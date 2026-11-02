@@ -1,3 +1,14 @@
+## 2026-11-02 ssh｜相册小程序 撤回投屏进度页出帧地址调试显示（main + main-wifi）
+
+- 需求（用户）：联调测试已通过（贴回调试框：来源接口下发、基地址 https://apirp.boltstar.net、返回 data={"region":"CN","endpoint":"https://apirp.boltstar.net"}），把调试日志的内容去掉、还原回来。
+- 同步：Hub、小程序 main / main-wifi 同名 pull 均已最新。
+- main/7f28502：git revert 46c3c86（进度页调试框、dithering 的 getLastEndpoint / 记录、dithering-backend ⑥、调试变更记录与 README 条目），冲突处保留 610e71b 的 data.endpoint 取址与其用例。
+- main-wifi：merge origin/main caf8e43（result.js 冲突取 main-wifi 的 ditherTypeFor 写法、去掉 try/finally；README 去掉调试条目）。核对：两支 subpackages/projection/result/ 与加调试前（main 076ea8c、main-wifi e7a9d36）无差异。均已 push，仓库停 main-wifi，origin/main 无未合入。
+- 相册APP 未加过该调试显示，无需处理。
+- 验证：本机无 node，测试未运行；git diff --check 通过。
+
+---
+
 ## 2026-11-02 ssh｜出帧基地址改取 download-endpoint 的 data.endpoint（相册小程序、相册APP，main + main-wifi）
 
 - 需求（用户）：取地址接口 https://iot.boltfox.cn/api/device/download-endpoint 实际返回 HTTP 200 code=0 data={"region":"CN","endpoint":"https://apirp.boltstar.net"}，取 endpoint 值。（此前按 data 直接是地址字符串实现，对象形式会一律回落 api.boltfox.cn。）
