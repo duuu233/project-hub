@@ -1,3 +1,15 @@
+## 2026-11-02 ssh｜相册APP main→main-wifi 同步；相册小程序 main-wifi 对接 WiFi 版 OTA 升级
+
+- 需求（用户）：① 确认相册小程序、相册APP 的 main 今天的改动已同步给 main-wifi（main 线上版、main-wifi 下一版本，main 改动要同步）；② 相册小程序切 main-wifi，按 docs/前端对接文档20261031.md 对接 OTA 升级模块。
+- 同步：Hub main 已最新。小程序原就停 main-wifi，同名 pull 带入用户 14:13~14:14 的两个「合并」提交（main 076ea8c 改 project.private.config.json；main-wifi aead6fe 新增 20261031 对接文档），origin/main 已全部在 main-wifi 内。APP 停 main（干净），同名 pull 已最新；origin 均 GitHub。
+- ① 核对结果：小程序 main-wifi 已含 main 全部提交，无需操作。APP main-wifi 缺 77d4df9、31b20c3（上一轮只做了 main），按用户本次要求切 main-wifi，同名 pull 后 git merge origin/main：docs/README.md（两支各自的「本次更新」行，合为 11-02 在前、main-wifi 各条在后）与 my_devices_page.dart（main-wifi 分组 ListView(children) 与 main 的 ListView.separated(controller:) 冲突，取分组写法并挂 controller: _scroll）手工解决；其余自动合并。merge c79f9b4 已 push，APP 现停 main-wifi，origin/main 无未合入。
+- ② 小程序 main-wifi/c1cac77（已 push）：新 utils/wifi-ota.js（evaluate 按 x.y.z 数字段比，当前版本空/旧格式 → 无法判断；stepsFor 四步，FAILED/TIMEOUT 在当前步打叉；ota_inflight:{deviceNo} 带 type:'ota' 存取，终态/4044 清，VERIFYING/查询失败保留；isBusyError 4045 与 OTA 上的 4000）；iot-api 加 startOta / getOtaStatus；新页 subpackages/device/wifi-ota（@import 配网页 wxss 同形态，3 秒轮询 + WS ota.result 按 msgid，重连补查，隐藏停轮询；VERIFYING 四步全勾可离开；重进 VERIFYING 显示「升级完成 · 等待设备重启」不再提示升级；4000/4045 切「设备正在升级」）；WiFi 详情消息中心后加「固件升级」行（当前版本 + 红点，进行中显示「升级中」，订阅 ota.result）；wifi-messages 加 OTA_SUCCESS / OTA_FAILED；app.js 强制升级弹窗对 WiFi 版先查进行中记录、进 wifi-ota。新增 tests/wifi-ota.test.js，wifi-tf-local-mode 详情沙箱补注入 wifi-ota。文档：变更记录 docs/changes/2026-11-02-WiFi版固件升级OTA.md、docs/README（变更记录 + 参考表登记 20261031 文档）、AI_CONTEXT 新节、wifi/对接开发进度 STEP 6 改「已实现，待联调」。
+- 自行决定（可改）：目标版本 / 固件包沿用老服务 getDeviceDetail 的 newVersionNo / downloadPath（文档未说 WiFi 版从哪取）；type 固定 main，无 FPGA 入口；4000 服务端文案明显非「升级/进行中」时按普通失败；轮询 3 秒；下发前二次确认弹窗。
+- 待确认：getDeviceDetail 对 WiFi 版是否下发 newVersionNo / downloadPath，newVersionNo 是否同为 x.y.z。
+- 验证：本机无 node / Flutter，小程序测试、APP analyze/test 均未运行，未开发者工具 / 真机 / 联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜花盆APP 联调日志框拉高并常显滚动条
 
 - 需求（用户）：花盆下方「联调日志」高度拉高一点，显示滚动条，方便查看日志。

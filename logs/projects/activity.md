@@ -2,6 +2,18 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-app｜ssh｜main-wifi｜合入 main 的出帧基地址下发与列表回顶
+
+merge origin/main（77d4df9、31b20c3），README 与 my_devices_page 冲突手工解决（分组 ListView 挂 controller）。main-wifi/c79f9b4 已 push；无 Flutter，analyze/test 未跑。
+
+---
+
+## 2026-11-02｜album-miniapp｜ssh｜main-wifi｜WiFi 版 OTA 升级对接
+
+核对 main-wifi 已含 main 全部提交。按 20261031 对接文档新增 wifi-ota 步骤页（四步到 VERIFYING、失败当前步打叉、msgid 带类型本地保存恢复、4000/4045 按进行中）、详情「固件升级」入口、OTA 消息类型、强制升级弹窗区分 WiFi。main-wifi/c1cac77 已 push；无 node，测试未跑、未真机/联调。
+
+---
+
 ## 2026-11-02｜flowerpot-app｜ssh｜main｜联调日志框拉高并常显滚动条
 
 日志区封顶由 180 拉到屏高 45%（不低于 180），滚动条常显。main/5f56e83 已 push；无 Flutter，analyze/test 未跑、未真机。
