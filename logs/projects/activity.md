@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-02｜album-miniapp + album-app｜ssh｜main + main-wifi｜出帧基地址改取 data.endpoint
+
+download-endpoint 实际 data={region, endpoint}，两端改取 endpoint（字符串兼容）。小程序 main/610e71b、main-wifi/cddf5ab；APP main/ca8a96c、main-wifi/4a8ac89，均已 push；测试未跑。
+
+---
+
 ## 2026-11-02｜album-miniapp｜ssh｜main + main-wifi｜投屏进度页显示出帧地址（调试）；WiFi 详情去掉顶部设备ID
 
 main-wifi/e7a9d36 去掉顶部设备ID；main/46c3c86 进度页显示出帧地址来源 / 基地址 / 请求地址 / 返回（仅开发版、体验版），merge 到 main-wifi f0b4997。均已 push；无 node，测试未跑、未目检。

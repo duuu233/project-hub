@@ -1,3 +1,14 @@
+## 2026-11-02 ssh｜出帧基地址改取 download-endpoint 的 data.endpoint（相册小程序、相册APP，main + main-wifi）
+
+- 需求（用户）：取地址接口 https://iot.boltfox.cn/api/device/download-endpoint 实际返回 HTTP 200 code=0 data={"region":"CN","endpoint":"https://apirp.boltstar.net"}，取 endpoint 值。（此前按 data 直接是地址字符串实现，对象形式会一律回落 api.boltfox.cn。）
+- 同步：Hub、小程序 main / main-wifi、APP main / main-wifi 同名 pull 均已最新；origin 均 GitHub。
+- 小程序 main/610e71b：dithering.js 新增 endpointOf（data 为对象取 endpoint，字符串仍兼容）；dithering-backend 默认桩改对象形式，补实测返回、字符串兼容、对象缺 endpoint 回落三例；AI_CONTEXT、pipeline、client-api-matrix、11-02 变更记录同步。main-wifi merge cddf5ab。均已 push，仓库停 main-wifi。
+- APP（用户未单独点名，同一接口同一缺陷，一并修）main/ca8a96c：DitheringApi._endpointOf 同口径；dithering_api_test 桩改对象、补用例；AI_CONTEXT、API_INTEGRATION、PROJECT_STRUCTURE、11-02 history 同步。main-wifi merge 4a8ac89。均已 push，仓库停 main-wifi。
+- 提醒：小程序 request 合法域名需加 https://apirp.boltstar.net（APP 无此限制）。最终请求为 https://apirp.boltstar.net/Client/Basic/imageDitheringBinDownload，是否需要 /api 前缀以联调为准。
+- 验证：本机无 node / Flutter，测试未运行、未真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜相册小程序 WiFi 详情去掉顶部设备ID（main-wifi）；投屏进度页显示出帧地址（main → main-wifi）
 
 - 需求（用户）：① main-wifi 设备详情头部设备名下的设备ID去掉（与下面功能栏重复）；② 切 main，在投屏进度页把获取到的地址打印到页面上，方便调试。
