@@ -4,6 +4,7 @@
 - 同步：Hub main、tq-plus dev 同名 pull 已最新；核实 5439e32 已在 origin/dev（不在 master）。
 - 原因：5439e32 匹配不到列表菜单就静默不调；漏了 B 类按钮、Layout 占位、perms 为空、路径前缀层级不同等情况，菜单列表失败还会被缓存成空。
 - dev/25efecc（已 push）：放宽匹配（最近真实页面、页面 perms 兜底、路径末段、路由标题），失败不缓存，开发环境控制台 `[列表列字段]` 输出原因与候选菜单；README 同步；测试补两例。私人 docs、AI_CONTEXT、logs 已更新。
+- 用户追加口径：isList 菜单是占位，应找它的上一级；进入列表取对应权限标识调 policyColumns；权限标识为空才找上一级。dev/d5b543b（已 push）按此修改：页面一律取占位的上一级，menuPerm = 占位 perms → 上一级 perms → 最近页面 perms。
 - 请用户：开发环境打开列表页看 Network 是否有 system/menu/list 与 policyColumns；没有 policyColumns 时把控制台 `[列表列字段]` 输出发来对照真实菜单。
 - 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
 
