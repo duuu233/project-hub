@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/48b77ac：列表列配置与数据并行请求（whenListColumnsReady 内 Promise.all），走动态列的 gridOptions.loading 为访问器 = 页面 loading || 列配置加载中。未运行测试/浏览器。
+
 2026-11-03 ssh dev/bfb7dda：AppMain 路由切换去掉 fade-transform out-in 过渡（消除切换留白），keep-alive 与路由名外壳不变。未运行测试/浏览器。
 
 2026-11-03 ssh dev/866b4f5（测试阶段）：动态列 strict——setListColumnSource(..., { strict: true })，首屏只显示 type 列与操作列，数据列全按接口（对上的沿用页面渲染，无关列不留），无配置 / 失败只剩序号与操作；恢复兜底改 false。页面切换留白已分析未改：AppMain transition out-in 生效（正矿写法使过渡不触发），详见 docs/qianrong-list-style.md 末节。

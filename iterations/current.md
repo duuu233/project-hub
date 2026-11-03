@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 列配置与数据并行、等列配置 loading（dev）
+
+- 需求（用户）：按建议 2 改，等列配置时加 loading 并和数据请求并行。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/48b77ac（已 push）：listGrid 的 whenListColumnsReady 并行发起列配置与 load、都结束才 resolve；走动态列的列表 loading 改访问器（页面 loading || 列配置加载中），24 个页面无需改；README、policy-columns 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 未做：建议 3（vendor 拆包）。
+- 验证：无 Node，测试 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 页面切换去掉 out-in 过渡（dev）
 
 - 需求（用户）：按建议 1 改，去掉 out-in 过渡动画。

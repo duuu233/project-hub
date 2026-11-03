@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜taiqian-front｜ssh｜dev｜列配置与数据并行、等列配置 loading
+
+列表首屏列配置请求与数据请求改为并行，列配置未回来时表格保持 loading。dev/48b77ac 已 push；无 Node，未验证。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜页面切换去掉 out-in 过渡
 
 按分析建议 1 去掉 AppMain 路由切换的 fade-transform out-in 过渡，keep-alive 不变。dev/bfb7dda 已 push；无 Node，未验证。

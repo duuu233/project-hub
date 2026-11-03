@@ -380,3 +380,4 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **改动**：⑧ 只读对比 qianrong 与正矿 AppMain / transition.scss / 守卫 / 构建配置，结论写入 docs；⑨ strict 模式（main.js、listGrid、policyColumns、policyColumnsModel）、README、测试。tq-plus dev 与 zk feature-v1.8.5 同名 pull 均已最新（zk 未改）；dev/866b4f5 提交后再次 pull 并 push。
 - **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
 - **追加（dev/bfb7dda）**：按用户选的建议 1 去掉 AppMain 的 out-in 过渡，新增 route-switch-no-transition 测试；已 push，未运行测试。
+- **追加（dev/48b77ac）**：按建议 2，列配置与数据并行、等列配置期间 loading（listGrid loading 访问器）；README、测试同步。已 push，未运行测试。
