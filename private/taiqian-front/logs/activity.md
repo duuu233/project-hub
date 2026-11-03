@@ -387,3 +387,4 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：检查列表操作栏按钮权限字符是否都加上（附全量菜单 perms）。
 - **改动**：6 个页面 7 处权限字符修正 / 补齐，新增 list-button-perms 测试；菜单缺权限的 6 处列给用户确认。dev 同名 pull 已最新，dev/3644e86 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行（Python 核过）；git diff --check、信息隔离自查通过。
+- **追加（dev/9b7592a）**：用户追加 401 页优化——重写内容与样式，守卫带 from；README、route-access 测试同步。已 push，未运行测试。

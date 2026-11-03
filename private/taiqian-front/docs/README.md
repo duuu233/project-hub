@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/9b7592a 401 无权限页重写（无权限原因、访问地址、当前身份、返回 / 切换系统）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/3644e86 列表按钮权限字符按菜单数据核对（7 处修正、6 处菜单缺权限待后端确认）。
 - [qianrong-list-style.md](qianrong-list-style.md)末两节：2026-11-03 ssh dev/866b4f5 列表只按接口渲染（strict，屏蔽写死兜底列）；页面切换留白与正矿对比分析（AppMain out-in 过渡为主因，未改）。
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-11-03 ssh dev/004d44f 菜单管理改 vxe 树形（transform、虚拟滚动、setAllTreeExpand、只允许同级拖拽且先保存后换位）；同提交系统启用 / 停用开关改用 system:system:status。

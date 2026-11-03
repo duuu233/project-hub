@@ -122,3 +122,9 @@
 - 已改（菜单里有对应权限）：系统管理删除 system:system:remove → system:system:del；币种新增 / 修改补 system:currency:save、删除补 system:currency:remove（原三个都没加）；菜单管理详情 system:menu:detail → system:menu:query，列字段设置 ['system:menu:edit','system:menu:detail'] → ['system:menu:detail']；企业用户新增 system:org:insert → system:org:add、启用 / 禁用 system:org:update → system:org:edit（菜单「更新企业用户状态」即 edit）；角色详情 system:role:query → system:role:detail；账户管理账号状态开关加 system:user:status（无权限 disabled，只看不切）。流程实例「发起」整块早已有 workflow:instance:start，未改。
 - 未改、需后端 / 产品确认（页面权限在菜单数据里不存在或为空，非超管看不到）：账户详情 system:user:query（菜单「账户详情」perms 为空）；部门详情 system:dept:query（「部门详情」perms 空）；用户组编辑 system:groups:edit（「用户组编辑」perms 空）；字典详情与「字典项」system:dict:query（字典只有 list/add/edit/remove/export）；角色启停 system:role:status（菜单无）；角色配置权限 / 列字段配置 / 数据权限 / 分配用户 用 system:role:edit（「角色管理-权限设置」perms 空，可另配）。另：菜单有但列表无按钮的权限（用户导入 / 导出、岗位 / 参数 / 字典导出、登录日志删除 / 解锁、操作日志删除、币种详情、产品流程新增 / 发布、授信导出）未加按钮。
 - 测试 tests/list-button-perms.test.mjs（22 页 has / not，Python 核过）。无 Node，未运行。
+
+## 401 无权限页面重写（2026-11-03 ssh dev/9b7592a，用户明确）
+
+- 需求（用户）：优化 401 页面，可重写内容和样式，现在太丑，要体现是因为没有权限导致的。
+- 改动：views/error/401.vue 重写——工作区渐变背景 + 居中卡片（16 圆角、品牌色盾牌锁 SVG）、「401 · 无访问权限」徽标、标题「暂无访问权限」、说明（当前登录身份没有访问该页面的权限，通常是角色 / 用户组未开通对应菜单或权限刚调整）；信息区显示访问地址（query.from，只认 / 开头的站内地址）与当前身份（昵称 · identityDisplay 完整身份）；两条处理建议（联系管理员在「角色管理 → 配置权限」开通；有其它身份可切换）；操作：返回首页（replace /，守卫转第一个可访问页）、返回上一页（有历史且无 noGoBack）、IdentitySwitcher（已登录才显示）。去掉旧 gif 与旧样式（401.gif 资源文件仍在，未删）。permission.js 跳 401 改为带 `query: { from: to.fullPath }`。≤480px 收紧内边距。
+- 测试 route-access 改守卫断言、补 401 页源码断言（Python 核过）。无 Node，未运行、未浏览器目检。
