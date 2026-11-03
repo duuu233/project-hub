@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/3644e86：列表按钮权限字符按菜单 perms 修正（system:system:del、system:currency:save/remove、system:menu:query、菜单列字段设置仅 system:menu:detail、system:org:add / edit、system:role:detail、账号状态开关 system:user:status）；菜单缺 perms 的 user/dept 详情、groups 编辑、dict 详情、role 启停待后端。未运行测试。
+
 2026-11-03 ssh dev/48b77ac：列表列配置与数据并行请求（whenListColumnsReady 内 Promise.all），走动态列的 gridOptions.loading 为访问器 = 页面 loading || 列配置加载中。未运行测试/浏览器。
 
 2026-11-03 ssh dev/bfb7dda：AppMain 路由切换去掉 fade-transform out-in 过渡（消除切换留白），keep-alive 与路由名外壳不变。未运行测试/浏览器。

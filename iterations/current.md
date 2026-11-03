@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 列表按钮权限字符核对（dev）
+
+- 需求（用户）：检查列表操作栏按钮的权限字符是否都加上，附 system/menu/list 全量菜单数据，主要指按钮权限。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/3644e86（已 push）：system:system:remove→del；币种三个按钮补 save / remove；菜单详情 detail→query、列字段设置只认 detail；企业用户 insert→add、update→edit；角色详情 query→detail；账号状态开关加 system:user:status（无权限 disabled）。新增 tests/list-button-perms。私人 docs、AI_CONTEXT、logs 已更新。
+- 待后端 / 产品：账户详情、部门详情、用户组编辑 菜单 perms 为空；字典详情 / 字典项（system:dict:query）、角色启停（system:role:status）菜单里没有。
+- 验证：无 Node，测试未运行（Python 核过）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 列配置与数据并行、等列配置 loading（dev）
 
 - 需求（用户）：按建议 2 改，等列配置时加 loading 并和数据请求并行。
