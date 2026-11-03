@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜花盆APP 割草机区域设置：区域 2 在机器上设置后 App 没反应（main）
+
+- 问题（用户）：区域设置页区域 2 配置没生效——机器上设置第二区域，App 没反应；最新 App，旧 App 正常，同一固件；问最新版有没有按涂鸦 SDK 动态改值；用户补充「APP 端应该没有动态刷」。
+- 同步：Hub main、flowerpot main 同名 pull 已最新（5f56e83），origin GitHub；仓库无 .codegraph，按 grep 定位。
+- 结论：MowerDevice 层收到 DP103 上报会解码更新 zones；MowerZonesPage 只在进页拷贝一次，不监听、不现读——停留时机器改区域 2、下发被拒回弹页面都不变。该页自建页起即如此；DP103 编解码 9 月起未改、与协议 V3.0 一致；「旧版正常」在代码中未找到对应差异。雨淋、时间同步页同类写法。
+- main/9b1ef34（已 push）：MowerDevice.rereadDps（现读 SDK，读取期间实时上报优先、跳过等回显）；区域页进页现读 DP103、监听设备，无未保存修改随变化刷新，有未保存修改保留；mower_pages_test 新增两例；项目 history 记录、history/README、AI_CONTEXT 已更新。
+- 待确认：旧版具体版本与操作顺序；雨淋 / 时间同步页是否一并改；若真机仍无反应且联调日志无 DP103 上报，需固件确认本地修改是否上报 DP103。
+- 验证：无 Flutter / Dart，analyze / format / test / 编译均未运行，未真机；git diff --check 通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 切换系统处显示当前系统与角色（dev）
 
 - 需求（用户）：7. 改一下切换系统的显示，假如选了角色需要展示出来。
