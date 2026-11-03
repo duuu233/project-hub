@@ -3,7 +3,7 @@
 - 需求（用户）：轮播设置（WiFi）「轮播照片」下的图片列表也调 getUserProductImgRecordList，同样加可选参数 deviceId，规则和「我的上传」一样。
 - 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。无 .codegraph。
 - main-wifi/9cb2f46（已 push）：wifi-slideshow load() 的 getProjectionRecords 加 deviceId: device.productDeviceId（getDeviceDetail 已规范成完整 ID，取不到为空 → 不带，仍按用户查）；userProductId 照旧一起传。album-records-device-id 测试补轮播页用例（有 / 无完整 ID），其它调用方断言只留投屏记录页；当日变更记录、docs/README、client-api-matrix 同步。
-- 用户追加：日志里重点标出是否传了设备 ID 及原因，要着重测。main-wifi/f098443（已 push）：控制台 `★★★【轮播选图·deviceId】` 开头——已传（log，带 deviceId / userProductId，原因按设备查）/ 未传（warn，原因：设备详情没有设备 ID，或历史短 ID「xxx」不完整）；接口返回后再打返回条数、按设备 / 按用户查、可轮播张数；接口失败也带同一标记。测试补三种日志断言；变更记录同步。「我的上传」页未加同类日志。
+- 用户追加：日志里重点标出是否传了设备 ID 及原因，要着重测。main-wifi/f098443（已 push）：控制台 `★★★【轮播选图·deviceId】` 开头——已传（log，带 deviceId / userProductId，原因按设备查）/ 未传（warn，原因：设备详情没有设备 ID，或历史短 ID「xxx」不完整）；接口返回后再打返回条数、按设备 / 按用户查、可轮播张数；接口失败也带同一标记。测试补三种日志断言；变更记录同步。用户再追加：「我的上传」页也加。main-wifi/63b429c（已 push）：album/list 的 deviceIdOf 改为 recordsDeviceId（返回 deviceId + 原因），loadRecords 打 `★★★【我的上传·deviceId】`——已传（log，带设备名）/ 未传（warn，原因：「全部」/ 设备列表里找不到 / 没有设备 ID / 历史短 ID 不完整）；返回后打返回条数、按设备 / 按用户查、投屏成功张数；失败同标记。测试补五种日志断言；变更记录同步。
 - 待确认：同上一条，带 deviceId 时 userProductId 仍一起传，需后端确认 deviceId 优先。相册APP 的轮播选图未同步（用户未要求）。
 - 验证：无 node，测试未运行；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
 

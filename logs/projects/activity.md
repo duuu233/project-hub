@@ -4,7 +4,7 @@
 
 ## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜WiFi 轮播设置选图带 deviceId
 
-轮播设置「轮播照片」选图列表的投屏记录请求按「我的上传」同规则带 deviceId（设备有完整 ID 才带）。main-wifi/9cb2f46 已 push；追加控制台重点日志（是否传 deviceId 及原因、返回条数），main-wifi/f098443 已 push；无 node，测试未运行，未联调。
+轮播设置「轮播照片」选图列表的投屏记录请求按「我的上传」同规则带 deviceId（设备有完整 ID 才带）。main-wifi/9cb2f46 已 push；追加控制台重点日志（是否传 deviceId 及原因、返回条数），main-wifi/f098443 已 push；「我的上传」页同类日志 main-wifi/63b429c 已 push；无 node，测试未运行，未联调。
 
 ---
 
