@@ -2,7 +2,7 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
-## 2026-11-04｜taiqian-front｜ssh｜dev｜列表动态列字段、无权限页 401、公告信息权限
+## 2026-11-03｜taiqian-front｜ssh｜dev｜列表动态列字段、无权限页 401、公告信息权限
 
 列表列按 policyColumns 动态渲染（菜单 isList 匹配路由取 menuPerm，接口定列复用页面渲染，先列后数据）；未匹配路由的已知页面进 401；右上角公告信息按 system:notice:list 显示。dev/5439e32 已 push；无 Node，测试 / 构建 / 联调未跑。
 
