@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜我的上传投屏记录每页 21 条
+
+「我的上传」投屏记录 pageSize 100 → 21，触底加载下一页；轮播设置选图、投屏记录页仍一次 100 条。main-wifi/6f9d87b 已 push；无 node，测试未运行，未联调。另答复：切回页面重载是页面 onShow 清空重拉所致，非微信机制，可改缓存（未改）。
+
+---
+
 ## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜WiFi 轮播设置选图带 deviceId
 
 轮播设置「轮播照片」选图列表的投屏记录请求按「我的上传」同规则带 deviceId（设备有完整 ID 才带）。main-wifi/9cb2f46 已 push；追加控制台重点日志（是否传 deviceId 及原因、返回条数），main-wifi/f098443 已 push；「我的上传」页同类日志 main-wifi/63b429c 已 push；无 node，测试未运行，未联调。

@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜相册小程序「我的上传」投屏记录每页 21 条（main-wifi）
+
+- 需求（用户）：① 我的上传图片列表接口分页改成 21，轮播设置的分页暂不变；② 切出小程序再切回「我的上传」总要重新加载，是否内部机制、能否改缓存——先给结论不改。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。无 .codegraph。
+- ①：原来只取第 1 页 100 条、没有加载更多，单改 pageSize 会只剩 21 张，故按「每页 21 条 + 触底加载」做。main-wifi/6f9d87b（已 push）：新增 api.getProjectionRecordsPage（hasMore 先信 pageCount / recordCount，再看满页）；getProjectionRecords 改调它取 1 页 100 条（投屏记录页、WiFi 轮播选图不变）；album/list onReachBottom → loadMoreRecords（沿用首屏查询条件含 deviceId、按 id 去重、保留已选、seq 丢旧回包、失败底部点击重试、路径 setData 只追加新格）；网格内横跨三列的分页尾；「共 N 张」首页全成功用 recordCount，否则按已加载张数；全选只选已加载。新增 tests/album-records-paging，device-id 测试 stub 改 getProjectionRecordsPage；变更记录、docs/README、client-api-matrix 同步。
+- ②结论：不是微信机制，是页面代码——onShow 每次跑 loadPhotos（getDevices → applyFilter → loadRecords），loadRecords 先清空网格并置 loading，所以切回来必闪「加载中」，已选也被清。小程序切后台短时间内页面实例和 data 都还在，可以缓存。建议：区分「切后台回来」（不重载或静默刷新）与「从子页面返回」（静默刷新第一页、不清网格）；有分页后静默刷新需处理已翻页数据。用户未要求改。
+- 待确认：全选只选已加载是否符合产品预期；hasMore 依赖后端分页元数据，后端无视 pageSize 时只能按满页判。
+- 验证：无 node，测试未运行；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜相册小程序 WiFi 轮播设置选图带 deviceId（main-wifi）
 
 - 需求（用户）：轮播设置（WiFi）「轮播照片」下的图片列表也调 getUserProductImgRecordList，同样加可选参数 deviceId，规则和「我的上传」一样。
