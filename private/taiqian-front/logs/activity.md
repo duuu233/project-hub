@@ -328,3 +328,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：列表用 vxe 官方列设置控制列显隐；列顺序支持手动拖拽并本地持久化，下次进入保持。
 - **改动**：listGrid.js 统一加表头拖拽（整格、无图标、type 列不拖）与原生 customConfig.storage（显隐/顺序/固定/列宽）；存储 id 带登录用户编号（main.js 注入）；24 个标准列表加 id；README 新增「列设置与本地记忆」；新增 list-column-custom 测试。dev 同名 pull 带入 8e2431a，dev/1b09a7c 提交后再次 pull 并 push。
 - **验证**：无 Node，测试已加未运行（正则 Python 核过），未构建 / 浏览器；git diff --check、信息隔离自查通过。
+
+## 2026-11-04 ssh｜列表动态列字段、无权限页 401、公告信息权限
+
+- **需求**：③ 404 返回按钮检查（已有），无路由权限应进 401；④ 列表列按 policyColumns 动态渲染（菜单 isList → 路由匹配 menuPerm → 先列后数据）；⑤ 公告信息按 system:notice:list 显示。
+- **改动**：policyColumnsModel / policyColumns / routeAccess 新增，listGrid 列状态可替换，24 页首次加载等列就绪，permission store 存 meta.view，守卫加 401 判断，Navbar 公告按权限；README 两节；新增两份测试。dev 同名 pull 已最新，dev/5439e32 提交后再次 pull 并 push。
+- **验证**：无 Node，测试已加未运行，未构建 / 浏览器 / 联调；git diff --check、信息隔离自查通过。

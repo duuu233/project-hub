@@ -59,3 +59,20 @@
 - id：24 页按 views 目录路径（如 `config-audit/notice`、`organization/dept`）；DefListPage 用 `config-audit/workflow-def/${props.kind}`，AdmissionTable 用 `supply-chain/admission-list/${props.type}`（两类列不同，分开存）。
 - 风险 / 已知：① 因权限被 responseColumns 去掉的列不在 sortData 里，之后该列再返回时按初始序号插回，位置可能与用户期望不同；期间用户再保存会覆盖掉它的旧位置。② 用户编号在页面 setup 时取，若不重新挂载就切账号会沿用旧键（现有退出流程会整页重载，未实测）。③ 表头 `trigger: 'cell'` 与远端排序（日志页 sortConfig trigger cell）同在表头：点击仍是排序，按住拖动才换位，未浏览器实测。④ 用户列表首屏 data 为空，首个有数据的响应才确定列，存储在每次列重载时套用。
 - 公开说明：`apps/qianrong/README.md`「列设置与本地记忆」。测试 `tests/list-column-custom.test.mjs`（配置合成、用户键、页面覆盖、24 页 id 存在且不重复、main.js 注入；正则用 Python 核过）。无 Node，测试 / 构建 / 浏览器均未运行。
+
+## 列表列按生效列字段配置动态渲染（2026-11-04 ssh dev/5439e32，用户明确）
+
+- 需求（用户）：所有列表的列字段动态获取——调菜单列表接口过滤出「是否列表」的列表菜单，按路由匹配拿到 menuPerm，调 `/api-qianrong/system/menu/column/policyColumns?menuPerm=`（previewRoleId 可选，不传按登录角色），动态渲染列，然后再调原来的列表数据接口。合并口径用户选「接口定列，复用页面渲染」。
+- 实现：`utils/policyColumnsModel.js`（纯函数：menuFullPath / listMenuTargets / findListMenu / mergePolicyColumns / policyCell）+ `utils/policyColumns.js`（listMenu 每会话按 token 缓存一次、失败记为空不重试；currentRouteInfo；applyPolicyColumns）；`listGrid.js` 把列状态挪到 WeakMap（raw 原始列 / all 生效列 / signature），新增 listBaseColumns、setListColumns（替换后按已有行重算 responseColumns）、setListColumnSource / listColumnsReady / whenListColumnsReady（来源失败直接放行），`policyColumns: false` 关闭；main.js 注入 applyPolicyColumns；permission store 的 filterAsyncRouter 把字符串组件路径存进 `route.meta.view`（routes 里 component 会被替换成加载函数，否则拿不到）；24 页首次加载改 `whenListColumnsReady(gridOptions, getList|load)`（user/index 是 setup 顶层调用，dict/data 在 loadContext 里 await）；api 加 policyColumns。
+- 匹配：isList=1、status≠1、perms 非空；F 按钮列表作用在父级页面（与 10-30 列字段口径「按钮占位 → 页面」一致），C 作用在自身；路由路径（matched 末项 path 或 route.path）= 菜单完整路径优先，其次 meta.view = 菜单 component；多个取 orderNum 最小。
+- 合并：HIDDEN 与未配置的列不显示；fieldCode 依次按 field、responseKey、嵌套首段、末段对应页面列，沿用格式化 / 插槽 / 宽度、标题换 fieldName（空则保留原标题）；对不上的新增纯文本列（minWidth 140，数组用「、」拼、对象 JSON）；type 列在前、操作列在后，responseKey: false 的列保留在数据列后。无配置 / 无匹配 / 失败 → 保持原列。responseColumns 过滤与 vxe 列设置存储照常作用在合并结果上。
+- 风险 / 待确认：① `system/menu/list` 后端若要求 system:menu:list，没有菜单管理权限的用户取不到 → 全部列表保持原列，且请求拦截器会弹一次错误通知（会话内不重试）；若是这样，需要后端放开或在 getRouters 里带 isList / perms。② 准入列表一个路由下按类型分多张表，若各类型各有列表菜单，目前都取 orderNum 最小的那个，需按真实菜单确认。③ 列 field 与 fieldCode 命名不一致又不符合上述四种对应时会变成纯文本新列、原列消失（未对照真实配置）。④ 字典数据（dict/data）等前端内置隐藏路由没有 meta.view，只能靠路径匹配。⑤ 首屏多两个请求的等待时间。
+- 测试 `tests/policy-columns.test.mjs`。无 Node，未运行、未构建 / 浏览器 / 联调。
+
+## 无权限页面进 401、公告信息按权限显示（2026-11-04 ssh dev/5439e32，用户明确）
+
+- 404（用户）：「检查下有这个按钮就行」——404 页本有「返回首页」（router-link /，守卫转 firstAccessiblePath(addRoutes)），未改；「现在没有这个路由会返回到 404，其实应该返回到 401，做一下判断」。
+- 实现：`utils/routeAccess.js`（isNotFoundRoute 认 catch-all `/:pathMatch(.*)*`；viewPagePaths 由 import.meta.glob 键得到页面地址，排除 error/login/register/redirect 与 components、template 子目录；isKnownPagePath）；permission.js 在路由已就绪分支、`/` 之后加判断：未匹配且已知页面 → `next('/401', replace)`。已知页面 = `src/views/<路径>(/index).vue` 存在，或命中 dynamicRoutes（用内存 history 的探测 router 解析，带参数正则，如 role-permission/index/:roleId(\\d+)）。首次加载分支 `next({...to})` 会重入守卫，因此同样生效。
+- 局限：依赖「菜单路径 = 视图目录」，菜单 path 与目录不一致的页面仍判 404；地址恰好对应某视图文件但不是菜单页面时会判 401。
+- 公告（用户第 5 点）：右上角「公告信息」需 system:notice:list，Navbar `v-if="!isEmbedded && canViewNotice"`，canViewNotice = auth.hasPermi（含 *:*:*），没权限不渲染也不请求公告；分隔线保留。
+- 测试 `tests/route-access.test.mjs`、policy-columns 末例。无 Node，未运行。

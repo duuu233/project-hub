@@ -1,3 +1,13 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 列表动态列字段、无权限页 401、公告信息权限（dev）
+
+- 需求（用户）：③ 404 加返回第一个页面的按钮——追问后用户说「有这个按钮就行，没有这个路由会返回 404，其实应返回 401，做一下判断」；④ 所有列表列字段动态获取：菜单列表过滤是否列表 → 路由匹配 menuPerm → policyColumns → 动态渲染 → 再调原列表接口（合并口径选「接口定列，复用页面渲染」）；⑤（中途追加）右上角公告信息需 system:notice:list，没返回就隐藏。
+- 同步：Hub main、tq-plus dev 同名 pull 均已最新，origin GitHub。
+- dev/5439e32（已 push）：policyColumnsModel.js / policyColumns.js / routeAccess.js 新增；listGrid 列状态可替换（setListColumns、whenListColumnsReady）；24 页首次加载先等列；permission store 存 meta.view；permission.js 未匹配路由且视图文件 / dynamicRoutes 存在 → /401；Navbar 公告 v-if 权限；api policyColumns；README 两节；tests policy-columns、route-access。私人 docs（list-style 末两节、README）、AI_CONTEXT、logs 已更新。
+- 待确认：system/menu/list 普通用户是否有权限（没有则全部保持原列并弹一次错误）；准入列表多类型对应的列表菜单；fieldCode 与页面 field 命名差异；401 判断依赖菜单路径 = 视图目录。
+- 验证：无 Node，测试 / 构建 / 浏览器 / 联调均未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 列表列设置：显隐、拖拽排序与本地持久化（dev）
 
 - 需求（用户）：① 列表都是 vxe-table，用官网的列设置控制列是否展示；② 所有列顺序支持手动拖拽，本地持久化（浏览器缓存或更好方式），下次进入仍按用户调整的顺序。
