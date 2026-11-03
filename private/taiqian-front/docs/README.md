@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-11-03 ssh dev/2f37850 系统管理列表启用 / 停用开关（同账户管理交互，二次确认后 system/update 传 id + status）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/e1d81b2 动态纯文本列遇 HTML（公告内容）显示成去标签文字（htmlToText）。
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)末节、[qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/e61d620 角色列字段弹框去掉导入 / 编辑 / 删除 / 详情，策略与脱敏方式列表内直接改；列表起止日期拆成开始、结束两列（融资方案、授信、银行政策快照）。
 - [qianrong-web-login.md](qianrong-web-login.md)末节：2026-11-03 ssh dev/3b01b30 切换系统按钮旁显示当前系统，选了角色时显示角色（sessionStorage qianrong-login-identity，缺名按身份树补）。

@@ -63,3 +63,10 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 口径：用户明确角色编号 0 也有效。`role-model.js` 新增 `validRoleId`（同 validOrgId），所有角色编号校验改用它：列表删除/启停、配置权限页、角色表单 load 与 `rolePayload`、`RoleColumnConfig`、`RoleDataScopeForm`、`RolePermissionPreview`、`role-column-model.columnContext`。菜单、系统、部门、字段编号及部门上级（0 = 一级）仍用 validId。上一节「角色仍用 validId」的说法作废。
 - 未改：列表对 roleId=1（超级管理员）隐藏行内操作的判断不变；分配用户 / 用户分配角色页没有对角色编号做 0 判断。
 - 测试：`tests/role-contract.test.mjs` 加 validRoleId 用例，并对上述 7 个文件断言「用到哪个 valid* 就必须 import」，防止再次漏导入（Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调；角色 0 能否删除、启停以后端为准。
+
+## 系统管理列表启用 / 停用开关（2026-11-03 ssh dev/2f37850，用户明确）
+
+- 需求（用户）：系统管理列表新增启用禁用开关，要二次确认弹框，交互同账户管理列表的账号状态；直接调编辑接口，传主键 ID 和当前状态值。
+- 改动：config-audit/all-system 状态列由 el-tag 改为 el-switch（active '0' 启用 / inactive '1' 停用，按 String(row.status) 比较兼容数字状态）；切换后 `$modal.confirm('确认要"启用/停用""系统名"系统吗?')`，确认调 `editSystem({ id, status: 切换后的值 })`（POST system/update），成功 msgSuccess，取消或失败切回原值；保存中开关 loading、重复切换忽略；无 system:system:edit 权限仍显示标签，状态值不是 0/1 时开关禁用。
+- 风险：system/update 只收 id + status 是否会把其它字段置空未联调（用户口径就是只传这两个）。
+- 测试 tests/system-status-switch.test.mjs（源码断言，Python 核过）。无 Node，未运行。

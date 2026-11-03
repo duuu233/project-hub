@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 系统管理列表启用 / 停用开关（dev）
+
+- 需求（用户）：5. 系统管理列表新增启用禁用开关，二次确认弹框，交互同账户管理列表的账号状态；直接调编辑接口，传主键 ID 和当前状态值。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/2f37850（已 push）：all-system 状态列 el-switch（'0' 启用 / '1' 停用，String 比较兼容数字），切换→$modal.confirm→editSystem({ id, status: 切换后值 })，成功提示，取消 / 失败切回；保存中 loading；无 system:system:edit 显示原标签。tests/system-status-switch 新增。私人 docs、AI_CONTEXT、logs 已更新。
+- 待确认：system/update 只传 id + status 是否会清空其它字段（未联调）。
+- 验证：无 Node，测试未运行（正则 Python 核过）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 通知公告「公告内容」露 HTML 标签（dev）
 
 - 需求（用户）：3. 通知公告列表「公告内容」展示的是带 HTML 标签的内容，兼容一下渲染出来。

@@ -361,3 +361,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：通知公告列表「公告内容」显示带 HTML 标签的内容，兼容渲染。
 - **改动**：该列是动态列新增的纯文本列；policyCell 加 htmlToText，HTML 值显示成文字；README 一处；policy-columns 测试补一例。dev 同名 pull 已最新，dev/e1d81b2 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜系统管理列表启用 / 停用开关
+
+- **需求**：系统管理列表加启用禁用开关，二次确认，交互同账户管理账号状态；直接调编辑接口传 id 和当前状态。
+- **改动**：all-system 状态列改 el-switch + $modal.confirm + editSystem({ id, status })，取消 / 失败切回；新增 system-status-switch 测试。dev 同名 pull 已最新，dev/2f37850 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。
