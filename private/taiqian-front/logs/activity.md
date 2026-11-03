@@ -341,3 +341,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **改动**：匹配失败是静默跳过的；补 B 类按钮、Layout 占位、perms 为空、路径前缀不同、按标题兜底，菜单列表失败不缓存，开发环境控制台输出原因与候选菜单。dev 同名 pull 已最新，dev/25efecc 提交后再次 pull 并 push。
 - **验证**：无 Node，未运行测试 / 构建 / 浏览器；git diff --check、信息隔离自查通过。
 - **追加（dev/d5b543b）**：用户明确 isList 菜单是占位、作用在上一级，权限标识为空才取上一级；已改并 push，未运行测试。
+
+## 2026-11-03 ssh｜切换系统处显示当前系统与角色
+
+- **需求**：改切换系统的显示，选了角色需要展示出来。
+- **改动**：IdentitySwitcher 显示系统名 + 角色标签；sessionStorage 记当前身份（默认授权 / 切换身份写入，退出清除），缺名称按身份树补；README 新增一节；新增 identity-display 测试。dev 同名 pull 已最新，dev/3b01b30 提交后再次 pull 并 push。
+- **验证**：无 Node，测试已加未运行，未构建 / 浏览器；git diff --check、信息隔离自查通过。

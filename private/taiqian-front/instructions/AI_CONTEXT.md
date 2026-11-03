@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/3b01b30：IdentitySwitcher 显示当前系统名与（有 roleId 时）角色标签；当前身份存 sessionStorage qianrong-login-identity（authorize / changeIdentity 写入、login / clearSession 清空，仅展示），缺名称时 fillIdentityNames 按 loginIdentityTree 补。未运行测试/构建。详见 docs/qianrong-web-login.md 末节。
+
 2026-11-03 ssh dev/d5b543b（用户明确）：isList 菜单是占位，一律作用在上一级页面；menuPerm 取占位自身权限标识，为空才取上一级。
 
 2026-11-03 ssh dev/25efecc：用户没看到 policyColumns 调用（匹配不到列表菜单时静默跳过）。列表菜单页面改为 F/B 及 Layout 占位向上找最近真实页面；menuPerm 自身为空用页面 perms；匹配加路径末段、路由标题；菜单列表失败不缓存；开发环境控制台 `[列表列字段]` 输出未调用原因与候选菜单。未运行测试/构建。

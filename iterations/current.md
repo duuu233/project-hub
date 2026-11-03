@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 切换系统处显示当前系统与角色（dev）
+
+- 需求（用户）：7. 改一下切换系统的显示，假如选了角色需要展示出来。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- 理解：弹窗里本就有「已选：路径」，改的是顶部 / 个人中心「切换系统」按钮处——显示当前系统，有角色时显示角色。
+- dev/3b01b30（已 push）：IdentitySwitcher 系统名 + 「角色：XX」标签、title 完整身份；auth.js / user store 新增 loginIdentity（sessionStorage，authorize / changeIdentity 写，login / clearSession 清）；identity-model 新增 names、identitySummary、contextSummary、findIdentityNode、identityDisplay；缺名称 fillIdentityNames 查身份树补；useWebLogin 传登录页系统名；README 一节；tests/identity-display。私人 docs（web-login 末节、README）、AI_CONTEXT、logs 已更新。
+- 待确认：默认授权 context 是否带名称；SSO 入口不显示当前身份。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 列表动态列：没看到 policyColumns 调用（dev）
 
 - 问题（用户）：没看到 /api-qianrong/system/menu/column/policyColumns 调用，应是每次进入列表页先调它动态取列字段。

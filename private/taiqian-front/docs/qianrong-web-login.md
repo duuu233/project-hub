@@ -71,3 +71,11 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 - 根因：GeneralLogin.vue 第二个 style 块的 `.auth-wrapper { min-height: 720px; height: auto }` 覆盖了第一块的 `height: 100vh`，外层高度只等于内容高度（约 720px）；视口更高时下方露出空白，背景没铺满。
 - 改法参照正矿登录页：背景改为 `import` 图片 + 绝对定位 `<img class="auth-bg">`（`inset: 0`、`object-fit: cover`），外层 `min-height: max(720px, 100vh)`，兜底底色 `#edf4ff`；卡片与页脚加 `z-index: 1` 压在背景上。窄屏（≤600px）原 `min-height: 100vh` 不变。正矿超宽屏（>2:1）限宽与两侧渐隐未搬，避免改变卡片靠右的布局。
 - 验证：无 Node，未构建、未浏览器看效果。
+
+## 切换系统处显示当前身份（2026-11-03 ssh dev/3b01b30，用户明确）
+
+- 需求（用户）：改一下切换系统的显示，假如选了角色需要展示出来。身份弹窗里原本就有「已选：路径」，理解为顶部（及个人中心）「切换系统」按钮处要显示当前身份。
+- 改动：IdentitySwitcher 在按钮左侧显示系统名（加粗、省略号），当前身份有 roleId 时加 el-tag「角色：XX」，管理员身份（用户组无角色）不显示角色；title 为 系统 / 企业 / 用户组 / 角色；≤768px 隐藏文字只留按钮。
+- 数据：此前 changeIdentity 后整页重载、context 只在内存，刷新即丢，所以新增 sessionStorage `qianrong-login-identity`（auth.js get/setLoginIdentity，与 login-org-id 同类，只作展示）。写入点：authorize 用 contextSummary(context, 登录页 selectedSystem.systemName)（context 若带 systemName/orgName/userGroupName/roleName 优先用）；changeIdentity 用 identitySummary(所选节点)（normalizeIdentityTree 新增 node.names 累积各层 label）；login 开始与 clearSession 清空。缺名称（有 systemId 无 systemName，或有 roleId 无 roleName）时 store.fillIdentityNames 调 loginIdentityTree，按 系统 + 企业 + 用户组 + 角色 编号找节点补名（同 Token 只请求一次，失败下次再试）。
+- 未覆盖：SSO 入口不经 authorize，不显示当前身份（只剩按钮）；默认授权 context 是否带名称未核实；loginIdentityTree 失败会弹通用错误。
+- 测试 tests/identity-display.test.mjs；login-presentation 现有断言兼容（login 仍带 systemId、authorize 首参仍为 systemId）。无 Node，未运行、未构建 / 浏览器。

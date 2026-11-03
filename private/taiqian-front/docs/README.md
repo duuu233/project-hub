@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-web-login.md](qianrong-web-login.md)末节：2026-11-03 ssh dev/3b01b30 切换系统按钮旁显示当前系统，选了角色时显示角色（sessionStorage qianrong-login-identity，缺名按身份树补）。
 - [qianrong-list-style.md](qianrong-list-style.md)「列表列按生效列字段配置」小节：2026-11-03 ssh dev/25efecc 用户没看到 policyColumns 调用——放宽列表菜单匹配（B 类按钮、占位、路径前缀、标题），失败不缓存，开发环境控制台提示原因。
 - [qianrong-list-style.md](qianrong-list-style.md)末两节：2026-11-03 ssh dev/5439e32 列表列按 policyColumns 动态渲染（菜单 isList → 路由匹配 menuPerm → 接口定列复用页面渲染，先列后数据）；未匹配路由的已知页面进 401；公告信息按 system:notice:list 显示。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/1b09a7c 标准列表列设置用 vxe 原生面板控制显隐 / 拖拽排序，表头整格拖拽，按 `qr-list:<页面>@<用户>` 存 localStorage（显隐、顺序、固定、列宽）。
