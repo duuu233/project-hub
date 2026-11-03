@@ -1,3 +1,12 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 树形列表去掉按返回字段隐藏列（dev）
+
+- 需求（用户）：树形列表也去掉按接口返回字段隐藏列。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/e0f8b99（已 push）：withListGridStyle 的 responseColumns 默认 !treeConfig（菜单、部门原本显式关闭）；账户管理显式 responseColumns: false；README、policy-columns 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 验证：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 树形结构列表不走动态列配置（dev）
 
 - 需求（用户）：凡是树形结构的列表都不使用动态获取列的限制，不调用动态列表配置接口；追加例子：菜单管理和账户管理。

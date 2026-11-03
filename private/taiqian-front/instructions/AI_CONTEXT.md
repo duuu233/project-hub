@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/e0f8b99：树形结构列表也不按接口返回字段隐藏列——responseColumns 默认 !treeConfig，账户管理显式 responseColumns: false。未运行测试。
+
 2026-11-03 ssh dev/9361aa7：树形结构列表不走生效列字段配置——withListGridStyle 的 policyColumns 默认 !treeConfig（菜单、部门自动关），账户管理（左侧部门树）显式 policyColumns: false；三页直接加载数据、显示原有列。未运行测试。
 
 2026-11-03 ssh dev/698140c：IdentitySwitcher 角色标签由 el-tag(200px 截断) 改为自定义标签，最宽 min(420px, 32vw)、名称省略、el-tooltip 显示完整身份。未运行测试/浏览器。

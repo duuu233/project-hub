@@ -135,3 +135,4 @@
 - 理解：「树形结构」含 vxe 树形表格（treeConfig：菜单管理、部门管理）与左侧部门树 + 列表的页面（账户管理，el-tree 筛选部门）。
 - 改动：withListGridStyle 中 policyColumns 默认值改为 `!options.treeConfig`（树形表格自动关闭，新树形表格同样适用；显式 true 可强开）；账户管理显式 `policyColumns: false`；部门、账户首次加载由 whenListColumnsReady 改为直接 load / getList。strict（只按接口渲染）对这些页面不生效，显示页面原有列。responseColumns（按接口返回字段隐藏列）不在本规则内，账户管理仍按返回字段过滤，部门树原本就关闭。
 - 测试 policy-columns：特殊列表扩为菜单 / 部门 / 账户、标准列表 22 个，新增 treeConfig 默认关闭用例。无 Node，未运行。
+- 同日后续 dev/e0f8b99（用户）：树形列表也去掉按接口返回字段隐藏列。withListGridStyle 的 responseColumns 默认也改为 `!treeConfig`（菜单、部门本就显式 false），账户管理显式 `responseColumns: false`；三页 data 为普通字段，列不随返回字段变化。policy-columns 测试补断言。无 Node，未运行。
