@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 菜单管理改 vxe 树形、系统启停权限字符（dev）
+
+- 需求（用户）：6. 菜单管理 tree 展开明显延迟，有无更好的树形 + 拖拽方案——给出分析后用户选「改成 vxe-table 树形，只支持同级拖拽」；7. 系统管理的启用禁用加了权限字符 system:system:status，补上。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- 分析（已回复用户）：展开全部销毁重建 el-table、每行 5 按钮带下拉、渲染后逐行测宽、无虚拟滚动；重建后拖拽失效、拖错整页刷新、同级全量提交。
+- dev/004d44f（已 push）：menu/index.vue 改 vxe-grid 树形（transform 扁平转树、>60 行虚拟滚动、setAllTreeExpand、isPeerDrag 同级拖拽，dragEndMethod 只提交变了的序号、成功才换位、失败重载）；删「索引」列；新增 menu-tree-model.js、tests/menu-tree-grid；list-column-custom / policy-columns 计数调整；all-system 开关权限改 system:system:status；README 新增「菜单管理树形列表」。私人 docs、AI_CONTEXT、logs 已更新。
+- 待验证：浏览器里虚拟滚动 + 固定操作列 + 行内下拉、拖拽手感与提示；未联调 updateMenu 收列表行字段。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行（排序逻辑 Python 模拟核过）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 系统管理列表启用 / 停用开关（dev）
 
 - 需求（用户）：5. 系统管理列表新增启用禁用开关，二次确认弹框，交互同账户管理列表的账号状态；直接调编辑接口，传主键 ID 和当前状态值。

@@ -367,3 +367,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：系统管理列表加启用禁用开关，二次确认，交互同账户管理账号状态；直接调编辑接口传 id 和当前状态。
 - **改动**：all-system 状态列改 el-switch + $modal.confirm + editSystem({ id, status })，取消 / 失败切回；新增 system-status-switch 测试。dev 同名 pull 已最新，dev/2f37850 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜菜单管理改 vxe 树形、系统启停权限字符
+
+- **需求**：⑥ 菜单管理树展开有延迟，用户确认改 vxe-table 树形、只支持同级拖拽；⑦ 系统管理启用禁用的权限字符为 system:system:status。
+- **改动**：menu/index.vue 重写为 vxe-grid 树形（transform、虚拟滚动、同级拖拽先保存后换位），新增 menu-tree-model.js 与 menu-tree-grid 测试，两个计数测试调整；all-system 开关权限改 system:system:status；README 新增一节、改一处。dev 同名 pull 已最新，dev/004d44f 提交后再次 pull 并 push。
+- **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。

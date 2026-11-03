@@ -70,3 +70,4 @@ Swagger（dev，本轮只读拉取）：`SysDept`、`SysUser`、`SysRole` 都有
 - 改动：config-audit/all-system 状态列由 el-tag 改为 el-switch（active '0' 启用 / inactive '1' 停用，按 String(row.status) 比较兼容数字状态）；切换后 `$modal.confirm('确认要"启用/停用""系统名"系统吗?')`，确认调 `editSystem({ id, status: 切换后的值 })`（POST system/update），成功 msgSuccess，取消或失败切回原值；保存中开关 loading、重复切换忽略；无 system:system:edit 权限仍显示标签，状态值不是 0/1 时开关禁用。
 - 风险：system/update 只收 id + status 是否会把其它字段置空未联调（用户口径就是只传这两个）。
 - 测试 tests/system-status-switch.test.mjs（源码断言，Python 核过）。无 Node，未运行。
+- 同日后续 dev/004d44f（用户第 7 点）：启用 / 停用开关的权限字符改为 system:system:status（原临时用 system:system:edit）；无该权限显示标签。

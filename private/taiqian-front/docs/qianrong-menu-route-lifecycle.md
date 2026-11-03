@@ -33,3 +33,12 @@
 - 改动：`template/handleDetail.vue` 开关只在详情页（pageType 3）禁用，删掉强制置 0 的 watch，回显、提交按原值取 0/1；`components/column-model.js` 的 `isListMenu` 只看 isList，不再排除按钮。
 - 未改：开关切为「是」时把显示状态设为隐藏（`onListChange`，同事 10-26 加入）保持原样；列字段设置入口 `showColumnSettings`（C 且名称含「列表」）不受 isList 影响，仍不给按钮显示；按钮类型下路由地址等字段照旧隐藏。
 - 测试：`tests/menu-add-dept-parent.test.mjs` 加 isListMenu 用例与源码断言（Python 核过正则）。无 Node，未运行、未构建 / 浏览器；按钮 isList=1 后端是否接受以后端为准。
+
+## 菜单管理列表改为 vxe 树形表格（2026-11-03 ssh dev/004d44f，用户明确）
+
+- 问题（用户）：菜单管理 tree 展开有明显延迟，问有无更好的「树形 + 拖拽」方案；看完分析后用户选「改成 vxe-table 树形，只支持同级拖拽」。
+- 原实现慢的原因（读码判断，未实测）：展开 / 折叠全部是 refreshTable v-if 销毁重建 el-table 并 default-expand-all 一次画出全部行；每行 10 列 + 5 个操作按钮（ListRowActions 超 3 个即每行一个 ElDropdown，并逐个算权限 / 颜色）；ListTablePanel 的 MutationObserver 渲染后逐行 getBoundingClientRect 测按钮宽；el-table 无虚拟滚动。另：重建后未重新 initSortable，拖拽失效；Sortable 在扁平 tbody 上按 realIndex 推算，仅一、二级，拖错 window.location.reload，同级每项都发 updateMenu。
+- 改动：index.vue 换 vxe-grid + withListGridStyle（id config-audit/menu，responseColumns / policyColumns 均 false）；数据 sortMenuRows(listMenu 扁平行) 直接给 treeConfig.transform（rowField menuId / parentField parentId，reserve 保留展开）；virtualYConfig { enabled, gt: 60 } + showOverflow + maxHeight = max(420, innerHeight − 280)（随 resize）；展开 / 折叠用 setAllTreeExpand；rowConfig.drag + rowDragConfig.isPeerDrag（vxe 源码核实：isPeerDrag 且非 isCrossDrag 时根↔子、跨父级都拒）+ dragStartMethod（保存中禁拖）+ dragEndMethod → saveDragOrder：siblingReorder 同级重编 1..n，只对变了的 updateMenu(menuOrderPayload)（去 _X_ 内部字段与 children），全部成功返回 true 才换位，失败提示并 getList。拖拽手柄列 __qr_drag（dragSort）。去掉原「索引」列（显示的是渲染行号，无业务含义）。新增 components/menu-tree-model.js。
+- 保留：搜索、列字段设置入口（showColumnSettings / menuId）、修改 / 新增 / 详情 / 删除、useRefreshWhenStale、扁平过滤结果父级不在时作根展示。
+- 风险：未在浏览器验证虚拟滚动下固定列、ListRowActions 下拉、v-list-grid 操作列测宽；同级序号非连续时一次拖拽会把整组重编号（与原实现同样全量提交）；updateMenu 收到的是列表行字段（不含 children）。
+- 测试 tests/menu-tree-grid.test.mjs（排序 / 同级重编 / 跨级拒绝 / payload / 页面配置，Python 模拟核过）；list-column-custom 计数改 25、policy-columns 将菜单页列为特殊列表（policyColumns: false、不等列就绪）。无 Node，未运行。

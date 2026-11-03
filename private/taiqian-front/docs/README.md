@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-11-03 ssh dev/004d44f 菜单管理改 vxe 树形（transform、虚拟滚动、setAllTreeExpand、只允许同级拖拽且先保存后换位）；同提交系统启用 / 停用开关改用 system:system:status。
 - [qianrong-org-scope-forms.md](qianrong-org-scope-forms.md)末节：2026-11-03 ssh dev/2f37850 系统管理列表启用 / 停用开关（同账户管理交互，二次确认后 system/update 传 id + status）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/e1d81b2 动态纯文本列遇 HTML（公告内容）显示成去标签文字（htmlToText）。
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)末节、[qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/e61d620 角色列字段弹框去掉导入 / 编辑 / 删除 / 详情，策略与脱敏方式列表内直接改；列表起止日期拆成开始、结束两列（融资方案、授信、银行政策快照）。

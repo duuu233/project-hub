@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/004d44f：菜单管理列表改为 vxe-grid 树形（扁平数据 treeConfig.transform、>60 行虚拟滚动、setAllTreeExpand 不重建、rowDragConfig.isPeerDrag 只同级拖拽，dragEndMethod 先 updateMenu 变了的序号成功才换位，menu-tree-model.js），不再用 el-table + Sortable；系统启用 / 停用开关权限改为 system:system:status。未运行测试/构建/浏览器。
+
 2026-11-03 ssh dev/2f37850：系统管理列表状态列改为启用 / 停用开关（同账户管理账号状态：切换→二次确认→editSystem({ id, status })，取消或失败切回；无编辑权限显示标签）。未运行测试。
 
 2026-11-03 ssh dev/e1d81b2：动态新增的纯文本列（policyCell）遇到 HTML 值显示成去标签、还原实体的文字（htmlToText），修通知公告「公告内容」露标签；不在单元格 v-html。未运行测试。

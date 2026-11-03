@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜taiqian-front｜ssh｜dev｜菜单管理改 vxe 树形、系统启停权限字符
+
+菜单管理由 el-table + Sortable 改为 vxe-grid 树形（扁平转树、虚拟滚动、展开不重建、只同级拖拽且先保存后换位）；系统启用 / 停用开关权限改为 system:system:status。dev/004d44f 已 push；无 Node，未验证。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜系统管理列表启用 / 停用开关
 
 状态列改为开关，交互同账户管理账号状态（二次确认、取消 / 失败切回），确认后 system/update 只传 id 与状态。dev/2f37850 已 push；无 Node，未验证。
