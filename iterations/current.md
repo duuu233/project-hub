@@ -4,6 +4,7 @@
 - 同步：Hub main、tq-plus dev 同名 pull 已最新。
 - 理解：弹窗里本就有「已选：路径」，改的是顶部 / 个人中心「切换系统」按钮处——显示当前系统，有角色时显示角色。
 - dev/3b01b30（已 push）：IdentitySwitcher 系统名 + 「角色：XX」标签、title 完整身份；auth.js / user store 新增 loginIdentity（sessionStorage，authorize / changeIdentity 写，login / clearSession 清）；identity-model 新增 names、identitySummary、contextSummary、findIdentityNode、identityDisplay；缺名称 fillIdentityNames 查身份树补；useWebLogin 传登录页系统名；README 一节；tests/identity-display。私人 docs（web-login 末节、README）、AI_CONTEXT、logs 已更新。
+- 用户追加口径：没有角色就不管、按现在的展示，有角色才展示角色。dev/2e66dd1（已 push）：去掉系统名，无角色只显示原按钮，有角色显示「角色：XX」；无角色不查身份树。
 - 待确认：默认授权 context 是否带名称；SSO 入口不显示当前身份。
 - 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
 

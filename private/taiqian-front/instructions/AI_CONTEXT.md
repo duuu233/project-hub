@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/2e66dd1（用户明确）：切换系统处无角色保持原样只显示按钮，有角色才显示「角色：XX」，不显示系统名；无角色不查身份树补名。
+
 2026-11-03 ssh dev/3b01b30：IdentitySwitcher 显示当前系统名与（有 roleId 时）角色标签；当前身份存 sessionStorage qianrong-login-identity（authorize / changeIdentity 写入、login / clearSession 清空，仅展示），缺名称时 fillIdentityNames 按 loginIdentityTree 补。未运行测试/构建。详见 docs/qianrong-web-login.md 末节。
 
 2026-11-03 ssh dev/d5b543b（用户明确）：isList 菜单是占位，一律作用在上一级页面；menuPerm 取占位自身权限标识，为空才取上一级。

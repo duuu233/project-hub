@@ -79,3 +79,4 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 - 数据：此前 changeIdentity 后整页重载、context 只在内存，刷新即丢，所以新增 sessionStorage `qianrong-login-identity`（auth.js get/setLoginIdentity，与 login-org-id 同类，只作展示）。写入点：authorize 用 contextSummary(context, 登录页 selectedSystem.systemName)（context 若带 systemName/orgName/userGroupName/roleName 优先用）；changeIdentity 用 identitySummary(所选节点)（normalizeIdentityTree 新增 node.names 累积各层 label）；login 开始与 clearSession 清空。缺名称（有 systemId 无 systemName，或有 roleId 无 roleName）时 store.fillIdentityNames 调 loginIdentityTree，按 系统 + 企业 + 用户组 + 角色 编号找节点补名（同 Token 只请求一次，失败下次再试）。
 - 未覆盖：SSO 入口不经 authorize，不显示当前身份（只剩按钮）；默认授权 context 是否带名称未核实；loginIdentityTree 失败会弹通用错误。
 - 测试 tests/identity-display.test.mjs；login-presentation 现有断言兼容（login 仍带 systemId、authorize 首参仍为 systemId）。无 Node，未运行、未构建 / 浏览器。
+- 同日后续 dev/2e66dd1（用户口径）：「没有角色的就不管，按现在的展示，有角色才需要展示角色」。去掉系统名显示：无角色时只有原「切换系统」按钮；有 roleId 时按钮左侧 el-tag「角色：XX」（title 仍为完整身份，≤768px 隐藏）。identityNeedsNames 改为只在有 roleId 且缺角色名 / 系统名时才查身份树，无角色不再请求。
