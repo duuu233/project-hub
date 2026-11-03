@@ -69,6 +69,13 @@
 - 风险 / 待确认：① `system/menu/list` 后端若要求 system:menu:list，没有菜单管理权限的用户取不到 → 全部列表保持原列，且请求拦截器会弹一次错误通知（会话内不重试）；若是这样，需要后端放开或在 getRouters 里带 isList / perms。② 准入列表一个路由下按类型分多张表，若各类型各有列表菜单，目前都取 orderNum 最小的那个，需按真实菜单确认。③ 列 field 与 fieldCode 命名不一致又不符合上述四种对应时会变成纯文本新列、原列消失（未对照真实配置）。④ 字典数据（dict/data）等前端内置隐藏路由没有 meta.view，只能靠路径匹配。⑤ 首屏多两个请求的等待时间。
 - 测试 `tests/policy-columns.test.mjs`。无 Node，未运行、未构建 / 浏览器 / 联调。
 
+### 2026-11-03 ssh dev/25efecc：用户反馈没看到 policyColumns 调用
+
+- 原因（代码推断，未拿真实菜单数据核对）：5439e32 只有匹配到列表菜单才调接口，匹配失败静默返回。可能的漏洞：① 按钮类型只认 F，系统里还有 B（column-model.js isButtonMenu = F/B），B 类「XX列表」被当成页面自身，组件匹配必然失败；② 菜单完整路径与路由路径前缀层级不一致（如多一层系统根）时路径匹配失败；③ 列表菜单 perms 为空被直接过滤；④ 菜单列表失败被缓存成空数组，整个会话都不再调。
+- 改动：listMenuPage——F/B 从上级开始，往上找最近的真实页面菜单（C 且组件不是 Layout/ParentView/InnerLink/空）；menuPerm 取列表菜单自身 perms，空则用页面 perms；findListMenu 依次：完整路径 → 组件 → 路径末段（取两边较短的段数比较）→ 页面菜单名 = 路由 meta.title；菜单列表只缓存成功结果；开发环境（import.meta.env.DEV）控制台输出 `[列表列字段]` 原因，没匹配时列出所有候选列表菜单的名称 / 类型 / menuPerm / 页面路径 / 组件，方便对照。
+- 仍未做：页签缓存切回不重新挂载，不会重新调 policyColumns。
+- 测试 policy-columns 补两例。无 Node，未运行。
+
 ## 无权限页面进 401、公告信息按权限显示（2026-11-03 ssh dev/5439e32，用户明确）
 
 - 404（用户）：「检查下有这个按钮就行」——404 页本有「返回首页」（router-link /，守卫转 firstAccessiblePath(addRoutes)），未改；「现在没有这个路由会返回到 404，其实应该返回到 401，做一下判断」。

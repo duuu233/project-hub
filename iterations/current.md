@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 列表动态列：没看到 policyColumns 调用（dev）
+
+- 问题（用户）：没看到 /api-qianrong/system/menu/column/policyColumns 调用，应是每次进入列表页先调它动态取列字段。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新；核实 5439e32 已在 origin/dev（不在 master）。
+- 原因：5439e32 匹配不到列表菜单就静默不调；漏了 B 类按钮、Layout 占位、perms 为空、路径前缀层级不同等情况，菜单列表失败还会被缓存成空。
+- dev/25efecc（已 push）：放宽匹配（最近真实页面、页面 perms 兜底、路径末段、路由标题），失败不缓存，开发环境控制台 `[列表列字段]` 输出原因与候选菜单；README 同步；测试补两例。私人 docs、AI_CONTEXT、logs 已更新。
+- 请用户：开发环境打开列表页看 Network 是否有 system/menu/list 与 policyColumns；没有 policyColumns 时把控制台 `[列表列字段]` 输出发来对照真实菜单。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 列表动态列字段、无权限页 401、公告信息权限（dev）
 
 - 需求（用户）：③ 404 加返回第一个页面的按钮——追问后用户说「有这个按钮就行，没有这个路由会返回 404，其实应返回 401，做一下判断」；④ 所有列表列字段动态获取：菜单列表过滤是否列表 → 路由匹配 menuPerm → policyColumns → 动态渲染 → 再调原列表接口（合并口径选「接口定列，复用页面渲染」）；⑤（中途追加）右上角公告信息需 system:notice:list，没返回就隐藏。

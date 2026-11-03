@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/25efecc：用户没看到 policyColumns 调用（匹配不到列表菜单时静默跳过）。列表菜单页面改为 F/B 及 Layout 占位向上找最近真实页面；menuPerm 自身为空用页面 perms；匹配加路径末段、路由标题；菜单列表失败不缓存；开发环境控制台 `[列表列字段]` 输出未调用原因与候选菜单。未运行测试/构建。
+
 2026-11-03 ssh dev/5439e32：标准列表列字段动态——listMenu（会话缓存）过滤 isList → 按路由路径 / meta.view 匹配列表菜单 perms → policyColumns?menuPerm → mergePolicyColumns（接口定列、复用页面列渲染、HIDDEN 不显示、无配置保持原列）→ setListColumns，页面首次加载 whenListColumnsReady(gridOptions, getList)；未匹配路由而视图文件 / dynamicRoutes 存在时进 401；公告信息按 system:notice:list 显示。未运行测试/构建。详见 docs/qianrong-list-style.md 末两节。
 
 2026-11-03 ssh dev/1b09a7c：标准列表（withListGridStyle）列设置走 vxe 原生——面板勾显隐、拖排序，表头整格拖拽（type 列 / 固定列除外）；页面传 id 时按 vxe customConfig.storage 存 localStorage（visible/sort/fixed/resizable，不存分页），存储 id `qr-list:<id>@<userId>`，用户编号由 main.js setListGridOwner 注入。24 页已配 id，新列表须配不重复 id。未运行测试/构建。详见 docs/qianrong-list-style.md 末节。

@@ -334,3 +334,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：③ 404 返回按钮检查（已有），无路由权限应进 401；④ 列表列按 policyColumns 动态渲染（菜单 isList → 路由匹配 menuPerm → 先列后数据）；⑤ 公告信息按 system:notice:list 显示。
 - **改动**：policyColumnsModel / policyColumns / routeAccess 新增，listGrid 列状态可替换，24 页首次加载等列就绪，permission store 存 meta.view，守卫加 401 判断，Navbar 公告按权限；README 两节；新增两份测试。dev 同名 pull 已最新，dev/5439e32 提交后再次 pull 并 push。
 - **验证**：无 Node，测试已加未运行，未构建 / 浏览器 / 联调；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜列表动态列：用户没看到 policyColumns 调用
+
+- **问题**：进入列表页没有 policyColumns 请求；期望每次进入列表页先调它取列字段。
+- **改动**：匹配失败是静默跳过的；补 B 类按钮、Layout 占位、perms 为空、路径前缀不同、按标题兜底，菜单列表失败不缓存，开发环境控制台输出原因与候选菜单。dev 同名 pull 已最新，dev/25efecc 提交后再次 pull 并 push。
+- **验证**：无 Node，未运行测试 / 构建 / 浏览器；git diff --check、信息隔离自查通过。
