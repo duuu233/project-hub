@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜album-app / album-miniapp｜ssh｜main + main-wifi｜小程序功能同步到 APP、main 合入 main-wifi
+
+main：小程序 10-28 之后的 main 改动（出帧基地址、连接后回顶）APP 已同步，无新增。main-wifi：APP 同步小程序 10-29 之后改动——WiFi 固件升级（入口 + 四步升级页 + 本地进行中记录）、轮播开启中标记、详情页设备ID / 屏幕尺寸行、我的上传按设备 ID 查、分享成员 joinTime、消息中心升级通知（a9529e8，已 push）。合并：APP origin/main（68dc1b4 构建号）合入 main-wifi（663a2af）；小程序 main 早已全部在 main-wifi。无 Flutter，未 analyze / test / 编译 / 真机。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜树形列表去掉按返回字段隐藏列
 
 树形表格默认不按接口返回字段隐藏列，账户管理显式关闭。dev/e0f8b99 已 push；无 Node，未验证。

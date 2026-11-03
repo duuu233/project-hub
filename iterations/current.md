@@ -1,3 +1,15 @@
+## 2026-11-03 ssh｜相册小程序 → 相册APP 功能同步（main / main-wifi）、main 合入 main-wifi
+
+- 需求（用户）：相册小程序的 main、main-wifi 分别把功能同步给相册APP，然后把 main 往 main-wifi 合并（main 是 main-wifi 的子集）。
+- 同步：Hub main；photo-album、flutter 均在 main-wifi、工作区干净，同名 pull 已最新；origin 均 GitHub。
+- main 对照：小程序 10-28 后 main 改动（抖动出帧基地址 download-endpoint / data.endpoint、我的设备连接后回顶；出帧地址调试加了又撤）APP main 已有（31b20c3、ca8a96c、77d4df9），无需同步。
+- main-wifi 对照（APP 上次同步止于 10-29 52219bb / 526c217）：需同步 c1cac77 OTA、c8d8bb9 轮播中标记、fc63897+e7a9d36 详情设备ID / 屏幕尺寸行、e47e3bf 我的上传 deviceId、d3e14ed 分享 joinTime；a8ce496 删除文案 APP 已有；6468f04（小程序开发工具）、0d1bc5f（按钮高度，上轮已判无需）不同步。
+- flutter main-wifi：663a2af 合入 origin/main（68dc1b4 pubspec 构建号）；a9529e8（已 push）实现上述五项：IotApi.startOta / getOtaStatus、wifi_ota.dart（步骤、版本比较、busy 判断、SharedPreferences ota_inflight 记录）、WifiOtaPage（配网同款四步页，WifiStepIcon 改公共）、详情「固件升级」行；WifiSlideshowStore + WifiActionBar.slideshowOn；详情功能栏设备ID / 屏幕尺寸行；refreshCastRecords(deviceId) + 图库页传 canonicalDeviceSerial；WifiShareMember 只取 joinTime；消息中心 OTA_SUCCESS / OTA_FAILED。test/wifi_ota_test.dart；docs/history 记录、docs/README、AI_CONTEXT 已更新。
+- 合并结果：两仓 origin/main 均已全部在 main-wifi（小程序本就如此，未产生提交）。
+- 验证：无 Flutter / Dart，未 analyze / test / 编译 / 真机；git diff --check 通过；版本比较规则用 Python 核过。OTA 需真机与服务端联调。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 树形列表去掉按返回字段隐藏列（dev）
 
 - 需求（用户）：树形列表也去掉按接口返回字段隐藏列。
