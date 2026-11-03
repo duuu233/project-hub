@@ -355,3 +355,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：① 角色列字段配置弹框去掉导入、删除、编辑（追加：详情也不要），策略 / 脱敏方式在列表里直接操作；② 列表起止日期的开始列拼了结束日期。
 - **改动**：RoleColumnWorkspace 重写为列表内下拉保存，删 RoleColumnForm 与三个接口；融资方案、授信、银行政策快照起止日期拆两列；README 两处；测试 role-contract 改、date-range-columns 新增。dev 同名 pull 已最新，dev/e61d620 提交后再次 pull 并 push。
 - **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜通知公告「公告内容」露 HTML 标签
+
+- **需求**：通知公告列表「公告内容」显示带 HTML 标签的内容，兼容渲染。
+- **改动**：该列是动态列新增的纯文本列；policyCell 加 htmlToText，HTML 值显示成文字；README 一处；policy-columns 测试补一例。dev 同名 pull 已最新，dev/e1d81b2 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。

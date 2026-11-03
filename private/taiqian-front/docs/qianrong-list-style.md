@@ -91,3 +91,11 @@
 - 原因：三处列 field 只写开始字段，formatter 却拼了区间——融资方案「有效起止日期」field=startDate、`start ~ end`；授信管理「授信期限」field=startDate、`start 至 end`；银行政策快照「合作期限」field=validFrom、`from 至 to`。按 policyColumns 动态渲染后，接口配置的 startDate（fieldName 如「开始日期」）匹配到这一列，沿用拼接 formatter，显示成整段区间。
 - 选择：用户给的第一种「只要开始日期」——开始、结束各一列（有效开始 / 结束日期、授信开始 / 结束日期、合作开始 / 结束日期），toDateText，空显示 --。没选合并成一列：动态列按单字段配置，合并列会让配置里的 endDate 再生成一列纯文本，或标题与内容不符。bank-policy-snapshot 删除不再使用的 periodText。详情页、版本对比里的「有效起止日期 / 授信期限」不在列表范围，未改。
 - 测试 tests/date-range-columns.test.mjs（源码不拼接、两列存在；mergePolicyColumns 两字段各对应一列）。无 Node，未运行。
+
+## 富文本字段在动态纯文本列里显示成文字（2026-11-03 ssh dev/e1d81b2，用户明确）
+
+- 问题（用户）：通知公告列表「公告内容」展示的是带 HTML 标签的内容，兼容一下渲染出来。
+- 原因：通知公告页 columns 里没有 noticeContent；「公告内容」是 policyColumns 配置的 fieldCode 对不上页面列、由 mergePolicyColumns 新增的纯文本列，policyCell 原样 String 输出编辑器存的 HTML。
+- 改动：policyColumnsModel 新增 htmlToText（像 HTML 才处理：去 script/style 及内容、注释，br 与 p/div/li/h*/tr/blockquote 结束处留空格，去标签，还原常见命名实体与 &#数字; / &#x十六进制;，合并空白）；policyCell 对字符串（含数组元素）走它。作用于所有动态新增的纯文本列，页面自带列不受影响。
+- 选择：单元格显示纯文本、不 v-html——行高会被段落和图片撑开，项目无 DOMPurify 等净化依赖，有注入风险。如需按富文本样式查看，可另做「查看内容」弹窗（NoticeMessage 详情已用 v-html）。
+- 测试 policy-columns 新增一例（Python 按同规则核过期望值）。无 Node，未运行。

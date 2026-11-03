@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/e1d81b2：动态新增的纯文本列（policyCell）遇到 HTML 值显示成去标签、还原实体的文字（htmlToText），修通知公告「公告内容」露标签；不在单元格 v-html。未运行测试。
+
 2026-11-03 ssh dev/e61d620：角色列字段弹框（RoleColumnWorkspace）不再导入 / 编辑 / 删除 / 查详情，策略与脱敏方式在列表里下拉直接改并保存（rowPolicyPayload，其余字段按行原值），保留一键设置策略；RoleColumnForm 与 getRoleColumn / deleteRoleColumn / importRoleColumns 已删。列表起止日期拆成开始、结束两列（融资方案、授信、银行政策快照），开始列不再拼结束日期。未运行测试/构建。
 
 2026-11-03 ssh dev/6cbf64b（用户明确）：切换系统处角色标签改为 roleName 有值就显示（含登录不选角色时 defaultAuthorize context.roleName 的默认角色），不再要求 roleId。
