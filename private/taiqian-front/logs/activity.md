@@ -394,3 +394,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：顶部有角色时角色内容太长显示不完整，修复。
 - **改动**：IdentitySwitcher 角色由 el-tag（200px、内层不省略被截断）改为自定义标签，最宽 min(420px, 32vw)，名称省略，悬停 el-tooltip 显示完整身份；identity-display 测试同步。dev 同名 pull 已最新，dev/698140c 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜树形结构列表不走动态列配置
+
+- **需求**：树形结构的列表都不使用动态列限制、不调动态列表配置接口，例如菜单管理和账户管理。
+- **改动**：listGrid policyColumns 默认 !treeConfig；账户管理显式关闭；部门 / 账户直接加载；README、policy-columns 测试同步。dev 同名 pull 已最新，dev/9361aa7 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。

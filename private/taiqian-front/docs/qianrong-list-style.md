@@ -128,3 +128,10 @@
 - 需求（用户）：优化 401 页面，可重写内容和样式，现在太丑，要体现是因为没有权限导致的。
 - 改动：views/error/401.vue 重写——工作区渐变背景 + 居中卡片（16 圆角、品牌色盾牌锁 SVG）、「401 · 无访问权限」徽标、标题「暂无访问权限」、说明（当前登录身份没有访问该页面的权限，通常是角色 / 用户组未开通对应菜单或权限刚调整）；信息区显示访问地址（query.from，只认 / 开头的站内地址）与当前身份（昵称 · identityDisplay 完整身份）；两条处理建议（联系管理员在「角色管理 → 配置权限」开通；有其它身份可切换）；操作：返回首页（replace /，守卫转第一个可访问页）、返回上一页（有历史且无 noGoBack）、IdentitySwitcher（已登录才显示）。去掉旧 gif 与旧样式（401.gif 资源文件仍在，未删）。permission.js 跳 401 改为带 `query: { from: to.fullPath }`。≤480px 收紧内边距。
 - 测试 route-access 改守卫断言、补 401 页源码断言（Python 核过）。无 Node，未运行、未浏览器目检。
+
+## 树形结构的列表不走生效列字段配置（2026-11-03 ssh dev/9361aa7，用户明确）
+
+- 规则（用户）：凡是树形结构的列表都不使用动态列限制，不调用获取动态列表配置的接口；例如菜单管理和账户管理。
+- 理解：「树形结构」含 vxe 树形表格（treeConfig：菜单管理、部门管理）与左侧部门树 + 列表的页面（账户管理，el-tree 筛选部门）。
+- 改动：withListGridStyle 中 policyColumns 默认值改为 `!options.treeConfig`（树形表格自动关闭，新树形表格同样适用；显式 true 可强开）；账户管理显式 `policyColumns: false`；部门、账户首次加载由 whenListColumnsReady 改为直接 load / getList。strict（只按接口渲染）对这些页面不生效，显示页面原有列。responseColumns（按接口返回字段隐藏列）不在本规则内，账户管理仍按返回字段过滤，部门树原本就关闭。
+- 测试 policy-columns：特殊列表扩为菜单 / 部门 / 账户、标准列表 22 个，新增 treeConfig 默认关闭用例。无 Node，未运行。

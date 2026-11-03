@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 树形结构列表不走动态列配置（dev）
+
+- 需求（用户）：凡是树形结构的列表都不使用动态获取列的限制，不调用动态列表配置接口；追加例子：菜单管理和账户管理。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/9361aa7（已 push）：withListGridStyle 的 policyColumns 默认 !treeConfig（菜单、部门自动关闭）；账户管理（左侧部门树）显式 policyColumns: false；部门、账户首次加载直接 load / getList；README、policy-columns 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 说明：只关动态列配置；按接口返回字段隐藏列（responseColumns）不在范围，账户管理仍生效。
+- 验证：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 顶部角色标签显示不完整（dev）
 
 - 需求（用户）：系统顶部右上角有角色时展示角色，现在内容太长展示不完整，修复。

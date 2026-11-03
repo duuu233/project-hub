@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/9361aa7 树形结构列表（菜单、部门、账户）不走生效列字段配置，treeConfig 默认关闭。
 - [qianrong-web-login.md](qianrong-web-login.md)末节：2026-11-03 ssh dev/698140c 顶部角色标签放宽到 min(420px, 32vw) 完整显示，过长省略 + 悬停完整身份。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/9b7592a 401 无权限页重写（无权限原因、访问地址、当前身份、返回 / 切换系统）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/3644e86 列表按钮权限字符按菜单数据核对（7 处修正、6 处菜单缺权限待后端确认）。
