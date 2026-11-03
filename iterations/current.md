@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜相册小程序 WiFi 轮播设置选图带 deviceId（main-wifi）
+
+- 需求（用户）：轮播设置（WiFi）「轮播照片」下的图片列表也调 getUserProductImgRecordList，同样加可选参数 deviceId，规则和「我的上传」一样。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。无 .codegraph。
+- main-wifi/9cb2f46（已 push）：wifi-slideshow load() 的 getProjectionRecords 加 deviceId: device.productDeviceId（getDeviceDetail 已规范成完整 ID，取不到为空 → 不带，仍按用户查）；userProductId 照旧一起传。album-records-device-id 测试补轮播页用例（有 / 无完整 ID），其它调用方断言只留投屏记录页；当日变更记录、docs/README、client-api-matrix 同步。
+- 待确认：同上一条，带 deviceId 时 userProductId 仍一起传，需后端确认 deviceId 优先。相册APP 的轮播选图未同步（用户未要求）。
+- 验证：无 node，测试未运行；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜相册小程序 → 相册APP 功能同步（main / main-wifi）、main 合入 main-wifi
 
 - 需求（用户）：相册小程序的 main、main-wifi 分别把功能同步给相册APP，然后把 main 往 main-wifi 合并（main 是 main-wifi 的子集）。
