@@ -84,3 +84,10 @@
 - 风险：保存走整角色 `PUT /system/role`，与编辑页相同，会带上详情里的其余字段；同一角色同时在编辑页改基本信息可能互相覆盖（后保存者生效）。
 - 验证：ssh 无 Node，`node --test`、构建、浏览器、联调均未运行。
 
+## 角色列字段弹框改为列表内改策略（2026-11-03 ssh dev/e61d620，用户明确）
+
+- 口径（用户）：角色管理「列字段配置」弹框去掉「导入菜单列字段」入口、删除按钮、编辑按钮；原来可操作的字段平铺到列表；数据来源于菜单里的列字段配置，这里没有增删改查权限，只能改策略、脱敏方式等。同轮追加：「详情接口也不需要了，直接在弹出框列表操作」。
+- 改动：RoleColumnWorkspace 去掉操作列（详情 / 编辑 / 删除）与导入按钮，保留「一键设置策略」「刷新」；策略列、脱敏方式列在有 system:role:edit 且非只读时为下拉，改动即 `editRoleColumn(rowPolicyPayload(row, change, roleId, menuId))`——rowPolicyPayload 只换 policy / maskType，fieldName / fieldCode / fieldType / orderNum / isFilter / remark 按列表行原值带回（不再查详情，不校验名称长度），行带 roleId / menuId 时须与当前一致；选「脱敏」未选方式时只记草稿不保存，选了脱敏方式才保存；保存失败回到原值并在顶部提示；同一行保存中下拉禁用。顶部加说明「列字段来源于菜单的列字段配置，这里只能修改字段策略与脱敏方式」。RoleColumnAction 去掉导入分支。删除 RoleColumnForm.vue，api 去掉 getRoleColumn / deleteRoleColumn / importRoleColumns，model 去掉 roleColumnPayload / scopedColumn（10-30 dev/8d1b2e5「字段名称可编辑」随之作废）。
+- 「等」的理解：只做了策略与脱敏方式；筛选项、顺序、名称、备注只读（属菜单列字段定义）。如需其它字段可改，需用户明确。
+- 风险：edit 接口是否接受「列表行字段原样回传」未联调；列表行若缺 remark 等字段会按空回传。
+- 测试 role-contract：新增 rowPolicyPayload 用例、三请求契约（断言三个接口已移除）、弹框源码断言；原「字段名称可编辑」用例删除（功能已去掉）。无 Node，未运行。

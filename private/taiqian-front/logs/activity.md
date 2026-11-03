@@ -349,3 +349,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **验证**：无 Node，测试已加未运行，未构建 / 浏览器；git diff --check、信息隔离自查通过。
 - **追加（dev/2e66dd1）**：用户明确无角色保持原样、有角色才显示角色；去掉系统名显示，无角色不再补名。已 push，未运行测试。
 - **追加（dev/6cbf64b）**：登录不选角色时默认授权返回的默认角色（context.roleName 有值）也显示；identityDisplay 不再要求 roleId。已 push，未运行测试。
+
+## 2026-11-03 ssh｜角色列字段弹框列表内改策略、列表起止日期拆列
+
+- **需求**：① 角色列字段配置弹框去掉导入、删除、编辑（追加：详情也不要），策略 / 脱敏方式在列表里直接操作；② 列表起止日期的开始列拼了结束日期。
+- **改动**：RoleColumnWorkspace 重写为列表内下拉保存，删 RoleColumnForm 与三个接口；融资方案、授信、银行政策快照起止日期拆两列；README 两处；测试 role-contract 改、date-range-columns 新增。dev 同名 pull 已最新，dev/e61d620 提交后再次 pull 并 push。
+- **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。

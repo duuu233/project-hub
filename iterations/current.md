@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 角色列字段列表内改策略、列表起止日期拆列（dev）
+
+- 需求（用户）：① 角色管理-列字段配置弹框去掉「导入菜单列字段」、删除、编辑按钮，原可操作字段平铺到列表；数据来源于菜单列字段配置，没有增删改查权限，只能改策略、脱敏方式等；追加：详情接口也不需要，直接在弹框列表操作。② 所有涉及起止日期的列表，开始列取值有问题（拼了结束日期），应只要开始日期或合并成「开始至结束」。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/e61d620（已 push）：① RoleColumnWorkspace 去操作列与导入，策略 / 脱敏方式下拉直接保存（rowPolicyPayload 按行原值带回其余字段，选脱敏须再选方式才保存，失败回原值），保留一键设置策略；删 RoleColumnForm、api 的 detail/delete/import、model 的 roleColumnPayload/scopedColumn。② 融资方案 startDate、授信 startDate、银行政策快照 validFrom 原 formatter 拼了区间，动态列配置成开始日期时显示整段——拆成开始 / 结束两列。README 两处、测试（role-contract 改、date-range-columns 新增）、私人 docs、AI_CONTEXT、logs 已更新。
+- 自行决定（可改）：「等」只做策略与脱敏方式；起止日期选「拆两列」而非合并（动态列按单字段配置，合并会重复或标题不符）。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜花盆APP 割草计划跟随设备上报（main）
 
 - 需求（用户）：和区域设置类似，割草计划设备那边也能设时间段，需要监听设备传回的数据并更新 App 内数据。

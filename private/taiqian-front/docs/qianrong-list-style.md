@@ -84,3 +84,10 @@
 - 局限：依赖「菜单路径 = 视图目录」，菜单 path 与目录不一致的页面仍判 404；地址恰好对应某视图文件但不是菜单页面时会判 401。
 - 公告（用户第 5 点）：右上角「公告信息」需 system:notice:list，Navbar `v-if="!isEmbedded && canViewNotice"`，canViewNotice = auth.hasPermi（含 *:*:*），没权限不渲染也不请求公告；分隔线保留。
 - 测试 `tests/route-access.test.mjs`、policy-columns 末例。无 Node，未运行。
+
+## 起止日期列拆成开始 / 结束两列（2026-11-03 ssh dev/e61d620，用户明确）
+
+- 问题（用户）：所有涉及起止日期的列表，开始日期这一列取值有问题，是不是拼了结束日期；应只要开始日期，或合并成一列「开始至结束」。
+- 原因：三处列 field 只写开始字段，formatter 却拼了区间——融资方案「有效起止日期」field=startDate、`start ~ end`；授信管理「授信期限」field=startDate、`start 至 end`；银行政策快照「合作期限」field=validFrom、`from 至 to`。按 policyColumns 动态渲染后，接口配置的 startDate（fieldName 如「开始日期」）匹配到这一列，沿用拼接 formatter，显示成整段区间。
+- 选择：用户给的第一种「只要开始日期」——开始、结束各一列（有效开始 / 结束日期、授信开始 / 结束日期、合作开始 / 结束日期），toDateText，空显示 --。没选合并成一列：动态列按单字段配置，合并列会让配置里的 endDate 再生成一列纯文本，或标题与内容不符。bank-policy-snapshot 删除不再使用的 periodText。详情页、版本对比里的「有效起止日期 / 授信期限」不在列表范围，未改。
+- 测试 tests/date-range-columns.test.mjs（源码不拼接、两列存在；mergePolicyColumns 两字段各对应一列）。无 Node，未运行。
