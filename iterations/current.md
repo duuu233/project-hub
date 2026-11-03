@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 页面切换留白分析、列表只按接口渲染（dev）
+
+- 需求（用户）：8. 每次切换页面时间长、有留白，对比正矿丝滑很多，是什么问题，先不急着改；9. 屏蔽列表兜底的写死列，都按接口返回渲染，序号和操作不变，用户测试。
+- 同步：Hub main、tq-plus dev、zk feature-v1.8.5 同名 pull 均已最新（zk 只读）。
+- ⑧ 结论（未改）：qianrong AppMain 的 transition 在 router-view 插槽内且 mode="out-in"，旧页 .25s 离场播完才挂新页，进场类名是 Vue 2 写法无动画；正矿 transition 包在 router-view 外，过渡实际不触发。叠加：列表首屏先等菜单列表 + policyColumns 再请求数据且无 loading、列二次重载、懒加载 chunk。建议去掉 out-in（或照正矿写法）、等列期间 loading 并与数据请求并行、可选 vendor 拆包。
+- ⑨ dev/866b4f5（已 push）：setListColumnSource 加 strict（main.js 开），首屏只有 type 列与操作列，数据列全按接口（对上沿用页面渲染，无关列不留），无配置 / 无匹配 / 失败只剩序号与操作；README、测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 菜单管理改 vxe 树形、系统启停权限字符（dev）
 
 - 需求（用户）：6. 菜单管理 tree 展开明显延迟，有无更好的树形 + 拖拽方案——给出分析后用户选「改成 vxe-table 树形，只支持同级拖拽」；7. 系统管理的启用禁用加了权限字符 system:system:status，补上。

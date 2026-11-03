@@ -373,3 +373,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：⑥ 菜单管理树展开有延迟，用户确认改 vxe-table 树形、只支持同级拖拽；⑦ 系统管理启用禁用的权限字符为 system:system:status。
 - **改动**：menu/index.vue 重写为 vxe-grid 树形（transform、虚拟滚动、同级拖拽先保存后换位），新增 menu-tree-model.js 与 menu-tree-grid 测试，两个计数测试调整；all-system 开关权限改 system:system:status；README 新增一节、改一处。dev 同名 pull 已最新，dev/004d44f 提交后再次 pull 并 push。
 - **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜页面切换留白分析、列表只按接口渲染
+
+- **需求**：⑧ 切换页面慢有留白，对比正矿，先不改；⑨ 屏蔽写死兜底列，全按接口渲染（序号、操作不变）供测试。
+- **改动**：⑧ 只读对比 qianrong 与正矿 AppMain / transition.scss / 守卫 / 构建配置，结论写入 docs；⑨ strict 模式（main.js、listGrid、policyColumns、policyColumnsModel）、README、测试。tq-plus dev 与 zk feature-v1.8.5 同名 pull 均已最新（zk 未改）；dev/866b4f5 提交后再次 pull 并 push。
+- **验证**：无 Node，测试 / 构建 / 浏览器未运行；git diff --check、信息隔离自查通过。

@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜taiqian-front｜ssh｜dev｜列表只按接口渲染、页面切换留白分析
+
+列表动态列改为只按接口渲染（屏蔽写死兜底列，序号与操作不变，测试阶段开关 strict）；页面切换留白对比正矿只做分析（AppMain out-in 过渡为主因），未改。dev/866b4f5 已 push；正矿仅同步只读。无 Node，未验证。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜菜单管理改 vxe 树形、系统启停权限字符
 
 菜单管理由 el-table + Sortable 改为 vxe-grid 树形（扁平转树、虚拟滚动、展开不重建、只同级拖拽且先保存后换位）；系统启用 / 停用开关权限改为 system:system:status。dev/004d44f 已 push；无 Node，未验证。

@@ -99,3 +99,16 @@
 - 改动：policyColumnsModel 新增 htmlToText（像 HTML 才处理：去 script/style 及内容、注释，br 与 p/div/li/h*/tr/blockquote 结束处留空格，去标签，还原常见命名实体与 &#数字; / &#x十六进制;，合并空白）；policyCell 对字符串（含数组元素）走它。作用于所有动态新增的纯文本列，页面自带列不受影响。
 - 选择：单元格显示纯文本、不 v-html——行高会被段落和图片撑开，项目无 DOMPurify 等净化依赖，有注入风险。如需按富文本样式查看，可另做「查看内容」弹窗（NoticeMessage 详情已用 v-html）。
 - 测试 policy-columns 新增一例（Python 按同规则核过期望值）。无 Node，未运行。
+
+## 只按接口渲染列（2026-11-03 ssh dev/866b4f5，用户明确，测试阶段）
+
+- 口径（用户）：先屏蔽兜底的写死列数据，都按接口返回渲染，序号和操作不变，用户要测试。
+- 改动：main.js `setListColumnSource(applyPolicyColumns, { strict: true })`；listGrid 记 columnStrict，withListGridStyle 在走动态列（byPolicy 且有来源且 strict）时首屏 columns = fixedPolicyColumns（type 列 + 操作列），raw 仍存页面全部列；policyColumns 合并时 `{ unrelated: !strict }`——字段对上页面列仍沿用渲染，responseKey: false 的无关列不保留；没匹配到列表菜单、无配置、菜单 / 策略请求失败都停在只有序号与操作列。policyColumns: false 的特殊列表（菜单管理）不受影响。恢复兜底把 strict 改 false。
+- 测试 policy-columns 补一例并改入口断言。无 Node，未运行。
+
+## 页面切换慢、有留白：与正矿对比分析（2026-11-03 ssh，仅分析未改）
+
+- 用户：每次切换页面时间长、有留白，正矿切换丝滑很多，先不急着改。
+- 主因（读码判断，未实测）：AppMain 过渡写法不同。qianrong `<router-view v-slot><transition name="fade-transform" mode="out-in"><keep-alive>…` 把 transition 放在 router-view 插槽内，路由切换真的走 out-in：旧页先播 .25s 离场（opacity→0、右移 30px），播完才挂新页；进场类名用的是 Vue 2 的 `.fade-transform-enter`（Vue 3 应为 `-enter-from`），进场没有动画——观感就是「淡出 → 空白 → 突然出现」。正矿是 `<transition><router-view v-slot>…</router-view></transition>`，transition 的直接子节点是 RouterView 本身、路由切换时不变，过渡实际不触发，新页直接替换，所以显得丝滑。两边 transition.scss 完全相同。
+- 叠加因素：① 今天的列表动态列让标准列表首屏要先等「菜单列表（会话首次）+ policyColumns」再发列表请求，期间表格没有 loading，strict 模式下数据列也要等配置回来才出现；② 接口字段过滤（responseColumns）在数据回来后会再重载一次列，表格重排一次；③ 首次访问页面的路由组件是懒加载 chunk，需网络请求（两边同为 import.meta.glob；正矿有 manualChunks 拆 vendor 便于缓存，qianrong 用默认拆分 + vite-plugin-lazy-import 按需引 vxe 样式，开发环境首次进页编译更明显）；④ 守卫每次跳转只做 syncSsoSystemContext / refreshListOnReturn 等轻量判断，不是瓶颈。
+- 建议（待用户决定）：去掉 out-in（改 mode 默认或直接去掉 transition，或照正矿写法），预期即可消除大部分留白；列表等列配置期间给 loading，并把 policyColumns 与列表请求并行；可选：build 加 vendor manualChunks。

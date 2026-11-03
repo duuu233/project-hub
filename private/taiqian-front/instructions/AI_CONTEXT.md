@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/866b4f5（测试阶段）：动态列 strict——setListColumnSource(..., { strict: true })，首屏只显示 type 列与操作列，数据列全按接口（对上的沿用页面渲染，无关列不留），无配置 / 失败只剩序号与操作；恢复兜底改 false。页面切换留白已分析未改：AppMain transition out-in 生效（正矿写法使过渡不触发），详见 docs/qianrong-list-style.md 末节。
+
 2026-11-03 ssh dev/004d44f：菜单管理列表改为 vxe-grid 树形（扁平数据 treeConfig.transform、>60 行虚拟滚动、setAllTreeExpand 不重建、rowDragConfig.isPeerDrag 只同级拖拽，dragEndMethod 先 updateMenu 变了的序号成功才换位，menu-tree-model.js），不再用 el-table + Sortable；系统启用 / 停用开关权限改为 system:system:status。未运行测试/构建/浏览器。
 
 2026-11-03 ssh dev/2f37850：系统管理列表状态列改为启用 / 停用开关（同账户管理账号状态：切换→二次确认→editSystem({ id, status })，取消或失败切回；无编辑权限显示标签）。未运行测试。
