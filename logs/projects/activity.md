@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜flowerpot-app｜ssh｜main｜割草计划页跟随设备 DP101
+
+计划页本就不存副本、随 DP101 上报重画（编辑 / 删除已按设备当前值合并）；补进页从 SDK 现读 DP101（防过期序号）。main/38253f3 已 push；无 Flutter，未运行测试、未真机。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜切换系统显示默认角色
 
 登录不选角色时 defaultAuthorize 返回的默认角色（context.roleName 有值）也在切换系统旁显示，不再要求 roleId。dev/6cbf64b 已 push；无 Node，未验证。

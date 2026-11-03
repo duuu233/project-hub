@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜花盆APP 割草计划跟随设备上报（main）
+
+- 需求（用户）：和区域设置类似，割草计划设备那边也能设时间段，需要监听设备传回的数据并更新 App 内数据。
+- 同步：Hub main、flowerpot main 同名 pull 已最新（9b1ef34），origin GitHub。
+- 核查：计划页本就不存副本，ListenableBuilder 读 MowerDevice.schedule，设备 DP101 上报即重画；DP101 不乐观显示（下发后等设备返回才更新、期间锁页）；编辑保存 / 长按删除已按设备当前值合并或校验；首页计划卡同样监听。与区域页修复后的差异只有进页不现读 SDK。
+- main/38253f3（已 push）：rereadDps 支持 DP101（_scheduleReadSequence 防过期、不因等回显跳过、读到记联调日志「进页现读」）；计划页进页 rereadDps([DP101])；mower_pages_test 新增一例；项目 history 记录、history/README、AI_CONTEXT 已更新。
+- 未改：编辑弹层打开期间设备改了同一天时段，弹层不实时变（保存时按合并规则）。
+- 验证：无 Flutter / Dart，未运行 analyze / test / 编译，未真机；git diff --check 通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 切换系统显示默认角色（dev）
 
 - 需求（用户）：前面改的角色展示，登录不选角色时会有一个默认角色也要展示；defaultAuthorize 返回 data.context（样例：orgId "0"、orgName 有值，userGroup / system / role / dept 的 id 与名称均为 null，adminLoginAllowed true），取 roleName，有值就显示。
