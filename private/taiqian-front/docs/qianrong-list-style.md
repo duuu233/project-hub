@@ -49,3 +49,13 @@
 - 页面改动：角色列表不再往行里补 orgName，「所属企业」改 formatter（null 仍显示「企业 {orgId}」，没返回 orgName 就整列隐藏，不拿 orgId 兜底）；准入列表不再补 areaName，「地区」改 formatter，`responseKey: ['provinceCode','cityCode','areaCode']`；企业链「阶段进度」来自另一个接口，`responseKey: false`；流程定义「结构」按 `nodeTypeSeq`。`updateTime || createTime` 这类兜底列按列自身字段严格判断，未加 responseKey。
 - 风险：列 field 与接口 key 不一致的列会被误隐藏（已逐页核对 24 页字段，只发现上述 4 处派生列，未对照真实响应）；首屏先显示全部列、数据回来后再收起；以后新页面若往行里补字段，补的字段会被当成已返回。
 - 公开说明写在 `apps/qianrong/README.md`「列表列按接口字段展示」。测试 `tests/response-columns.test.mjs`（规则、分组、withListGridStyle 赋值与透传、页面源码断言，Python 核过正则）。无 Node，未运行、未构建 / 浏览器 / 联调。
+
+## 列设置：原生显示/隐藏、拖拽排序与本地持久化（2026-11-03 ssh dev/1b09a7c，用户明确）
+
+- 需求（用户）：① 列表都是 vxe-table，用官网的列设置控制列是否展示；② 所有列的展示顺序支持手动拖拽，并本地持久化（浏览器缓存或更好的方式），下次进入仍按用户调整的顺序展示。
+- 现状核对：24 个标准列表全部经 `withListGridStyle`，工具栏早已 `custom: true`；vxe-table 4.21.10 默认 `customConfig` 就是 allowVisible / allowSort / showSortDragButton，面板本身能勾显隐、拖排序，但没配 `id` 与 `storage`，刷新即丢。源码依据（unpkg 只读下载到 `.codex-tmp/vxe/`）：`es/table/src/table.js` 的 `restoreCustomStorage` 在每次 `handleInitColumn` 都执行（因此 responseColumns 重赋 columns 后仍会套用存储）；存储键 `VXE_CUSTOM_STORE`，按 `_v === getConfig().version` 校验，vxe 升级即作废；列键 `column.getKey()` = field 或 `type=xxx`；`handleCustomStoreConfig` 里 `storage: true` 会把未声明项（含 pager）默认全存，所以用对象形式并同写 `storeOptions`（storeOptions 覆盖 storage）。
+- 实现：`listGrid.js` 在工具栏开着列设置时统一追加 `columnConfig.drag: true`、`columnDragConfig { trigger: 'cell', showIcon: false, disabledMethod: type 列 }`（整格拖表头不加图标；固定列 vxe 本身不允许拖；拉列宽手柄 mousedown 已 stopPropagation，不冲突），页面传 `id` 时 `customConfig.storage = storeOptions = { visible, sort, fixed, resizable }`（不存分页条数，避免与页面 queryParams 不一致）。页面自己的 columnConfig / columnDragConfig / customConfig 优先。表头拖拽结束 vxe 自己调 `saveCustomStore('update:sort')`，面板点确认同样落盘，「重置」清存储。
+- 「更好的方式」：没有后端保存接口，按 localStorage；但存储 id 带登录用户编号 `qr-list:<id>@<userId>`（`setListGridOwner` 由 main.js 注入 `useUserStore().id`，listGrid.js 保持不依赖 store 以便 node 测试直接导入），同浏览器换账号各存各的，也和各账号的字段权限不同相匹配。以后若要跨设备，可用 vxe 的 `restoreStore` / `updateStore` 接后端，接口需后端提供。
+- id：24 页按 views 目录路径（如 `config-audit/notice`、`organization/dept`）；DefListPage 用 `config-audit/workflow-def/${props.kind}`，AdmissionTable 用 `supply-chain/admission-list/${props.type}`（两类列不同，分开存）。
+- 风险 / 已知：① 因权限被 responseColumns 去掉的列不在 sortData 里，之后该列再返回时按初始序号插回，位置可能与用户期望不同；期间用户再保存会覆盖掉它的旧位置。② 用户编号在页面 setup 时取，若不重新挂载就切账号会沿用旧键（现有退出流程会整页重载，未实测）。③ 表头 `trigger: 'cell'` 与远端排序（日志页 sortConfig trigger cell）同在表头：点击仍是排序，按住拖动才换位，未浏览器实测。④ 用户列表首屏 data 为空，首个有数据的响应才确定列，存储在每次列重载时套用。
+- 公开说明：`apps/qianrong/README.md`「列设置与本地记忆」。测试 `tests/list-column-custom.test.mjs`（配置合成、用户键、页面覆盖、24 页 id 存在且不重复、main.js 注入；正则用 Python 核过）。无 Node，测试 / 构建 / 浏览器均未运行。

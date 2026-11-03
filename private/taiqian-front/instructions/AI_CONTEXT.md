@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/1b09a7c：标准列表（withListGridStyle）列设置走 vxe 原生——面板勾显隐、拖排序，表头整格拖拽（type 列 / 固定列除外）；页面传 id 时按 vxe customConfig.storage 存 localStorage（visible/sort/fixed/resizable，不存分页），存储 id `qr-list:<id>@<userId>`，用户编号由 main.js setListGridOwner 注入。24 页已配 id，新列表须配不重复 id。未运行测试/构建。详见 docs/qianrong-list-style.md 末节。
+
 2026-10-30 ssh dev/8d1b2e5：角色 RoleColumnForm 字段名称改为可编辑（必填、≤30 字，roleColumnPayload 去空格校验），编码 / 类型仍只读；菜单 MenuColumnForm 字段名称本就可编辑。未运行测试/构建。
 
 2026-10-30 ssh dev/308a36f：列表列按接口字段渲染——withListGridStyle 的 data 改为访问器，赋值时按行数据返回的 key 过滤 columns（utils/responseColumns.js；无行保持上次；type 列与操作列不参与；派生列 responseKey）。ListTablePanel 特殊列表与部门树（responseColumns: false）不接入。行数据须保持接口原样，派生展示放 formatter。未运行测试/构建。详见 docs/qianrong-list-style.md 末节。

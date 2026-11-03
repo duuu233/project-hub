@@ -1,3 +1,15 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 列表列设置：显隐、拖拽排序与本地持久化（dev）
+
+- 需求（用户）：① 列表都是 vxe-table，用官网的列设置控制列是否展示；② 所有列顺序支持手动拖拽，本地持久化（浏览器缓存或更好方式），下次进入仍按用户调整的顺序。
+- 同步：Hub main 已最新；tq-plus dev 同名 pull 带入 8e2431a（7 个文件），origin 为 GitHub。本机无 codegraph CLI / node，按 grep 定位，vxe 源码从 unpkg 只读下载到 .codex-tmp/vxe/ 核对。
+- 现状：24 个标准列表全走 withListGridStyle，工具栏早已 custom: true，vxe 4.21 列设置面板默认就能勾显隐、拖排序，缺的是 id + storage，刷新即丢。
+- dev/1b09a7c（已 push）：listGrid.js 加表头整格拖拽（无图标，type 列 / 固定列不拖）与原生 customConfig.storage = storeOptions = {visible, sort, fixed, resizable}（对象形式，避免 storage:true 连带存分页条数）；存储 id `qr-list:<页面路径>@<userId>`，main.js setListGridOwner 注入 useUserStore().id；24 页加 id（DefListPage 按 kind、AdmissionTable 按 type 分开）；README「列设置与本地记忆」；新增 tests/list-column-custom.test.mjs。私人 docs（list-style 末节、README）、AI_CONTEXT、logs 已更新。
+- 「更好的方式」：无后端保存接口，先 localStorage + 按用户隔离；跨设备需后端接口，vxe restoreStore / updateStore 可直接接。
+- 风险：权限隐藏的列再返回时按初始序号插回；表头拖拽与点击排序同在表头（日志页），未浏览器实测；vxe 升级后旧存储自动作废。
+- 验证：无 Node，测试 / 构建 / 浏览器均未运行（新测试正则用 Python 核过）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-02 ssh｜泰乾超级-qianrong 配置权限「功能权限」接真实数据（dev）
 
 - 需求（用户）：按排查后的方案 1，功能权限接上真实数据。

@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/1b09a7c 标准列表列设置用 vxe 原生面板控制显隐 / 拖拽排序，表头整格拖拽，按 `qr-list:<页面>@<用户>` 存 localStorage（显隐、顺序、固定、列宽）。
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)末节：2026-11-02 ssh dev 配置权限「功能权限」接真实数据：按角色 userGroupId 取 menuTreeList 范围、roleSystems 回显、updateRole 保存（同编辑页），删除示例模型。
 - [qianrong-role-permission-workspace.md](qianrong-role-permission-workspace.md)末节：2026-10-30 ssh dev/8d1b2e5 角色「编辑列字段」放开字段名称（必填、≤30 字）；菜单列字段本就可编辑未改。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-10-30 ssh dev/308a36f 标准列表按接口返回字段渲染列（未返回 = 权限隐藏不渲染，空值照常展示）；特殊列表与部门树不接入。

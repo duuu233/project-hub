@@ -322,3 +322,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：菜单和角色配置权限的编辑列字段弹框放开字段名称编辑。
 - **改动**：菜单侧本就可编辑未改；角色 RoleColumnForm 字段名称改输入框，payload 去空格、必填、≤30 字。dev 同名 pull 已最新，dev/8d1b2e5 提交后再次 pull 并 push。
 - **验证**：无 Node，测试已加未运行，未构建；git diff --check、信息隔离自查通过。
+
+## 2026-11-03 ssh｜列表列设置：显隐、拖拽排序与本地持久化
+
+- **需求**：列表用 vxe 官方列设置控制列显隐；列顺序支持手动拖拽并本地持久化，下次进入保持。
+- **改动**：listGrid.js 统一加表头拖拽（整格、无图标、type 列不拖）与原生 customConfig.storage（显隐/顺序/固定/列宽）；存储 id 带登录用户编号（main.js 注入）；24 个标准列表加 id；README 新增「列设置与本地记忆」；新增 list-column-custom 测试。dev 同名 pull 带入 8e2431a，dev/1b09a7c 提交后再次 pull 并 push。
+- **验证**：无 Node，测试已加未运行（正则 Python 核过），未构建 / 浏览器；git diff --check、信息隔离自查通过。
