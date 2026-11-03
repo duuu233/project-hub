@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 页面切换去掉 out-in 过渡（dev）
+
+- 需求（用户）：按建议 1 改，去掉 out-in 过渡动画。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/bfb7dda（已 push）：AppMain 去掉 transition 包裹，router-view 插槽内直接 keep-alive + 路由名外壳；新增 tests/route-switch-no-transition。私人 docs、AI_CONTEXT、logs 已更新。
+- 未做：建议 2（等列配置期间 loading、与数据请求并行）、3（vendor 拆包）。
+- 验证：无 Node，测试 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 页面切换留白分析、列表只按接口渲染（dev）
 
 - 需求（用户）：8. 每次切换页面时间长、有留白，对比正矿丝滑很多，是什么问题，先不急着改；9. 屏蔽列表兜底的写死列，都按接口返回渲染，序号和操作不变，用户测试。

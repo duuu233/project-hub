@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜taiqian-front｜ssh｜dev｜页面切换去掉 out-in 过渡
+
+按分析建议 1 去掉 AppMain 路由切换的 fade-transform out-in 过渡，keep-alive 不变。dev/bfb7dda 已 push；无 Node，未验证。
+
+---
+
 ## 2026-11-03｜taiqian-front｜ssh｜dev｜列表只按接口渲染、页面切换留白分析
 
 列表动态列改为只按接口渲染（屏蔽写死兜底列，序号与操作不变，测试阶段开关 strict）；页面切换留白对比正矿只做分析（AppMain out-in 过渡为主因），未改。dev/866b4f5 已 push；正矿仅同步只读。无 Node，未验证。
