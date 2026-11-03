@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 切换系统显示默认角色（dev）
+
+- 需求（用户）：前面改的角色展示，登录不选角色时会有一个默认角色也要展示；defaultAuthorize 返回 data.context（样例：orgId "0"、orgName 有值，userGroup / system / role / dept 的 id 与名称均为 null，adminLoginAllowed true），取 roleName，有值就显示。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- dev/6cbf64b（已 push）：identityDisplay 的 role 改为只看 roleName（原要求 roleId 非空）；contextSummary 原本就会存 context.roleName；identity-display 测试补样例用例；README 同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 说明：用户给的样例 roleName 为 null，此时仍只显示按钮。
+- 验证：无 Node，测试未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜相册小程序「我的上传」投屏记录按设备 ID 查询（main-wifi）
 
 - 需求（用户）：切到 main-wifi；getUserProductImgRecordList 新增非必选参数 deviceId——传了后端按设备 ID 查、不按用户 ID；不传维持按用户查。追问传参页面后用户明确：只改「我的上传」页面里的这个接口调用，其它页面先不管。

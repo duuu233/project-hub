@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-03 ssh dev/6cbf64b（用户明确）：切换系统处角色标签改为 roleName 有值就显示（含登录不选角色时 defaultAuthorize context.roleName 的默认角色），不再要求 roleId。
+
 2026-11-03 ssh dev/2e66dd1（用户明确）：切换系统处无角色保持原样只显示按钮，有角色才显示「角色：XX」，不显示系统名；无角色不查身份树补名。
 
 2026-11-03 ssh dev/3b01b30：IdentitySwitcher 显示当前系统名与（有 roleId 时）角色标签；当前身份存 sessionStorage qianrong-login-identity（authorize / changeIdentity 写入、login / clearSession 清空，仅展示），缺名称时 fillIdentityNames 按 loginIdentityTree 补。未运行测试/构建。详见 docs/qianrong-web-login.md 末节。

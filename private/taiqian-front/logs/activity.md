@@ -348,3 +348,4 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **改动**：IdentitySwitcher 显示系统名 + 角色标签；sessionStorage 记当前身份（默认授权 / 切换身份写入，退出清除），缺名称按身份树补；README 新增一节；新增 identity-display 测试。dev 同名 pull 已最新，dev/3b01b30 提交后再次 pull 并 push。
 - **验证**：无 Node，测试已加未运行，未构建 / 浏览器；git diff --check、信息隔离自查通过。
 - **追加（dev/2e66dd1）**：用户明确无角色保持原样、有角色才显示角色；去掉系统名显示，无角色不再补名。已 push，未运行测试。
+- **追加（dev/6cbf64b）**：登录不选角色时默认授权返回的默认角色（context.roleName 有值）也显示；identityDisplay 不再要求 roleId。已 push，未运行测试。

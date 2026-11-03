@@ -80,3 +80,4 @@ deptId可选，本轮不提供任意部门选择，不提交部门字段，由�
 - 未覆盖：SSO 入口不经 authorize，不显示当前身份（只剩按钮）；默认授权 context 是否带名称未核实；loginIdentityTree 失败会弹通用错误。
 - 测试 tests/identity-display.test.mjs；login-presentation 现有断言兼容（login 仍带 systemId、authorize 首参仍为 systemId）。无 Node，未运行、未构建 / 浏览器。
 - 同日后续 dev/2e66dd1（用户口径）：「没有角色的就不管，按现在的展示，有角色才需要展示角色」。去掉系统名显示：无角色时只有原「切换系统」按钮；有 roleId 时按钮左侧 el-tag「角色：XX」（title 仍为完整身份，≤768px 隐藏）。identityNeedsNames 改为只在有 roleId 且缺角色名 / 系统名时才查身份树，无角色不再请求。
+- 同日后续 dev/6cbf64b（用户口径）：「登录不选角色会有一个默认角色，也展示出来」，defaultAuthorize 返回 `data.context` 含 orgName / userGroupName / systemName / roleName / adminLoginAllowed / deptName（用户给的样例 orgId="0"、其余 id 与 roleName 均为 null）。identityDisplay 改为 roleName 有值就显示，不再要求 roleId；contextSummary 原本就存 context.roleName。样例 roleName=null 时不显示，保持原样。

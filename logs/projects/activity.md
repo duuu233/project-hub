@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜taiqian-front｜ssh｜dev｜切换系统显示默认角色
+
+登录不选角色时 defaultAuthorize 返回的默认角色（context.roleName 有值）也在切换系统旁显示，不再要求 roleId。dev/6cbf64b 已 push；无 Node，未验证。
+
+---
+
 ## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜「我的上传」投屏记录按设备 ID 查询
 
 getUserProductImgRecordList 新增可选 deviceId（传了后端按设备查，不传按用户查）；按用户口径只有「我的上传」页（album/list）选了具体设备时带 productDeviceId，其它页面不变。main-wifi/e47e3bf 已 push；无 node，测试未跑、未联调。
