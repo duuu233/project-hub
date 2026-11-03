@@ -1,3 +1,13 @@
+## 2026-11-03 ssh｜泰乾超级-qianrong 顶部角色标签显示不完整（dev）
+
+- 需求（用户）：系统顶部右上角有角色时展示角色，现在内容太长展示不完整，修复。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。
+- 原因：el-tag 设了 max-width 200px，内层文字不省略，直接被截断。
+- dev/698140c（已 push）：自定义角色标签（「角色」小标 + 名称），最宽 min(420px, 32vw)，名称 nowrap + 省略，el-tooltip 悬停显示完整身份；≤768px 仍隐藏；identity-display 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 验证：无 Node，测试 / 浏览器未运行；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜泰乾超级-qianrong 列表按钮权限字符核对（dev）
 
 - 需求（用户）：检查列表操作栏按钮的权限字符是否都加上，附 system/menu/list 全量菜单数据，主要指按钮权限。
