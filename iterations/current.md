@@ -1,3 +1,14 @@
+## 2026-11-03 ssh｜相册小程序「我的上传」投屏记录按设备 ID 查询（main-wifi）
+
+- 需求（用户）：切到 main-wifi；getUserProductImgRecordList 新增非必选参数 deviceId——传了后端按设备 ID 查、不按用户 ID；不传维持按用户查。追问传参页面后用户明确：只改「我的上传」页面里的这个接口调用，其它页面先不管。
+- 同步：仓库本就在 main-wifi、工作区干净，同名 pull 已最新（caf8e43），origin/main 无未合入提交；origin GitHub。无 .codegraph，按 grep 定位。
+- 「我的上传」= 首页入口 goMyUploads → subpackages/album/list（页面标题仍是「我的图库」）。后端 deviceId = 设备完整 6 字节 ID = 前端 productDeviceId。
+- main-wifi/e47e3bf（已 push）：api.getProjectionRecords 只在给了 deviceId 时带上；album/list 新增 deviceIdOf(userProductId)，选了具体设备时带该设备 productDeviceId，「全部」/找不到/无完整 ID 不带；userProductId 照旧一起传。新增 tests/album-records-device-id.test.js；docs/changes 变更记录、docs/README、client-api-matrix 已更新。
+- 待确认：带 deviceId 时 userProductId 仍一起传（未删原参数）——若后端同时按 userProductId 过滤，共享设备上其他人的记录仍查不到，需后端确认 deviceId 优先。
+- 验证：无 node，测试未运行；未开发者工具 / 真机联调；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜花盆APP 割草机区域设置：区域 2 在机器上设置后 App 没反应（main）
 
 - 问题（用户）：区域设置页区域 2 配置没生效——机器上设置第二区域，App 没反应；最新 App，旧 App 正常，同一固件；问最新版有没有按涂鸦 SDK 动态改值；用户补充「APP 端应该没有动态刷」。

@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜「我的上传」投屏记录按设备 ID 查询
+
+getUserProductImgRecordList 新增可选 deviceId（传了后端按设备查，不传按用户查）；按用户口径只有「我的上传」页（album/list）选了具体设备时带 productDeviceId，其它页面不变。main-wifi/e47e3bf 已 push；无 node，测试未跑、未联调。
+
+---
+
 ## 2026-11-03｜flowerpot-app｜ssh｜main｜割草机区域设置页跟随设备上报
 
 反馈机器上设区域 2、App 没反应。区域页只在进页拷贝一次 MowerDevice.zones，不监听上报、不现读；改为进页现读 SDK DP103 并监听设备，无未保存修改时随上报 / 回弹刷新。main/9b1ef34 已 push；无 Flutter，未运行测试、未真机。
