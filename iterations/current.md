@@ -6,6 +6,7 @@
 - main-wifi/6a22233（已 push）：api.getServerTime / checkShareTimeValid（showError:false）；卡片路径加 t（原样），parseAcceptQuery 缺 / 非法 t 按无效；分享列表进页面取时间戳（取不到置灰，点按钮重取），onShareAppMessage 返回 promise 分享时取最新、失败用默认；开发版复制测试参数先取最新；接受页已登录进页面校验（「校验中…」），false 显示「分享链接已过期」，点接受前再校验以此为准，校验失败提示稍后重试且不绑定；未登录不校验（接口要登录态，401 会被拉去登录页），登录回来再校验。wifi-share 测试补用例；新增变更记录，docs/README、client-api-matrix、AI_CONTEXT 同步。
 - 用户追加：chkTimeValid 只判断 retData 布尔值。main-wifi/68c8306（已 push）：retCode 非 200 但带布尔 retData 也按该值算，401/405/406/409、网络失败、无布尔值仍按校验失败；测试补四例，变更记录同步。
 - 方案风险（已回复用户）：t 是卡片明文参数、无签名，可改成新时间戳绕过；校验只在端上，addUserProduct 不验时间，绕开接受页即可加入。挡住普通用户点旧卡片，挡不住刻意绕过；建议服务端 addUserProduct 带上分享时间戳并校验，或对 d/u/t 签名。另需确认未来时间戳是否判无效。
+- 用户确认（同日）：目前做到「正常用户点过期旧卡片被拦、停留期间过期点接受时再拦」即可，服务端校验 / 签名暂不做。
 - 自行决定（可改）：旧卡片（无 t）一律按无效；进页面校验失败不拦、点接受时校验不了不绑定。
 - 待确认：时间戳单位与有效时长按服务端；chkTimeValid 只验时间，其余卡片参数仍靠 addUserProduct 服务端兜底。相册APP 未同步（用户未要求）。
 - 验证：无 node，测试未运行（parse 规则 Python 核过）；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
