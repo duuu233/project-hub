@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 发新版后自动刷新、列表小屏最小列宽（dev）
+
+- 问答（用户）：开着测试环境过段时间报 assets/*.js 404、Failed to fetch dynamically imported module，刷新就好——原因：部署后带哈希的旧页面文件被删（emptyOutDir），旧页面按旧文件名按需加载 404。
+- 需求（用户）：1. 加自动刷新兜底；2. 小屏列宽收缩太小，给最小宽度，列多允许滚动条，操作栏固定右侧。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新；origin GitHub。
+- dev/c8e5279（已 push）：chunkReload.js（router.onError 识别动态导入失败 → 刷新到目标页 href，10 秒内一次、存储不可用不刷），main.js 安装；listGrid.styleColumns 数据列 minWidth 下限 clamp(表头字数×13+30, 100, 220)、低的抬上来、width / 百分比不动，操作列默认 fixed right（此前仅币种未固定）。新增 chunk-reload、list-min-width 测试；README 同步；私人 docs、AI_CONTEXT、logs 已更新。
+- 未做 / 待确认：部署侧保留旧 assets、入口页不缓存（需运维）；vite:preloadError 未接（非路由动态导入未覆盖）；vue-router 4.2.5 onError 的 to 参数未在本机核对（取不到刷新当前页）；浏览器已存的列设置会盖过新默认，需「重置」。
+- 验证：无 Node，测试未运行（手推断言）；未浏览器 / 小屏实测；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜花盆APP 首页隐藏自定义图片入口、放上选择植物（main）
 
 - 需求（用户）：花盆首页 ① 隐藏定制动画（现名「自定义图片」）入口，App 暂时不做入口；② 把植物选择放到这个位置，图标做适配。

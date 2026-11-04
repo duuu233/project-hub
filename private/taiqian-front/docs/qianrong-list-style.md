@@ -184,3 +184,10 @@
 - 修正前的问题：准入列表 provinceCode 落到页面地区列后，cityCode / areaCode 会各自变成纯文本编码列。
 - 测试：policy-columns 新增合并用例；原「区域」标题断言改为「地区」并注明原因（fieldName 作标题仍由其它三列守）。README 动态列第 4 条同步。无 Node，未运行（Python 核过源码正则、手推合并结果），未浏览器验证。
 
+## 发新版后自动刷新、列表小屏最小列宽与操作列固定右侧（2026-11-04 ssh dev/c8e5279，用户明确）
+
+- 用户问：浏览器开着测试环境，过段时间点页面报 `GET /assets/enterprise-users-DOgu7pfK.js 404`、`Failed to fetch dynamically imported module`，刷新就好。原因：按需加载的页面文件名带内容哈希，vite.config `emptyOutDir: true`、部署整体替换，开着的旧版本按旧文件名取 → 404。答复后用户要前端兜底（第 1 条）；部署侧保留旧 assets、入口页不缓存需运维，未做。
+- 兜底：`src/utils/chunkReload.js`，main.js `app.use(router)` 后 `installChunkReload(router)`：router.onError 遇 Chrome / Firefox / Safari 动态导入失败文案或 Vite 预加载 CSS 失败，刷新到 `router.resolve(to).href`（取不到则刷新当前页）；sessionStorage `qr-chunk-reload-at` 10 秒内只刷一次，存储不可用不刷。未接 `vite:preloadError` 事件（它在路由拿到错误前触发，刷新当前地址会丢掉目标页；非路由的动态导入未覆盖）。vue-router 4.2.5 的 onError 第二参数 `to` 本机无 node_modules 未核对，取不到时退回刷新当前页。
+- 小屏：listGrid.styleColumns 对数据列（非 type、非操作列、非分组表头、无 width）设 minWidth 下限 = clamp(表头字数 × 13 + 30, 100, 220)，已有 minWidth 低于下限抬到下限，百分比字符串不动；全部写死 width 转 minWidth 的旧逻辑之后同样套下限。操作列 `fixed: col.fixed || 'right'`（此前只有币种管理没固定）。改前扫描：27 列没写宽度（参数、币种、字典、岗位、用户组、流程定义等）、公告编号 minWidth 70。vxe customConfig storage 里已存的固定 / 列宽会盖过默认，需「重置」。
+- 测试：新增 chunk-reload、list-min-width；README 加「发新版后自动刷新」节与列设置第一条。无 Node，未运行（手推断言），未浏览器 / 小屏实测。
+

@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/c8e5279 发新版后页面文件 404 自动刷新一次（chunkReload）；列表数据列最小宽度适配小屏、操作列默认固定右侧。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/1fd9b8a 列表省 / 市 / 区编码合成一列「地区」显示名称，有哪级显示哪级（mergePolicyColumns 统一处理）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/a1959a1 准入列表动态列按当前类型的列表权限查询（withListGridStyle menuPerm，如融资企业 access:financeOrg:list），根因是四个类型共用一个路由。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/3662e27 右上角公告信息改用 system:notice:headertopright。

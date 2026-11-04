@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜发新版后自动刷新、列表最小列宽与操作列固定右侧
+
+dev 干净同名 pull 已最新（1fd9b8a）。新增 chunkReload.js 并在 main.js 安装；listGrid.styleColumns 数据列 minWidth 下限、操作列默认 fixed right。新增两份测试、README 同步。dev/c8e5279 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜列表省市区编码合成一列「地区」
 
 dev 干净同名 pull（拉入同事 99fa8ba / 4110fbc / 683859d：角色权限面板、金融方案弹框，与本次无关）。mergePolicyColumns 合并三个编码为一列、areaText 显示名称；applyColumns 有编码才 loadAreaNames。README、policy-columns 测试同步（原「区域」标题断言改「地区」并注明）。dev/1fd9b8a 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。
