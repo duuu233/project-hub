@@ -1,3 +1,15 @@
+## 2026-11-04 ssh｜相册小程序 WiFi 版分享链接有效期校验（main-wifi）
+
+- 需求（用户）：在之前的分享流程上加两个判断链接是否失效的接口——① 分享时取系统时间戳 /Client/UserProduct/getCurrentTime；② 被分享人点进链接，拿时间戳调 /Client/UserProduct/chkTimeValid 校验是否过期。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。无 .codegraph。
+- 接口口径：项目文档里没有这两个接口，参数取自公开 Swagger（/v2/api-docs，只读）：getCurrentTime 无业务入参、retData long；chkTimeValid 入参 currentTime（int64）、retData boolean。
+- main-wifi/6a22233（已 push）：api.getServerTime / checkShareTimeValid（showError:false）；卡片路径加 t（原样），parseAcceptQuery 缺 / 非法 t 按无效；分享列表进页面取时间戳（取不到置灰，点按钮重取），onShareAppMessage 返回 promise 分享时取最新、失败用默认；开发版复制测试参数先取最新；接受页已登录进页面校验（「校验中…」），false 显示「分享链接已过期」，点接受前再校验以此为准，校验失败提示稍后重试且不绑定；未登录不校验（接口要登录态，401 会被拉去登录页），登录回来再校验。wifi-share 测试补用例；新增变更记录，docs/README、client-api-matrix、AI_CONTEXT 同步。
+- 自行决定（可改）：旧卡片（无 t）一律按无效；进页面校验失败不拦、点接受时校验不了不绑定。
+- 待确认：时间戳单位与有效时长按服务端；chkTimeValid 只验时间，其余卡片参数仍靠 addUserProduct 服务端兜底。相册APP 未同步（用户未要求）。
+- 验证：无 node，测试未运行（parse 规则 Python 核过）；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜泰乾超级-qianrong 角色列表按钮权限按新菜单数据（dev）
 
 - 需求（用户）：附补充后的 system/menu/list 菜单数据，把按钮权限加到项目对应按钮上，主要是列表操作栏。

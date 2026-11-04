@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜WiFi版分享链接有效期校验
+
+分享卡片带 getCurrentTime 服务器时间戳 t，接受页 chkTimeValid 校验（进页面 + 点接受前），过期 / 校验不了不绑定，缺 t 旧卡片按无效。main-wifi/6a22233 已 push；无 node，测试未运行，未真机。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 401 页去掉返回上一页
 
 401 页删除「返回上一页」按钮及逻辑，只留返回首页与切换系统。dev/b5fe1ce 已 push；无 Node，测试未运行。
