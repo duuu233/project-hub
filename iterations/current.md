@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜相册小程序 → 相册APP 分享链接有效期同步（main / main-wifi）
+
+- 需求（用户）：把分享链接有效期同步到相册APP，main 对 main、main-wifi 对 main-wifi。
+- 同步：Hub main；flutter main-wifi 同名 pull 已最新，origin/main（68dc1b4 构建号）已在 main-wifi；origin GitHub。
+- main：小程序 origin/main 仍为 7f28502，11-03 已判 APP main 齐全，本轮无改动，未切分支。
+- main-wifi/a0c8c5a（已 push）：BoltFoxApi.getCurrentTime；wifi_share.dart 新增 wifiShareTime、acceptPath 加 shareTime→t；分享页点「分享设备」时取时间戳写进卡片，取不到提示暂时无法分享、不发卡片（APP 无同步回调限制，不预取）。APP 无接受页，不调 chkTimeValid。必要性：小程序接受页对无 t 卡片判无效，不同步则 APP 发出的卡片全部打不开。测试补、docs/history 新增、docs/README、AI_CONTEXT 同步。
+- APP main-wifi 仍未跟上的小程序 11-03 改动（用户未要求，已告知）：9cb2f46 轮播设置选图带 deviceId（APP fetchSuccessCastRecords 只传 userProductId）、6f9d87b 我的上传每页 21 条 + 触底加载（APP 仍一次 100）、63d4fb9 切后台回来不重载（小程序生命周期特有，APP 需另判）；f098443 / 63b429c 控制台日志属调试，不移植。
+- 验证：无 Flutter / Dart，未 analyze / test / 编译 / 真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜相册小程序 WiFi 版分享链接有效期校验（main-wifi）
 
 - 需求（用户）：在之前的分享流程上加两个判断链接是否失效的接口——① 分享时取系统时间戳 /Client/UserProduct/getCurrentTime；② 被分享人点进链接，拿时间戳调 /Client/UserProduct/chkTimeValid 校验是否过期。
