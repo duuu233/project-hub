@@ -1,3 +1,13 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 列表省市区编码合成一列「地区」（dev）
+
+- 需求（用户）：很多列表返回 provinceCode / cityCode / areaCode，拼到一列，没有数据的为空。问后确认显示地区名称；追加「有哪个就展示哪个」。
+- 同步：Hub main；tq-plus dev 同名 pull 拉入同事 3 个提交（角色权限面板、金融方案弹框，无关）；origin GitHub。
+- dev/1fd9b8a（已 push）：mergePolicyColumns 把配置里的三个编码合成一列「地区」（最靠前位置；页面已有 responseKey 含编码的列沿用，否则新增 __qr_area，按可见级别 areaText 显示「广东省-湛江市-赤坎区」，取不到名称显示编码）；applyColumns 有编码字段才 loadAreaNames。README、policy-columns 测试同步（原「区域」标题断言改「地区」并注明）；私人 docs、AI_CONTEXT、logs 已更新。
+- 自行决定（可改）：合并列标题固定「地区」；名称查不到显示编码。
+- 验证：无 Node，测试未运行（Python 核过正则、手推合并）；未浏览器验证；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜相册小程序 搜索设备列表优先显示用户设备名称（main-wifi）
 
 - 问答（用户）：搜索列表标题「EF6-589」取广播ID 还是后端设备名称——答：设备蓝牙广播名（扫描 name，无则 localName），后端产品 broadcastId 只用于白名单匹配与查尺寸，不当标题。

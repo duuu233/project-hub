@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜列表省市区编码合成一列「地区」
+
+dev 干净同名 pull（拉入同事 99fa8ba / 4110fbc / 683859d：角色权限面板、金融方案弹框，与本次无关）。mergePolicyColumns 合并三个编码为一列、areaText 显示名称；applyColumns 有编码才 loadAreaNames。README、policy-columns 测试同步（原「区域」标题断言改「地区」并注明）。dev/1fd9b8a 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜准入列表动态列按当前类型的列表权限查询
 
 dev 干净同名 pull 已最新（3662e27）。withListGridStyle 加 menuPerm，applyPolicyColumns 指定了就直接查；AdmissionTable 传 meta.perms.list；开发环境打印 menuPerm 来源。README、policy-columns 测试同步。dev/a1959a1 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过正则）；信息隔离自查通过。

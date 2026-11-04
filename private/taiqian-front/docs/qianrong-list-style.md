@@ -176,3 +176,11 @@
 - 其它页面：25 个 withListGridStyle 列表里只有准入是一个路由多张表；子流程 / 系统审核流共用 DefListPage 但各有路由；其余一页一表。按路由实际匹配到哪个 menuPerm 取决于菜单数据（本机没有保存 system/menu/list 原始数据），未逐页对照；可在开发环境按上面的日志核对。
 - README（第 2 步、开发环境提示）、policy-columns 测试同步（Python 核过正则）。无 Node，未运行、未浏览器验证。
 
+## 列表省 / 市 / 区编码合成一列「地区」（2026-11-04 ssh dev/1fd9b8a，用户明确）
+
+- 用户：很多列表返回 provinceCode / cityCode / areaCode（如 440000 / 440800 / 440802），拼到一列，没有数据的为空；追问后确认显示地区名称（不是拼编码），「有哪个就展示哪个」。
+- 改在动态列合并（policyColumnsModel.mergePolicyColumns），所有走 policyColumns 的列表统一生效：配置里出现任意几个编码只占一列，位置取最靠前那个；页面已有 responseKey 含编码的列（准入列表 areaName）沿用它，否则新增 `__qr_area`（responseKey 为配置里可见的那几级，formatter areaText）。标题固定「地区」（自行决定：单个编码的 fieldName 不适合作合并列标题）；HIDDEN 的那级不显示；名称取不到显示编码。
+- policyColumns.applyColumns：配置有编码字段才 `loadAreaNames()`（common/area，会话缓存；失败为 null → 显示编码）。
+- 修正前的问题：准入列表 provinceCode 落到页面地区列后，cityCode / areaCode 会各自变成纯文本编码列。
+- 测试：policy-columns 新增合并用例；原「区域」标题断言改为「地区」并注明原因（fieldName 作标题仍由其它三列守）。README 动态列第 4 条同步。无 Node，未运行（Python 核过源码正则、手推合并结果），未浏览器验证。
+

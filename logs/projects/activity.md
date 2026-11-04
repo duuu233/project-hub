@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 列表省市区编码合成一列「地区」
+
+动态列里的 provinceCode / cityCode / areaCode 合成一列显示地区名称，有哪级显示哪级，全没有为空。dev/1fd9b8a 已 push；无 Node，测试未运行。
+
+---
+
 ## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜搜索设备列表优先显示用户设备名称
 
 搜索页按完整设备ID 匹配用户名下设备，命中显示用户的设备名称，否则广播名；只加展示字段，绑定逻辑未动。main-wifi/8c60c8e 已 push；无 node，测试未运行，未真机。
