@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜相册小程序 搜索设备列表优先显示用户设备名称（main-wifi）
+
+- 问答（用户）：搜索列表标题「EF6-589」取广播ID 还是后端设备名称——答：设备蓝牙广播名（扫描 name，无则 localName），后端产品 broadcastId 只用于白名单匹配与查尺寸，不当标题。
+- 需求（用户）：先说「修改设备名称」弹框按设备ID 查名称、没有显示广播ID；拉最新 BoltFox Swagger（只读，.codex-tmp/boltfox-api-1104.json，187 个接口，较 10-29 只多 getCurrentTime / chkTimeValid）核对：没有按设备ID 查名称的接口，后台产品设备记录也无名称字段。问用户后定为：名称来源用户自己的设备记录、广播ID 指蓝牙广播名、只改蓝牙版。用户随即要求「绑定后的逻辑千万别动」，答复现有绑定弹框已基本如此（addUserProduct 按设备ID 回带上次名称，否则广播名），未改。用户再明确：是搜索阶段，以前绑定过就在搜索列表显示用户的设备名称，优先级最高。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。
+- main-wifi/8c60c8e（已 push）：api.getBoundDeviceNames（静默 getUserProductList，按完整 6 字节设备ID 索引 productName，空名 / 短 ID 不收，失败空表）；bind.js loadBoundNames（与扫描并行，晚到补到已搜行）、boundTitle（蓝牙 broadcastDeviceId / WiFi wifiDeviceId）、行加 title；wxml `{{item.title || item.name}}`。name 仍是广播名，绑定及绑定后逻辑未动。新增 tests/bind-bound-name；变更记录、docs/README、AI_CONTEXT 同步。
+- 限制（已写进变更记录）：只能查当前仍在用户名下的设备，解绑过的查不到（无接口）；蓝牙按广播设备ID 匹配仅用于展示。
+- 验证：无 node，测试未运行（模板 / 源码正则 Python 核过）；改了 wxml，全量测试需本地跑；未开发者工具 / 真机；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜相册小程序 投屏按钮防重复点击（main-wifi）
 
 - 需求（用户）：「相框小程序」点击投屏是否做了防重复点击，所有按钮都要节流防抖。已确认「相框小程序」即相册小程序、只做 main-wifi。中途追加：先改点击投屏，其它先不管；所有涉及点击投屏的按钮。
