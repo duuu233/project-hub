@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 准入列表动态列按当前类型的列表权限查询
+
+四个准入类型共用一个路由，原按路由匹配都取同一列表菜单；改为按选中类型传 access:<类型>:list。dev/a1959a1 已 push；无 Node，测试未运行。
+
+---
+
 ## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜WiFi 版分享卡片封面改用 Canvas
 
 分享设备卡片不再用页面截图，离屏 Canvas 画 5:4 封面（设备图 + 设备名 / 规格 + 橙色接受按钮），失败用设备图。main-wifi/1960456 已 push；无 node，测试未运行，未真机。

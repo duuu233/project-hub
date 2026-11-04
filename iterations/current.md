@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 准入列表动态列按当前类型的列表权限（dev）
+
+- 需求（用户）：融资企业准入列表获取动态字段时参数不是 access:financeOrg:list，是不是数据没更新；也检查其它页面。追加：准入有几个列表，选中哪个就用哪个的权限字符。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新（3662e27）；origin GitHub。.codegraph 在但本机无 codegraph 命令，grep 定位。
+- 根因：不是数据问题。动态列按路由匹配「是否列表」菜单，准入四个类型共用 /supply-chain/admission-list（tab 切换 AdmissionTable），都匹配到同一个排序号最小的列表菜单（11-03 已记为待确认风险②）。
+- dev/a1959a1（已 push）：withListGridStyle 新增 menuPerm，指定了 applyPolicyColumns 就直接查、不按路由匹配；AdmissionTable 传 meta.perms.list（切 tab 按 key 重挂载，按当前类型重新查）；开发环境 console.info 每次 menuPerm 与来源。README、policy-columns 测试同步；私人 docs、AI_CONTEXT、logs 已更新。
+- 其它页面：25 个列表只有准入是一路由多表，其余一页一表（子流程 / 系统审核流共用组件但路由各自独立），机制上不受影响；按路由实际匹配到的 menuPerm 取决于菜单数据，本机没存 menu/list 原始数据，未逐页对照，可看开发环境新日志核对。
+- 验证：无 Node，测试未运行（Python 核过正则）；未浏览器验证；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜相册小程序 WiFi 版分享卡片封面改用 Canvas（main-wifi）
 
 - 需求（用户）：分享出去的卡片用画布等方式做样式，不用页面截图；结合项目风格，简洁大气明了。

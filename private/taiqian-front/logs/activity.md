@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜准入列表动态列按当前类型的列表权限查询
+
+dev 干净同名 pull 已最新（3662e27）。withListGridStyle 加 menuPerm，applyPolicyColumns 指定了就直接查；AdmissionTable 传 meta.perms.list；开发环境打印 menuPerm 来源。README、policy-columns 测试同步。dev/a1959a1 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过正则）；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜右上角公告信息改用独立权限
 
 dev 干净同名 pull 已最新（02e32d8）。Navbar canViewNotice 改 system:notice:headertopright；README、policy-columns 测试同步。dev/3662e27 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过）；信息隔离自查通过。

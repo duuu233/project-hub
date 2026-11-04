@@ -166,3 +166,13 @@
 - 用户：权限字符新增 `system:notice:headertopright`（系统顶部右上角【公告信息】查看权限）。上一版菜单里该按钮的 perms 是 system:notice:list，与公告列表同名。
 - Navbar canViewNotice 改为 `auth.hasPermi('system:notice:headertopright')`（仍含 *:*:*），没权限不渲染也不请求公告；公告管理列表仍 system:notice:list。README、policy-columns 测试同步（Python 核过）。无 Node，未运行。
 - 注意：登录信息里没有新权限的账号（角色还没勾这个按钮）右上角公告会消失，需在角色里重新授权。
+
+## 准入列表动态列按当前类型的列表权限查询（2026-11-04 ssh dev/a1959a1，用户明确）
+
+- 用户：融资企业准入列表调 policyColumns 时 menuPerm 不是 access:financeOrg:list，问是不是数据没更新；准入比较特殊，有几个列表，选中哪个就用哪个的权限字符。
+- 根因（不是数据问题）：动态列按当前路由匹配「是否列表」菜单。准入列表四个类型（核心企业 / 监管方 / 监管仓库 / 融资企业）共用 /supply-chain/admission-list，按 tab 切换 AdmissionTable，路由不变，所以所有 tab 都匹配到同一路由下排序号最小的列表菜单。11-03 接入时已记为待确认风险②。
+- 改法：withListGridStyle 新增 menuPerm 选项（不传给 vxe，listMenuPerm(grid) 读取）；applyPolicyColumns 有页面指定的 menuPerm 就直接调 policyColumns，不读菜单、不按路由匹配。AdmissionTable 传 meta.perms.list（access:coreOrg / regulatorOrg / superviseOrg / financeOrg:list）；tab 切换按 :key 重新挂载，每次按当前类型重新查。
+- 开发环境每次调 policyColumns 控制台 console.info `[列表列字段] policyColumns menuPerm=…（页面指定 / 按路由匹配菜单「…」）`，用于逐页核对。
+- 其它页面：25 个 withListGridStyle 列表里只有准入是一个路由多张表；子流程 / 系统审核流共用 DefListPage 但各有路由；其余一页一表。按路由实际匹配到哪个 menuPerm 取决于菜单数据（本机没有保存 system/menu/list 原始数据），未逐页对照；可在开发环境按上面的日志核对。
+- README（第 2 步、开发环境提示）、policy-columns 测试同步（Python 核过正则）。无 Node，未运行、未浏览器验证。
+

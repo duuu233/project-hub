@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-04 ssh dev/a1959a1（用户明确）：动态列默认按路由匹配列表菜单；一个路由多张表时页面在 withListGridStyle 里传 menuPerm 直接指定——准入列表按当前类型传 access:<类型>:list。开发环境控制台打印每次 policyColumns 的 menuPerm 与来源。
 2026-11-04 ssh dev/b5fe1ce（用户明确）：401 页去掉「返回上一页」（守卫 replace 进 401，后退会回到被拦地址或离开系统），只留返回首页与切换系统。未运行测试。
 
 2026-11-04 ssh dev/3662e27：右上角公告信息权限改为 system:notice:headertopright（不再借用 system:notice:list）。
