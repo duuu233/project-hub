@@ -4,6 +4,7 @@
 - 同步：Hub main、tq-plus dev 同名 pull 已最新；origin GitHub。.codegraph 存在但本机无 codegraph 命令，按脚本 + grep 核对。
 - dev/4aa6f70（已 push）：角色 配置权限 → system:role:configPerm（含路由）；数据权限 → system:role:permission（含配置权限页保存行级）；分配用户 → system:role:user（含路由、页内添加 / 取消授权，原 role:add / remove，自行决定）；企业用户启停 → system:org:status；币种修改 → system:currency:edit。README、list-button-perms 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
 - 仍缺：system:dict:query、system:role:status 菜单里没有；菜单有、列表无按钮的权限未新增按钮。
+- 用户追加：新增权限字符 system:notice:headertopright（右上角公告信息）。dev/3662e27（已 push）：Navbar 改用它，公告列表仍 system:notice:list；README、policy-columns 测试同步。
 - 用户追加 2.：账户管理列表数据不是树形，同大多数列表走动态列字段。3.：系统启停改调新接口 /api-qianrong/system/changeStatus（id、status）。dev/02e32d8（已 push）：user/index 去掉 policyColumns / responseColumns false、首次加载 whenListColumnsReady；changeSystemStatus（POST JSON，Swagger 未收录、按同控制器口径，待确认），列表开关改调它，编辑页仍 editSystem；README、两个测试同步。
 - 验证：无 Node，测试未运行（Python 核过断言）；git diff --check、信息隔离自查通过。
 

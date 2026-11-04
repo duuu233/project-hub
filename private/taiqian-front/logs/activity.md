@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜右上角公告信息改用独立权限
+
+dev 干净同名 pull 已最新（02e32d8）。Navbar canViewNotice 改 system:notice:headertopright；README、policy-columns 测试同步。dev/3662e27 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过）；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜账户管理走动态列、系统启停改调更新状态接口
 
 dev 干净同名 pull 已最新（4aa6f70）。user/index 去掉两个关闭项、首次加载改 whenListColumnsReady；system.js 新增 changeSystemStatus，all-system 状态开关改调它。README、policy-columns、system-status-switch 测试同步。dev/02e32d8 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。changeStatus 请求方法按 POST，Swagger 未收录。

@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 右上角公告信息改用独立权限
+
+Navbar 公告信息改按 system:notice:headertopright 显示。dev/3662e27 已 push；无 Node，测试未运行。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 账户管理走动态列、系统启停改调更新状态接口
 
 账户管理恢复动态列字段（列表数据非树形）；系统启停改调 /system/changeStatus（POST {id,status}，Swagger 未收录待确认）。dev/02e32d8 已 push；无 Node，测试未运行。

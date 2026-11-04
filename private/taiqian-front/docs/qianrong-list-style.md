@@ -160,3 +160,9 @@
 - 系统管理启停（用户 3.）：新接口「更新系统状态」`/api-qianrong/system/changeStatus`，入参 id（int64，必填）、status（'0' 正常 / '1' 停用，必填），不再调编辑接口。api/system/system.js 新增 changeSystemStatus，列表 handleStatusChange 改调它（只传 id / status）；编辑页 handleDetail 仍用 editSystem。system-status-switch 测试同步。
 - 请求方法：用户只给了入参，当日 Swagger（v2/api-docs，275 个路径，只读）里还没有这个接口；按同一控制器 `/system/update`、企业 `/system/org/changeStatus` 的口径用 POST + JSON body。若后端是 PUT 或 query 参数需要改。
 - 无 Node，测试未运行（Python 核过断言）、未联调、未浏览器验证。
+
+## 右上角公告信息改用独立权限（2026-11-04 ssh dev/3662e27，用户明确）
+
+- 用户：权限字符新增 `system:notice:headertopright`（系统顶部右上角【公告信息】查看权限）。上一版菜单里该按钮的 perms 是 system:notice:list，与公告列表同名。
+- Navbar canViewNotice 改为 `auth.hasPermi('system:notice:headertopright')`（仍含 *:*:*），没权限不渲染也不请求公告；公告管理列表仍 system:notice:list。README、policy-columns 测试同步（Python 核过）。无 Node，未运行。
+- 注意：登录信息里没有新权限的账号（角色还没勾这个按钮）右上角公告会消失，需在角色里重新授权。
