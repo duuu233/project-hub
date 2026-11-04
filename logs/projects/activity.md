@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜WiFi 版分享卡片封面改用 Canvas
+
+分享设备卡片不再用页面截图，离屏 Canvas 画 5:4 封面（设备图 + 设备名 / 规格 + 橙色接受按钮），失败用设备图。main-wifi/1960456 已 push；无 node，测试未运行，未真机。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 右上角公告信息改用独立权限
 
 Navbar 公告信息改按 system:notice:headertopright 显示。dev/3662e27 已 push；无 Node，测试未运行。

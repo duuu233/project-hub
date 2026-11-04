@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜相册小程序 WiFi 版分享卡片封面改用 Canvas（main-wifi）
+
+- 需求（用户）：分享出去的卡片用画布等方式做样式，不用页面截图；结合项目风格，简洁大气明了。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。无 .codegraph。
+- 现状：wifi-share 的 onShareAppMessage 没传 imageUrl，微信默认截当前页面（头像 / 成员列表 / 按钮）。
+- main-wifi/1960456（已 push）：新增 utils/share-card.js，离屏 Canvas 画 5:4 封面（逻辑 500×400，导出 750×600 PNG）：暖白→浅蓝渐变底 + 右上橙光 / 左下蓝光；左上橙色浅底标签「设备共享邀请」；左边机型设备图（device-thumb，带淡橙投影），右边设备名（粗体 38px，最多两行省略）+「WiFi版 · 尺寸」；底部橙色渐变按钮「点击接受邀请」（同页面主按钮色）。分享列表 load 拿到设备详情就画；onShareAppMessage 默认参数带封面，没画好先用设备图，promise 里等时间戳和封面；离屏 Canvas 不可用 / 导出失败退回机型设备图，不退回截图。新增 tests/share-card、wifi-share 测试补；变更记录、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：图上不重复分享者昵称（标题已有）；不能分享时的首页兜底卡片未改。
+- 验证：无 node，测试未运行（按记忆不借用 SDK）；未开发者工具 / 真机，实际字体、投影、离屏 Canvas 导出效果需真机看；git diff --check、信息隔离自查通过。相册APP 未同步（用户未要求）。
+
+---
+
 ## 2026-11-04 ssh｜泰乾超级-qianrong 按钮权限按第二版菜单数据再核对（dev）
 
 - 需求（用户）：按钮权限又更新了一些，附全量 system/menu/list，再次核对补充。
