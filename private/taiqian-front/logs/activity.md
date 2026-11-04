@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜账户管理走动态列、系统启停改调更新状态接口
+
+dev 干净同名 pull 已最新（4aa6f70）。user/index 去掉两个关闭项、首次加载改 whenListColumnsReady；system.js 新增 changeSystemStatus，all-system 状态开关改调它。README、policy-columns、system-status-switch 测试同步。dev/02e32d8 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。changeStatus 请求方法按 POST，Swagger 未收录。
+
 ## 2026-11-04 ssh｜按钮权限按第二版菜单数据再核对
 
 dev 干净同名 pull 已最新（b5fe1ce）。角色配置权限 configPerm、数据权限 permission（含配置权限页行级保存）、分配用户 user（含路由与页内三个按钮）、企业用户启停 org:status、币种修改 currency:edit；README、list-button-perms 测试同步。dev/4aa6f70 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。

@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/02e32d8 账户管理改走动态列字段（列表数据不是树形就走）；系统启停改调 system/changeStatus（POST，Swagger 未收录待确认）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/4aa6f70 按钮权限按第二版菜单数据再核对（角色配置权限 configPerm、数据权限 permission、分配用户 user 含页内，企业用户启停 org:status，币种修改 currency:edit）。
 - [qianrong-list-style.md](qianrong-list-style.md)「401 无权限页面重写」小节：2026-11-04 ssh dev/b5fe1ce 401 页去掉返回上一页按钮。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/b498bf3 角色列表按新菜单数据改按钮权限（详情 / 配置权限 system:role:query，列字段配置 system:roleColumn:edit）。

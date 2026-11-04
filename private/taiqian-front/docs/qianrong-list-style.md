@@ -153,3 +153,10 @@
 - 核对一致未改：账户（list/add/edit/query/remove/resetPwd，状态开关 system:user:status）、部门、菜单（详情 query、列字段设置 detail）、系统（add/edit/detail/del、状态 status）、用户组、字典、岗位、参数、公告（含右上角公告信息 list）、操作 / 登录日志、合同模板、产业配置、产品流程（编排 edit、删除 remove、发布在编排页 publish）、子流程 / 系统审核流、流程实例（start / detail）、企业链路、金融方案、银行政策、快照对比、准入（access:* 动态拼接）、授信、任务审核。
 - 仍缺（菜单里没有）：字典详情 / 字典项 system:dict:query；角色启停 system:role:status；部门启停沿用 system:dept:edit（菜单无单独启停）。菜单有、列表无按钮：用户导入 / 导出、角色 / 岗位 / 参数 / 字典导出、登录日志删除 / 解锁、操作日志删除、币种详情 query、产品流程新增、授信导出、融资企业准入导出（菜单已停用）。
 - README（角色权限配置页、分配用户）、list-button-perms 测试同步（Python 核过断言）。无 Node，未运行、未浏览器验证。
+
+## 账户管理改走动态列字段、系统启停改调更新系统状态接口（2026-11-04 ssh dev/02e32d8，用户明确）
+
+- 账户管理（用户 2.）：「账户管理可以按前面大多数列表那种调用动态获取列字段的逻辑，只要列表的数据不是树形结构都可以用」。修正 11-03 口径：判断看列表数据本身，不看页面有没有左侧部门树。user/index 去掉 `policyColumns: false`、`responseColumns: false`，首次加载改回 `whenListColumnsReady(gridOptions, getList)`；走 strict（只按接口渲染）与按返回字段隐藏列，与其它 23 个标准列表一致。菜单、部门（treeConfig）仍关闭。README「树形结构的列表」段、policy-columns 测试（标准 22 → 23，特殊只剩菜单 / 部门，加账户不再关闭断言）同步。
+- 系统管理启停（用户 3.）：新接口「更新系统状态」`/api-qianrong/system/changeStatus`，入参 id（int64，必填）、status（'0' 正常 / '1' 停用，必填），不再调编辑接口。api/system/system.js 新增 changeSystemStatus，列表 handleStatusChange 改调它（只传 id / status）；编辑页 handleDetail 仍用 editSystem。system-status-switch 测试同步。
+- 请求方法：用户只给了入参，当日 Swagger（v2/api-docs，275 个路径，只读）里还没有这个接口；按同一控制器 `/system/update`、企业 `/system/org/changeStatus` 的口径用 POST + JSON body。若后端是 PUT 或 query 参数需要改。
+- 无 Node，测试未运行（Python 核过断言）、未联调、未浏览器验证。
