@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜flowerpot-app｜ssh｜main｜首页隐藏自定义图片入口、放上选择植物
+
+首页快捷列表第一项换成「选择植物」（门禁同设置页），新图标沿用首页三张底板与青色；改写编译不过的首页用例。main/5dad8c6 已 push；未运行测试，未编译。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 列表省市区编码合成一列「地区」
 
 动态列里的 provinceCode / cityCode / areaCode 合成一列显示地区名称，有哪级显示哪级，全没有为空。dev/1fd9b8a 已 push；无 Node，测试未运行。

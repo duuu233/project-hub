@@ -1,3 +1,13 @@
+## 2026-11-04 ssh｜花盆APP 首页隐藏自定义图片入口、放上选择植物（main）
+
+- 需求（用户）：花盆首页 ① 隐藏定制动画（现名「自定义图片」）入口，App 暂时不做入口；② 把植物选择放到这个位置，图标做适配。
+- 同步：Hub main、flowerpot main 同名 pull 已最新（38253f3）；origin GitHub。无 .codegraph / codegraph 命令。
+- main/5dad8c6（已 push）：HomeActionKind 加 plant，首页快捷列表第一项换成「选择植物」（选择植物 → 帮助中心 → 设置；animation 枚举 / 页面 / 路由保留）；_openPlantPicker 与设置页同一套门禁（没设备 / 离线 / DP116 == -1）进 PlantPickerPage select；新图标 home_plant_select_icon.png：底板逐像素取自 device_settings_icon（#EEF6F7），图形取 select_plant_icon 盆栽改青色 #70AFB5、4/3 放大到 40px 居中（无高清源，边缘略软；本机纯 Python 合成，中间产物在 .codex-tmp/fp-icon）。home_scene_test 原用例自 09-15 引用已删除的 HomeActionKind.battery、整文件编译不过，按新顺序改写；widget_test 断言同步。docs/history 记录、索引、AI_CONTEXT 已更新。
+- 自行决定（可改）：入口文案沿用 App 内统一的「选择植物」。
+- 验证：无 Flutter / Dart，未 analyze / test / 编译 / 真机；图标按像素核对底板、颜色与图形范围；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜泰乾超级-qianrong 列表省市区编码合成一列「地区」（dev）
 
 - 需求（用户）：很多列表返回 provinceCode / cityCode / areaCode，拼到一列，没有数据的为空。问后确认显示地区名称；追加「有哪个就展示哪个」。
