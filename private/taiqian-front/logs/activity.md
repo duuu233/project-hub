@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜角色列表按钮权限按新菜单数据更新
+
+dev 干净同名 pull 已最新（e0f8b99）。对照用户补充后的菜单数据，角色列表详情 / 配置权限改 system:role:query（含路由），列字段配置及列字段编辑改 system:roleColumn:edit；账户 / 部门详情、用户组编辑页面原本已对上。README、list-button-perms 测试同步。dev/b498bf3 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。
+
 ## 2026-11-02 ssh｜配置权限「功能权限」接真实数据
 
 dev 同名 pull 已最新。排查用户反馈「配置权限菜单没按角色 / 用户组展示」：功能权限标签一直是前端示例模型。按用户选的方案 1 改为与编辑页同口径（menuTreeList?userGroupsId=角色 userGroupId ∩ 启用菜单、roleSystems 回显、updateRole 保存），删除 permission-workspace-model.js，改两处测试。无 Node，测试 / 构建 / 浏览器均未运行。

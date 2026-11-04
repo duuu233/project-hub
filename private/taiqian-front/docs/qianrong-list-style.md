@@ -136,3 +136,11 @@
 - 改动：withListGridStyle 中 policyColumns 默认值改为 `!options.treeConfig`（树形表格自动关闭，新树形表格同样适用；显式 true 可强开）；账户管理显式 `policyColumns: false`；部门、账户首次加载由 whenListColumnsReady 改为直接 load / getList。strict（只按接口渲染）对这些页面不生效，显示页面原有列。responseColumns（按接口返回字段隐藏列）不在本规则内，账户管理仍按返回字段过滤，部门树原本就关闭。
 - 测试 policy-columns：特殊列表扩为菜单 / 部门 / 账户、标准列表 22 个，新增 treeConfig 默认关闭用例。无 Node，未运行。
 - 同日后续 dev/e0f8b99（用户）：树形列表也去掉按接口返回字段隐藏列。withListGridStyle 的 responseColumns 默认也改为 `!treeConfig`（菜单、部门本就显式 false），账户管理显式 `responseColumns: false`；三页 data 为普通字段，列不随返回字段变化。policy-columns 测试补断言。无 Node，未运行。
+
+## 角色列表按钮权限按新菜单数据更新（2026-11-04 ssh dev/b498bf3，用户明确）
+
+- 需求（用户）：附补充后的 system/menu/list 菜单数据，按按钮权限把对应 perms 加到项目按钮上（主要是列表操作栏）。
+- 与 11-03 那版相比菜单里新增或变了的：账户详情 system:user:query、部门详情 system:dept:query、用户组编辑 system:groups:edit 都补上了（页面原本就用这三个，无需改）；角色详情改为 system:role:query；角色下新增「列表-配置权限」system:role:query、「列表-列字段配置」system:roleColumn:edit、「列表-数据权限」「列表-分配用户」system:role:edit；账户启用 / 禁用 system:user:status、系统启用 / 禁用 system:system:status、公告信息 system:notice:list 之前已接。
+- 已改：角色列表 详情 system:role:detail → system:role:query（11-03 按旧数据改成 detail，这次按新数据改回 query）；配置权限 system:role:edit → system:role:query，路由 /organization/role-permission 的 permissions 同步改为 system:role:query；列字段配置 system:role:edit → system:roleColumn:edit，RoleColumnWorkspace 的 canEdit（列表内改策略 / 脱敏、一键设置策略；配置权限页的数据权限·列级共用）同改。数据权限、分配用户仍是 system:role:edit。README 同步；list-button-perms 测试改角色断言，补账户 query、部门、用户组 edit 断言和角色五个按钮逐个断言（Python 核过）。无 Node，未运行。
+- 仍缺（菜单数据里没有）：字典详情 / 字典项 system:dict:query；角色启停 system:role:status。另外配置权限页内保存（updateRole）没有单独的按钮权限，只要能进页面就能保存；分配用户页内「添加账户 / 取消授权」仍是 system:role:add / remove（若依原样），与入口 system:role:edit 不同，是否统一待确认。菜单有、列表无按钮的权限（用户导入 / 导出、岗位 / 参数 / 字典 / 角色导出、登录日志删除 / 解锁、操作日志删除、币种详情、产品流程新增、授信导出、融资企业准入导出〔菜单已停用〕）未新增按钮。
+

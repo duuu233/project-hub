@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 角色列表按钮权限按新菜单数据
+
+角色列表详情、配置权限改 system:role:query（路由同步），列字段配置及列字段编辑改 system:roleColumn:edit；其余列表按钮已与新菜单数据一致。dev/b498bf3 已 push；无 Node，测试未运行。
+
+---
+
 ## 2026-11-03｜album-miniapp｜ssh｜main-wifi｜我的上传投屏记录每页 21 条
 
 「我的上传」投屏记录 pageSize 100 → 21，触底加载下一页；轮播设置选图、投屏记录页仍一次 100 条。main-wifi/6f9d87b 已 push；无 node，测试未运行，未联调。另答复：切回页面重载是页面 onShow 清空重拉所致，非微信机制；用户追加按建议改缓存，main-wifi/63d4fb9 已 push（切后台 10 分钟内回来不请求，从子页面返回静默刷新）；无 node，测试未运行，未真机。

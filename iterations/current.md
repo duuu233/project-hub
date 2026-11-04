@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 角色列表按钮权限按新菜单数据（dev）
+
+- 需求（用户）：附补充后的 system/menu/list 菜单数据，把按钮权限加到项目对应按钮上，主要是列表操作栏。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新。无 .codegraph 索引、无 Node。
+- 对照：11-03 待后端的账户详情 system:user:query、部门详情 system:dept:query、用户组编辑 system:groups:edit 菜单已补，页面本就用这三个；新增的账户 / 系统启停、公告信息之前已接。需要改的只有角色列表。
+- dev/b498bf3（已 push）：角色 详情 system:role:detail → system:role:query、配置权限 system:role:edit → system:role:query（路由 role-permission 同步）、列字段配置 system:role:edit → system:roleColumn:edit（RoleColumnWorkspace 编辑同改）；数据权限 / 分配用户仍 system:role:edit。README、list-button-perms 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 仍缺 / 待确认：字典 system:dict:query、角色启停 system:role:status 菜单里还没有；配置权限页保存没有单独按钮权限；分配用户页内添加 / 取消授权仍为 system:role:add / remove；菜单有但列表无按钮的权限未新增按钮。
+- 验证：无 Node，测试未运行（Python 核过断言）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-03 ssh｜相册小程序「我的上传」投屏记录每页 21 条（main-wifi）
 
 - 需求（用户）：① 我的上传图片列表接口分页改成 21，轮播设置的分页暂不变；② 切出小程序再切回「我的上传」总要重新加载，是否内部机制、能否改缓存——先给结论不改。

@@ -1,5 +1,7 @@
 # 泰乾超级当前背景
 
+2026-11-04 ssh dev/b498bf3：角色列表按钮按新菜单数据——详情、配置权限（及其路由）system:role:query，列字段配置与 RoleColumnWorkspace 编辑 system:roleColumn:edit，数据权限 / 分配用户 system:role:edit；dict:query、role:status 菜单仍无。未运行测试。
+
 2026-11-03 ssh dev/e0f8b99：树形结构列表也不按接口返回字段隐藏列——responseColumns 默认 !treeConfig，账户管理显式 responseColumns: false。未运行测试。
 
 2026-11-03 ssh dev/9361aa7：树形结构列表不走生效列字段配置——withListGridStyle 的 policyColumns 默认 !treeConfig（菜单、部门自动关），账户管理（左侧部门树）显式 policyColumns: false；三页直接加载数据、显示原有列。未运行测试。
