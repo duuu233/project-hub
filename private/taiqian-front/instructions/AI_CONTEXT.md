@@ -2,6 +2,7 @@
 
 2026-11-04 ssh dev/b5fe1ce（用户明确）：401 页去掉「返回上一页」（守卫 replace 进 401，后退会回到被拦地址或离开系统），只留返回首页与切换系统。未运行测试。
 
+2026-11-04 ssh dev/4aa6f70：按第二版菜单数据——角色配置权限（及路由）system:role:configPerm，数据权限与配置权限页保存行级 system:role:permission，分配用户（路由、页内添加 / 取消授权）system:role:user；企业用户启停 system:org:status；币种修改 system:currency:edit。仍缺 system:dict:query、system:role:status。
 2026-11-04 ssh dev/b498bf3：角色列表按钮按新菜单数据——详情、配置权限（及其路由）system:role:query，列字段配置与 RoleColumnWorkspace 编辑 system:roleColumn:edit，数据权限 / 分配用户 system:role:edit；dict:query、role:status 菜单仍无。未运行测试。
 
 2026-11-03 ssh dev/e0f8b99：树形结构列表也不按接口返回字段隐藏列——responseColumns 默认 !treeConfig，账户管理显式 responseColumns: false。未运行测试。

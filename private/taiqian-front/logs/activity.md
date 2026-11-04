@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜按钮权限按第二版菜单数据再核对
+
+dev 干净同名 pull 已最新（b5fe1ce）。角色配置权限 configPerm、数据权限 permission（含配置权限页行级保存）、分配用户 user（含路由与页内三个按钮）、企业用户启停 org:status、币种修改 currency:edit；README、list-button-perms 测试同步。dev/4aa6f70 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜401 页去掉返回上一页
 
 dev 干净同名 pull 已最新（b498bf3）。401.vue 删除返回上一页按钮与 canGoBack / goBack，README、route-access 测试同步。dev/b5fe1ce 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。

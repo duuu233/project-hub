@@ -1,3 +1,13 @@
+## 2026-11-04 ssh｜泰乾超级-qianrong 按钮权限按第二版菜单数据再核对（dev）
+
+- 需求（用户）：按钮权限又更新了一些，附全量 system/menu/list，再次核对补充。
+- 同步：Hub main、tq-plus dev 同名 pull 已最新；origin GitHub。.codegraph 存在但本机无 codegraph 命令，按脚本 + grep 核对。
+- dev/4aa6f70（已 push）：角色 配置权限 → system:role:configPerm（含路由）；数据权限 → system:role:permission（含配置权限页保存行级）；分配用户 → system:role:user（含路由、页内添加 / 取消授权，原 role:add / remove，自行决定）；企业用户启停 → system:org:status；币种修改 → system:currency:edit。README、list-button-perms 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
+- 仍缺：system:dict:query、system:role:status 菜单里没有；菜单有、列表无按钮的权限未新增按钮。
+- 验证：无 Node，测试未运行（Python 核过断言）；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜相册小程序 → 相册APP 分享链接有效期同步（main / main-wifi）
 
 - 需求（用户）：把分享链接有效期同步到相册APP，main 对 main、main-wifi 对 main-wifi。

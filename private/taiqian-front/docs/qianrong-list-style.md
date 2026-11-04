@@ -145,3 +145,11 @@
 - 已改：角色列表 详情 system:role:detail → system:role:query（11-03 按旧数据改成 detail，这次按新数据改回 query）；配置权限 system:role:edit → system:role:query，路由 /organization/role-permission 的 permissions 同步改为 system:role:query；列字段配置 system:role:edit → system:roleColumn:edit，RoleColumnWorkspace 的 canEdit（列表内改策略 / 脱敏、一键设置策略；配置权限页的数据权限·列级共用）同改。数据权限、分配用户仍是 system:role:edit。README 同步；list-button-perms 测试改角色断言，补账户 query、部门、用户组 edit 断言和角色五个按钮逐个断言（Python 核过）。无 Node，未运行。
 - 仍缺（菜单数据里没有）：字典详情 / 字典项 system:dict:query；角色启停 system:role:status。另外配置权限页内保存（updateRole）没有单独的按钮权限，只要能进页面就能保存；分配用户页内「添加账户 / 取消授权」仍是 system:role:add / remove（若依原样），与入口 system:role:edit 不同，是否统一待确认。菜单有、列表无按钮的权限（用户导入 / 导出、岗位 / 参数 / 字典 / 角色导出、登录日志删除 / 解锁、操作日志删除、币种详情、产品流程新增、授信导出、融资企业准入导出〔菜单已停用〕）未新增按钮。
 
+## 按钮权限按第二版菜单数据再核对（2026-11-04 ssh dev/4aa6f70，用户明确）
+
+- 需求（用户）：按钮权限更新了一些，附全量 system/menu/list，再次核对并补充。
+- 方法：沿用 11-03 扫描脚本（25 个列表 + 银行与政策、接口日志、任务工作台）+ grep 路由 / 组件内权限，与菜单 perms 逐页对照。
+- 已改：角色列表 配置权限 system:role:query → system:role:configPerm（路由 /organization/role-permission 同改）；数据权限 system:role:edit → system:role:permission，配置权限页「保存行级权限」同加（与列级用 roleColumn:edit 同口径）；分配用户 system:role:edit → system:role:user（路由 /organization/role-auth 同改），分配用户页内添加帐户 / 批量取消 / 行内取消授权由若依原样的 system:role:add / remove 改为 system:role:user（自行决定：菜单只有这一个分配用户权限，否则只有分配用户权限的人进得去页面却不能操作）；企业用户 启用 / 禁用 system:org:edit → system:org:status（菜单「更新企业用户状态」）；币种 修改 system:currency:save → system:currency:edit（菜单新增「币种编辑」，新增仍 save）。
+- 核对一致未改：账户（list/add/edit/query/remove/resetPwd，状态开关 system:user:status）、部门、菜单（详情 query、列字段设置 detail）、系统（add/edit/detail/del、状态 status）、用户组、字典、岗位、参数、公告（含右上角公告信息 list）、操作 / 登录日志、合同模板、产业配置、产品流程（编排 edit、删除 remove、发布在编排页 publish）、子流程 / 系统审核流、流程实例（start / detail）、企业链路、金融方案、银行政策、快照对比、准入（access:* 动态拼接）、授信、任务审核。
+- 仍缺（菜单里没有）：字典详情 / 字典项 system:dict:query；角色启停 system:role:status；部门启停沿用 system:dept:edit（菜单无单独启停）。菜单有、列表无按钮：用户导入 / 导出、角色 / 岗位 / 参数 / 字典导出、登录日志删除 / 解锁、操作日志删除、币种详情 query、产品流程新增、授信导出、融资企业准入导出（菜单已停用）。
+- README（角色权限配置页、分配用户）、list-button-perms 测试同步（Python 核过断言）。无 Node，未运行、未浏览器验证。
