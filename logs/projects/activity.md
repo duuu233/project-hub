@@ -4,7 +4,7 @@
 
 ## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜WiFi版分享链接有效期校验
 
-分享卡片带 getCurrentTime 服务器时间戳 t，接受页 chkTimeValid 校验（进页面 + 点接受前），过期 / 校验不了不绑定，缺 t 旧卡片按无效。main-wifi/6a22233 已 push；无 node，测试未运行，未真机。
+分享卡片带 getCurrentTime 服务器时间戳 t，接受页 chkTimeValid 校验（进页面 + 点接受前），过期 / 校验不了不绑定，缺 t 旧卡片按无效。main-wifi/6a22233、68c8306（只看 retData 布尔值）已 push；无 node，测试未运行，未真机。
 
 ---
 
