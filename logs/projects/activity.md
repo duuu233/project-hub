@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜album-miniapp｜ssh｜main-wifi｜投屏按钮防重复点击
+
+新增 tap-guard（执行中忽略 + 冷却 500ms），11 个页面的投屏相关按钮接入并补齐调用链 return；其它按钮未接。main-wifi/df969ee 已 push；无 node，测试未运行，未真机。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 准入列表动态列按当前类型的列表权限查询
 
 四个准入类型共用一个路由，原按路由匹配都取同一列表菜单；改为按选中类型传 access:<类型>:list。dev/a1959a1 已 push；无 Node，测试未运行。

@@ -1,3 +1,14 @@
+## 2026-11-04 ssh｜相册小程序 投屏按钮防重复点击（main-wifi）
+
+- 需求（用户）：「相框小程序」点击投屏是否做了防重复点击，所有按钮都要节流防抖。已确认「相框小程序」即相册小程序、只做 main-wifi。中途追加：先改点击投屏，其它先不管；所有涉及点击投屏的按钮。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub。
+- 现状：预览「开始投屏」、官方图库 onProject、我的相册 / 投屏记录再次投屏原有锁；首页拍照 / 相册入口、我的设备与蓝牙详情「投屏」（要连蓝牙）、WiFi 详情 / 我的设备弹层选图、AI 对话投屏、官方图库与 AI 的选设备弹层「连接并投屏」、蓝牙结果页「重新投屏」（直接 redirectTo）都没有。
+- main-wifi/df969ee（已 push）：新增 utils/tap-guard.js（页面注册处 tapGuard.wrap 按方法名加锁：同页同 key 执行中忽略、结束后冷却 500ms、挂住 60s 兜底；按钮用前沿锁不用防抖）。11 个页面接入（key projection 入口 / pick 弹层选图），补齐调用链 return（首页 chooseX、各页 pickAndProject / pickAndContinue、官方图库 / AI startProjection、AI openProjectionPreview）。新增 tests/tap-guard；device-list-wifi-group 补连点被挡断言并在测离线前清锁；三个 vm 加载页面的测试补模块。变更记录、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：冷却 500ms；被挡不提示；其它按钮未接入（用户明确先不管）。
+- 验证：无 node，测试未运行（源码断言 Python 核过）；未开发者工具 / 真机连点；git diff --check、信息隔离自查通过。main 分支与相册APP 未同步（用户只要 main-wifi）。
+
+---
+
 ## 2026-11-04 ssh｜泰乾超级-qianrong 准入列表动态列按当前类型的列表权限（dev）
 
 - 需求（用户）：融资企业准入列表获取动态字段时参数不是 access:financeOrg:list，是不是数据没更新；也检查其它页面。追加：准入有几个列表，选中哪个就用哪个的权限字符。
