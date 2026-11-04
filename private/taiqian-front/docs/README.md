@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)「401 无权限页面重写」小节：2026-11-04 ssh dev/b5fe1ce 401 页去掉返回上一页按钮。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/b498bf3 角色列表按新菜单数据改按钮权限（详情 / 配置权限 system:role:query，列字段配置 system:roleColumn:edit）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-03 ssh dev/9361aa7 树形结构列表（菜单、部门、账户）不走生效列字段配置，treeConfig 默认关闭。
 - [qianrong-web-login.md](qianrong-web-login.md)末节：2026-11-03 ssh dev/698140c 顶部角色标签放宽到 min(420px, 32vw) 完整显示，过长省略 + 悬停完整身份。

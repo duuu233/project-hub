@@ -5,6 +5,7 @@
 - 对照：11-03 待后端的账户详情 system:user:query、部门详情 system:dept:query、用户组编辑 system:groups:edit 菜单已补，页面本就用这三个；新增的账户 / 系统启停、公告信息之前已接。需要改的只有角色列表。
 - dev/b498bf3（已 push）：角色 详情 system:role:detail → system:role:query、配置权限 system:role:edit → system:role:query（路由 role-permission 同步）、列字段配置 system:role:edit → system:roleColumn:edit（RoleColumnWorkspace 编辑同改）；数据权限 / 分配用户仍 system:role:edit。README、list-button-perms 测试同步。私人 docs、AI_CONTEXT、logs 已更新。
 - 仍缺 / 待确认：字典 system:dict:query、角色启停 system:role:status 菜单里还没有；配置权限页保存没有单独按钮权限；分配用户页内添加 / 取消授权仍为 system:role:add / remove；菜单有但列表无按钮的权限未新增按钮。
+- 用户追加：401 去掉返回上一页按钮（逻辑有问题）。dev/b5fe1ce（已 push）：删除按钮与 canGoBack / goBack，只留返回首页与切换系统；README、route-access 测试同步。原因：守卫以 replace 进 401，后退会回到被拦的地址或离开系统。
 - 验证：无 Node，测试未运行（Python 核过断言）；git diff --check、信息隔离自查通过。
 
 ---

@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-04 ssh｜401 页去掉返回上一页
+
+dev 干净同名 pull 已最新（b498bf3）。401.vue 删除返回上一页按钮与 canGoBack / goBack，README、route-access 测试同步。dev/b5fe1ce 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜角色列表按钮权限按新菜单数据更新
 
 dev 干净同名 pull 已最新（e0f8b99）。对照用户补充后的菜单数据，角色列表详情 / 配置权限改 system:role:query（含路由），列字段配置及列字段编辑改 system:roleColumn:edit；账户 / 部门详情、用户组编辑页面原本已对上。README、list-button-perms 测试同步。dev/b498bf3 提交后再次同名 pull 并 push。无 node 未跑测试（Python 核过断言）；信息隔离自查通过。

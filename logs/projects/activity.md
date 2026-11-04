@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 401 页去掉返回上一页
+
+401 页删除「返回上一页」按钮及逻辑，只留返回首页与切换系统。dev/b5fe1ce 已 push；无 Node，测试未运行。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 角色列表按钮权限按新菜单数据
 
 角色列表详情、配置权限改 system:role:query（路由同步），列字段配置及列字段编辑改 system:roleColumn:edit；其余列表按钮已与新菜单数据一致。dev/b498bf3 已 push；无 Node，测试未运行。
