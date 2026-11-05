@@ -1,3 +1,16 @@
+## 2026-11-05 ssh｜相册小程序 配网再次去掉 2.4G 限制 ＋ 搜索名称 loading（main-wifi）
+
+- 需求（用户）：1. 再次去掉 2.4G 配网限制（文字和过滤数据）；2. 配网设备入网超时 60→120 秒；3. 搜索页名称先显示广播名再跳成名称，查到前名称处给 loading。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/6213648（已 push）：
+  - 1：wifi-list / wifi-config 去掉「设备仅支持 2.4G WiFi 配网」提示条及 .wifi-tip 样式（config 表单补 margin-top 36rpx，同 10-28 做法）；标题「设备附近的WiFi」；搜不到提示去 2.4G；toWifiList 去掉 is24GChannel 过滤（blufi 解析保留）。wifi-search 测试相关断言改写并注明三次反复；对接开发进度补一条。
+  - 2：配网流程唯一的 60 秒超时就是上云轮询 ONLINE_TIMEOUT_MS，上一提交 bedf781 已改 120 秒（测试同步），本轮无需再改；WiFi 列表扫描 60 秒是等设备回列表，不属入网，未动。
+  - 3：跳动原因是 getBoundDeviceNames 晚于扫描结果回来。bind 新增 namesLoading（初始 true），名称处显示 spec-spinner（.nearby-name--loading 高 44rpx，行高不变），回来后一次性显示；列表为空时先回来也结束；5 秒上限，超时显示广播名、晚到仍补上。bind-bound-name 测试补用例、模板断言改写注明。docs/changes 记录、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：名称最多等 5 秒；loading 用现有橙色小圆圈。
+- 验证：未运行测试（无 node，按约定不用 /home/cc/sdk 的 node）；JS 括号 / WXML 标签配平自查、git diff --check、信息隔离自查通过；未开发者工具 / 真机。
+
+---
+
 ## 2026-11-05 ssh｜相册小程序 轮播服务端化对接 ＋ 双频合一保持 2.4G 方案报告（main-wifi）
 
 - 需求（用户）：1. 按 docs/wifi/前端对接文档20261105.md 开发；2. 开启轮播必须至少选一张图；3. 下发轮播后不再额外调 /api/device/play（设备会立刻自动刷屏）；4. 双频合一 WiFi 如何维持 2.4G（不谈固件优化），单独出简洁报告。
