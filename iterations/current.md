@@ -1,3 +1,19 @@
+## 2026-11-05 ssh｜相册小程序 轮播按对接文档修订版 20261105-1 ＋ 搜索页雷达 GIF 尺寸不变（main-wifi）
+
+- 需求（用户）：1. 按 docs/wifi/前端对接文档20261105-1.md 实现（9 条：选图弹层上滑 / 每行 3 张 / 每页 21、时区按语种、轮播中去文字图标变绿、设置时间格式、下次刷新带卡片类型、每 N 天上限 30、纪念日只选月日、基础配置非必填、简单模式卡片）；2. 搜索页 GIF 搜出结果后变小，要求尺寸不变。
+- 同步：Hub main 已最新；photo-album main-wifi 同名 pull 快进 6213648→466b8e9（新增对接文档 20261105-1），origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/666276b（已 push）：
+  - 轮播页：简单模式卡片（switch 默认开，关闭不提交基础字段及基础 mode / imgUrls；回显按当前模式基础字段是否为空判开关）；简单模式 / 任一高级卡片启用才能存，否则按钮置灰「至少配置一项」；固定 updateDays 1~30（只跟 updateTimeList 带，存量 >30 原值回显红字提示、不让存；间隔模式下天数非法则固定组整组不带）；纪念日 multiSelector 月 / 日两列，bindcolumnchange 换日列（2 月 28、小月 30），越界落月末，删掉「02月29日只在闰年生效」；状态区「设置时间：yyyy-MM-dd HH:mm」「下次刷新：MM-dd HH:mm · 卡片类型」（base 按 updateType 取 intervalMinutes / updateDays，null 不带后缀，1 天为「每天」）。
+  - 选图：简单模式照片改一行入口，与高级卡片共用底部弹层；弹层（含时区）popSheetSlideUp 上滑、pop-closing-sheet 下滑退场（240ms，退场中重开不误关）；3 列网格照「我的上传」样式；进页按 getProjectionRecordsPage 每页 21 取完（≤30 页），弹层每次显示 21 张、scrolltolower 再显示下一页。
+  - 时区：time-zone label / options 按 language.getSelectedLanguage（四语种）显示「国家 / 城市」，去 UTC 偏移与右侧副标题，港澳台并入「中国」组，搜索认 IANA 与全部译名；提交仍 IANA。
+  - 轮播中标记：list / wifi-detail 去掉「轮播中」标签及样式，running 且在线才显示绿点，图标换绿色版 device-detail-icon01-on.png（python 按原图 alpha 改色 #0e9f87）。
+  - 搜索页：原因是 radar-wrap--found 按 devices.length 挂（09-16 为列表 4.5 张设计），搜到第一台即 500→340rpx，且 flex-shrink 40 随列表变长继续压。改为 found 只在 devices.length && !scanning 挂，搜索中挂 radar-wrap--scanning（flex-shrink 0）。
+  - 测试：wifi-strategy（365→30、已选 X/100 挪弹层、提示文案与条件、02-29、下次刷新格式就地改写注明，新增 20261105-1 一组）、wifi-carousel-server（时区展示改写）、wifi-slideshow-on（轮播中标签断言有意删除，改守 running 且在线）、album-records-paging / album-records-device-id（轮播选图 100 条断言挪到每页 21）、bind-device-list-layout（found 条件改写、补 scanning 规则）。docs/changes 两篇、AI_CONTEXT 已更新。
+- 自行决定（可改）：绿色图标与绿点只在「轮播中且在线」；轮播页自身「轮播中」状态文字不动；小时档显示「每 1 小时」；纪念日后缀不附月日；时区译名（中国 / 香港·澳门·台北，新加坡一段，英文 USA / UK / UAE）；照片进页取完（≤30 页 = 630 张）以保回显校验 / 全选 / 全部相册语义；「开启轮播至少选一张」沿用。搜索结束后换静态已发现图仍缩到 340rpx（用户只提 GIF）；小屏搜索中列表约 1.5 张。
+- 验证：本机无 node，测试未运行；WXML 标签配平、信息隔离自查通过；未开发者工具 / 真机，未与服务端联调（nextRefreshCardType 等字段、简单模式关闭的回显形态）。改了 wxml / wxss，需本地跑全量 tests。相册APP main-wifi 未同步。
+
+---
+
 ## 2026-11-05 ssh｜相册小程序 配网再次去掉 2.4G 限制 ＋ 搜索名称 loading（main-wifi）
 
 - 需求（用户）：1. 再次去掉 2.4G 配网限制（文字和过滤数据）；2. 配网设备入网超时 60→120 秒；3. 搜索页名称先显示广播名再跳成名称，查到前名称处给 loading。
