@@ -1,3 +1,17 @@
+## 2026-11-05 ssh｜泰乾超级-qianrong 拼接列可见规则（dev）＋ 花盆APP 网络 / 服务器异常分开（main）＋ 相册小程序 移除按 isCanDel（main-wifi）
+
+- 需求（用户）：A. qianrong 多个列字段拼到一列时，至少一个字段是可见的有效值，合并列就展示并展示内容；B. 花盆「网络异常」弹框误报排查报告，网络异常与服务器异常分开，服务器异常用自动隐藏的 toast；C. 相册小程序 main-wifi 后端已返回全部 4 条成员，列表接口新增 isCanDel，== 1 显示解绑按钮（后端控制）。
+- 同步：Hub main、tq-plus dev、flowerpot main、photo-album main-wifi 同名 pull 均已最新，photo-album origin/main 无未合入；origin 均 GitHub。tq-plus 有 .codegraph 但本机无 codegraph CLI（未 sync）；另两仓无 .codegraph。
+- A tq-plus dev/8efe678（已 push）：mergePolicyColumns——页面列 responseKey 为多字段数组 = 拼接列；任一字段配置非 HIDDEN 就显示、只出一列（最靠前位置），字段有自己的列（field 一致）仍归自己；标题沿用页面列标题；函数 formatter 收到去掉 HIDDEN 字段的 row（field 本身隐藏则 cellValue 置空，不改原行），插槽列原样；全部隐藏 / 未配置不显示。地区并入同一套（准入列表地区列现在也不显示隐藏级别）。policy-columns 新增用例、README 第 4 条同步；私人 docs、AI_CONTEXT、logs 已更新。
+- A 未做 / 待确认：目前只有准入列表地区列这样声明；产品流程「产品」（routeName + brand · routeKey）、流程实例插槽列、银行政策序号、projectName‖字典(projectCode)、updateTime‖createTime 等未补声明（兜底类不宜合并），需用户按页指定。「有效值」按列级可见理解，不按行内是否有值隐藏列。
+- B flowerpot main/4c76d04（已 push）：NetworkStatus.probe 改为后端域名 + www.baidu.com / www.qq.com / www.apple.com 任一解析成功即有网；新增 serverProbe（只解析后端域名）；reportFailure 带来源（ApiClient 5 处 backend，涂鸦 tuya）。NetworkAlertHost：没网照旧弹框；有网且后端失败、或主动检查时后端域名解析不了 → AppToast.warn「服务器异常，请稍后重试」（约 3 秒消失，5 秒内一次，配网动线不提示）；有网涂鸦报错不提示。AppToast 支持传 Overlay 自身 context（原来全局宿主用 overlay.context 会静默不显示）。l10n 加 serverErrorMessage；network_alert_test 加 4 个用例、test config 加 serverProbe；PRODUCT_RULES、AI_CONTEXT、docs/history 记录与索引已更新。
+- B 未做（报告其余项）：弹框出现后网络恢复不自动关；刚切网未加二次确认（现需 4 个域名全失败才判没网）；HTTP 非 2xx 不触发全局 toast，仍由页面提示。
+- C photo-album main-wifi/c3fd3f1（已 push）：toMember 加 canDel（isCanDel == 1，字符串也认）；wxml「移除」改 wx:if item.canDel（之后仍 wx:elif isMe 显示「我」）；removeMember / confirmRemove 改按 member.canDel 拦；移除自己的确认文案「移除后你将不能再使用这台设备」，成功后 reLaunch 首页。测试新增一组、接收者组模板断言改口径并注明；变更记录补充二、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：按钮文案仍「移除」（用户说「解绑」，沿用原按钮）；不带 isCanDel 一律不能移除（不回退按所有者）；拼接列标题用页面标题；服务器 toast 冷却 5 秒、公共探测域名三个。
+- 验证：本机无 Node / Flutter，三仓测试均未运行（手推断言，括号配平、行宽核对）；未浏览器 / 开发者工具 / 真机；git diff --check、信息隔离自查通过。相册APP main-wifi 未同步 isCanDel（待用户决定）。
+
+---
+
 ## 2026-11-05 ssh｜相册小程序 共享设备：接收者只看到一条的排查 ＋ 接收者自己标「我」（main-wifi）
 
 - 问答（用户）：接收者进共享设备只看到一条（实际 1 所有者 + 3 接收者），是否接口问题、两边条件是否一致。结论：两边同页面同接口同参数（deviceId 均为本人记录上的同一 AA:BB:… 设备号，所有者配网与接收者接受都经 requireComplete 存同格式；pageIndex 1 / pageSize 50），仅 token 不同；请求层原样透传 retData、splitMembers 不按身份过滤 → 接口按调用人过滤。推测后端条件为 userId=当前 OR shareUserId=当前（接收者只命中自己）。需后端：调用人在该设备有记录即按 deviceId 返回全部成员（含 isToHave=1），无记录不返回。未抓包核对。

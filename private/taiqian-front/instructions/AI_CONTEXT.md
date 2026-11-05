@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-05 ssh dev/8efe678（用户明确）：页面列 responseKey 写成多个字段 = 拼接列；其中任一字段配置可见就显示、只出一列（最靠前位置、沿用页面标题），函数 formatter 拿不到 HIDDEN 字段；全部隐藏 / 未配置不显示。目前只有准入列表地区列这样声明，其他拼接列需按页补声明。
 2026-11-04 ssh dev/c8e5279（用户明确）：router.onError 遇动态导入失败自动刷新到目标页（10 秒一次，chunkReload.js）；listGrid 数据列 minWidth 下限 100~220（按表头字数）、操作列默认 fixed right。
 2026-11-04 ssh dev/1fd9b8a（用户明确）：动态列配置里的 provinceCode / cityCode / areaCode 合成一列「地区」（名称「省-市-区」，有哪级显示哪级，取不到名称显示编码；页面已有地区列则沿用）。
 2026-11-04 ssh dev/a1959a1（用户明确）：动态列默认按路由匹配列表菜单；一个路由多张表时页面在 withListGridStyle 里传 menuPerm 直接指定——准入列表按当前类型传 access:<类型>:list。开发环境控制台打印每次 policyColumns 的 menuPerm 与来源。

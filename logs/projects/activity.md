@@ -2,6 +2,24 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-05｜album-miniapp｜ssh｜main-wifi｜共享设备「移除」改由 isCanDel 控制
+
+成员接口每条 isCanDel == 1 才显示「移除」、才能移除（不再看所有者身份）；接收者自己那条可移除时显示移除、移除后回首页。main-wifi/c3fd3f1 已 push；无 node，测试未跑、未真机、isCanDel 未联调；相册APP main-wifi 未同步。
+
+---
+
+## 2026-11-05｜flowerpot-app｜ssh｜main｜网络异常与服务器异常分开
+
+没网（后端域名与 3 个公共域名全部解析失败）才弹「网络异常」；有网而后端连不上 / 超时、或后端域名解析不了 → 自动消失的「服务器异常，请稍后重试」toast（5 秒一次）；涂鸦报错有网不提示。main/4c76d04 已 push；无 Flutter，未 analyze / test / 真机。
+
+---
+
+## 2026-11-05｜taiqian-front｜ssh｜dev｜qianrong 多字段拼成的列任一字段可见就显示
+
+页面列 responseKey 为多字段数组即拼接列：任一字段配置可见就显示、只出一列、沿用页面标题，函数 formatter 拿不到 HIDDEN 字段；全部隐藏不显示。dev/8efe678 已 push；无 Node，测试未跑、未浏览器。
+
+---
+
 ## 2026-11-05｜album-miniapp｜ssh｜main-wifi｜共享设备接收者自己那行显示「我」
 
 接收者看共享设备，自己那行（成员 userProductId = 本人记录）在原「移除」位置显示灰色文字「我」；所有者不变。main-wifi/804a4cc 已 push；无 node，测试未跑、未真机。

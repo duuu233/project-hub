@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-05 ssh｜多个字段拼成的列任一字段可见就显示
+
+dev 干净同名 pull 已最新（c8e5279）。mergePolicyColumns 加多字段列规则（place / inPlaced / visibleFormatter），地区并入同一套。policy-columns 新增用例、README 同步。dev/8efe678 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。
+
 ## 2026-11-04 ssh｜发新版后自动刷新、列表最小列宽与操作列固定右侧
 
 dev 干净同名 pull 已最新（1fd9b8a）。新增 chunkReload.js 并在 main.js 安装；listGrid.styleColumns 数据列 minWidth 下限、操作列默认 fixed right。新增两份测试、README 同步。dev/c8e5279 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。
