@@ -1,3 +1,20 @@
+## 2026-11-05 ssh｜相册小程序 轮播服务端化对接 ＋ 双频合一保持 2.4G 方案报告（main-wifi）
+
+- 需求（用户）：1. 按 docs/wifi/前端对接文档20261105.md 开发；2. 开启轮播必须至少选一张图；3. 下发轮播后不再额外调 /api/device/play（设备会立刻自动刷屏）；4. 双频合一 WiFi 如何维持 2.4G（不谈固件优化），单独出简洁报告。
+- 同步：Hub main 已最新；photo-album main-wifi 同名 pull 快进 c3fd3f1→c2f4ae9（新增对接文档 20261105），origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/bedf781（已 push）：
+  - 轮播页：时区行（utils/time-zone.js 新增：系统名 → Intl → 按偏移兜底 / Etc/GMT±N，弹层分组 + 搜索，展示带当前偏移）；间隔档位 10 分钟~24 小时；结束时间两列可选 24:00，新配置默认 00:00~24:00；去掉轮播后休眠（idle 不传）；轮播中显示下次刷新（nextRefreshAt 去秒）。
+  - 高级设置同页展开（进页收起不持久化，「高级设置（N 项）」）：工作日 / 周末启用开关、纪念日多条（2028 闰年日期选择器只取月日、重复拦截、可删）、每卡独立时间 / 照片（弹层选）/ 顺序；三档灰字提示；保存成功后重拉配置以服务端为准。
+  - 保存：两组参数都带（当前模式校验、另一方合法才带）；基础与启用卡片都至少一张；卡片 imgUrls 一律明确提交；去掉 playFirst（不再补投第一张），提示「屏幕即将刷新」。
+  - 文档其余项：WiFi 结果页两个按钮（成功「再投一张」弹拍照 / 相册 → 同设备进预览，有失败「重试未成功的」，第二个均「返回首页」，tapGuard 锁表同步）；消息 CAROUSEL_NOT_SENT；配网上云等待 60→120 秒。
+  - 测试：wifi-strategy 按新口径就地改写作废断言并注明（5 分钟→10、7 分钟回显落 10、idle、投第一张三条改守「不投屏」、时间点文案），新增高级卡片两组；新增 wifi-carousel-server.test.js；tap-guard、wifi-provision（轮询次数 25~31→55~61）同步。docs/changes 记录、docs/README、AI_CONTEXT、iot-api 注释已更新。
+  - 第 4 点报告：docs/wifi/双频合一WiFi保持2.4G方案.md——主方案路由器分开 2.4G（关双频合一 / IoT 或访客 2.4G 网络）；可实测方案配网多发 BluFi STA_BSSID（0x01）锁 2.4G 射频（取决于现有固件是否保留乐鑫示例处理；BSSID 仅安卓 wx.getWifiList 可取，iOS 不行）；辅助方案按设备扫描同名跨频段标注、按 shadow.wifiCh≥36 提示。未改代码。
+- 自行决定（可改）：成功按钮文案「再投一张」、失败沿用「重试未成功的」；停用但选过照片的卡片带 enabled:false 保留参数，否则 null；卡片回显无 imgUrls 按全选；起止相同不让存；CAROUSEL_NOT_SENT 时刻字段按 time / triggerTime / scheduledAt / planTime / triggerAt 猜取；下次刷新只在轮播中显示。
+- 未做 / 待确认：对接文档仍标「方案待确认」，未联调（卡片字段、nextRefreshAt、通知 payload 实际格式）；相册APP main-wifi 未同步；双频方案 2 / 3 待产品确认后再开发。
+- 验证：本机无 node（/home/cc/sdk 下有 node 二进制，按约定未运行），测试未运行；JS 括号配平、WXML 标签配平脚本自查通过；未开发者工具 / 真机；git diff --check、信息隔离自查通过。改了 wxml / wxss，需本地跑全量 tests。
+
+---
+
 ## 2026-11-05 ssh｜泰乾超级-qianrong 拼接列可见规则（dev）＋ 花盆APP 网络 / 服务器异常分开（main）＋ 相册小程序 移除按 isCanDel（main-wifi）
 
 - 需求（用户）：A. qianrong 多个列字段拼到一列时，至少一个字段是可见的有效值，合并列就展示并展示内容；B. 花盆「网络异常」弹框误报排查报告，网络异常与服务器异常分开，服务器异常用自动隐藏的 toast；C. 相册小程序 main-wifi 后端已返回全部 4 条成员，列表接口新增 isCanDel，== 1 显示解绑按钮（后端控制）。
