@@ -2,6 +2,18 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-05｜album-app｜ssh｜main｜iOS 权限弹框文案四语种本地化（审核 Guideline 4）
+
+新增 en / zh-Hans / zh-Hant / ja 的 InfoPlist.strings 并注册进工程，Info.plist 改英文兜底加 CFBundleLocalizations。main/d345c5d 已 push；无 Xcode，未构建 / 真机；build number 未递增。
+
+---
+
+## 2026-11-05｜album-miniapp｜ssh｜main-wifi｜WiFi 详情「共享设备」接收者可见
+
+入口改名「共享设备」，接收者也能进；共享页内容同所有者，接收者无移除 / 分享设备按钮。main-wifi/c338b5e 已 push；无 node，测试未运行；接收者调成员接口未联调。
+
+---
+
 ## 2026-11-04｜taiqian-front｜ssh｜dev｜qianrong 发新版后自动刷新、列表小屏最小列宽
 
 部署后旧页面文件 404 时路由自动刷新一次到目标页；列表数据列给最小宽度（多列出横向滚动），操作列默认固定右侧。dev/c8e5279 已 push；无 Node，测试未运行。

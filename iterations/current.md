@@ -1,3 +1,16 @@
+## 2026-11-05 ssh｜相册APP iOS 权限弹框文案本地化（main）＋ 相册小程序 共享设备接收者可见（main-wifi）
+
+- 需求（用户）：① 相册APP main：iOS 1.0.1 (2) 审核被拒（Guideline 4，iPad Air 5th）——权限请求文案与 App 本地化语言不一致，按此修改；② 相册小程序 main-wifi 设备详情：「设备分享」改「共享设备」；接收者也要有入口；进去内容与所有者一致，只是没有移除、没有分享设备按钮。要求两边各自分支改、不混淆。
+- 同步：Hub main 已最新；flutter 原停在 main-wifi（干净），按用户指定 checkout main，同名 pull 快进 1 个提交（68dc1b4 bump build number to 2）；photo-album main-wifi 同名 pull 已最新，origin/main 无未合入。origin 均 GitHub。两仓都无 .codegraph。
+- 根因（APP）：App 支持简中 / 繁中 / 英 / 日（系统语言不在内兜底英文），但 Info.plist 8 个权限文案只有简中，工程 knownRegions 只有 en / Base、无任何 lproj 字符串——英文系统下界面英文、授权弹框中文。
+- album-app main/d345c5d（已 push）：新增 ios/Runner/{en,zh-Hans,zh-Hant,ja}.lproj/InfoPlist.strings（8 键：蓝牙 ×2、定位、相册读 / 写、相机、麦克风、语音识别；简中沿用原文，其它用词对齐 App 内 l10n）；pbxproj 加 InfoPlist.strings 变体组进 Resources、knownRegions 补 zh-Hans / zh-Hant / ja；Info.plist 权限值改英文兜底并加 CFBundleLocalizations。BUILD_RELEASE、AI_CONTEXT、docs/history 记录已更新。
+- album-miniapp main-wifi/c338b5e（已 push）：wifi-detail 入口改名「共享设备」、去掉 isOwner 限制（删除设备仍仅所有者）；wifi-share 标题改「共享设备」，按设备详情 wifiShare.isOwner 判断身份，接收者隐藏行内「移除」和底部分享按钮 / 提示 / 开发版复制，方法内同样拦；接收者不画封面、不取资料 / 时间戳，成员接口无所有者那条时不拿自己兜底所有者栏。测试：wifi-share 新增接收者用例组；wifi-tf-local-mode 原「分享仅所有者」断言按新口径改写并注明。变更记录、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：共享页标题随入口改「共享设备」；底部按钮仍叫「分享设备」（只所有者可见）；成员列表里接收者自己照常显示、不加「我」标记。
+- 未做 / 待确认：未递增 build number（当前 1.0.1+2 已被审，重新提审前需 +1）；接收者账号调 getShareUserProductList 能否拿到完整成员列表未联调（只给所有者返回的话接收者会看到加载失败 / 空列表）；APP main 的 iOS 改动未同步到 main-wifi（待用户决定）；小程序改动未同步到 main / 相册APP；flutter 现停在 main（原为 main-wifi）。
+- 验证：无 Xcode / Flutter / node，未构建、测试未运行；Info.plist plistlib 解析通过、pbxproj 括号配平；未真机 / 开发者工具；git diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-04 ssh｜泰乾超级-qianrong 发新版后自动刷新、列表小屏最小列宽（dev）
 
 - 问答（用户）：开着测试环境过段时间报 assets/*.js 404、Failed to fetch dynamically imported module，刷新就好——原因：部署后带哈希的旧页面文件被删（emptyOutDir），旧页面按旧文件名按需加载 404。
