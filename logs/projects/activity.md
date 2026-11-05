@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-05｜album-app｜ssh｜main-wifi｜合入 main iOS 权限文案、共享设备接收者可见（对齐小程序）
+
+merge origin/main（d570d33）带入 iOS 权限文案本地化；详情「共享设备」接收者可见、共享页接收者无移除 / 分享设备按钮。main-wifi/bc6200a 已 push；无 Flutter，未 analyze / test / 真机。
+
+---
+
 ## 2026-11-05｜album-app｜ssh｜main｜iOS 权限弹框文案四语种本地化（审核 Guideline 4）
 
 新增 en / zh-Hans / zh-Hant / ja 的 InfoPlist.strings 并注册进工程，Info.plist 改英文兜底加 CFBundleLocalizations。main/d345c5d 已 push；无 Xcode，未构建 / 真机；build number 未递增。

@@ -1,3 +1,15 @@
+## 2026-11-05 ssh｜相册APP main→main-wifi 同步 iOS 权限文案、main-wifi 共享设备对齐小程序
+
+- 需求（用户）：两个项目都同步，main 和 main 对齐，main 的改动也同步到 main-wifi。
+- 同步：Hub main 已最新；flutter 从 main（干净）切回 main-wifi，同名 pull 已最新；photo-album main-wifi 同名 pull 已最新、origin/main 无未合入。origin 均 GitHub。
+- 判断：两边 main 本轮唯一改动是 APP 的 iOS 权限文案（iOS 原生专属，小程序无对应项），mains 无需另改即对齐；小程序共享设备改动只涉及 WiFi 版页面（main 上没有），不进 main，改为同步到相册APP main-wifi。
+- album-app main-wifi：git merge origin/main → d570d33（无冲突；main-wifi 的 Info.plist 与 main 一致，同为 8 个权限键，无额外键需翻译）；bc6200a（已 push）：wifi_l10n 新增 wifiSharedDevice（共享设备 / Device sharing / デバイス共有）作详情入口与页标题，底部按钮仍「分享设备」；详情入口去掉 _isOwner；WifiSharePage 自查 getUserProductDetail → wifiIsOwner（查不到按加载失败），接收者隐藏移除、底部分享按钮与提示，_remove / _share 内拦，无所有者那条时不兜底自己。test/wifi_tf_share_test 加接收者分组用例；docs/README、docs/history 记录已更新。
+- album-miniapp：本轮无改动（main-wifi 已含 c338b5e；main 不需要）。
+- 自行决定（可改）：英文入口名用「Device sharing」；APP 端身份查询失败按加载失败（不猜身份）。
+- 验证：无 Flutter / Dart，未 analyze / test / 真机；Dart 文件括号配平；git diff --check、信息隔离自查通过。接收者调成员接口仍未联调；build number 仍未递增。
+
+---
+
 ## 2026-11-05 ssh｜相册APP iOS 权限弹框文案本地化（main）＋ 相册小程序 共享设备接收者可见（main-wifi）
 
 - 需求（用户）：① 相册APP main：iOS 1.0.1 (2) 审核被拒（Guideline 4，iPad Air 5th）——权限请求文案与 App 本地化语言不一致，按此修改；② 相册小程序 main-wifi 设备详情：「设备分享」改「共享设备」；接收者也要有入口；进去内容与所有者一致，只是没有移除、没有分享设备按钮。要求两边各自分支改、不混淆。
