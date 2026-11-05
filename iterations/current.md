@@ -1,3 +1,14 @@
+## 2026-11-05 ssh｜相册小程序 共享设备：接收者只看到一条的排查 ＋ 接收者自己标「我」（main-wifi）
+
+- 问答（用户）：接收者进共享设备只看到一条（实际 1 所有者 + 3 接收者），是否接口问题、两边条件是否一致。结论：两边同页面同接口同参数（deviceId 均为本人记录上的同一 AA:BB:… 设备号，所有者配网与接收者接受都经 requireComplete 存同格式；pageIndex 1 / pageSize 50），仅 token 不同；请求层原样透传 retData、splitMembers 不按身份过滤 → 接口按调用人过滤。推测后端条件为 userId=当前 OR shareUserId=当前（接收者只命中自己）。需后端：调用人在该设备有记录即按 deviceId 返回全部成员（含 isToHave=1），无记录不返回。未抓包核对。
+- 需求（用户）：4. 自己是接收者时，在原移除按钮位置加文字「我」。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin GitHub；无 .codegraph。
+- album-miniapp main-wifi/804a4cc（已 push）：wifi-share load 给成员加 isMe（!isOwner 且成员 userProductId = 本人记录 userProductId）；wxml 移除后 wx:elif 显示「我」，.share-me 灰色 #8b9098、同移除内边距、无边框不可点。测试接收者组加第三个成员断言 isMe、模板位置与样式；变更记录补充段、docs/README、AI_CONTEXT 同步。推翻上轮「接收者自己不加我标记」的自行决定。
+- 自行决定（可改）：「我」用灰色纯文字、无边框；所有者那栏不加「我」；相册APP main-wifi 未同步（待用户决定）。
+- 验证：无 node，测试未运行；未开发者工具 / 真机；git diff --check、信息隔离自查通过。接口修好前接收者看不到所有者栏与其他人，只能看到自己那行带「我」。
+
+---
+
 ## 2026-11-05 ssh｜相册APP main→main-wifi 同步 iOS 权限文案、main-wifi 共享设备对齐小程序
 
 - 需求（用户）：两个项目都同步，main 和 main 对齐，main 的改动也同步到 main-wifi。

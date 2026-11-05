@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-05｜album-miniapp｜ssh｜main-wifi｜共享设备接收者自己那行显示「我」
+
+接收者看共享设备，自己那行（成员 userProductId = 本人记录）在原「移除」位置显示灰色文字「我」；所有者不变。main-wifi/804a4cc 已 push；无 node，测试未跑、未真机。
+
+---
+
 ## 2026-11-05｜album-app｜ssh｜main-wifi｜合入 main iOS 权限文案、共享设备接收者可见（对齐小程序）
 
 merge origin/main（d570d33）带入 iOS 权限文案本地化；详情「共享设备」接收者可见、共享页接收者无移除 / 分享设备按钮。main-wifi/bc6200a 已 push；无 Flutter，未 analyze / test / 真机。
