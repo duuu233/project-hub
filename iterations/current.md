@@ -1,3 +1,13 @@
+## 2026-11-06 ssh｜相册小程序 restore-builtin 按简化返回处理（main-wifi）
+
+- 需求（用户）：restore-builtin 接口简化返回值：data.status 只有 SENT / SKIPPED（SKIPPED 合并离线、关机、休眠、TF 本地模式、升级中、下发失败），都继续删、不重试；错误码只有 4000 参数错误、401 token 无效重登、403 无权限（设备已删，顺序错，唯一需停下检查）、5000 服务端异常继续删。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。环境按服务器内运行，ssh。
+- album-miniapp main-wifi/8bd7354（已 push）：wifi-detail confirmDeleteDevice 第 ③ 步改为成功（任意 status）继续删并打日志 status；catch 里只有 401（接口层已 expireSession，不再另 toast）和 403（toast「恢复内置图片失败：原因」）停下不删设备，其余（4000 / 5000 / 网络 / resolveRenderMode 抛错）只打日志照删。iot-api 注释补返回与错误码；tests/wifi-tf-local-mode 原「5000 不删设备」改为 5000/4000/NETWORK_ERROR 照删、401/403 不删（注明有意改口径）；docs/changes 同日文档、docs/README、AI_CONTEXT 更新。
+- 自行决定（可改）：4000 文档写「代码问题」未说停不停，按「403 是唯一需停下的」照删；网络错误文档未列，同 5000 照删；401 停下（登录已失效，后续删设备也会失败）。
+- 验证：本机无 node，测试未运行；git diff 人工核对、信息隔离自查通过；未真机、未联调。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 WiFi 版删除设备调 restore-builtin（main-wifi）
 
 - 需求（用户）：按接口文档新增 `POST /api/device/restore-builtin`（JSON：deviceNo、renderMode，Header userToken）。删除设备流程：调删除设备图片接口后调该接口，成功后再调删除设备接口；解除绑定不调；仅 WiFi 版，蓝牙版删除不变。

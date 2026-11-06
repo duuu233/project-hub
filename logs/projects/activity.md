@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-06｜album-miniapp｜ssh｜main-wifi｜restore-builtin 按简化返回处理
+
+删除设备第 ③ 步：SENT / SKIPPED 都继续删；出错只有 401（重登）/ 403（提示，设备已删顺序有问题）停下，4000 / 5000 / 网络错误照删。main-wifi/8bd7354 已 push；无 node，测试未跑、未真机、未联调。
+
+---
+
 ## 2026-11-06｜album-miniapp｜ssh｜main-wifi｜WiFi 版删除设备调 restore-builtin
 
 WiFi 详情「删除设备」在删云端照片后调 POST /api/device/restore-builtin（deviceNo + 产品 renderMode，取不到不传），成功才删设备，失败提示并中止；解除绑定、蓝牙版不调。main-wifi/e34fdd4 已 push；无 node，测试未跑、未真机、未联调。
