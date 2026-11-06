@@ -1,3 +1,13 @@
+## 2026-11-06 ssh｜相册小程序 我的设备改 Tab 切换 ＋ 空态点击添加（main-wifi）
+
+- 需求（用户）：设备列表页改成 Tab 切换区分 WiFi 和蓝牙版，样式交互参考以前的投屏记录列表；没有设备时给默认图标，点击添加 = 跳搜索设备页。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/2fab17f（已 push）：subpackages/device/list 删 10-27 分组标题，顶部 `.device-tabs`（照 projection/records `.record-tabs`：白胶囊底、橙色指示器 translateX、选中白字）+ 右侧添加按钮常驻（原 `.device-toolbar` 并入）；「共 N 台设备」同 `.record-count`；两组卡片外各包 `deviceTab` 条件（未动卡片内容）；当前 Tab 无设备 `.empty-tab`：empty_device_art + 右下 home-add-icon，整块 bindtap goBind（→ bind 搜索页），旧「暂无电子纸设备」卡片去掉、加载失败卡片保留。list.js：data.deviceTab、defaultDeviceTab、switchDeviceTab（本地切换、pageScrollTo 0）。tests/device-list-wifi-group 分组断言按 Tab 改写并注明，新增 Tab 默认 / 切换 / 重载保持 / 空态 / 选相框一组与样式断言；docs/changes、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：默认 WiFi版、选相框模式默认蓝牙版、默认那类没设备而另一类有则落有设备那类；点过 Tab 后重拉保持（不持久化）；Tab 文案不带数量，数量放「共 N 台设备」；指示器两 Tab 同为橙色（记录页失败 Tab 变红，这里不需要）、不加页面底色 tint；空态文案「暂无WiFi版设备 / 暂无蓝牙版设备」「点击添加设备」。
+- 验证：本机无 node，测试未运行；WXML 标签配平、git diff --check、信息隔离自查通过；未开发者工具 / 真机。改了 wxml / wxss，需本地跑全量 tests。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 我的上传 IJ_101 照片倒置（main-wifi）
 
 - 问题（用户）：IJ_101（WiFi）、EC-370、EF6-370 都配置竖向旋转 180，「我的上传」EC-370 / EF6-370 方向正常，IJ_101 是倒的。

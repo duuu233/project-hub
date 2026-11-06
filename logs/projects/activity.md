@@ -3351,3 +3351,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-06 | album-miniapp | ssh | main-wifi | WiFi 版我的上传存原图（IJ_101 照片倒置）
 - WiFi 结果页写相册记录原先上传按 verticalRotation 转过的投屏图，竖向 180° 的 IJ_101 在我的上传倒置；改为同蓝牙版存原图 _origSrc（云端先下载、长边缩到设备长边），无备份 / 下载失败退回投屏图；投屏与 imgBle 不变。main-wifi/ef0e815 已推送。测试未运行，未真机；旧记录仍倒置。
+
+## 2026-11-06 | album-miniapp | ssh | main-wifi | 我的设备改 Tab 切换 ＋ 空态点击添加
+- WiFi版 / 蓝牙版由上下分组改为顶部 Tab（同投屏记录页 record-tabs），添加按钮移到 Tab 右侧常驻，「共 N 台设备」；当前 Tab 无设备显示默认设备图 + 加号，点击进搜索设备页。main-wifi/2fab17f 已推送。测试未运行，未真机。
