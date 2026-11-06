@@ -8866,3 +8866,14 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - photo-album main-wifi/1e7a874：已提交，再次同名 pull 后 push。项目 docs/changes 变更记录与 docs/README 已更新。
 - 验证：无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；新增断言用 Python 对源码核对通过；未真机。git diff --check、信息隔离自查通过。
 - 提醒：只改 main-wifi（WiFi 版才有两类设备区分），不需同步 main。
+
+---
+
+## 2026-11-06 ssh｜相册小程序 轮播默认不选、消息中心红点、投屏固定弹选择框
+
+- 需求（用户）：① 轮播设置-简单模式-轮播照片不要默认全选；② 设备详情-消息中心新消息数字改红点（消息列表不变）；③ 官方图库 / AI 生图点投屏取消「已连蓝牙直接进投屏」，固定弹设备选择框（无绑定设备判断与提示不变），按钮「连接并投屏」改「投屏」，选择框带连接状态（在线 / 离线、已连接）。
+- 同步：photo-album main-wifi/1e7a874、Hub main 同名 pull 均已最新，origin/main 无未合入。无 .codegraph，直接读源码。
+- 判断：① imgUrls=null 只在简单模式保存过（configured 且基础字段在）时视为「全部相册」回显全选，其余不选——否则保存过「全部」的用户再进来会被清空；高级卡片口径未改。③ 为显示「离线」，选择框列出全部已绑定设备（取消 10-29 不可投 WiFi 版不进列表、「暂无可投屏」提示），选了不可投的由既有 ensureOnline 拦下；蓝牙版未连接显示「未连接」（用户只写了已连接，自行补全）。行映射收进 utils/picker-devices.js。
+- photo-album main-wifi/dde545f：已提交，再次同名 pull 后 push。docs/changes 变更记录、docs/README、AI_CONTEXT 已更新。
+- 验证：无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；源码正则类断言用 Python 核对通过；未真机。git diff --check、信息隔离自查通过。
+- 待用户确认：③ 是否也要同步到 main（BLE 版官方图库 / AI 生图同样有直接投的逻辑）；①② 为 WiFi 版专属，不涉及 main。
