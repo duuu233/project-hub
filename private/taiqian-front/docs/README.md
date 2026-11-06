@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-06 ssh dev/0b66c9a 23 个动态列列表的列表接口带上与 policyColumns 相同的 menuPerm（resolveListMenuPerm 一次解析共用、withMenuPerm 包参数；列表接口 Swagger 尚未声明，待联调）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-05 ssh dev/8efe678 多个字段拼成一列（页面列 responseKey 数组）至少一个字段可见就显示、只出一次、内容不含隐藏字段。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/c8e5279 发新版后页面文件 404 自动刷新一次（chunkReload）；列表数据列最小宽度适配小屏、操作列默认固定右侧。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/1fd9b8a 列表省 / 市 / 区编码合成一列「地区」显示名称，有哪级显示哪级（mergePolicyColumns 统一处理）。

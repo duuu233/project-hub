@@ -3334,3 +3334,8 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-05 | album-miniapp | ssh | main-wifi | 配网再次去掉 2.4G 限制、搜索名称 loading
 - 选择 WiFi / 账号密码页去掉 2.4G 提示条与样式、标题与搜不到提示去 2.4G、列表不再按频段过滤；配网上云 120 秒已在 bedf781 改好；搜索页用户名称查回来前名称处 loading（最多 5 秒）。main-wifi/6213648 已推送。测试未运行，未真机。
+
+## 2026-11-06 | taiqian-front | ssh | dev | qianrong 列表接口带 menuPerm
+- 23 个动态列列表的列表接口带上与 policyColumns 相同的 menuPerm（resolveListMenuPerm 一次解析共用，getList 用 withMenuPerm 包参数；树形列表与导出不带）。
+- 列表接口 Swagger 尚未声明 menuPerm，待联调；无 Node，未运行测试/构建。
+- 交付：dev/0b66c9a 已推送。

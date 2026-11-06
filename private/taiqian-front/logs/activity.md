@@ -437,3 +437,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **改动**：listGrid policyColumns 默认 !treeConfig；账户管理显式关闭；部门 / 账户直接加载；README、policy-columns 测试同步。dev 同名 pull 已最新，dev/9361aa7 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；git diff --check、信息隔离自查通过。
 - **追加（dev/e0f8b99）**：树形列表也去掉按接口返回字段隐藏列（responseColumns 默认 !treeConfig，账户管理显式关）；README、测试同步。已 push，未运行测试。
+
+## 2026-11-06 ssh｜qianrong 列表接口带 menuPerm
+
+- **需求**：列表接口也加参数 menuPerm，取值与列表前调的 policyColumns 相同。
+- **改动**：listGrid resolveListMenuPerm / withMenuPerm，main.js 注入 matchRouteMenuPerm；23 个标准列表 getList 包 withMenuPerm(gridOptions, …)；README、policy-columns 测试同步。dev 同名 pull 已最新，dev/0b66c9a 提交后再次 pull 并 push。
+- **验证**：无 Node，测试未运行；Python 核源码正则、git diff --check、信息隔离自查通过。列表接口 Swagger 尚未声明 menuPerm，待联调。

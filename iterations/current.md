@@ -8843,3 +8843,14 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - tq-plus dev/4df38d0：已提交，再次同名 pull 后 push。私人文档、docs/README、AI_CONTEXT、logs 已更新。
 - 验证：无 node，未构建/测试/浏览器/联调；git diff --check、信息隔离自查通过。
 - 待确认：getInfo 是否回 user.orgId；GET /system/user/?orgId 与 deptTree?orgId 是否按企业过滤。
+
+---
+
+## 2026-11-06 ssh｜泰乾超级-qianrong 列表接口带 menuPerm
+
+- 需求（用户）：根据文档，每个列表前面会调 policyColumns?menuPerm=…，现在列表接口也要加参数 menuPerm，取值同 policyColumns。
+- 同步：tq-plus dev/8efe678、Hub main 同名 pull 均已最新。有 .codegraph 但本机无 codegraph CLI / node，直接读源码。
+- 契约：dev Swagger 现按三组提供（v2/api-docs?group=业务管理/审核工作流/系统管理，不带 group 已 404），只读核对：只有 policyColumns 声明 menuPerm，列表接口尚未声明，按用户口径以 query 传，待联调。
+- 改动：resolveListMenuPerm 解析一次、policyColumns 与列表接口共用；23 个动态列列表 getList 包 withMenuPerm（树形菜单 / 部门不带，导出不带）。细节见私人 docs/qianrong-list-style.md 末节。
+- tq-plus dev/0b66c9a：已提交，再次同名 pull 后 push。私人文档、docs/README、AI_CONTEXT、logs 已更新。
+- 验证：无 node，测试 / 构建 / 浏览器未运行；Python 核源码正则断言、git diff --check、信息隔离自查通过。

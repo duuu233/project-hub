@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-06 ssh dev/0b66c9a（用户明确）：动态列列表的列表接口也带 menuPerm（同 policyColumns）——listGrid resolveListMenuPerm 一次解析（页面指定优先，否则入口注入的 matchRouteMenuPerm 按路由匹配）、记在列表上，数据请求等解析完；getList 用 withMenuPerm(gridOptions, {...}) 包参数，导出不包。列表接口 Swagger 尚未声明，待联调。未运行测试/构建。
 2026-11-05 ssh dev/8efe678（用户明确）：页面列 responseKey 写成多个字段 = 拼接列；其中任一字段配置可见就显示、只出一列（最靠前位置、沿用页面标题），函数 formatter 拿不到 HIDDEN 字段；全部隐藏 / 未配置不显示。目前只有准入列表地区列这样声明，其他拼接列需按页补声明。
 2026-11-04 ssh dev/c8e5279（用户明确）：router.onError 遇动态导入失败自动刷新到目标页（10 秒一次，chunkReload.js）；listGrid 数据列 minWidth 下限 100~220（按表头字数）、操作列默认 fixed right。
 2026-11-04 ssh dev/1fd9b8a（用户明确）：动态列配置里的 provinceCode / cityCode / areaCode 合成一列「地区」（名称「省-市-区」，有哪级显示哪级，取不到名称显示编码；页面已有地区列则沿用）。

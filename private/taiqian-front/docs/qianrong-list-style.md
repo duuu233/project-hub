@@ -199,3 +199,13 @@
 - 规则：页面列 `responseKey` 为多个字段的数组即视为拼接列。其中任一字段配置为可见（非 HIDDEN）→ 显示该列、只出一次、位置取最靠前那个；字段有自己的列（field 一致）仍归自己的列；标题沿用页面列标题（自行决定：单个字段的 fieldName 不适合作合并列标题，与「地区」一致）；函数 formatter 收到的 row 去掉配置为 HIDDEN 的字段（field 本身隐藏时 cellValue 也置空），不改原行。插槽 / 非函数 formatter 原样沿用，前端拦不住隐藏字段。全部隐藏或未配置 → 不显示。地区：页面有编码列沿用（标题仍固定「地区」，隐藏级别现在也不进准入列表地区列的内容），没有则照旧新增 `__qr_area`。
 - 范围：目前声明了多字段 responseKey 的页面列只有准入列表「地区」。其余看起来拼接的列未改声明——产品流程编排「产品」（routeName + brand · routeKey，brand 有自己的列）、流程实例各插槽列、银行政策序号（productNo · 版本）、projectName || 字典(projectCode)、updateTime || createTime 等兜底取值；要按此规则合并，需在页面列上补 responseKey 数组（兜底类如更新 / 创建时间各有独立列含义，不宜合并），待用户按页指定。
 - 测试：policy-columns 新增「多个字段拼成一列」用例（主字段隐藏仍显示且内容不含隐藏值、都可见只占一列、插槽沿用、全隐藏不显示）。README 动态列第 4 条同步。无 Node，未运行（手推），未浏览器验证。
+
+## 列表接口带 menuPerm（2026-11-06 ssh dev/0b66c9a，用户明确）
+
+- 用户：根据文档，每个列表前面会多调 `policyColumns?menuPerm=system:user:list`，现在列表接口也要多加参数 menuPerm，把 policyColumns 的这个参数也放到列表接口中。
+- 契约：dev Swagger 已拆成三组（`v2/api-docs?group=业务管理 / 审核工作流 / 系统管理`，旧的不带 group 地址现 404；swagger-resources 列出三组），只读拉取，174 + 业务管理 + 审核工作流路径中只有 policyColumns 声明了 menuPerm（query、必填），**各列表接口尚未声明**，按用户口径作为 query 参数传，后端是否已收待联调。快照留在 Hub 已忽略的临时目录。
+- 范围：走动态列的 23 个标准列表（树形的菜单 / 部门不走 policyColumns，也不带）。全部是 GET + params；银行政策快照的分页与「全量拉取后本地筛」两处都带；产品流程编排 routeList 原本无参数，改为只带 menuPerm。导出（操作 / 登录日志 requestParams）不带。
+- 改法：listGrid 新增 `resolveListMenuPerm(grid)`（页面指定的 menuPerm 优先，否则调入口注入的 `menuPerm` 来源按路由匹配；结果记在列表状态 resolvedPerm，失败 / 空不记，下次重解析；policyColumns: false 的列表不解析）、`listEffectiveMenuPerm`、`withMenuPerm(grid, params)`（有就追加 menuPerm，没有原样返回）。`setListColumnSource` 新增 `menuPerm` 选项，main.js 注入 `matchRouteMenuPerm`（从 applyPolicyColumns 拆出的路由匹配部分）。applyPolicyColumns 改为 `await resolveListMenuPerm(grid)` 后调 policyColumns，与列表接口共用同一次解析。
+- 时序：whenListColumnsReady 中列配置照旧立即开始（loading 立刻置上），数据请求改为等 menuPerm 解析完再调 load（菜单列表会话缓存，只在首次进页多等菜单那一次请求）；之后查询 / 翻页 / 刷新直接取已记的值。解析完成前就调 getList（理论上如账户管理首屏前点部门树）会不带 menuPerm。
+- 测试：policy-columns 原「页面指定」源码正则改为行为断言（指定了不调路由来源）、main.js 注入正则同步；新增「列表接口也带 menuPerm」（等解析、共用一次、记住、失败不带且重解析、policyColumns: false 不解析）与「23 个列表都用 withMenuPerm(gridOptions…)」。README 动态列第 3 条、开发环境日志、页面接入同步。
+- 验证：无 Node，测试 / 构建 / 浏览器均未运行；源码正则类断言用 Python 核对通过，git diff --check、信息隔离自查通过；未联调列表接口是否接受 menuPerm。
