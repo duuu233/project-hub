@@ -1,3 +1,14 @@
+## 2026-11-06 ssh｜相册小程序 我的上传删除写请求日志（main-wifi）
+
+- 需求（用户）：「我的上传」页删除操作把请求日志也写出来，目前没有。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- 原因：页面删除只记摘要（掩码、0x12、记录删除结果、云端返回），看不到接口 / 参数；网络层 [HTTP] / [IoT] 行只走 debugLog.add 进浮窗，不进 console。
+- album-miniapp main-wifi/f650fd9（已 push）：api.deleteProjectionRecords 与 iotApi.deletePhotos 加可选 options.onLog，逐条「接口【删除相册记录】/【删除云端照片】POST 路径 参数 …」+「→ 返回 … / → 失败 code message」（云端记实际 body，deviceNo 已去冒号）；list.js 蓝牙版 / WiFi 版两条删除链路都传，前缀 [相册删除] / [相册删除][WiFi]；蓝牙版补「记录删除结果」一行，WiFi 版原「云端删除返回」并入请求日志、失败 warn 保留。新增 tests/album-delete-request-log.test.js；docs/changes、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：日志走 console.log（控制台 + 浮窗都有），不另做页内日志面板；WiFi 详情「删除设备」的 photo/delete all=true 未加。
+- 验证：本机无 node，测试未运行；JS 括号配平、git diff --check、信息隔离自查通过；未开发者工具 / 真机。
+
+---
+
 ## 2026-11-05 ssh｜相册小程序 轮播按对接文档修订版 20261105-1 ＋ 搜索页雷达 GIF 尺寸不变（main-wifi）
 
 - 需求（用户）：1. 按 docs/wifi/前端对接文档20261105-1.md 实现（9 条：选图弹层上滑 / 每行 3 张 / 每页 21、时区按语种、轮播中去文字图标变绿、设置时间格式、下次刷新带卡片类型、每 N 天上限 30、纪念日只选月日、基础配置非必填、简单模式卡片）；2. 搜索页 GIF 搜出结果后变小，要求尺寸不变。
