@@ -1,3 +1,13 @@
+## 2026-11-06 ssh｜相册小程序 WiFi 版删除设备调 restore-builtin（main-wifi）
+
+- 需求（用户）：按接口文档新增 `POST /api/device/restore-builtin`（JSON：deviceNo、renderMode，Header userToken）。删除设备流程：调删除设备图片接口后调该接口，成功后再调删除设备接口；解除绑定不调；仅 WiFi 版，蓝牙版删除不变。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。环境用户未声明，按服务器内运行、仅 ssh 映射可解析，按 ssh。
+- album-miniapp main-wifi/e34fdd4（已 push）：iot-api 新增 restoreBuiltin（deviceNo 去冒号大写，renderMode 有值才带）；wifi-detail confirmDeleteDevice 改为 clearUserProductImg → photo/delete all=true → restore-builtin → delUserProduct，renderMode 走 api.resolveRenderMode（同投屏）；restore 失败 toast「恢复内置图片失败：原因」、不删设备、弹窗保留可重试；confirmUnbind 不变。tests/wifi-tf-local-mode 删除顺序断言改四步（注明有意改口径）、新增 restore 失败不删设备；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：renderMode 取不到不传（与投屏一致，不在前端拦删除）；restore 失败即中止删除（用户口径「成功后再删」）；设备列表页左滑「删除设备」实为只删记录（同解绑），未加。
+- 验证：本机无 node，测试未运行；git diff 人工核对、信息隔离自查通过；未真机、未联调新接口。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 投屏结果页逐张状态与文案 ＋ 我的设备 Tab 换行（main-wifi）
 
 - 需求（用户）：1. 投屏报错「电子纸设备-图传中断:…停在已接收第72包不再前进…MTU=500、每包489字节」改为「电子纸设备忙或处理不过来，请重新尝试」；2. 我的设备 Tab 不和右上角加号同一行，放下面一行；3. WiFi 投屏页进度条叫图片处理中时，下面对应图片也叫处理中，不叫投屏中；4. 蓝牙版批量投屏仿 WiFi 版展示每张状态（已发送 / 传输中 / 投屏完成），单图按原来；小缩略图是倒的，要与我的上传方位一致。
