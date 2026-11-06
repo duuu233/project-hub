@@ -8877,3 +8877,15 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - photo-album main-wifi/dde545f：已提交，再次同名 pull 后 push。docs/changes 变更记录、docs/README、AI_CONTEXT 已更新。
 - 验证：无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；源码正则类断言用 Python 核对通过；未真机。git diff --check、信息隔离自查通过。
 - 待用户确认：③ 是否也要同步到 main（BLE 版官方图库 / AI 生图同样有直接投的逻辑）；①② 为 WiFi 版专属，不涉及 main。
+
+---
+
+## 2026-11-06 ssh｜相册小程序 我的上传删除去掉「未找到所属设备」拦截
+
+- 需求（用户）：我的上传删除图片现在支持删除所有图片（接口已支持），去掉「未找到照片所属电子纸设备，请刷新后重试」的逻辑。
+- 同步：photo-album main-wifi/dde545f、Hub main 同名 pull 均已最新，origin/main 无未合入。
+- 根因（本日前面已分析）：11-03 起按设备 ID 查记录会带出共享成员 / 重绑前的照片，其 userProductId 不在本人设备列表。
+- 改动：list.js 新增 resolveOwnerDevice（userProductId → 完整设备 ID → 当前选中设备），ensureConnectedDevice 去掉该拦截，ownerIfWifi 同口径；「只能操作同一台」按归属后的设备比。再次投屏共用归属，一并生效。
+- photo-album main-wifi/468cf86：已提交，再次同名 pull 后 push。docs/changes 与 docs/README 已更新。
+- 验证：无 node，测试未运行；未真机、未联调删除他人记录。git diff --check、信息隔离自查通过。
+- main 分支同一句拦截仍在，但 main 按用户查记录、列表只有本人照片，基本触发不到，未同步。
