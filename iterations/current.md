@@ -1,3 +1,18 @@
+## 2026-11-06 ssh｜相册小程序 投屏结果页逐张状态与文案 ＋ 我的设备 Tab 换行（main-wifi）
+
+- 需求（用户）：1. 投屏报错「电子纸设备-图传中断:…停在已接收第72包不再前进…MTU=500、每包489字节」改为「电子纸设备忙或处理不过来，请重新尝试」；2. 我的设备 Tab 不和右上角加号同一行，放下面一行；3. WiFi 投屏页进度条叫图片处理中时，下面对应图片也叫处理中，不叫投屏中；4. 蓝牙版批量投屏仿 WiFi 版展示每张状态（已发送 / 传输中 / 投屏完成），单图按原来；小缩略图是倒的，要与我的上传方位一致。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/dfa87bd（已 push）：
+  - 1：result.js classifyFailureMessage 在「未连接」判断后加 /图传中断|不再前进|处理不过来/ → STALL_MESSAGE；device-ble 原文不动（避免「电子纸设备-」前缀叠成「电子纸设备-电子纸设备忙…」，也保留排查信息进 console）。
+  - 2：list.wxml 恢复 `.device-toolbar`（加号单独一行右对齐、常驻），`.device-tabs` 下一行占满；删 `.device-tab-bar`。
+  - 3：wifi-result 列表文案 itemStageText 跟 onStage（图片上传中→上传中、图片处理中→处理中），去掉「投屏中」；缩略图 thumbSrc 用 `_origSrc`。
+  - 4：result.js BATCH_TEXT / BATCH_RANK，initBatchItems / setBatchItem（只前进）/ closeBatchItems；startPrefetch 标处理中、帧就绪且未被作废标已发送；循环中传输中 → 投屏完成；catch 标失败 / 中断，后面未投屏。wxml 在进度条（或结果卡片）下加 `.batch-list`（items.length > 1），进度提示挪到列表后；wxss 行样式同 wifi-result-row。缩略图 `_origSrc`。
+  - 测试：projection-final-refresh 驱动加 items / listData / images 选项，新增批量状态、单张不出列表、缩略图原图、图传卡住文案；wifi-projection 加缩略图与文案断言；device-list-wifi-group 加「加号一行在 Tab 上方」。docs/changes 新增一篇、Tab 那篇补充、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：「已发送」= 该张帧已就绪排队等蓝牙（下一张预取完成时就会显示，位于处理中与传输中之间），另补「等待投屏 / 处理中」及失败「投屏失败 / 已中断 / 未投屏」；缩略图用原图（未裁剪，同我的上传），不做取景框画面反转；WiFi 上传阶段显示「上传中」（用户只提处理中）；蓝牙版列表结束后保留在结果卡片下方。
+- 验证：本机无 node，测试未运行；括号 / WXML 标签配平、git diff --check、信息隔离自查通过；未开发者工具 / 真机。改了 wxml / wxss，需本地跑全量 tests。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 我的设备改 Tab 切换 ＋ 空态点击添加（main-wifi）
 
 - 需求（用户）：设备列表页改成 Tab 切换区分 WiFi 和蓝牙版，样式交互参考以前的投屏记录列表；没有设备时给默认图标，点击添加 = 跳搜索设备页。
