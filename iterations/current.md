@@ -1,3 +1,13 @@
+## 2026-11-06 ssh｜相册小程序 投屏结果页列表限高 ＋ 再投一张改继续投屏（main-wifi）
+
+- 需求（用户）：1. 投屏页一次投很多张（如 8 张），下面排队的图片列表最多显示 4 张，可上下滑动查看其他；2. 「再投一张」按钮文案改为「继续投屏」。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/a51ef15（已 push）：WiFi 版 wifi-result 与蓝牙版 result 的逐张列表都把行包进 scroll-view scroll-y（`.wifi-result-list__scroll` / `.batch-list__scroll`，max-height 384rpx = 4 × 96rpx 行高，border-box 含分隔线），外层卡片与显示条件不变；scroll-into-view 跟当前那张（WiFi 每张开始上传设 listAnchor，蓝牙进入传输中设 batchAnchor，新一批清空）。WiFi 版成功按钮「再投一张」→「继续投屏」（蓝牙版本来就叫继续投屏）。tests：wifi-carousel-server 文案断言改写注明、wifi-projection / projection-final-refresh 加限高与锚点断言、tap-guard 注释；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：两个版本的结果页都限 4 行（用户未分版本）；自动滚到当前那张（贴顶，下面露排队的），用户手动滑开后切到下一张会被拉回；不足 4 张按实际高度。
+- 验证：本机无 node，测试未运行（新增断言正则用 python 对实际文件核对通过）；scroll-view 标签配平、git diff --check、信息隔离自查通过；未开发者工具 / 真机。改了 wxml / wxss，需本地跑全量 tests。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 restore-builtin 按简化返回处理（main-wifi）
 
 - 需求（用户）：restore-builtin 接口简化返回值：data.status 只有 SENT / SKIPPED（SKIPPED 合并离线、关机、休眠、TF 本地模式、升级中、下发失败），都继续删、不重试；错误码只有 4000 参数错误、401 token 无效重登、403 无权限（设备已删，顺序错，唯一需停下检查）、5000 服务端异常继续删。
