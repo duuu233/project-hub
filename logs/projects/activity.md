@@ -3339,3 +3339,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 - 23 个动态列列表的列表接口带上与 policyColumns 相同的 menuPerm（resolveListMenuPerm 一次解析共用，getList 用 withMenuPerm 包参数；树形列表与导出不带）。
 - 列表接口 Swagger 尚未声明 menuPerm，待联调；无 Node，未运行测试/构建。
 - 交付：dev/0b66c9a 已推送。
+
+## 2026-11-06 | album-miniapp | ssh | main-wifi | 选择投屏设备弹层蓝牙版标识
+- 图片详情 / AI 对话共用的选择投屏设备弹层，蓝牙版设备名后挂「蓝牙版」角标（蓝牙图标 + 蓝色，同搜索列表），WiFi版角标不变。main-wifi/1e7a874 已推送。测试未运行，未真机。

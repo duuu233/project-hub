@@ -8854,3 +8854,15 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 改动：resolveListMenuPerm 解析一次、policyColumns 与列表接口共用；23 个动态列列表 getList 包 withMenuPerm（树形菜单 / 部门不带，导出不带）。细节见私人 docs/qianrong-list-style.md 末节。
 - tq-plus dev/0b66c9a：已提交，再次同名 pull 后 push。私人文档、docs/README、AI_CONTEXT、logs 已更新。
 - 验证：无 node，测试 / 构建 / 浏览器未运行；Python 核源码正则断言、git diff --check、信息隔离自查通过。
+
+---
+
+## 2026-11-06 ssh｜相册小程序 选择投屏设备弹层蓝牙版标识
+
+- 需求（用户）：图片详情页里的「选择投屏设备」弹框，蓝牙设备加上蓝牙版标识。
+- 同步：photo-album main-wifi/f650fd9、Hub main 同名 pull 均已最新，origin/main 无未合入。无 .codegraph，直接读源码。
+- 依据：「根据文档」未在仓库文档里找到该弹层蓝牙版标识的专门描述；样式按已有搜索列表蓝牙版标签（badge-bluetooth.svg + 蓝色 .comm-badge--ble）口径，文字只写「蓝牙版」（弹层原 WiFi版角标也不带尺寸）。
+- 改动：components/device-picker-sheet 非 isWifi 行挂「蓝牙版」角标；角标颜色拆 --wifi / --ble 修饰，WiFi 版观感不变。组件与 AI 对话页共用，两处同时生效（两处调用方本就带 isWifi，未改）。
+- photo-album main-wifi/1e7a874：已提交，再次同名 pull 后 push。项目 docs/changes 变更记录与 docs/README 已更新。
+- 验证：无 node，测试未运行（动了 wxss/wxml，需本地跑全量）；新增断言用 Python 对源码核对通过；未真机。git diff --check、信息隔离自查通过。
+- 提醒：只改 main-wifi（WiFi 版才有两类设备区分），不需同步 main。
