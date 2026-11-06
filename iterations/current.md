@@ -1,3 +1,15 @@
+## 2026-11-06 ssh｜相册小程序 我的上传 IJ_101 照片倒置（main-wifi）
+
+- 问题（用户）：IJ_101（WiFi）、EC-370、EF6-370 都配置竖向旋转 180，「我的上传」EC-370 / EF6-370 方向正常，IJ_101 是倒的。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- 原因：两类设备相册记录 img 来源不同。蓝牙版 result.uploadOriginalForRecord 传预览前原图 `_origSrc`（未旋转）；WiFi 版 wifi-result.saveAlbumRecord 传的是投屏用 filePath——预览页已按 verticalRotation（横向 rotationDegree）转过的成品，180° 机型存进去就是倒图。连带：从我的上传再次投屏以倒图为源再转一次，设备上也会倒；轮播选图缩略图同样倒。
+- album-miniapp main-wifi/ef0e815（已 push）：wifi-result 新增 resolveRecordSource / shrinkToDevice / recordImageFile——记录用 `_origSrc`（https 先下载），长边 > 设备长边才按比例缩（质量 90，同 BLE compressForUpload）；无 `_origSrc` 或下载失败退回投屏图，缩放失败用未缩原图；saveAlbumRecord 改收 image；投屏与 imgBle 不变；日志加「相册记录用图：…」。api.addWifiAlbumRecord 注释同步；tests/wifi-projection 新增一组（投屏用图不变、记录四种来源、imgBle 不变、只缩超长边）；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：存原图（未裁剪，同蓝牙版口径），不做「取景框内画面反向转正」；横向构图一并改为存原图。
+- 未覆盖：已存的 IJ_101 旧记录仍是倒图，需删除后重投；相册APP main-wifi 是否有同样问题未查。
+- 验证：本机无 node，测试未运行；括号配平（测试文件原有不配平来自正则，新增部分配平）、git diff --check、信息隔离自查通过；未开发者工具 / 真机。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 我的上传删除写请求日志（main-wifi）
 
 - 需求（用户）：「我的上传」页删除操作把请求日志也写出来，目前没有。
