@@ -1,3 +1,18 @@
+## 2026-11-09 ssh｜相册小程序 首页标签去图标 ＋ WiFi 详情隐藏休眠 / 一键清空 ＋ 消息接口文案（main-wifi）
+
+- 需求（用户）：1. 首页隐藏「WiFi版·10.1寸」「蓝牙版·1.69寸」前面的 WiFi / 蓝牙图标（首页两个 WiFi 图标重复）；2. WiFi 版设备详情隐藏休眠设置；3. WiFi 版设备详情同步蓝牙版一键清空，布局样式一致；4. 消息通知按接口返回内容直接显示：`/api/notification/list` 新增选填 lang（zh-CN / zh-TW / en / ja，不传按简中），返回新增 title / content；按 app 设置语种传、小程序默认中文。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- album-miniapp main-wifi/6ad937f（已 push）：
+  - 1：home.wxml 删 `.comm-badge__icon` 图片（两类卡都去），wxss 删该规则、内边距改 `0 14rpx`；WiFi 状态行 mini-wifi 图标保留；搜索列表 / 选择设备弹层角标未动。
+  - 2：wifi-detail.wxml 删休眠设置行（页面、openSleep、app.json 注册保留）。
+  - 3：wifi-detail 功能栏下新增卡片 `.detail-list.action-list`（规则从 detail.wxss 搬，图标 icon05 / icon06）：一键清空（`wx:if isOwner`）+ thin-divider + 解除绑定（从功能栏挪来，删 `.unbind-entry`）；两级确认同蓝牙版。删除设备前三步抽成 `wipePhotos(tag, loadingTitle)`，删除设备与一键清空共用；confirmClearCopies 成功 toast「已清空」、重查轮播标记。
+  - 4：iot-api.getNotifications 加 `lang`（有值才带）；wifi-messages 导出 `NOTIFICATION_LANG='zh-CN'`，页面首屏 / 加载更多都带；toItem 标题优先接口 title（非空），正文接口给了 content 就用（空串不显示），没给才本地拼。
+  - 测试：wifi-sleep（入口不显示，有意改口径）、wifi-tf-local-mode（顺序去休眠加一键清空 + 清空行为四组 + 模板样式）、wifi-messages（参数带 lang 有意改口径 + 接口文案优先）、home-card-name-size（标签无图标）；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：一键清空 = 清相册记录 → photo/delete all=true → restore-builtin（让屏幕回到内置图，对应蓝牙版清空后设备显示默认图），错误口径同删除设备；**仅所有者可见**（all=true 会删整台设备云端照片，接收者点了会波及所有者）；不要求设备在线、不连蓝牙；一级确认文案改为「将清空该设备的云端照片并恢复设备内置图片，同时清空小程序/APP的图库…」；行右侧说明写「清空电子纸设备及小程序/APP内的照片」（蓝牙版原文少个「清」字：「空电子纸设备…」，未动蓝牙版）；解除绑定挪进新卡片后字色随蓝牙版规则（`.row-left text` 深灰，原 WiFi 版是红字）。lang：小程序语种设置入口已隐藏，按「小程序默认中文」固定传 zh-CN，未跟随微信系统语种（要跟随可改为按 language.getSelectedLanguage 映射）。
+- 验证：本机无 node，测试未运行（新增 / 改写断言正则用 python 对实际文件核对通过）；WXML 标签配平、JS 括号配平、git diff --check、信息隔离自查通过；未开发者工具 / 真机，未联调新消息字段。改了 wxml / wxss，需本地跑全量 tests。
+
+---
+
 ## 2026-11-06 ssh｜相册小程序 投屏结果页列表限高 ＋ 再投一张改继续投屏（main-wifi）
 
 - 需求（用户）：1. 投屏页一次投很多张（如 8 张），下面排队的图片列表最多显示 4 张，可上下滑动查看其他；2. 「再投一张」按钮文案改为「继续投屏」。

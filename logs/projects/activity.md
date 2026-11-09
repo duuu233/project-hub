@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-09｜album-miniapp｜ssh｜main-wifi｜首页标签去图标、WiFi 详情一键清空、消息接口文案
+
+首页「WiFi版 / 蓝牙版·尺寸」标签去前置图标（与 WiFi 状态行图标重复）；WiFi 详情隐藏休眠设置入口；新增一键清空（仅所有者，同蓝牙版布局与两级确认，= 删除设备前三步不删设备）；消息列表带 lang=zh-CN、直接显示接口 title / content。main-wifi/6ad937f 已 push；无 node，测试未跑、未真机、未联调。
+
 ## 2026-11-06｜album-miniapp｜ssh｜main-wifi｜restore-builtin 按简化返回处理
 
 删除设备第 ③ 步：SENT / SKIPPED 都继续删；出错只有 401（重登）/ 403（提示，设备已删顺序有问题）停下，4000 / 5000 / 网络错误照删。main-wifi/8bd7354 已 push；无 node，测试未跑、未真机、未联调。
