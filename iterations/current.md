@@ -1,3 +1,18 @@
+## 2026-11-11 ssh｜相册小程序 ＋ 相册APP 选择WiFi页搜一个显示一个（main-wifi）
+
+- 需求（用户）：检测搜索设备 WiFi——① WiFi 列表出来了头部还在显示搜索中；② 搜索 WiFi 很慢，是否设备原因；③ 能否像搜索蓝牙设备一样搜一个显示一个。
+- 项目确认：用户原文写「花盆小程序 / 花盆APP main-wifi」，SSH 无花盆小程序映射、flowerpot 只有 main（远端也无 main-wifi），WiFi 搜索与 main-wifi 在相册两端；已问用户，确认为相册小程序 + 相册APP。
+- 同步：Hub main、photo-album main-wifi/f436a7b、flutter main-wifi/1b84812 同名 pull 均已最新；origin 均 GitHub；无 .codegraph。
+- 原因：① 列表每批即显示，但 `scanning` 要等 `scanWifi` 结束——设备无「列表结束」标记，最后一批后静默 5 秒（WIFI_LIST_QUIET_MS / Blufi.wifiListQuiet）才判结束，故列表出来后头部至少还转 5 秒。② 耗时 = 设备扫描（双频 2.4G+5G 逐信道扫完才回，乐鑫扫描整轮结束才给结果，设备侧）+ 蓝牙回传 + 5 秒静默；前端连接复用、停扫沉淀仅 ~120ms，不是瓶颈。无真机耗时数据，本次加耗时日志待确认。③ 设备按批回，几十条整批出现。
+- 改法（两端一致）：转圈只在一条都没有时显示；列表出来后头部即「重新搜索」、底部手动输入同时出现（静默 5 秒判结束保留，只用于空列表 / 未返回提示）；每批没显示过的按信号从强到弱 100ms 亮一条（第一条立即），新行淡入、按 ssid 复用不重播，收尾补齐；重搜不等收尾，scanSeq 让旧一轮批次 / 结果作废；控制台打每批距发出扫描的毫秒数与总耗时。
+- album-miniapp main-wifi/eb3a660（已 push）：wifi-list.{js,wxml,wxss}；tests/wifi-search.test.js 加 manualTimers，分批用例每批后走完定时器保留原断言，新增逐条亮出 / 重搜作废 / 收尾补齐用例与模板断言；docs/changes 新增、docs/README、docs/wifi/对接开发进度 已更新。
+- album-app main-wifi/aa5d247（已 push）：wifi_list_page.dart 同口径（_reveal / _scanSeq / _WifiRowFadeIn）；新增 test/wifi_list_reveal_test.dart（源码静态核对）；docs/history 新增、docs/README 已更新。
+- 验证：本机无 node / Flutter，测试与 analyze 均未运行（动了 wxml/wxss，需本地跑全量）；新断言用 Python 对实际文件核对通过，Dart 括号配平、git diff --check、信息隔离自查通过；未真机。
+- 自行决定（可改）：逐条间隔 100ms、淡入 260ms；排序仍按信号（新一批里更强的会插到中间，而非像蓝牙页那样追加在末尾）。
+- 待真机：看控制台 `[WiFi列表] 第 N 批 … 距发出扫描 …ms` 判断设备扫描耗时；若设备一批回完、仍嫌慢，需固件按信道分段扫描并逐段上报，前端已能直接接住。
+
+---
+
 ## 2026-11-10 ssh｜相册小程序 绑定设备页雷达各状态尺寸不变（main-wifi）
 
 - 需求（用户）：绑定设备页上方搜索 GIF 占用的宽高要一直不变；勾选搜到的设备后切成「已搜到」图标时又缩小了，只按状态换图标，宽高不变。
