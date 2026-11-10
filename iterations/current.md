@@ -1,3 +1,15 @@
+## 2026-11-10 ssh｜相册小程序 ＋ 相册APP restore-builtin 新增 scene（main-wifi）
+
+- 需求（用户）：1. 检查 WiFi 版删除设备是否按「删除照片（老）→ restore-builtin → 删除设备（老）」操作，简要回复；2. `POST /api/device/restore-builtin` 新增选填 scene，原入参出参不变（删除设备可不传）；3. WiFi 版一键删除，删除照片成功后调 restore-builtin 传 scene=DELETE_ALL_PHOTOS；4. WiFi 版我的上传选择全删，成功后调 restore-builtin 传 scene=DELETE_ALL_PHOTOS。
+- 同步：Hub main、photo-album / flutter main-wifi 同名 pull 已最新，两仓 origin/main 均无未合入；origin 均 GitHub；无 .codegraph。
+- 1 检测：两端删除设备都是 ① clearUserProductImg（老服务清相册记录）→ ② IoT photo/delete all=true（删云端 bin，用户流程里没列这步）→ ③ restore-builtin → ④ delUserProduct（老服务删设备），顺序符合；restore 只有 401 / 403 停下不删设备，其余照删。
+- album-miniapp main-wifi/19a507f（已 push）：iot-api.restoreBuiltin 带 scene（有值才带）+ 常量 RESTORE_SCENE_DELETE_ALL_PHOTOS；wifi-detail wipePhotos 加 scene 参数，一键清空传、删除设备不传（一键清空 11-09 已在调 restore，本次只加 scene）；album/list deleteWifiPhotos 全删后新调 restoreBuiltinAfterDeleteAll。测试：新增 wifi-restore-scene，wifi-tf-local-mode 一键清空参数断言加 scene（注明有意改口径），album-wifi-delete 新增 ⑥；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- album-app main-wifi/2693ba6（已 push）：IotApi.restoreBuiltin 加 scene + restoreSceneDeleteAllPhotos + restoreBuiltinBody；wifi_remove_flow 一键清空传 scene；gallery_page _deleteWifiPhotos 全删后调 _restoreBuiltinAfterDeleteAll；新文案 wifiDeleteRestoredBuiltin；新增 test/wifi_restore_scene_test.dart；docs/history 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：「全删」= 删除前当前设备列表已加载完（没有下一页）且全选，记录全部删成功、云端删除也成功；部分选中 / 有下一页未加载 / 部分记录失败 / 云端失败都不调。我的上传里 restore 出错只记日志、不改删除结果（照片已删）；SENT 提示「已删除，相框将恢复显示内置图片」，SKIPPED / 出错照原提示。一键清空的错误口径不变（401 / 403 不提示「已清空」）。
+- 验证：本机无 node / Flutter，测试与 analyze 未运行；JS 括号配平脚本、Dart 增删行括号增量、git diff --check、信息隔离自查通过；未真机、未联调 scene。
+
+---
+
 ## 2026-11-10 ssh｜相册小程序 → 相册APP 同步 11-04 ~ 11-09 改动（main / main-wifi）
 
 - 需求（用户）：根据文档，当前 SSH，把相册小程序近期改动同步给相册APP，main 同步 main、main-wifi 同步 main-wifi。

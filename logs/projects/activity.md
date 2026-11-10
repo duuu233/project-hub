@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-10｜album-miniapp + album-app｜ssh｜main-wifi｜restore-builtin 新增 scene
+
+核对 WiFi 版删除设备顺序（两端均为 clearUserProductImg → photo/delete all=true → restore-builtin → delUserProduct，符合）；restore-builtin 支持选填 scene，一键清空传 DELETE_ALL_PHOTOS（删除设备不传），我的上传 / 我的相册 WiFi 版全删后新调 restore-builtin（scene=DELETE_ALL_PHOTOS）。album-miniapp main-wifi/19a507f、album-app main-wifi/2693ba6 已 push。无 node / Flutter，测试未运行，未真机 / 联调。
+
 ## 2026-11-10｜album-app｜ssh｜main-wifi｜同步小程序 main-wifi 11-04 ~ 11-09
 
 相册APP main-wifi 先合入 origin/main（cad2bc4 构建号）再同步小程序 11-04 ~ 11-09：轮播服务端化（时区、简单模式、高级卡片、选图弹层）、删除设备 restore-builtin 与一键清空、隐藏休眠入口、消息 lang 与接口文案、共享设备 isCanDel /「我」/ 卡片封面、WiFi / 蓝牙结果页按钮与逐张状态、投屏选择框带状态、防重复点击、我的设备 Tab、我的相册分页与共享照片归属、搜索名称优先、配网去 2.4G、首页标签去图标；顺带修正 wifi_l10n 重名。main-wifi/c55af45 已 push；main 无需改动。无 Flutter，未 analyze / test / 真机 / 联调。
