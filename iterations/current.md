@@ -1,3 +1,23 @@
+## 2026-11-10 ssh｜相册小程序 → 相册APP 同步 11-04 ~ 11-09 改动（main / main-wifi）
+
+- 需求（用户）：根据文档，当前 SSH，把相册小程序近期改动同步给相册APP，main 同步 main、main-wifi 同步 main-wifi。
+- 同步：Hub main 已最新；photo-album、flutter 均停在 main-wifi、工作区干净，同名 pull 已最新；origin 均 GitHub；两仓无 .codegraph。flutter origin/main 多 cad2bc4（构建号 3），按约定 git merge 进 main-wifi → 7319b60。
+- main：小程序 origin/main 仍为 7f28502（11-02 后无新提交，11-03 已判 APP main 齐全），本轮不改，flutter 未切分支。
+- main-wifi 对照：APP 上次同步止于 11-05（bc6200a 共享设备），需同步小程序 1960456 ~ 6ad937f 共 20 余个提交，另补 11-04 记下未跟的 9cb2f46（轮播选图带 deviceId）、6f9d87b（我的上传每页 21）。c2f4ae9 / 466b8e9 只是对接文档；68c8306（chkTimeValid 布尔）APP 无接受页不涉及；63d4fb9（切后台不重载）APP 本就不重载，只补分页下的静默刷新。
+- album-app main-wifi/c55af45（已 push）：
+  - 轮播服务端化：wifi_strategy.dart 按小程序 wifi-strategy.js 重写（时区必传、10 分钟起、24:00、去 idle、两组参数、简单模式开关、工作日 / 周末 / 纪念日卡片、每 N 天 ≤30、纪念日月日、下次刷新带卡片类型、简单模式默认不选、保存后不投第一张）；新增 wifi_time_zone.dart、wifi_slideshow_sheets.dart（时区 / 选图 / 多列滚轮弹层）；WifiSlideshowPage 重写；fetchSuccessCastRecords 带 deviceId、每页 21 取完。
+  - WiFi 详情：删除设备加 restore-builtin（IotApi.restoreBuiltin，401/403 才停）；一键清空（仅所有者）与解除绑定同卡片；隐藏休眠入口；未读红点；轮播中标记改绿色图标、仅 running 且在线（详情 + 我的设备，复制小程序 device-detail-icon01-on.png）。
+  - 消息：lang 按 App 语种、接口 title / content 优先、CAROUSEL_NOT_SENT。共享设备：isCanDel、接收者「我」、移除自己回首页；分享卡片封面 wifi_share_card.dart（dart:ui 画，超 128KB / 失败退回设备图）。
+  - 投屏：WiFi 结果页继续投屏 / 重试 + 返回首页、逐张文案跟阶段、4 行限高、记录与缩略图用原图（cast_preview 传 originalPaths）；蓝牙结果页逐张状态（projection_service.onItemStage）、4 行限高、图传卡住文案；官方图库 / AI 投屏一律弹选择框、行上带状态、蓝牙版角标、按钮「投屏」；shared/tap_guard.dart 接入投屏入口。
+  - 我的设备 Tab + 空态添加；我的相册每页 21 触底加载、共享成员照片归属当前设备、删除请求日志；搜索名称优先 + loading、搜索中 gif 不缩；配网去 2.4G 限制、上云 120 秒；首页标签去图标。
+  - 顺带修正：wifi_l10n 里 wifiCloudDeleteFailed getter 与方法重名（10-29 起编译不过），方法改名 wifiCloudPhotosDeleteFailed。
+  - 测试：新增 test/wifi_slideshow_server_test.dart，wifi_tf_share_test 补 isCanDel；docs/history 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：消息 lang 跟 App 语种（小程序固定 zh-CN）；手机时区按 UTC 偏移推断（App 无时区插件，非 +8 地区可能与小程序推断出同偏移的不同城市）；WiFi 相册记录直接存原图不另缩（选图已降到 1920，同蓝牙版 App）；一键清空 / 解除绑定行沿用 APP 蓝牙版配色（橙 / 红）；我的设备 Tab 固定在列表上方不随列表滚动、默认 WiFi 版（WiFi 版没设备而蓝牙版有则落蓝牙版）；我的相册按设备 ID 查时不再按 userProductId 在端上过滤（与小程序一致显示共享成员照片），跨设备提示「只能操作同一台电子纸设备的照片」。
+- 验证：本机无 Flutter / Dart，未 analyze / test / 编译 / 真机；改动的 33 个 Dart 文件括号配平脚本、l10n 无重名 / 无未定义名脚本核对通过，git diff --check、信息隔离自查通过。改动面大，务必本地 flutter analyze + 全量 test；restore-builtin、消息 lang、轮播卡片字段、isCanDel 均未联调。
+- album-miniapp：本轮无改动。
+
+---
+
 ## 2026-11-09 ssh｜相册小程序 首页标签去图标 ＋ WiFi 详情隐藏休眠 / 一键清空 ＋ 消息接口文案（main-wifi）
 
 - 需求（用户）：1. 首页隐藏「WiFi版·10.1寸」「蓝牙版·1.69寸」前面的 WiFi / 蓝牙图标（首页两个 WiFi 图标重复）；2. WiFi 版设备详情隐藏休眠设置；3. WiFi 版设备详情同步蓝牙版一键清空，布局样式一致；4. 消息通知按接口返回内容直接显示：`/api/notification/list` 新增选填 lang（zh-CN / zh-TW / en / ja，不传按简中），返回新增 title / content；按 app 设置语种传、小程序默认中文。

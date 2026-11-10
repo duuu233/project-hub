@@ -2,6 +2,12 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-10｜album-app｜ssh｜main-wifi｜同步小程序 main-wifi 11-04 ~ 11-09
+
+相册APP main-wifi 先合入 origin/main（cad2bc4 构建号）再同步小程序 11-04 ~ 11-09：轮播服务端化（时区、简单模式、高级卡片、选图弹层）、删除设备 restore-builtin 与一键清空、隐藏休眠入口、消息 lang 与接口文案、共享设备 isCanDel /「我」/ 卡片封面、WiFi / 蓝牙结果页按钮与逐张状态、投屏选择框带状态、防重复点击、我的设备 Tab、我的相册分页与共享照片归属、搜索名称优先、配网去 2.4G、首页标签去图标；顺带修正 wifi_l10n 重名。main-wifi/c55af45 已 push；main 无需改动。无 Flutter，未 analyze / test / 真机 / 联调。
+
+---
+
 ## 2026-11-09｜album-miniapp｜ssh｜main-wifi｜首页标签去图标、WiFi 详情一键清空、消息接口文案
 
 首页「WiFi版 / 蓝牙版·尺寸」标签去前置图标（与 WiFi 状态行图标重复）；WiFi 详情隐藏休眠设置入口；新增一键清空（仅所有者，同蓝牙版布局与两级确认，= 删除设备前三步不删设备）；消息列表带 lang=zh-CN、直接显示接口 title / content。main-wifi/6ad937f 已 push；无 node，测试未跑、未真机、未联调。
