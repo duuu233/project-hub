@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-10｜album-miniapp｜ssh｜main-wifi｜搜索页雷达各状态尺寸不变
+
+绑定设备页勾选设备停扫后，GIF 换成「已搜到」图时外框 500→340rpx 且静态图占 100%（GIF 占 80%），看着缩小。改为外框各状态固定 500rpx、不参与收缩，三张图统一占 80%；设备列表让位（iPhone 13 约 3 张）。main-wifi/f436a7b 已 push。无 node，测试未运行，未真机。
+
 ## 2026-11-10｜album-miniapp + album-app｜ssh｜main-wifi｜restore-builtin 新增 scene
 
 核对 WiFi 版删除设备顺序（两端均为 clearUserProductImg → photo/delete all=true → restore-builtin → delUserProduct，符合）；restore-builtin 支持选填 scene，一键清空传 DELETE_ALL_PHOTOS（删除设备不传），我的上传 / 我的相册 WiFi 版全删后新调 restore-builtin（scene=DELETE_ALL_PHOTOS）。album-miniapp main-wifi/19a507f、album-app main-wifi/2693ba6 已 push。无 node / Flutter，测试未运行，未真机 / 联调。

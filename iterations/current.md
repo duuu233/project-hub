@@ -1,3 +1,14 @@
+## 2026-11-10 ssh｜相册小程序 绑定设备页雷达各状态尺寸不变（main-wifi）
+
+- 需求（用户）：绑定设备页上方搜索 GIF 占用的宽高要一直不变；勾选搜到的设备后切成「已搜到」图标时又缩小了，只按状态换图标，宽高不变。
+- 同步：Hub main、photo-album main-wifi 同名 pull 已最新，origin/main 无未合入；origin 均 GitHub；无 .codegraph。
+- 原因：11-05 只让搜索中不缩，`radar-wrap--found` 仍在 `devices.length && !scanning` 时挂上（500→340rpx）；勾选 / 结束搜索 / 立即绑定都会停扫 → 挂上缩小。另外 GIF 是 `radar-art-gif` 占 80%（400rpx），两张静态图占 100%，外框不缩也大小不一。
+- album-miniapp main-wifi/f436a7b（已 push）：bind.wxml 外框只留 `radar-wrap`、三张图统一 `radar-art`；bind.wxss `.radar-wrap` 改 `flex: 0 0 auto`、去 min-height，删 `--found` / `--scanning` / `.radar-art-gif`，`.radar-art` 改 80%；tests/bind-device-list-layout ③④ 有意改口径（雷达不收缩、无状态修饰类、三图同类 80%；flex 推算保留「列表不越过按钮」，可见张数下限重设 2.8 / 1.8 / 3.0，开发版 2.1 / 1.1 / 2.4）；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
+- 自行决定（可改）：三张图都按原 GIF 尺寸（外框 80% = 400rpx），「未发现」图原本 500rpx 也跟着统一；雷达上外边距统一 40rpx（原已发现态 24rpx）。代价是不再给列表让位：推算 iPhone 13 正式版约 3 张、SE 约 2 张、大屏安卓约 3.3 张（原搜索结束后 4.5 张），列表可滚动。
+- 验证：本机无 node，测试未运行（新断言用 python 对实际文件核对、可见张数用 python 按用例同口径推算）；git diff --check、信息隔离自查通过；未开发者工具 / 真机。改了 wxml / wxss，需本地跑全量 tests。素材自身留白不同的话视觉上仍可能略有差异。
+
+---
+
 ## 2026-11-10 ssh｜相册小程序 ＋ 相册APP restore-builtin 新增 scene（main-wifi）
 
 - 需求（用户）：1. 检查 WiFi 版删除设备是否按「删除照片（老）→ restore-builtin → 删除设备（老）」操作，简要回复；2. `POST /api/device/restore-builtin` 新增选填 scene，原入参出参不变（删除设备可不传）；3. WiFi 版一键删除，删除照片成功后调 restore-builtin 传 scene=DELETE_ALL_PHOTOS；4. WiFi 版我的上传选择全删，成功后调 restore-builtin 传 scene=DELETE_ALL_PHOTOS。
