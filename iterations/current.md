@@ -5,6 +5,13 @@
 - 原因：11-05 只让搜索中不缩，`radar-wrap--found` 仍在 `devices.length && !scanning` 时挂上（500→340rpx）；勾选 / 结束搜索 / 立即绑定都会停扫 → 挂上缩小。另外 GIF 是 `radar-art-gif` 占 80%（400rpx），两张静态图占 100%，外框不缩也大小不一。
 - album-miniapp main-wifi/f436a7b（已 push）：bind.wxml 外框只留 `radar-wrap`、三张图统一 `radar-art`；bind.wxss `.radar-wrap` 改 `flex: 0 0 auto`、去 min-height，删 `--found` / `--scanning` / `.radar-art-gif`，`.radar-art` 改 80%；tests/bind-device-list-layout ③④ 有意改口径（雷达不收缩、无状态修饰类、三图同类 80%；flex 推算保留「列表不越过按钮」，可见张数下限重设 2.8 / 1.8 / 3.0，开发版 2.1 / 1.1 / 2.4）；docs/changes 新增、docs/README、AI_CONTEXT 已更新。
 - 自行决定（可改）：三张图都按原 GIF 尺寸（外框 80% = 400rpx），「未发现」图原本 500rpx 也跟着统一；雷达上外边距统一 40rpx（原已发现态 24rpx）。代价是不再给列表让位：推算 iPhone 13 正式版约 3 张、SE 约 2 张、大屏安卓约 3.3 张（原搜索结束后 4.5 张），列表可滚动。
+- 补充（用户）：确认改的是 main-wifi；检查相册APP 是否同样问题并统一修复。
+  - 同步：flutter main-wifi 同名 pull 已最新，origin/main 无未合入，origin GitHub，无 .codegraph。
+  - APP 同样有：独立绑定流程发现页 bind_device_found 搜索结束后雷达按「列表凑满 4.5 张」夹在 150~280（常规屏明显小于 280），停扫换图即缩；且已搜到 / 未发现用代码画的雷达（FigmaBluetoothRadar / FigmaDeviceRadar），与 gif 视觉大小不一。首页内嵌 _BindDeviceView（仅调试场景）本来固定 250 框 + 三张图，未改。
+  - album-app main-wifi/1b84812（已 push）：发现页 radarSize 不看 scanning，一律 (avail - fixed).clamp(150, 280)（常规屏 280，分屏 / 横屏兜底）；已搜到改 device_found_art.png、未发现页改 device_not_found_art.png（与小程序同图），与 search-devices.gif 同为 280 框 contain。新增 test/bind_radar_fixed_size_test.dart（源码静态核对）；docs/history 新增、docs/README、AI_CONTEXT 已更新。
+  - 自行决定（可改）：APP 沿用自身 280 框（小程序 400rpx 图），三态图片同框 contain，不按小程序 80% 再缩；未发现页一并换图（原画的雷达）。
+  - 验证：无 Flutter，未 analyze / test / 真机；新测试正则用 python 对源码核对、括号配平、git diff --check、信息隔离自查通过。
+  - main 分支（蓝牙线上版）两端都未改：11-05 搜索中不缩也只在 main-wifi，main 上搜到设备即缩，是否同步待用户定。
 - 验证：本机无 node，测试未运行（新断言用 python 对实际文件核对、可见张数用 python 按用例同口径推算）；git diff --check、信息隔离自查通过；未开发者工具 / 真机。改了 wxml / wxss，需本地跑全量 tests。素材自身留白不同的话视觉上仍可能略有差异。
 
 ---
