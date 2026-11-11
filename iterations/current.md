@@ -1,3 +1,14 @@
+## 2026-11-11 ssh｜相册小程序 ↔ 相册APP 功能同步核对（main，只读）
+
+- 需求（用户）：合并为单分支后，检查 APP 与小程序两端功能是否同步。
+- 同步：Hub main、photo-album main/eb3a660、flutter main/aa5d247 同名 pull 均已最新；无 .codegraph。
+- 方法：小程序 10-29 起全部提交逐条对照 APP docs/history 各轮同步记录（10-22、10-27、10-28、10-29×2、11-02、11-03、11-04、11-05、11-10×3、11-11），再在 APP lib 抽查约 25 个关键点（出帧 data.endpoint 与回落域名、restore-builtin/scene、isCanDel、分享有效期、tap_guard、CAROUSEL_NOT_SENT/OTA、时区轮播、逐张状态、原图、WiFi 逐条亮出、雷达图、名称 loading、renderMode、常亮、首页标签等），均有对应实现。
+- 结论：用户可见功能已同步至小程序 11-11 eb3a660。差异均为有意保留或平台差异：调试台 IoT 联调卡 / 联调日志浮窗 / 分享「复制测试参数」（开发版工具）未移植；我的上传带不带 deviceId 的控制台日志 App 只在轮播选图有；APP 无接受页（chkTimeValid 不涉及）；切后台不重载、时区按 UTC 偏移推断、消息中心触底阈值、前后台不退订、搜索 freshOnly、预览 Demo 页。iOS 内购 / 权限文案本地化为 APP 独有。
+- 未改：业务仓未改动。
+- 验证：只读核对；APP 11-10 大同步（含轮播服务端化）至今未跑 flutter analyze / test，未真机、未联调，需本地跑。
+
+---
+
 ## 2026-11-11 ssh｜相册小程序 ＋ 相册APP main-wifi 合并到 main 并删除 main-wifi
 
 - 需求（用户）：两端 main-wifi 合并到 main，删除 main-wifi，只保留 main。

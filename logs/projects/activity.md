@@ -3425,3 +3425,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-11 | album-miniapp ＋ album-app | ssh | main | main-wifi 合并到 main 并删除 main-wifi
 - 两端 main-wifi 快进合并到 main 并 push（小程序 main/eb3a660、APP main/aa5d247，无合并提交），远端与本地 main-wifi 已删除，现只保留 main。无代码改动，未运行测试。
+
+## 2026-11-11 | album-miniapp ＋ album-app | ssh | main | 两端功能同步核对（只读）
+- 小程序 10-29~11-11 提交逐条对照 APP 同步记录并抽查代码：用户可见功能已同步至 eb3a660；差异仅开发版调试工具与平台差异。无代码改动；APP 11-10 起改动仍待本地 analyze / test。
