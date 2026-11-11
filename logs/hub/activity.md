@@ -4,7 +4,7 @@
 
 ## 2026-11-11｜work｜更正 qianrong H5 仓库映射
 
-用户更正目标为 `qianrong/h5` Flutter Web 仓库，复用 `taiqian-h5`。Hub `main` 先同步至 `57ff6b5`。替换 work 映射和项目资料，保留业务仓库已跟踪的规则和文档，五项私人挂载验证通过。配置 `mygithub`，GitHub `master` 仍指向旧仓库提交 `a6ef127`，试推无法快进，等待确认上传分支。
+用户更正目标为 `qianrong/h5` Flutter Web 仓库，复用 `taiqian-h5`。Hub `main` 先同步至 `57ff6b5`，更正 work 映射和项目资料，五项私人挂载验证通过。配置更正提交 `b26f25b` 已推送。经用户授权，GitHub `master` 已更新至正确仓库的 `2fcdb27`。
 
 ## 2026-11-11｜work｜接入泰乾超级-qianrong H5
 

@@ -9088,4 +9088,4 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 
 - 用户确认上次接入的是错误仓库，实际项目为 `qianrong/h5`（Flutter Web）。复用 `taiqian-h5`，仅更正 work 映射，更新项目规则和上下文。
 - `master/2fcdb27` 已从 Codeup 同步，工作区干净。保留版本控制中的 `AGENTS.md` 和 `docs/`，使用 `AGENTS.local.md`、`.local-docs/` 等五项私人挂载。挂载试运行及 Git 忽略检查通过，无源码改动。
-- `mygithub` 已配置到指定仓库。远端 `master/a6ef127` 来自上次误接的仓库，普通推送试运行拒绝更新。等待用户指定推送新分支或先备份旧分支再替换 `master`。
+- 用户授权直接替换 GitHub `master`。已推送 `2fcdb27`，核对远端默认分支和唯一 Git 引用均为 `master/2fcdb27`。H5 本地工作区干净。
