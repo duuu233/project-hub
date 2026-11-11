@@ -108,7 +108,7 @@ projects:
 
 泰乾超级已映射 home、work 与 ssh，实际根目录分别见对应环境的 `projects.local.yaml`：home 于 2026-10-11、work 于 2026-10-12 建立五项挂载并初始化各自本机索引；ssh 于 2026-10-26 接入（用户称「超级泰乾-qianrong」），因本机无 node 按脚本规则手动建立五项软链接与本地忽略，无 codegraph CLI 暂未建索引。复用同一个 taiqian-front 与私人目录，不复制另一台机器的数据库。用户在 work 确认以 front 仓库根目录关联，packages 为最初指定的重点维护范围；qianrong 是根仓库的子应用，简称「泰乾超级-qianrong」，沿用根仓库 Git、映射与挂载，不登记第二个仓库。其他环境未映射时不自动创建或绑定目录。复核使用 `node scripts/setup-links.mjs --env <当前环境> --project taiqian-front --dry-run`。
 
-泰乾超级-qianrong H5（`taiqian-h5`）在 work 使用 `qianrong/h5` Flutter Web 仓库，与 PC 端 `taiqian-front` 分开维护。为保留仓库已有的 `AGENTS.md` 和 `docs/`，私人规则和文档分别挂载到 `AGENTS.local.md`、`.local-docs/`。复核使用 `node scripts/setup-links.mjs --env work --project taiqian-h5 --dry-run`。
+泰乾超级-qianrong H5（`taiqian-h5`）在 work 使用 `qianrong/h5` Flutter Web 仓库，与 PC 端 `taiqian-front` 分开维护。为保留仓库已有的 `AGENTS.md` 和 `docs/`，私人规则和文档分别挂载到 `AGENTS.local.md`、`.local-docs/`。复核使用 `node scripts/setup-links.mjs --env work --project taiqian-h5 --dry-run`。ssh 于 2026-11-11 接入（`/home/cc/dh/tq-plus-h5`，只通过 GitHub 同步），因本机无 node 按脚本规则手动建立五项软链接与本地忽略。
 
 冲突处理：当业务仓库里已存在同名实体目录/文件、而 Hub 的私有目标也已存在时，脚本直接报 `Real source exists` 并拒绝执行，两边都不覆盖，也不能用 `--migrate` 绕过（`--migrate` 只适用于私有目标尚不存在的首次迁移）。正确做法是先判断本机那份内容是否需要保留：需要就复制进 `private/<project_id>/` 的对应位置、校验一致后再删除仓库内原件，确认无用才直接删除，然后重新执行脚本走 `mount`。历史上的 `docs/build-opt/` 资料合并仅是迁移案例，不能作为新 SSH 服务器已接入或挂载的证据；旧服务器接入记录已作废。
 

@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-11｜taiqian-h5｜ssh｜master｜登录、资产、我的（演示数据）
+
+ssh 接入 tq-plus-h5（私有挂载同泰乾超级）。按原型实现短信登录、资产模块、我的页面，静态演示数据。master/45dee66 已 push。无 flutter，analyze/test 未跑。
+
 ## 2026-11-11｜taiqian-h5｜work｜master｜更正为 Flutter Web 仓库
 
 Codeup `master/2fcdb27` 已同步，正确仓库已建立私人挂载和 `mygithub` 远端。按用户授权更新 GitHub `master` 并核对为 `2fcdb27`，远端仅有 `master`。业务工作区干净。

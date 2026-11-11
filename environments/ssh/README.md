@@ -1,6 +1,6 @@
 # SSH 环境
 
-**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP、相册后台、泰乾超级、正矿。**
+**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP、相册后台、泰乾超级、正矿、泰乾超级-qianrong H5。**
 
 2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目花盆APP；2026-10-22 用户在 `/home/cc/dh/` 下引入 photo-album，核实后作为相册小程序接入；同日又在该目录下新增 flutter，用户指明即相册APP，核实后接入；2026-10-23 用户引入 web-ui-v2，指明即相册后台，核实后接入；2026-10-26 用户引入 tq-plus，称「超级泰乾-qianrong」，核实即已有项目泰乾超级（taiqian-front，qianrong 为其子应用）后接入，并按正矿方式恢复私有挂载；同日又引入 zk，即正矿（minerals-admin），核实后接入并恢复私有挂载。其他项目后续再定。
 
@@ -14,6 +14,7 @@
 | 相册后台 | album-admin | `/home/cc/dh/web-ui-v2` | main |
 | 泰乾超级（含子应用 qianrong） | taiqian-front | `/home/cc/dh/tq-plus` | master（远端默认；开发分支为 dev，2026-10-28 用户明确） |
 | 正矿 | minerals-admin | `/home/cc/dh/zk` | feature-v1.8.5（本机远端只有此分支，共享配置记 master） |
+| 泰乾超级-qianrong H5 | taiqian-h5 | `/home/cc/dh/tq-plus-h5` | master |
 
 Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（Hub 与项目同在服务器内）。
 
@@ -24,6 +25,14 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 - 2026-10-26 接入时核实：tq-plus 是 Git 根目录，当前 master 与 origin/master 一致（9975d7f），Hub 私人日志里记录的多个提交号均在该仓库历史中，确认与 home/work 的 front 仓库为同一项目。origin 为用户 GitHub 上的 tq-plus 仓库（与 home/work 相同），pull/push 按规则走 origin 的同名分支。
 - 本机没有 `node`，`scripts/setup-links.mjs` 无法运行；按脚本同样的规则手动建立五项绝对路径软链接，并在 `.git/info/exclude` 追加 `/.codegraph`、`/docs`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/logs`。`git check-ignore -v` 五项全部命中，业务 `git status` 干净。
 - 本机没有 `codegraph`，索引未初始化；装好 CLI 后在业务根目录执行 `codegraph init .`（之后用 `codegraph sync .`）。是否安装由用户决定。
+
+## 私有挂载（泰乾超级-qianrong H5）
+
+2026-11-11 用户引入 tq-plus-h5，称其为「泰乾超级-qianrong」的 H5 端，要求按私人项目处理、与泰乾超级一致。核实：`/home/cc/dh/tq-plus-h5` 是 Git 根目录，同步来源为 GitHub `duuu233/tq-plus-h5`，只有 master，本地 master 与 GitHub 一致（2fcdb27，与 work 记录相同），确认是同一项目，复用 `taiqian-h5`。
+
+- 仓库自带 Git 跟踪的 `AGENTS.md`、`docs/`，按共享 `private_mounts` 挂载为 `AGENTS.local.md`、`.local-docs/`，另有 `AI_CONTEXT.md`、`logs/`、`.codegraph/`，真实文件在 `private/taiqian-h5/`。
+- 无 node，按 setup-links 规则手动建立五项绝对路径软链接，`.git/info/exclude` 追加 `/.codegraph`、`/.local-docs`、`/AGENTS.local.md`、`/AI_CONTEXT.md`、`/logs`；`git check-ignore -v` 五项命中，业务 `git status` 干净。
+- 按项目规则只通过 GitHub 拉取和推送当前同名分支，本机 Git 配置由用户维护。本机无 flutter/dart，analyze、测试、构建不能运行。
 
 ## 私有挂载（正矿）
 

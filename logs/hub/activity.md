@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-11｜ssh｜泰乾超级-qianrong H5 接入 ssh
+
+main 同名 pull 快进至 39a653f。ssh 映射新增 taiqian-h5（/home/cc/dh/tq-plus-h5，按项目规则只通过 GitHub 同步），手动建立五项挂载；同步 ssh README、项目上下文、Hub README 与 configuration 中的环境说明。
+
 ## 2026-11-11｜work｜明确 qianrong H5 仅对接 GitHub
 
 记录用户维护各项目本机 Git 配置的约定。`taiqian-h5` 在所有环境仅通过 GitHub 拉取和推送，项目明文规则同步更新。

@@ -9089,3 +9089,11 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 用户确认上次接入的是错误仓库，实际项目为 `qianrong/h5`（Flutter Web）。复用 `taiqian-h5`，仅更正 work 映射，更新项目规则和上下文。
 - `master/2fcdb27` 已从 Codeup 同步，工作区干净。保留版本控制中的 `AGENTS.md` 和 `docs/`，使用 `AGENTS.local.md`、`.local-docs/` 等五项私人挂载。挂载试运行及 Git 忽略检查通过，无源码改动。
 - 用户授权直接替换 GitHub `master`。已推送 `2fcdb27`，核对远端默认分支和唯一 Git 引用均为 `master/2fcdb27`。H5 本地工作区干净。
+
+---
+
+## 2026-11-11 ssh｜泰乾超级-qianrong H5 接入 ssh，实现登录、资产、我的（演示数据）
+
+- Hub `main` 同名 pull 快进至 `39a653f`（拉到 work 登记的 `taiqian-h5`）；push 前与远端 `6d156b9`（H5 只通过 GitHub 同步）分叉，经用户同意 rebase 合并，以远端口径为准。ssh 新增映射 `/home/cc/dh/tq-plus-h5`，核实同步来源为 GitHub `duuu233/tq-plus-h5`、master/2fcdb27 与 work 一致；按泰乾超级方式手动建立五项私人挂载与本地忽略。
+- H5 `master` 同名 pull 已最新。按原型 V16 实现用户负责的短信登录、资产 Tab（列表/详情三 Tab/质押解押/发起提货）、我的（切换企业/实名认证占位/企业信息/操作员维护/退出），数据走仓库接口 + 演示实现。`master/45dee66` 已 push。细节见 `private/taiqian-h5/logs/activity.md`。
+- 验证：无 flutter，analyze/test 未运行，需用户本地复核。主题沿用仓库青绿色、日期选择器未本地化、未加登录守卫、融资 Tab 留给合作方。
