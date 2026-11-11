@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-11｜taiqian-front｜ssh｜test｜字典数据页启用动态列
+
+字典数据页是固定路由，按路由匹配不到列表菜单 2506（system:dict:query，菜单与列配置本就有），页面直接指定 menuPerm。test/7f55b3b 已 push。无 Node，测试未跑。
+
 ## 2026-11-11｜taiqian-front｜ssh｜dev｜qianrong 新增三模块静态页面与菜单
 
 额度账本、认证管理、资产管理按 V0.9 原型做静态页面；dev 后端接口新增菜单 2507–2517（新顶级目录数字监管）。dev/c0beb06 已 push；test 分支 = 改动前 ba4b6dc，已 push。无 Node，未构建 / 测试 / 浏览器。

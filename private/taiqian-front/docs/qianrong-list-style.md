@@ -209,3 +209,12 @@
 - 时序：whenListColumnsReady 中列配置照旧立即开始（loading 立刻置上），数据请求改为等 menuPerm 解析完再调 load（菜单列表会话缓存，只在首次进页多等菜单那一次请求）；之后查询 / 翻页 / 刷新直接取已记的值。解析完成前就调 getList（理论上如账户管理首屏前点部门树）会不带 menuPerm。
 - 测试：policy-columns 原「页面指定」源码正则改为行为断言（指定了不调路由来源）、main.js 注入正则同步；新增「列表接口也带 menuPerm」（等解析、共用一次、记住、失败不带且重解析、policyColumns: false 不解析）与「23 个列表都用 withMenuPerm(gridOptions…)」。README 动态列第 3 条、开发环境日志、页面接入同步。
 - 验证：无 Node，测试 / 构建 / 浏览器均未运行；源码正则类断言用 Python 核对通过，git diff --check、信息隔离自查通过；未联调列表接口是否接受 menuPerm。
+
+## 字典数据页没走动态列（2026-11-11 ssh test/7f55b3b，用户明确）
+
+- 现象：`/config-audit/dict-data/index/203`（字典数据）不调 policyColumns，列表接口也不带 menuPerm。
+- 不是缺菜单：test 后端（test-qianrong）已有列表菜单 2506「字典详情(字典枚举值列表)」F、isList=1、perms `system:dict:query`，挂在 105 字典管理下，policyColumns 已配 11 个字段（dictCode、dictSort、dictLabel、dictValue、dictType、cssClass、listClass、isDefault、status、createTime、updateTime）。
+- 根因：字典数据是 router/index.js 的固定路由，不由菜单生成，meta 没有 view。isList 按钮作用在上一级页面，2506 的页面就是字典管理（/config-audit/dict，与 1025 字典列表同一页），四条匹配规则（完整路径、组件、路径末段、标题「字典数据」≠「字典管理」）都对不上，matchRouteMenuPerm 返回空串，静默跳过。
+- 改法：data.vue 的 withListGridStyle 直接传 `menuPerm: 'system:dict:query'`（同准入列表的页面指定方式），菜单未改；policy-columns 测试补一条。
+- 影响：strict 下列按接口渲染——「备注」（remark）未在 2506 列配置里，会不显示；需要的话在菜单管理给 2506 补 remark 字段。
+- 用户告知 test 分支后端为 https://test-qianrong.ftechain.com/api-qianrong；本次只用它查询菜单与列配置，vite.config.js 的 resUrl 仍为 dev，未改。未运行测试 / 构建。

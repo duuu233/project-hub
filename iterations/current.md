@@ -1,3 +1,15 @@
+## 2026-11-11 ssh｜泰乾超级-qianrong 字典数据页没走动态列（test）
+
+- 需求（用户）：项目切到 test 分支，检查 /config-audit/dict-data/index/203 为什么没用动态列表，菜单缺列表就补上；test 分支后端为 test-qianrong（用户提供新 token，未记录）。
+- 同步：Hub main 已最新；tq-plus 工作区干净，dev → test（用户指定），test 同名 pull 已最新（ba4b6dc）；origin GitHub。
+- 结论：菜单不缺——test 后端 2506「字典详情(字典枚举值列表)」isList=1、system:dict:query，列配置 11 个字段。字典数据是固定路由（不由菜单生成、无 meta.view），isList 按钮作用在字典管理页，路由匹配规则全部对不上 → 不调 policyColumns。
+- taiqian-front test/7f55b3b（已 push）：dict/data.vue withListGridStyle 指定 menuPerm: 'system:dict:query'；tests/policy-columns 补用例。菜单未改。
+- 影响：strict 下「备注」不在列配置里会不显示，需要时在菜单管理给 2506 补 remark。
+- 未改：vite.config.js resUrl 仍为 dev（用户只告知 test 后端地址，是否改待定）。
+- 验证：无 Node，测试未运行；按源码规则推演匹配、diff --check、信息隔离自查。
+
+---
+
 ## 2026-11-11 ssh｜泰乾超级-qianrong 新增额度账本、认证管理、资产管理（静态页面，dev）
 
 - 需求（用户）：按 V0.9 原型（F04 额度账本、F05 认证管理、O01 资产管理），用现有样式与交互实现，先静态页面 + 静态数据；通过接口查看其他模块菜单规律，自动新增三模块菜单（用户提供登录 token，未记录）。追加：新建 test 分支 = 本次改动前版本，推送 GitHub。
