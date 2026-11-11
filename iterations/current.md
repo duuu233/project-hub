@@ -1,3 +1,15 @@
+## 2026-11-11 ssh｜相册小程序 ＋ 相册APP main-wifi 合并到 main 并删除 main-wifi
+
+- 需求（用户）：两端 main-wifi 合并到 main，删除 main-wifi，只保留 main。
+- 同步：Hub main 已最新；photo-album、flutter 工作区干净，main-wifi 同名 pull 已最新；origin 均 GitHub。origin/main 均为 main-wifi 祖先（小程序 main-wifi 领先 132、APP 领先 16），无分叉。
+- album-miniapp：main 7f28502 → eb3a660 快进（`merge --ff-only`，无合并提交），pull 后 push；`push --delete` 删除远端 main-wifi，本地 `branch -d`；当前在 main，远端只剩 main（HEAD → main）。
+- album-app：main cad2bc4 → aa5d247 同上快进、push、删除远端与本地 main-wifi；当前在 main。
+- Hub：两份 context 的双长期分支约定改为单分支 main。
+- 未改：业务仓文档里的「`main-wifi`」历史标注（如 APP AI_CONTEXT「WiFi version (`main-wifi` branch only)」）未改，按需另行处理；其他机器若检出过 main-wifi，本地分支需自行切回 main。
+- 验证：两仓 main == 原 main-wifi 提交、`git status` 与 `origin/main` 一致，`branch -a` 只剩 main。未运行测试（无代码变更）。
+
+---
+
 ## 2026-11-11 ssh｜泰乾超级-qianrong 字典数据页没走动态列（test）
 
 - 需求（用户）：项目切到 test 分支，检查 /config-audit/dict-data/index/203 为什么没用动态列表，菜单缺列表就补上；test 分支后端为 test-qianrong（用户提供新 token，未记录）。

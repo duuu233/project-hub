@@ -3422,3 +3422,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-06 | album-miniapp | ssh | main-wifi | 投屏结果页列表限高 ＋ 继续投屏
 - WiFi 版 / 蓝牙版投屏结果页逐张列表最多显示 4 行，多出的框内上下滑动，当前那张自动滚到；WiFi 版「再投一张」改「继续投屏」。main-wifi/a51ef15 已推送。测试未运行，未真机。
+
+## 2026-11-11 | album-miniapp ＋ album-app | ssh | main | main-wifi 合并到 main 并删除 main-wifi
+- 两端 main-wifi 快进合并到 main 并 push（小程序 main/eb3a660、APP main/aa5d247，无合并提交），远端与本地 main-wifi 已删除，现只保留 main。无代码改动，未运行测试。

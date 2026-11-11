@@ -834,3 +834,7 @@ Hub main 已先同名pull至1c91cf4，七项目路径和分支核实，五业务
 ## 2026-10-31｜ssh｜花盆APP自定义图片与DP169门禁留痕
 
 用户未声明环境，仅 ssh 映射可解析，按 ssh 执行。Hub main 先同名 pull 至 8396b52，登记 flowerpot main/08a3908 交付；仅追加 iterations 与两类流水，不改映射或规则。提交后再次显式同名 pull 并 push main。
+
+## 2026-11-11｜ssh｜相册两端改为单分支 main
+
+Hub main 同名 pull 已最新。相册小程序、相册APP 的 main-wifi 快进合并到 main 并删除后，context/album-miniapp.md、context/album-app.md 的双长期分支约定改为单分支 main；追加 iterations 与两类流水。提交后再次显式同名 pull 并 push main。
