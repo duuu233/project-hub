@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F05 认证管理 - 高保真原型（含标注）</title>
+<style>
+:root {
+  --bg-page: #F5F7FA; --bg-card: #FFFFFF; --primary: #1668DC;
+  --nav-bg: #0F1B2D; --nav-bg-sub: #132238; --nav-text: #DCE6F2; --nav-text-sub: #8FA3BC;
+  --nav-hover: #1A2D47; --nav-active: #1D3A5F; --nav-highlight: #3B82F6;
+  --text-1: #1F2937; --text-2: #6B7280; --text-3: #9CA3AF;
+  --success: #10B981; --warning: #F59E0B; --danger: #EF4444; --info: #3B82F6;
+  --border: #E5E7EB; --disabled: #D1D5DB;
+  --radius-sm: 4px; --radius-md: 6px; --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; font-size:14px; line-height:22px; color:var(--text-1); background:var(--bg-page); display:flex; height:100vh; overflow:hidden; }
+
+.sidebar { width:220px; background:var(--nav-bg); color:var(--nav-text); display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-logo { padding:16px 20px; font-size:16px; font-weight:600; color:#fff; border-bottom:1px solid var(--nav-bg-sub); }
+.sidebar-menu { flex:1; overflow-y:auto; padding:8px 0; }
+.menu-group-title { padding:12px 20px 4px; font-size:12px; color:var(--nav-text-sub); }
+.menu-item { padding:10px 20px; font-size:14px; cursor:pointer; color:var(--nav-text); }
+.menu-item:hover { background:var(--nav-hover); }
+.menu-item.active { background:var(--nav-active); border-left:3px solid var(--nav-highlight); padding-left:17px; }
+.menu-item.sub { padding-left:36px; font-size:13px; color:var(--nav-text-sub); }
+.menu-item.sub.active { color:#fff; }
+
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.toolbar { height:44px; background:var(--bg-card); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 16px; gap:12px; flex-shrink:0; }
+.toolbar-title { font-size:16px; font-weight:600; }
+.toolbar-breadcrumb { font-size:12px; color:var(--text-3); margin-left:8px; }
+.toolbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+.toolbar-btn { padding:4px 12px; font-size:12px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); cursor:pointer; }
+.toolbar-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+.page-container { flex:1; overflow-y:auto; padding:24px; }
+.page { display:none; }
+.page.active { display:block; }
+
+.card { background:var(--bg-card); border-radius:var(--radius-md); box-shadow:var(--shadow); padding:20px; margin-bottom:16px; }
+.section-title { font-size:14px; font-weight:600; color:var(--text-1); padding:8px 12px; background:#F9FAFB; border-left:3px solid var(--primary); margin-bottom:16px; }
+
+.filter-row { display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center; }
+.filter-item { display:flex; align-items:center; gap:6px; }
+.filter-item label { font-size:13px; color:var(--text-2); white-space:nowrap; }
+.filter-item input { height:32px; padding:0 10px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; min-width:240px; }
+
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:#FAFBFC; text-align:left; padding:10px 12px; font-weight:500; color:var(--text-2); border-bottom:1px solid var(--border); white-space:nowrap; }
+td { padding:10px 12px; border-bottom:1px solid var(--border); }
+tr:hover td { background:#F9FAFB; }
+
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:500; }
+.tag-success { background:#D1FAE5; color:#065F46; }
+.tag-info { background:#DBEAFE; color:#1E40AF; }
+
+.btn { padding:6px 16px; border-radius:var(--radius-sm); font-size:13px; cursor:pointer; border:1px solid var(--border); background:var(--bg-card); }
+.btn-primary { background:var(--primary); color:#fff; border-color:var(--primary); }
+.btn-link { color:var(--primary); background:none; border:none; cursor:pointer; font-size:13px; padding:0 4px; }
+
+.info-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px 32px; }
+.info-item { display:flex; padding:10px 0; border-bottom:1px solid #F3F4F6; }
+.info-item .label { width:130px; color:var(--text-3); font-size:13px; flex-shrink:0; }
+.info-item .value { font-size:13px; color:var(--text-1); }
+
+.annotation-enabled .annotatable { position:relative; outline:1px dashed var(--info); outline-offset:2px; }
+.annot-badge { position:absolute; top:-8px; right:-8px; z-index:10; background:#fff; border:1px dashed var(--info); color:var(--info); font-size:11px; font-family:monospace; padding:1px 5px; border-radius:4px; cursor:pointer; }
+.annot-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); right:0; z-index:100; background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow); width:320px; padding:12px; font-size:12px; line-height:18px; }
+.annotatable:hover .annot-tooltip { display:block; }
+.annot-tooltip .tt-title { font-weight:600; margin-bottom:6px; }
+.annot-tooltip .tt-row { color:var(--text-2); margin-bottom:2px; }
+.annot-tooltip .tt-ref { color:var(--info); text-decoration:underline; cursor:pointer; }
+
+.req-panel { width:360px; background:var(--bg-card); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.req-panel-header { padding:12px 16px; font-size:14px; font-weight:600; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.req-panel-body { flex:1; overflow-y:auto; padding:12px 16px; }
+.req-section { margin-bottom:16px; }
+.req-section-title { font-size:13px; font-weight:600; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.req-section-title .count { font-size:11px; color:var(--text-3); font-weight:normal; }
+.req-section-body { font-size:12px; color:var(--text-2); line-height:18px; }
+.req-section-body .br-item { padding:6px 8px; margin-bottom:4px; background:#F9FAFB; border-radius:4px; border-left:3px solid var(--info); }
+.req-section-body .br-item .br-id { color:var(--info); font-weight:600; font-family:monospace; }
+
+.pagination { display:flex; justify-content:flex-end; align-items:center; gap:8px; padding:16px 0; font-size:13px; color:var(--text-2); }
+.pagination button { min-width:28px; height:28px; border:1px solid var(--border); background:#fff; cursor:pointer; border-radius:4px; }
+.pagination button.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">乾融金融中台</div>
+  <div class="sidebar-menu">
+    <div class="menu-group-title">供应链金融运营</div>
+    <div class="menu-item">准入管理</div>
+    <div class="menu-item">授信管理</div>
+    <div class="menu-item">融资管理</div>
+    <div class="menu-item">合同管理</div>
+    <div class="menu-item active" onclick="showPage('list')">认证管理</div>
+    <div class="menu-item sub active">认证列表</div>
+    <div class="menu-group-title">数字监管</div>
+    <div class="menu-item">资产监管</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="toolbar">
+    <span class="toolbar-title" id="pageTitle">认证列表</span>
+    <span class="toolbar-breadcrumb">认证管理 / 认证列表</span>
+    <div class="toolbar-right">
+      <button class="toolbar-btn active" onclick="toggleAnnot(event)">标注开关</button>
+      <button class="toolbar-btn" onclick="showPage('list')">列表</button>
+      <button class="toolbar-btn" onclick="showPage('detail')">详情</button>
+    </div>
+  </div>
+
+  <div class="page-container annotation-enabled" id="pageContainer">
+
+    <!-- 列表页 -->
+    <div class="page active" id="page-list">
+      <div class="card annotatable">
+        <span class="annot-badge">BR-01</span>
+        <div class="annot-tooltip">
+          <div class="tt-title">筛选条件</div>
+          <div class="tt-row">认证对象：输入框，模糊搜索（企业名称/个人姓名）</div>
+          <div class="tt-row">操作：搜索、重置</div>
+          <div class="tt-row">来源：<span class="tt-ref">F05-F01 BR-01</span></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><label>认证对象</label><input placeholder="请输入认证对象名称"></div>
+          <button class="btn btn-primary">搜索</button>
+          <button class="btn">重置</button>
+        </div>
+      </div>
+
+      <div class="card annotatable">
+        <span class="annot-badge">BR-02</span>
+        <div class="annot-tooltip">
+          <div class="tt-title">列表字段（8列）</div>
+          <div class="tt-row">序号 / 认证流水号 / 认证类型 / 认证对象 / 证件编号 / 创建时间 / 认证状态 / 操作</div>
+          <div class="tt-row">企业认证证件编号=统一社会信用代码；个人认证证件编号=身份证号/手机号</div>
+          <div class="tt-row">数据来源：E签宝回传认证通过信息（BR-05）</div>
+          <div class="tt-row">来源：<span class="tt-ref">F05-F01 BR-02/BR-03/BR-05</span></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th><th>认证流水号</th><th>认证类型</th><th>认证对象</th>
+                <th>证件编号</th><th>创建时间</th><th>认证状态</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>rz1239012312</td><td><span class="tag tag-info">企业认证</span></td>
+                <td>联冻乾行（广东）有限公司</td><td>891802830123</td>
+                <td>2021-03-09 09:11</td><td><span class="tag tag-success">已认证</span></td>
+                <td><button class="btn-link" onclick="showPage('detail')">详情</button></td>
+              </tr>
+              <tr>
+                <td>2</td><td>rz1239012312</td><td><span class="tag tag-info">个人认证</span></td>
+                <td>董军</td><td>360424199307253359</td>
+                <td>2021-03-09 09:11</td><td><span class="tag tag-success">已认证</span></td>
+                <td><button class="btn-link" onclick="showPage('detail')">详情</button></td>
+              </tr>
+              <tr>
+                <td>3</td><td>rz1239012312</td><td><span class="tag tag-info">企业认证</span></td>
+                <td>优合供应链管理有限公司</td><td>15013505030</td>
+                <td>2021-03-09 09:11</td><td><span class="tag tag-success">已认证</span></td>
+                <td><button class="btn-link" onclick="showPage('detail')">详情</button></td>
+              </tr>
+              <tr>
+                <td>4</td><td>rz1239012312</td><td><span class="tag tag-info">个人认证</span></td>
+                <td>方小小</td><td>15013505030</td>
+                <td>2021-03-09 09:11</td><td><span class="tag tag-success">已认证</span></td>
+                <td><button class="btn-link" onclick="showPage('detail')">详情</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span>共 15 条</span>
+          <button>‹</button><button class="active">1</button><button>2</button><button>3</button>
+          <span>每页显示</span>
+          <select style="height:28px;"><option>5条</option><option>10条</option><option>20条</option><option>50条</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 详情页 -->
+    <div class="page" id="page-detail">
+      <!-- 系统信息 -->
+      <div class="card annotatable">
+        <span class="annot-badge">BR-02</span>
+        <div class="annot-tooltip">
+          <div class="tt-title">系统信息区</div>
+          <div class="tt-row">认证编号 / 认证状态 / 创建时间</div>
+          <div class="tt-row">来源：<span class="tt-ref">F05-F02 BR-02</span></div>
+        </div>
+        <div class="section-title">系统信息</div>
+        <div class="info-grid">
+          <div class="info-item"><span class="label">认证编号</span><span class="value">5456456</span></div>
+          <div class="info-item"><span class="label">认证状态</span><span class="value"><span class="tag tag-success">已认证</span></span></div>
+          <div class="info-item"><span class="label">创建时间</span><span class="value">2026-09-21 12:34:45</span></div>
+        </div>
+      </div>
+
+      <!-- 认证信息（企业认证） -->
+      <div class="card annotatable">
+        <span class="annot-badge">BR-03</span>
+        <div class="annot-tooltip">
+          <div class="tt-title">认证信息区-企业认证</div>
+          <div class="tt-row">当认证类型为"企业认证"时展示以下8字段：</div>
+          <div class="tt-row">认证类型 / 企业编号 / 企业名称 / 统一社会信用代码 / 法定代表人 / 实际控制人 / 法人身份证号码 / 法人手机号</div>
+          <div class="tt-row">个人认证时切换为4字段：姓名/身份证号码/手机号（BR-04）</div>
+          <div class="tt-row">来源：<span class="tt-ref">F05-F02 BR-03/BR-04</span></div>
+        </div>
+        <div class="section-title">认证信息（企业认证）</div>
+        <div class="info-grid">
+          <div class="info-item"><span class="label">认证类型</span><span class="value">企业认证</span></div>
+          <div class="info-item"><span class="label">企业编号</span><span class="value">12341234</span></div>
+          <div class="info-item"><span class="label">企业名称</span><span class="value">深圳市泰盛医药有限公司</span></div>
+          <div class="info-item"><span class="label">统一社会信用代码</span><span class="value">914403007375704460</span></div>
+          <div class="info-item"><span class="label">法定代表人</span><span class="value">林榆盛</span></div>
+          <div class="info-item"><span class="label">实际控制人</span><span class="value">林榆盛</span></div>
+          <div class="info-item"><span class="label">法人身份证号码</span><span class="value">360424199307253359</span></div>
+          <div class="info-item"><span class="label">法人手机号</span><span class="value">138****8888</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button class="btn" onclick="showPage('list')">返回列表</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="req-panel">
+  <div class="req-panel-header">
+    <span>需求说明</span>
+  </div>
+  <div class="req-panel-body">
+    <div class="req-section">
+      <div class="req-section-title">1. 页面概述 <span class="count">F05-F01~F02</span></div>
+      <div class="req-section-body">
+        <div class="br-item"><span class="br-id">F05-F01</span> 认证列表查询 V1.0.0</div>
+        <div class="br-item"><span class="br-id">F05-F02</span> 认证详情查看 V1.0.0</div>
+        <div style="margin-top:8px;">覆盖用户故事：US-F05-001~003</div>
+      </div>
+    </div>
+
+    <div class="req-section">
+      <div class="req-section-title">2. 业务规则 BR <span class="count">×12</span></div>
+      <div class="req-section-body">
+        <div class="br-item"><span class="br-id">F01·BR-01</span> 筛选：认证对象模糊搜索</div>
+        <div class="br-item"><span class="br-id">F01·BR-02</span> 列表8列字段</div>
+        <div class="br-item"><span class="br-id">F01·BR-03</span> 操作列仅"详情"</div>
+        <div class="br-item"><span class="br-id">F01·BR-04</span> 分页5/10/20/50条</div>
+        <div class="br-item"><span class="br-id">F01·BR-05</span> 数据来源：E签宝回传</div>
+        <div class="br-item"><span class="br-id">F02·BR-01</span> 2个分区卡片</div>
+        <div class="br-item"><span class="br-id">F02·BR-02</span> 系统信息3字段</div>
+        <div class="br-item"><span class="br-id">F02·BR-03</span> 企业认证8字段</div>
+        <div class="br-item"><span class="br-id">F02·BR-04</span> 个人认证4字段</div>
+        <div class="br-item"><span class="br-id">F02·BR-05</span> 整页只读</div>
+      </div>
+    </div>
+
+    <div class="req-section">
+      <div class="req-section-title">3. 状态机 <span class="count">L1 §6</span></div>
+      <div class="req-section-body">
+        仅"已认证(CERTIFIED)"一个状态<br>
+        <span style="color:var(--warning)">未认证/认证中/认证失败不回传至本模块</span>
+      </div>
+    </div>
+
+    <div class="req-section">
+      <div class="req-section-title">4. 实体关系 <span class="count">L1 §7</span></div>
+      <div class="req-section-body">
+        <div class="br-item"><span class="br-id">E: Certification</span> F05拥有，本模块只读展示</div>
+        <div class="br-item"><span class="br-id">E: Enterprise</span> F01拥有，跨模块只读引用</div>
+        <div class="br-item"><span class="br-id">E: PersonalUser</span> 跨模块只读引用</div>
+        <div class="br-item"><span class="br-id">E: E签宝认证结果</span> 外部系统，只读</div>
+      </div>
+    </div>
+
+    <div class="req-section">
+      <div class="req-section-title">10. 明确不做 <span class="count">×6</span></div>
+      <div class="req-section-body">
+        • 认证发起/创建（E签宝侧完成）<br>
+        • 认证审批流程<br>
+        • 认证失败/认证中状态展示<br>
+        • 认证信息编辑<br>
+        • 列表导出/批量操作<br>
+        • 认证注销/撤销
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const titles = {list:'认证列表', detail:'认证详情'};
+  document.getElementById('pageTitle').textContent = titles[name];
+}
+function toggleAnnot(e) {
+  document.getElementById('pageContainer').classList.toggle('annotation-enabled');
+  document.querySelectorAll('.toolbar-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+}
+</script>
+</body>
+</html>

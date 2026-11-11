@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乾融 · 资产管理模块 高保真原型（标注版 V3）</title>
+<style>
+/* ========== Design Token（乾融金融中台 UI规范 V1.4 §3） ========== */
+:root{
+  --c-primary:#1668DC; --c-primary-h:#2F7BE8;
+  --c-bg:#F5F7FA; --c-card:#FFFFFF;
+  --c-t1:#1F2937; --c-t2:#6B7280; --c-t3:#9CA3AF;
+  --c-ok:#10B981; --c-warn:#F59E0B; --c-danger:#EF4444; --c-info:#3B82F6;
+  --c-line:#E5E7EB; --c-dis:#D1D5DB;
+  --c-nav:#0F1B2D; --c-nav-sub:#132238; --c-nav-t:#DCE6F2; --c-nav-aux:#8FA3BC;
+  --c-nav-hover:#1A2D47; --c-nav-active:#1D3A5F; --c-nav-hl:#3B82F6;
+  --ff:"Source Han Sans SC","Noto Sans SC","思源黑体",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --fm:"SFMono-Regular","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--ff);font-size:14px;color:var(--c-t1);background:var(--c-bg);overflow:hidden;height:100vh;display:flex}
+.num,.mono{font-family:var(--fm);font-variant-numeric:tabular-nums;letter-spacing:0}
+a{color:var(--c-primary);text-decoration:none;cursor:pointer}
+
+/* ========== 侧边导航 ========== */
+.sidebar{width:220px;background:var(--c-nav);color:var(--c-nav-t);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.logo{height:52px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.logo-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#1668DC,#3B82F6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;margin-right:10px}
+.logo-name{font-size:16px;font-weight:600;letter-spacing:2px}
+.nav{flex:1;padding:8px 0 30px}
+.nav-item{display:flex;align-items:center;height:40px;padding:0 20px;color:var(--c-nav-aux);cursor:pointer;font-size:14px;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--c-nav-hover);color:var(--c-nav-t)}
+.nav-item.active{background:var(--c-nav-active);color:#fff;border-left:3px solid var(--c-nav-hl);padding-left:17px}
+.nav-item.child{height:36px;padding-left:46px;font-size:13px}
+.nav-cap{padding:16px 20px 6px;font-size:12px;color:#5A6E88;letter-spacing:1px}
+.nav-item .ni{width:4px;height:4px;border-radius:50%;background:currentColor;margin-right:8px;opacity:.6}
+
+/* ========== 主区 ========== */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{height:52px;background:var(--c-card);border-bottom:1px solid var(--c-line);display:flex;align-items:center;padding:0 24px;flex-shrink:0;justify-content:space-between}
+.crumb{color:var(--c-t2);font-size:13px}
+.crumb b{color:var(--c-t1);font-weight:600}
+.topbar-r{display:flex;align-items:center;gap:14px;color:var(--c-t2);font-size:13px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--c-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.content{flex:1;display:flex;min-height:0}
+.viewport{flex:1;overflow-y:auto;padding:20px 24px;min-width:0}
+
+/* ========== 原型标注工具条（标注层，非业务 UI） ========== */
+.proto-toolbar{height:44px;background:#fff;border-bottom:2px dashed var(--c-info);display:flex;align-items:center;gap:16px;padding:0 20px;flex-shrink:0;z-index:60;flex-wrap:wrap}
+.pt-tag{font-size:12px;color:var(--c-info);border:1px dashed var(--c-info);border-radius:4px;padding:2px 8px;background:rgba(59,130,246,.06)}
+.pt-title{font-weight:600;font-size:13px}
+.st-sw{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--c-t2);flex-wrap:wrap}
+.st-sw button{border:1px solid var(--c-line);background:#fff;border-radius:4px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--c-t2);font-family:var(--ff)}
+.st-sw button.on{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.sw{position:relative;width:40px;height:20px;background:var(--c-primary);border-radius:10px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.sw.off{background:var(--c-dis)}
+.sw::after{content:"";position:absolute;top:2px;left:22px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.off::after{left:2px}
+.sw-lb{font-size:12px;color:var(--c-t2)}
+body.anno-off .anchor,body.anno-off .ebadge,body.anno-off .badge-T{display:none!important}
+body.anno-off .anno-el{outline:none!important}
+body.anno-off .panel{display:none}
+
+/* ========== 页面与卡片 ========== */
+.page{display:none;max-width:1440px;margin:0 auto}
+.page.on{display:block}
+.pg-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.pg-title{font-size:20px;font-weight:600}
+.pg-sub{font-size:12px;color:var(--c-t3);margin-top:4px;font-weight:400}
+.card{background:var(--c-card);border-radius:8px;border:1px solid var(--c-line);margin-bottom:16px;position:relative}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--c-line)}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title::before{content:"";width:3px;height:14px;background:var(--c-primary);border-radius:2px}
+.card-bd{padding:20px}
+
+/* ========== 搜索/表单 ========== */
+.search-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.f-item{display:flex;align-items:center;gap:8px}
+.f-item label{color:var(--c-t2);font-size:13px;white-space:nowrap}
+.ipt{height:32px;border:1px solid var(--c-line);border-radius:4px;padding:0 10px;font-size:13px;color:var(--c-t1);outline:none;width:180px;font-family:var(--ff);background:#fff}
+.ipt:focus{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(22,104,220,.12)}
+.ipt::placeholder{color:var(--c-t3)}
+.ipt.err{border-color:var(--c-danger)}
+.ipt-mono{font-family:var(--fm)}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 20px}
+.f-col{display:flex;flex-direction:column;gap:6px}
+.f-col label{font-size:13px;color:var(--c-t2)}
+.f-col label.req::before{content:"* ";color:var(--c-danger)}
+.d-label.rs::before{content:"* ";color:var(--c-danger)}
+.hint{font-size:12px;color:var(--c-info);line-height:18px}
+.hint-t{font-size:12px;color:var(--c-t3);line-height:18px}
+
+/* ========== 按钮 ========== */
+.btn{height:32px;padding:0 16px;border-radius:4px;font-size:13px;cursor:pointer;border:1px solid var(--c-line);background:#fff;color:var(--c-t1);font-family:var(--ff);display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn:hover{border-color:var(--c-primary);color:var(--c-primary)}
+.btn-primary{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.btn-primary:hover{background:var(--c-primary-h);color:#fff}
+.btn-text{color:var(--c-primary);font-size:13px;cursor:pointer;background:none;border:none;padding:2px 4px;font-family:var(--ff)}
+.btn-text:hover{text-decoration:underline}
+.btn-link-danger{color:var(--c-danger)}
+
+/* ========== 表格 ========== */
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+.tbl th{background:var(--c-bg);color:var(--c-t2);font-weight:500;height:auto;padding:8px 8px;text-align:left;border-bottom:1px solid var(--c-line);vertical-align:middle}
+.th-main{display:block;line-height:1.4;font-weight:500}
+.th-sub{display:block;font-size:11px;font-weight:400;color:var(--c-t3);line-height:1.3;margin-top:1px}
+.th-sub .anchor{margin-left:2px}
+.tbl th .anchor{top:0;height:14px;font-size:10px;margin-left:3px}
+.tbl td{padding:10px 8px;border-bottom:1px solid var(--c-line);color:var(--c-t1);vertical-align:middle}
+.tbl tr:hover td{background:rgba(22,104,220,.03)}
+/* .num 仅做等宽字体/对齐语义，禁止改变 display——曾因 td.num 变 inline-block 导致列错行 */
+.tbl td.num{display:table-cell}
+/* 资产列表 16 列：fixed 布局 + colgroup 定义列宽（表头/数据行统一生效） */
+#page-list table.tbl{table-layout:fixed;min-width:2040px}
+/* V2 修复：长公司名列文字溢出压叠相邻列——列宽已按最长内容加宽，另加 ellipsis 安全网（窄窗口截断显示，悬浮可见全文） */
+#page-list table.tbl td{overflow:hidden;text-overflow:ellipsis}
+td.r,th.r{text-align:right}
+td.c,th.c{text-align:center}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;font-size:13px;color:var(--c-t2)}
+.pager-r{display:flex;gap:6px;align-items:center}
+.pg-btn{min-width:28px;height:28px;border:1px solid var(--c-line);background:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--c-t2)}
+.pg-btn.on{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+.sel{height:32px;border:1px solid var(--c-line);border-radius:4px;padding:0 8px;font-size:13px;background:#fff;color:var(--c-t1);outline:none;font-family:var(--ff);min-width:120px}
+.sel:focus{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(22,104,220,.12)}
+.em-dash{color:var(--c-t3)}
+.dtag{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--c-t2);background:var(--c-bg);border:1px solid var(--c-line);border-radius:4px;padding:1px 6px}
+.dtag.blue{color:var(--c-primary);background:rgba(22,104,220,.06);border-color:rgba(22,104,220,.25)}
+.dtag.warn{color:var(--c-warn);background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.35)}
+
+/* ========== 详情描述 ========== */
+.desc-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--c-line);border-radius:6px;overflow:hidden}
+.d-item{display:flex;border-bottom:1px solid var(--c-line);border-right:1px solid var(--c-line)}
+.d-item:nth-child(3n){border-right:none}
+.d-item.last-row{border-bottom:none}
+.d-label{width:130px;background:var(--c-bg);color:var(--c-t2);font-size:13px;display:flex;align-items:center;padding:0 14px;flex-shrink:0}
+.d-val{flex:1;padding:10px 14px;font-size:13px;display:flex;align-items:center}
+
+/* ========== 页面状态（规范 §5.x / §10.5） ========== */
+.banner{display:none;margin-bottom:14px;padding:10px 14px;border-radius:6px;font-size:13px;align-items:center;gap:10px}
+.banner.show{display:flex}
+.banner.err{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.35);color:#B91C1C}
+.banner .b-retry{margin-left:auto}
+.full-state{display:none;position:absolute;inset:0;background:#fff;border-radius:8px;z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.full-state.show{display:flex}
+.fs-code{font-size:56px;font-weight:700;color:var(--c-dis);font-family:var(--fm)}
+.fs-t{font-size:16px;font-weight:600}
+.fs-d{font-size:13px;color:var(--c-t3)}
+.spinner{width:36px;height:36px;border:3px solid var(--c-line);border-top-color:var(--c-primary);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--c-ok);color:#065F46;padding:10px 18px;border-radius:6px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:none;z-index:200;max-width:80vw}
+.toast.err{border-color:var(--c-danger);color:#B91C1C}
+.toast.show{display:block}
+
+/* ========== 标注层：锚点 / 徽章 / Tooltip（规范 §10） ========== */
+.anno-el{outline:1px dashed rgba(59,130,246,.55);outline-offset:2px;border-radius:4px}
+.anno-el.a-warn{outline-color:rgba(245,158,11,.7)}
+.anno-el.a-danger{outline-color:rgba(239,68,68,.6)}
+.anchor{display:inline-flex;align-items:center;height:16px;padding:0 4px;margin-left:4px;font-family:var(--fm);font-size:11px;line-height:1;border:1px dashed;border-radius:4px;background:#fff;cursor:pointer;vertical-align:middle;position:relative;top:-6px}
+.anchor.a-info{color:var(--c-info);border-color:var(--c-info)}
+.anchor.a-warn{color:#C77700;border-color:var(--c-warn)}
+.anchor.a-danger{color:var(--c-danger);border-color:var(--c-danger)}
+.anchor.a-ok{color:#047857;border-color:var(--c-ok)}
+.anchor:hover,.anchor.pin{box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.ebadge{position:absolute;bottom:8px;left:10px;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:4px;border:1px dashed;cursor:pointer;z-index:5;background:#fff}
+.ebadge.b-ok{color:#047857;border-color:var(--c-ok)}
+.ebadge.b-warn{color:#C77700;border-color:var(--c-warn)}
+.ebadge.b-info{color:var(--c-info);border-color:var(--c-info)}
+.badge-T{display:inline-block;font-size:11px;color:#C77700;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.4);border-radius:3px;padding:0 4px;margin-left:4px;font-family:var(--fm);vertical-align:middle}
+#tt{position:fixed;z-index:300;background:#fff;border:1px solid var(--c-line);border-radius:8px;box-shadow:0 8px 28px rgba(15,27,45,.18);width:340px;font-size:12px;display:none;line-height:19px;color:var(--c-t1)}
+#tt.show{display:block}
+.tt-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--c-line);background:var(--c-bg);border-radius:8px 8px 0 0}
+.tt-type{font-family:var(--fm);font-size:11px;color:var(--c-t2)}
+.tt-sem{font-size:11px;padding:0 6px;border-radius:3px}
+.tt-sem.info{color:var(--c-info);background:rgba(59,130,246,.1)}
+.tt-sem.warn{color:#C77700;background:rgba(245,158,11,.12)}
+.tt-sem.danger{color:var(--c-danger);background:rgba(239,68,68,.1)}
+.tt-sem.ok{color:#047857;background:rgba(16,185,129,.1)}
+.tt-b{padding:10px 12px;max-height:320px;overflow-y:auto}
+.tt-t{font-weight:600;font-size:13px;margin-bottom:6px}
+.tt-row{margin-bottom:4px}
+.tt-row b{color:var(--c-t2);font-weight:500}
+.tt-links{border-top:1px dashed var(--c-line);margin-top:8px;padding-top:8px;color:var(--c-t2)}
+.tt-links a{font-family:var(--fm);font-size:11px;margin-right:8px}
+.tt-links a:hover{text-decoration:underline}
+.tt-pin{font-size:10px;color:var(--c-t3);float:right}
+
+/* ========== 右侧需求说明面板（规范 §10.4/10.7） ========== */
+.panel{width:360px;background:#fff;border-left:1px solid var(--c-line);display:flex;flex-direction:column;flex-shrink:0;transition:width .2s;font-size:12px}
+.panel.collapsed{width:40px}
+.panel-tab{width:40px;display:none;flex-direction:column;align-items:center;padding-top:10px;gap:8px;cursor:pointer;color:var(--c-primary)}
+.panel.collapsed .panel-tab{display:flex}
+.panel.collapsed .panel-main{display:none}
+.panel-main{display:flex;flex-direction:column;min-height:0;flex:1}
+.panel-hd{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--c-line);flex-shrink:0}
+.panel-hd b{font-size:13px}
+.panel-hd .ph-sub{font-size:11px;color:var(--c-t3);font-family:var(--fm);margin-left:6px}
+.panel-bd{flex:1;overflow-y:auto}
+.p-sec{border-bottom:1px solid var(--c-line)}
+.p-sec-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none}
+.p-sec-h:hover{background:var(--c-bg)}
+.p-sec-h b{font-size:12px;font-weight:600}
+.p-sec-h .cnt{font-size:11px;color:var(--c-t3);font-family:var(--fm)}
+.p-sec-h .arr{font-size:10px;color:var(--c-t3);transition:transform .15s;margin-left:6px}
+.p-sec.open .p-sec-h .arr{transform:rotate(90deg)}
+.p-body{display:none;padding:4px 14px 14px}
+.p-sec.open .p-body{display:block}
+.p-item{padding:7px 8px;border-radius:4px;border-left:2px solid transparent;margin-bottom:2px;line-height:19px}
+.p-item.hl{background:rgba(59,130,246,.08);border-left-color:var(--c-info)}
+.p-item .p-id{font-family:var(--fm);color:var(--c-primary);font-size:11px;margin-right:6px}
+.p-item .p-txt{color:var(--c-t1)}
+.p-meta{display:grid;grid-template-columns:76px 1fr;gap:4px 8px}
+.p-meta dt{color:var(--c-t3)}
+.p-meta dd{color:var(--c-t1)}
+.mini-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.mini-tbl th,.mini-tbl td{border:1px solid var(--c-line);padding:4px 6px;text-align:left;vertical-align:top;line-height:17px}
+.mini-tbl th{background:var(--c-bg);color:var(--c-t2);font-weight:500}
+.flow-nodes{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11px}
+.fn{padding:4px 8px;border:1px solid var(--c-line);border-radius:4px;background:var(--c-bg);color:var(--c-t2)}
+.fn.cur{border-color:var(--c-primary);background:rgba(22,104,220,.08);color:var(--c-primary);font-weight:600}
+.fa{color:var(--c-t3)}
+.oos{padding-left:16px}
+.oos li{margin-bottom:4px;color:var(--c-t1)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:4px}
+::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+
+<!-- ================= 侧边导航（业务 UI） ================= -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">乾</div><div class="logo-name">乾融中台</div></div>
+  <nav class="nav">
+    <div class="nav-cap">资产管理</div>
+    <div class="nav-item child active" data-page="list">资产列表</div>
+    <div class="nav-item child" data-page="new">新增资产</div>
+    <div class="nav-item child" data-page="detail">资产详情</div>
+    <div class="nav-cap">质押管理</div>
+    <div class="nav-item child" onclick="toast('O02 质押管理（独立原型，见 O02-质押管理交付物）')">质押管理</div>
+  </nav>
+</aside>
+
+<!-- ================= 主区 ================= -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">资产管理 / <b id="crumb-cur">资产列表</b></div>
+    <div class="topbar-r"><span>修改密码</span><div class="avatar">方</div><span>方雄敏</span></div>
+  </div>
+
+  <!-- 原型标注工具条（标注层，非业务 UI） -->
+  <div class="proto-toolbar">
+    <span class="pt-tag">原型标注层</span>
+    <span class="pt-title" id="tb-title">O01-F01 资产列表</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="sw" id="anno-sw" title="显示/隐藏标注层"></div>
+      <span class="sw-lb">标注总开关</span>
+    </div>
+    <div class="st-sw" id="st-sw"><span>页面状态：</span></div>
+  </div>
+
+  <div class="content">
+    <div class="viewport" id="viewport">
+
+      <!-- ============ 页面1：资产列表（O01-F01） ============ -->
+      <div class="page on" id="page-list">
+        <div class="pg-hd"><div><div class="pg-title">资产列表</div><div class="pg-sub">融资标的资产台账 · 数据范围见 L1 §3</div></div></div>
+        <div class="banner err" id="lb-list-e"><span>⛔</span><span class="bt"></span><a class="b-retry btn-text" onclick="toast('已重试（示例交互）')">重试</a></div>
+        <div class="card" style="padding:16px 20px">
+          <div class="search-row">
+            <div class="f-item anno-el"><label>乾链资产流水号</label><input class="ipt ipt-mono" placeholder="请输入乾链资产流水号" style="width:200px"><span class="anchor a-warn" data-tt="f01-dorder">BR-02</span></div>
+            <div class="f-item anno-el"><label>企业名称</label><input class="ipt" placeholder="请输入企业名称"><span class="anchor a-info" data-tt="f01-ent">BR-03</span></div>
+            <div class="f-item anno-el"><label>购销合同号</label><input class="ipt ipt-mono" placeholder="请输入购销合同号" style="width:180px"><span class="anchor a-warn" data-tt="f01-contract">BR-04</span></div>
+            <div class="f-item anno-el"><label>融资状态</label>
+              <select class="sel" style="min-width:160px"><option value="">请选择融资状态</option><option>未融资</option><option>融资中</option><option>已融资</option></select>
+              <span class="anchor a-warn" data-tt="f01-fin">BR-05</span><span class="badge-T">T04</span></div>
+            <div class="f-item">
+              <button class="btn btn-primary anno-el" onclick="toast('已按条件查询（示例交互）')">搜索<span class="anchor a-info" data-tt="f01-search">BR-01</span></button>
+              <button class="btn anno-el">重置<span class="anchor a-info" data-tt="f01-reset">BR-01</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-title">资产列表</div>
+            <button class="btn btn-primary anno-el" onclick="showPage('new')">＋ 新增资产<span class="anchor a-info" data-tt="f01-new">BR-11</span></button>
+          </div>
+          <div class="card-bd tbl-wrap">
+            <table class="tbl">
+              <colgroup>
+                <col style="width:48px"><col style="width:138px"><col style="width:100px"><col style="width:186px">
+                <col style="width:268px"><col style="width:252px"><col style="width:100px"><col style="width:106px">
+                <col style="width:104px"><col style="width:82px"><col style="width:80px"><col style="width:120px">
+                <col style="width:188px"><col style="width:136px"><col style="width:136px"><col style="width:94px">
+              </colgroup>
+              <thead><tr>
+                <th class="c">序号</th><th class="anno-el">乾链资产流水号<span class="anchor a-warn" data-tt="f01-dorder">BR-02</span></th><th class="anno-el"><span class="th-main">资产</span><span class="th-sub">单据类型<span class="anchor a-info" data-tt="f01-idcol">BR-10</span></span></th><th>企业名称</th><th class="anno-el">进口服务商<span class="anchor a-warn" data-tt="f01-imp">T18</span></th><th class="anno-el">核心企业<span class="anchor a-warn" data-tt="f01-core">T18</span></th><th>产业项目</th>
+                <th class="anno-el c5">资产编号(标识)</th>
+                <th class="r anno-el c6"><span class="th-main">资产价值</span><span class="th-sub">(外币)<span class="anchor a-info" data-tt="f01-fx">BR-08</span></span></th><th class="r c7">外币-币种</th><th class="r c8">汇率</th>
+                <th class="r anno-el c9"><span class="th-main">资产价值</span><span class="th-sub">(人民币)<span class="anchor a-warn" data-tt="f01-cny">BR-08</span></span></th><th class="c10">申请金融产品</th>
+                <th class="anno-el c11">资产形成时间<span class="anchor a-info" data-tt="f01-dt">BR-08</span></th><th class="c12">乾融创建时间</th><th class="c c13">操作</th>
+              </tr></thead>
+              <tbody id="list-tbody">
+                <tr><td class="c c0">1</td><td class="num c1">zr20121212121</td><td class="c2">尾款订单</td><td class="c3">湛江智鲜水产贸易有限公司</td><td class="c4">全联集采水产品（广东）股份有限公司</td><td class="c5">全联集采水产品（广东）股份有限公司</td><td class="c6">联冻乾行</td><td class="num c7">货柜号</td><td class="r num c8">100,800.00</td><td class="r c9">美元</td><td class="r num c10">6.2313</td><td class="r em-dash c11">-</td><td class="c12">建行平台云贷（一级在途融）</td><td class="num c13">2019.01.05 18:30</td><td class="num c14">2019.01.05 18:30</td><td class="c c15"><button class="btn-text" onclick="showPage('detail')">详情</button><span class="anchor a-info" data-tt="f01-detail">BR-11</span></td></tr>
+                <tr><td class="c c0">2</td><td class="num c1">zr20121212122</td><td class="c2">现货订单</td><td class="c3">河南大唐水产有限公司</td><td class="c4">全联集采供应链管理（山东）有限公司</td><td class="c5">全联集采水产品（广东）股份有限公司</td><td class="c6">联冻乾行</td><td class="num c7">货柜号</td><td class="r num c8">1,000,000.00</td><td class="r c9">英镑</td><td class="r num c10">8.2917</td><td class="r em-dash c11">-</td><td class="c12">上行易采购</td><td class="num c13">2019.01.05 18:30</td><td class="num c14">2019.01.05 18:30</td><td class="c c15"><button class="btn-text" onclick="showPage('detail')">详情</button><span class="anchor a-info" data-tt="f01-detail">BR-11</span></td></tr>
+                <tr><td class="c c0">3</td><td class="num c1">zr20121212123</td><td class="c2">购销合同</td><td class="c3">杭州昊安贸易有限公司</td><td class="r em-dash c4">-</td><td class="c5">广东德邦股份有限公司</td><td class="c6">链数融乾</td><td class="num c7">业务合同号</td><td class="r em-dash c8">-</td><td class="r em-dash c9">-</td><td class="r em-dash c10">-</td><td class="r num c11">1,047,986.40</td><td class="c12">浙商订单通</td><td class="num c13">2019.01.05 18:30</td><td class="num c14">2019.01.05 18:30</td><td class="c c15"><button class="btn-text" onclick="showPage('detail')">详情</button><span class="anchor a-info" data-tt="f01-detail">BR-11</span></td></tr>
+                <tr><td class="c c0">4</td><td class="num c1">zr20121212124</td><td class="c2">提单</td><td class="c3">金地新材料有限公司</td><td class="c4">正矿（广东）供应链有限公司</td><td class="c5">正矿（广东）供应链有限公司</td><td class="c6">锆钛正乾</td><td class="num c7">提单号</td><td class="r num c8">1,000,000.00</td><td class="r c9">美元</td><td class="r num c10">6.2313</td><td class="r em-dash c11">-</td><td class="c12">遂溪农商贷</td><td class="num c13">2019.01.05 18:30</td><td class="num c14">2019.01.05 18:30</td><td class="c c15"><button class="btn-text" onclick="showPage('detail')">详情</button><span class="anchor a-info" data-tt="f01-detail">BR-11</span></td></tr>
+              </tbody>
+            </table>
+            <div style="display:none" id="list-empty"><div style="text-align:center;color:var(--c-t3);padding:40px 0;font-size:13px">暂无数据</div></div>
+          </div>
+          <div class="pager anno-el">
+            <span>共 4 条</span>
+            <div class="pager-r"><span>每页</span>
+              <select class="sel" style="min-width:70px;height:28px"><option>10</option><option>20</option><option>50</option><option>100</option></select>
+              <div class="pg-btn">‹</div><div class="pg-btn on">1</div><div class="pg-btn">›</div>
+            </div>
+            <span class="anchor a-warn" style="position:absolute;right:10px;bottom:10px" data-tt="f01-pager">BR-07</span>
+          </div>
+          <div class="ebadge b-warn" data-tt="f01-ent-asset">E: Asset</div>
+          <div class="full-state" id="fs-list-403"><div class="fs-code">403</div><div class="fs-t">您没有权限执行该操作</div><div class="fs-d">EX-02 · 已记录审计日志（L1 §3 全局约定）</div></div>
+        </div>
+      </div>
+
+      <!-- ============ 页面2：新增资产（O01-F02） ============ -->
+      <div class="page" id="page-new">
+        <div class="pg-hd"><div><div class="pg-title">新增资产</div><div class="pg-sub">录入融资标的资产 · 提交后融资状态=NOT_FINANCED（L1 §6）</div></div></div>
+        <div class="banner err" id="lb-new-e"><span>⛔</span><span class="bt"></span></div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">乾链系统信息</div><span class="dtag warn">V3 扩为 5 字段【待确认-T23】</span></div>
+          <div class="card-bd">
+            <div class="hint-t" style="margin-bottom:14px">源截图注释：乾链资产流水号唯一性校验；单据类型：字典；产业项目：字典</div>
+            <div class="form-grid">
+              <div class="f-col anno-el"><label class="req">乾链资产流水号</label><input class="ipt ipt-mono" value="zr20121212121" placeholder="请输入乾链资产流水号"><span class="anchor a-warn" data-tt="f02-dorder">BR-01</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">资产形成时间</label><input class="ipt num" value="2019.01.05 18:30:00" style="background:var(--c-bg)" readonly><span class="hint">源于乾链推送，只读</span><span class="anchor a-warn" data-tt="f02-ttime">BR-11</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">乾链推送时间</label><input class="ipt num" value="2019.01.06 18:30:32" style="background:var(--c-bg)" readonly><span class="hint">乾链系统推送时刻，只读</span><span class="anchor a-warn" data-tt="f02-ptime">T21</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">单据类型</label>
+                <select class="sel"><option selected>尾款订单</option><option>现货订单</option><option>购销合同</option><option>提单</option></select>
+                <span class="hint">V3 新增于本分组（下拉·字典）</span><span class="anchor a-warn" data-tt="f02-dtype">T23</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">产业项目</label>
+                <select class="sel"><option selected>联冻乾行</option><option>链数融乾</option><option>锆钛正乾</option></select>
+                <span class="hint">下拉，字典</span><span class="anchor a-warn" data-tt="f02-project">BR-06</span></div>
+            </div>
+          </div>
+          <div class="ebadge b-warn" data-tt="f02-dchain">E: Asset</div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">资产基本信息</div><span class="dtag warn">V3 字段重构【待确认-T23/T24】</span></div>
+          <div class="card-bd">
+            <div class="hint" style="margin-bottom:14px">
+              源截图注释：进口服务商、核心企业：数据源：企业用户(核心企业)；融资企业：下拉可以模糊搜索，数据范围：授信通过的融资客户；金融产品：下拉可以模糊搜索，数据范围：融资客户授信通过的金融产品集合
+            </div>
+            <div class="form-grid">
+              <div class="f-col anno-el"><label class="req">资产编号</label><input class="ipt ipt-mono" placeholder="货柜号"><span class="hint-t">V3 label 去掉「(标识)」后缀，placeholder=货柜号</span><span class="anchor a-info" data-tt="f02-ident">BR-03</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">进口服务商</label>
+                <select class="sel"><option selected>全联集采供应链管理（山东）</option></select>
+                <span class="hint">V3 新增字段；数据源：企业用户(核心企业)【待确认-T24】</span><span class="anchor a-warn" data-tt="f02-supplier">T24</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">核心企业</label>
+                <select class="sel"><option selected>全联集采供应链管理（广东）</option></select>
+                <span class="hint">V3 新增字段；与详情页取值（山东）不一致【T24】</span><span class="anchor a-warn" data-tt="f02-supplier">T24</span></div>
+              <div class="f-col anno-el"><label>资产价值(外币)</label><input class="ipt num" value="100,800.00" style="text-align:right"><span class="anchor a-info" data-tt="f02-fxval">BR-09</span></div>
+              <div class="f-col anno-el"><label class="req">融资企业</label>
+                <select class="sel"><option selected>湛江智鲜水产贸易有限公司</option><option>河南大唐水产有限公司</option></select>
+                <span class="hint">V3 由「企业名称」更名；下拉可模糊搜索；候选=授信通过的融资企业</span><span class="anchor a-info" data-tt="f02-ent">BR-04</span></div>
+              <div class="f-col anno-el"><label>汇率</label><input class="ipt num" value="6.2313" style="text-align:right"><span class="anchor a-warn" data-tt="f02-rate">BR-10</span></div>
+              <div class="f-col anno-el a-warn"><label class="req">资产价值(人民币)</label><input class="ipt num" value="" placeholder="" style="text-align:right"><span class="hint">V3 截图为空输入框（未见只读样式）；计算口径【待确认-T02】</span><span class="anchor a-warn" data-tt="f02-cnyval">BR-09</span></div>
+              <div class="f-col anno-el"><label>外币-币种</label><select class="sel"><option selected>美元</option><option>英镑</option><option>人民币</option><option>日元</option></select><span class="anchor a-info" data-tt="f02-ccy">BR-07</span></div>
+              <div class="f-col anno-el"><label>申请金融产品</label>
+                <select class="sel"><option selected>建行平台云贷(一级在途融)</option><option>上行易采购</option></select>
+                <span class="hint">候选=该企业授信通过的金融产品集合；括号为半角（按源截图）</span><span class="anchor a-info" data-tt="f02-product">BR-05</span></div>
+            </div>
+            <div class="hint-t" style="margin-top:12px">V3 移除字段：乾融资产流水号（V2 新增，被推翻）、乾融创建时间（详情页保留）、产业项目（移入乾链分组）<span class="anchor a-warn" data-tt="f02-v3chg" style="margin-left:6px">T23</span></div>
+          </div>
+          <div class="ebadge b-ok" data-tt="f02-ent-asset">E: Asset</div>
+        </div>
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-title">资产明细信息</div>
+            <button class="btn btn-primary anno-el">＋ 新增商品明细<span class="anchor a-info" data-tt="f02-additem">BR-13</span></button>
+          </div>
+          <div class="card-bd tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th class="anno-el">*SKU编号<span class="anchor a-warn" data-tt="f02-tblv3">T25</span></th><th>*SKU名称</th><th>*品类</th><th class="r anno-el">单价 *<span class="anchor a-info" data-tt="f02-price">BR-14</span></th><th class="r anno-el">计件数量 *<span class="anchor a-info" data-tt="f02-qty">BR-14</span></th><th>*计价单位</th><th class="r anno-el a-warn">金额小计<span class="anchor a-warn" data-tt="f02-sub">BR-15</span></th></tr></thead>
+              <tbody>
+                <tr><td class="num">SKU001</td><td>印度去头虾30-40</td><td>虾</td><td class="r num">1000</td><td class="r num">1,000</td><td>PCS</td><td class="r num">20,000.00</td></tr>
+                <tr><td><input class="ipt ipt-mono" value="SKU002" style="width:110px;height:30px"></td><td><input class="ipt" value="印度去头虾40-50" style="width:190px;height:30px"></td><td><input class="ipt" value="虾" style="width:90px;height:30px"></td><td class="r"><input class="ipt num" value="2000" style="width:100px;height:30px;text-align:right"></td><td class="r"><input class="ipt num" value="1,000" style="width:100px;height:30px;text-align:right"></td><td><input class="ipt" value="PCS" style="width:90px;height:30px"></td><td class="r num">20,000.00</td></tr>
+                <tr><td style="font-weight:600">合计</td><td></td><td></td><td></td><td class="r num anno-el" style="font-weight:600">2,00<span class="anchor a-warn" data-tt="f02-total">T26</span></td><td></td><td class="r num anno-el" style="font-weight:600">20,000.00<span class="anchor a-warn" data-tt="f02-total">BR-16</span></td></tr>
+              </tbody>
+            </table>
+            <div class="hint-t" style="margin-top:10px;text-align:right">金额=单价*数量，四舍五入，保留2位</div>
+          </div>
+          <div class="ebadge b-ok" data-tt="f02-ent-item">E: AssetItem</div>
+        </div>
+        <div class="card" style="padding:14px 20px;display:flex;gap:12px;justify-content:flex-end">
+          <button class="btn anno-el" onclick="toast('已取消（示例交互）')">取消<span class="anchor a-info" data-tt="f02-cancel">EX-09</span></button>
+          <button class="btn btn-primary anno-el" onclick="toast('保存成功（示例交互）：Asset 新增 + AssetItem 整体替换式写入 + 审计日志 + asset.created 事件','ok');showPage('list')">确定<span class="anchor a-info" data-tt="f02-submit">BR-18</span></button>
+        </div>
+        <div class="full-state" id="fs-new-403"><div class="fs-code">403</div><div class="fs-t">您没有权限执行该操作</div><div class="fs-d">EX-08 · 已记录审计日志</div></div>
+      </div>
+
+      <!-- ============ 页面3：资产详情（O01-F03） ============ -->
+      <div class="page" id="page-detail">
+        <div class="pg-hd"><div><div class="pg-title">资产详情</div><div class="pg-sub mono">zr20121212121 · 只读展示（BR-07：页面不提供任何编辑、删除入口）</div></div>
+          <button class="btn anno-el" onclick="showPage('list')">← 返回列表<span class="anchor a-info" data-tt="f03-back">BR-01</span></button></div>
+        <div class="banner err" id="lb-det-e"><span>⛔</span><span class="bt">融资信息加载失败</span><a class="b-retry btn-text" onclick="toast('已重试（示例交互）')">重试</a><span class="badge-T">T17</span></div>
+        <div class="card" id="det-loading" style="display:none;padding:80px 0;text-align:center">
+          <div class="spinner" style="margin:0 auto 16px"></div><span style="color:var(--c-t2);font-size:13px">加载中…</span>
+        </div>
+        <div id="det-body">
+          <div class="card">
+            <div class="card-hd"><div class="card-title">乾链系统信息</div><span class="dtag warn">V3 扩为 5 字段【待确认-T23】</span></div>
+            <div class="card-bd anno-el">
+              <div class="desc-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="d-item"><div class="d-label rs">乾链资产流水号</div><div class="d-val num">zr20121212121</div></div>
+                <div class="d-item"><div class="d-label rs">资产形成时间</div><div class="d-val num">2019.01.05 18:30:00</div></div>
+                <div class="d-item"><div class="d-label rs">乾链推送时间</div><div class="d-val num">2019.01.06 18:30:32</div></div>
+                <div class="d-item last-row"><div class="d-label rs">单据类型</div><div class="d-val">尾款订单<span class="anchor a-warn" data-tt="f02-dtype" style="top:-8px;margin-left:6px">T23</span></div></div>
+                <div class="d-item last-row"><div class="d-label rs">产业项目</div><div class="d-val">联冻乾行<span class="anchor a-warn" data-tt="f02-project" style="top:-8px;margin-left:6px">BR-06</span></div></div>
+                <div class="d-item last-row"><div class="d-label"></div><div class="d-val"></div></div>
+              </div>
+            </div>
+            <div class="ebadge b-warn" data-tt="f02-dchain">E: Asset</div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">资产基本信息</div><span class="dtag warn">V3 字段重构【待确认-T23/T24】</span></div>
+            <div class="card-bd anno-el">
+              <div class="desc-grid">
+                <div class="d-item anno-el"><div class="d-label rs">资产编号</div><div class="d-val num">货柜号A<span class="anchor a-info" data-tt="f03-ident" style="top:-8px">BR-06</span></div></div>
+                <div class="d-item anno-el"><div class="d-label rs">进口服务商</div><div class="d-val">全联集采供应链管理（山东）有限公司<span class="anchor a-warn" data-tt="f03-supplier" style="top:-8px">T24</span></div></div>
+                <div class="d-item anno-el"><div class="d-label rs">核心企业</div><div class="d-val">全联集采供应链管理（山东）有限公司<span class="anchor a-warn" data-tt="f03-supplier" style="top:-8px">T24</span></div></div>
+                <div class="d-item"><div class="d-label">资产价值(外币)</div><div class="d-val num">100,800.00</div></div>
+                <div class="d-item"><div class="d-label rs">企业名称</div><div class="d-val">湛江智鲜水产贸易有限公司</div></div>
+                <div class="d-item"><div class="d-label">汇率</div><div class="d-val num">6.2313</div></div>
+                <div class="d-item"><div class="d-label rs">资产价值(人民币)</div><div class="d-val num em-dash">670,500.00<span class="anchor a-warn" data-tt="f03-cny" style="top:-8px">T02</span></div></div>
+                <div class="d-item"><div class="d-label">外币-币种</div><div class="d-val">美元</div></div>
+                <div class="d-item"><div class="d-label">申请金融产品</div><div class="d-val">建行平台云贷(一级在途融)</div></div>
+                <div class="d-item last-row"><div class="d-label rs">乾融创建时间</div><div class="d-val num">2019.01.05 18:30<span class="anchor a-warn" data-tt="f03-v3chg" style="top:-8px">T23</span></div></div>
+                <div class="d-item last-row"><div class="d-label"></div><div class="d-val"></div></div>
+                <div class="d-item last-row"><div class="d-label"></div><div class="d-val"></div></div>
+              </div>
+              <span class="anchor a-warn" style="float:right;margin-top:8px" data-tt="f03-base">BR-07 页面级只读</span>
+            </div>
+            <div class="ebadge b-warn" data-tt="f03-ent-asset">E: Asset</div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">资产明细信息</div><span class="dtag warn">V3 列重构 · 件价与新增页交叉【T22】</span></div>
+            <div class="card-bd tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th class="anno-el">*SKU编号<span class="anchor a-warn" data-tt="f03-tblv3">T22</span></th><th>*SKU名称</th><th>*品类</th><th class="r">单价 *</th><th class="r">计价数量 *</th><th>*计件单位</th><th class="r">金额小计</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">SKU001</td><td>印度去头虾</td><td>虾</td><td class="r num">1000</td><td class="r num">1,000</td><td>PCS</td><td class="r num">20,000.00</td></tr>
+                  <tr><td class="num">SKU002</td><td>印度去头虾</td><td>虾</td><td class="r num">2000</td><td class="r num">1,000</td><td>PCS</td><td class="r num">20,000.00</td></tr>
+                  <tr><td style="font-weight:600">合计</td><td></td><td></td><td></td><td class="r num anno-el" style="font-weight:600">2,00<span class="anchor a-warn" data-tt="f03-totalq">BR-04</span></td><td></td><td class="r num anno-el" style="font-weight:600">20,000.00<span class="anchor a-warn" data-tt="f03-total">T26</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="ebadge b-warn" data-tt="f03-ent-item">E: AssetItem</div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">融资信息</div><span class="dtag blue">来源：F03 融资管理 · 跨模块只读引用</span></div>
+            <div class="card-bd anno-el">
+              <div class="desc-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="d-item"><div class="d-label">融资编号</div><div class="d-val num" style="color:var(--c-primary);cursor:pointer" title="源截图为蓝色链接样式——跳转目标【待确认】">RZBH2026121245</div></div>
+                <div class="d-item anno-el"><div class="d-label">银行放款金额</div><div class="d-val num">70,800.00<span class="anchor a-warn" data-tt="f03-loan" style="top:-8px">T28</span></div></div>
+                <div class="d-item anno-el"><div class="d-label">放款时间</div><div class="d-val num">2019.02.05 18:30<span class="anchor a-warn" data-tt="f03-loantime" style="top:-8px">T28</span></div></div>
+              </div>
+              <span class="anchor a-warn" style="float:right;margin-top:8px" data-tt="f03-fin">BR-02/03 EX-03</span>
+            </div>
+            <div class="ebadge b-info" data-tt="f03-ent-fin">E: 融资单 · 引用</div>
+          </div>
+        </div>
+        <div class="card full-state" id="fs-det-404"><div class="fs-code">404</div><div class="fs-t">资产不存在</div><div class="fs-d">EX-01 · 不抛出服务端异常</div></div>
+        <div class="card full-state" id="fs-det-403"><div class="fs-code">403</div><div class="fs-t">您没有权限执行该操作</div><div class="fs-d">EX-02 · 已记录审计日志</div></div>
+      </div>
+
+    </div>
+
+    <!-- ============ 右侧需求说明面板（标注层） ============ -->
+    <aside class="panel" id="panel">
+      <div class="panel-tab" onclick="togglePanel()"><span style="writing-mode:vertical-lr;letter-spacing:2px;font-size:12px">需求说明面板</span><span>❯</span></div>
+      <div class="panel-main">
+        <div class="panel-hd"><div><b>需求说明面板</b> <span class="ph-sub" id="ph-spec"></span></div><span style="cursor:pointer;font-size:12px;color:var(--c-t3)" onclick="togglePanel()">收起 ❯</span></div>
+        <div class="panel-bd" id="panel-body"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="tt"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================== 标注数据（与 SPEC-O01-F01/F02/F03 严格一致） ================== */
+const PAGES = {
+list:{
+  spec:'O01-F01 · V0.1.0', crumb:'资产列表',
+  meta:[['功能编号','O01-F01（Spec V0.1.0 草稿）'],['路由','/assets'],['页面目标','资产台账检索与列表展示，入口→新增/详情'],['覆盖用户故事','US-O01-001'],['页面状态','默认 / 空态 / 参数错误400 / 查询失败error / 越权403']],
+  brs:[['BR-01','查询条件共 4 项，条件之间为 AND 关系；未输入条件时按数据范围查全量；重置=清空条件并回到第 1 页。'],
+    ['BR-02','乾链订单号——文本输入，匹配方式【待确认-T05：精确或模糊】。'],
+    ['BR-03','企业名称——文本输入，模糊匹配。'],
+    ['BR-04','购销合同号——文本输入，模糊匹配；取值口径【待确认-T06：匹配资产单据类型=购销合同的资产编号(标识)，或独立字段】。'],
+    ['BR-05','融资状态——下拉单选，候选取值集合 = L1 §6 资产融资状态全集【待确认-T04】；不选时视为不过滤。'],
+    ['BR-06','列表默认排序【待确认-T07：按乾融创建时间倒序】。'],
+    ['BR-07','分页展示【待确认-T08：默认每页 10 条，可选 10/20/50/100】。'],
+    ['BR-08','金额展示遵循 L0 §8——外币数字千分位；币种列显示币种名称；人民币显示"￥"+千分位；汇率原样展示。'],
+    ['BR-09','空值一律显示"-"（外币计价无人民币价值、人民币计价无外币价值与汇率时）。'],
+    ['BR-10','资产编号(标识)列的取值随资产单据类型变化：尾款订单、现货订单→货柜号；购销合同→业务合同号；提单→提单号。'],
+    ['BR-11','操作列仅提供"详情"，点击进入资产详情（O01-F03）；列表不提供编辑、删除操作。'],
+    ['BR-12','【V2】列表新增"进口服务商""核心企业"两列——L2 页面详细设计与 ER 模型均无定义【待确认-T18：字段语义、数据来源、空值口径】。'],
+    ['BR-13','【V2】"乾链订单号"更名为"乾链资产流水号"、"交易时间"列更名为"资产形成时间"【待确认-T19：L2/ER 字段名是否同步更新】。']],
+  sms:'本功能为纯查询，不触发任何状态流转；资产融资状态定义见 L1 §6（NOT_FINANCED→FINANCING→FINANCED，流转由 F03 触发）。列表筛选条件"融资状态"引用该状态全集【待确认-T04】。',
+  ents:[['Asset','O01 资产管理（本模块拥有）','本页只读','列表区块 ← GET /api/assets（分页）']],
+  wr:'无写操作（本页纯只读）。',
+  flow:[['打开列表页',1],['输入查询条件',0],['查询（AND 过滤）',0],['查看列表',1],['进入详情 / 新增',0]],
+  exs:[['EX-01','融资状态传入非法枚举值','后端 400 + PARAM_INVALID','融资状态不合法'],
+    ['EX-02','无权限访问（数据范围外或未登录）','403 + 审计日志','您没有权限执行该操作'],
+    ['EX-03','查询超时或服务失败','返回错误，前端展示错误横幅','查询失败，请稍后重试'],
+    ['EX-04','结果为空','正常返回空列表','空态"暂无数据"'],
+    ['EX-05','分页参数非法（页码≤0、每页条数超上限）','后端 400 + PARAM_INVALID','分页参数不合法'],
+    ['EX-06','点击详情时资产已被删除（若未来开放删除）','404','资产不存在']],
+  apis:[['/api/assets','GET','资产分页列表查询（分页参数+4 项查询条件）','幂等（只读）','后端鉴权+数据范围过滤（L1 §3）；融资状态值服务端校验；分页参数服务端校验']],
+  acs:[['01','Given 存在乾链订单号=zr20121212121 的资产，When 仅以该订单号搜索（匹配方式按 T05 裁决结果），Then 列表仅显示该资产。'],
+    ['02','Given 企业"湛江智鲜水产贸易有限公司"名下存在 2 条资产，When 以企业名称输入"智鲜"模糊搜索，Then 列表显示这 2 条资产。'],
+    ['03','Given 存在 financingStatus=NOT_FINANCED 与 FINANCED 的资产各若干，When 融资状态选择"未融资"并搜索，Then 仅显示 NOT_FINANCED 的资产。'],
+    ['04','Given 资产 X（资产单据类型=现货订单，assetIdentifier=HC0001），When 列表展示，Then 资产编号(标识)列显示 HC0001 且含义为货柜号（BR-10）。'],
+    ['05','Given 资产 Y 的 cnyValue=1047986.40，When 列表展示，Then 资产价值(人民币)列显示"￥1,047,986.40"。'],
+    ['06','Given 资产 Z 为外币计价（无 cnyValue，展示口径见 T02 裁决），When 列表展示，Then 该行人民币列按 T02 裁决结果展示（计算值或"-"）。'],
+    ['07','Given 无权限用户访问 /api/assets，When 发起查询，Then 返回 403 并记录审计日志，页面整页 403。'],
+    ['08','Given 数据范围内无任何资产，When 打开列表页，Then 显示空态"暂无数据"，不报错。']],
+  oos:['不做列表编辑、删除、批量操作、导出','不做明细在列表内展开（走 O01-F03 详情）','不展示质押状态（O02 职责）','不做自定义列、列排序配置'],
+  chg:[['V0.1.0','2026-10-27','初稿（Agent 起草）'],['V0.2.0','2026-11-04','按 V2 截图重绘：列表 16 列（新增进口服务商/核心企业）、字段更名（T18/T19）']]
+},
+new:{
+  spec:'O01-F02 · V0.3.0', crumb:'新增资产',
+  meta:[['功能编号','O01-F02（Spec V0.3.0 截图重绘）'],['路由','/assets/new'],['页面目标','录入资产及商品明细，建立台账初始记录（NOT_FINANCED）'],['覆盖用户故事','US-O01-002 / 003 / 004'],['页面状态','默认 / 前端校验拦截 / 防重复拦截 / 保存失败error / 越权403']],
+  brs:[['BR-01','乾链订单号——必填，≤32 字符；提交前按防重复口径校验；是否调用乾链系统校验【待确认-T01/T12】。'],
+    ['BR-02','【V3】资产单据类型——出现于「乾链系统信息」分组（下拉·字典，示例值 尾款订单），原 T12「新增页无该字段」被推翻；枚举全集【待确认-T15：尾款订单、现货订单、购销合同、提单】。'],
+    ['BR-03','【V3】资产编号——必填，≤64 字符；label 去掉「(标识)」后缀，placeholder=货柜号；含义仍随单据类型变化：货柜号 / 业务合同号 / 提单号【T23】。'],
+    ['BR-04','【V3】融资企业（原「企业名称」更名）——下拉单选，支持模糊搜索；数据范围：授信通过的融资客户（来源 F02）；禁止提交候选集合之外的值。'],
+    ['BR-05','【V3】申请金融产品——下拉单选，支持模糊搜索；数据范围：融资客户授信通过的金融产品集合（来源 C02∩F02）；示例值 建行平台云贷(一级在途融)（半角括号按源截图）；禁止提交候选集合之外的值。'],
+    ['BR-06','【V3】产业项目——由「资产基本信息（只读带出）」移入「乾链系统信息」分组并改为下拉（字典，示例值 联冻乾行）；原「由金融产品自动带出、只读」口径被推翻【T23】。'],
+    ['BR-07','外币-币种——下拉单选，候选取自数据字典币种集合（S08）。'],
+    ['BR-08','币种=人民币时——资产价值(外币)、汇率禁填；资产价值(人民币)必填。'],
+    ['BR-09','币种=外币时——资产价值(外币)、汇率必填；资产价值(人民币)=外币价值×汇率，四舍五入保留 2 位，系统计算、禁止手工修改【待确认-T02：计算与展示口径】。'],
+    ['BR-10','汇率——正数，小数位数 ≤4【待确认-T10】。'],
+    ['BR-11','交易时间——必填，日期时间选择【待确认-T11：格式 yyyy-MM-dd HH:mm，是否允许晚于当前时间】。'],
+    ['BR-12','【V3】乾融创建时间——从新增表单移除（详情页保留展示，值 2019.01.05 18:30）；系统生成（提交时刻）口径不变【T23】。'],
+    ['BR-13','【V3】商品明细通过"+新增商品明细"逐条添加；V3 截图明细表无序号列、无操作/删除列（V2 可删除行被推翻）；条数下限【待确认-T13：≥1 条 / 允许 0 条】。'],
+    ['BR-14','【V3】明细字段——*SKU编号（必填，≤32）、*SKU名称（必填，≤128）、*品类（必填，候选=BR-05 金融产品品类集合）、单价*（必填，>0）、计件数量*（原「数量」更名，必填，>0）、*计价单位（V3 新增列，示例 PCS）【T22/T25】。'],
+    ['BR-15','金额小计=单价×数量，四舍五入保留 2 位，系统计算、禁止手工修改。'],
+    ['BR-16','【V3】合计行——源截图显示 计件数量合计 2,00、金额合计 20,000.00（无￥前缀），与 SUM 规则值（2,000 / 40,000.00）矛盾，疑误延续 T20；原型按截图忠实展示并标注【T26】。'],
+    ['BR-17','【V3】源截图明细/合计金额均无￥前缀、单价为整数（1000/2000）无千分位——与 L0 §8 定谳（￥+千分位）冲突；原型按截图忠实展示【T28】。'],
+    ['BR-18','防重复口径【待确认-T14：乾链订单号+资产编号(标识) 唯一 / 乾链订单号 唯一 / 不做唯一约束】；命中时提交拦截并提示已存在资产。'],
+    ['BR-19','提交成功后，资产融资状态=NOT_FINANCED（L1 §6），写审计日志，发布领域事件 asset.created（L1 §9）。'],
+    ['BR-20','【V2】新增「乾链系统信息」分组：乾链资产流水号（可输入）、资产形成时间（只读）、乾链推送时间（只读）；原「交易时间」字段被资产形成时间取代【待确认-T21：分组定位与字段可编辑性】。'],
+    ['BR-21','【V3】「乾融资产流水号」字段从新增页与详情页移除——V2 新增（T21）被推翻，T21 需重审；「资产价值(人民币)」V3 截图仍为空输入框（未见只读样式）【待确认-T02】。'],
+    ['BR-22','【V3】新增「进口服务商」「核心企业」下拉字段（数据源：企业用户(核心企业)）；新增页取值 全联集采供应链管理（山东）/（广东），详情页均为 全联集采供应链管理（山东）有限公司——页间取值不一致【T24】。']],
+  sms:'本功能创建资产（初始状态 NOT_FINANCED），不触发既有资产的任何状态流转；状态机定义见 L1 §6。',
+  ents:[['Asset','O01 资产管理（本模块拥有）','本页新建（写入）','基本信息区块 → POST /api/assets'],['AssetItem','O01 资产管理（本模块拥有，N─1 Asset）','本页新建（整体替换式写入）','明细区块 → POST /api/assets'],['Enterprise / 金融产品 / 品类','S04 / C02（跨模块）','只读引用（候选集合）','下拉候选接口']],
+  wr:'提交动作写入清单：Asset 新增 + AssetItem 新增（整体替换式：未出现的既有记录物理删除、新增插入、保留更新）+ 审计日志 + 领域事件 asset.created。',
+  flow:[['进入新增页',1],['选择单据类型/产业项目（字典）',1],['选择进口服务商/核心企业',1],['选择融资企业（候选=授信通过）',1],['选择金融产品（品类候选联动）',1],['填写基本信息与商品明细',1],['提交',1],['成功 → 列表页 + Toast',1]],
+  exs:[['EX-01','必填字段为空/超长','前端拦截 + 后端 400 + PARAM_INVALID','对应字段级提示'],
+    ['EX-02','企业名称提交了候选集合之外的值（含先选后授信失效）','后端 400 拦截','所选企业未授信通过'],
+    ['EX-03','申请金融产品提交了候选集合之外的值','后端 400 拦截','所选金融产品不在该企业授信范围内'],
+    ['EX-04','币种=外币但汇率/外币价值缺失或≤0','前后端拦截','请输入汇率 / 请输入资产价值(外币)'],
+    ['EX-05','明细单价/数量 ≤0 或非数字','前后端拦截','请输入单价 / 请输入数量'],
+    ['EX-06','品类提交了所选金融产品品类集合之外的值','后端 400 拦截','所选品类不属于该金融产品'],
+    ['EX-07','防重复口径命中（BR-18）','后端拦截，返回已有资产摘要','该资产已存在，乾链订单号：{订单号}'],
+    ['EX-08','无权限调用','403 + 审计日志','您没有权限执行该操作'],
+    ['EX-09','并发重复提交','唯一索引兜底，后到请求返回已有记录','无感知（视为成功）'],
+    ['EX-10','数据库写入失败','整体回滚，无半截数据','保存失败，请稍后重试'],
+    ['EX-11','产业项目带出失败（金融产品数据异常）','拦截提交','金融产品数据异常，请联系管理员'],
+    ['EX-12','乾链订单号校验失败（若 T01 裁决为接口校验）','后端 400 拦截','乾链订单号校验未通过']],
+  apis:[['/api/assets/candidate/enterprises','GET','授信通过融资企业候选（模糊关键字）','幂等','来源 F02；后端鉴权'],
+    ['/api/assets/candidate/financial-products','GET','指定企业授信通过的金融产品候选（模糊关键字）','幂等','来源 C02∩F02；后端鉴权'],
+    ['/api/assets','POST','新增资产（含明细）','防重复口径内重复提交返回已有记录','服务端重算计算字段；候选集合服务端校验；事务整体提交；后端鉴权']],
+  acs:[['01','Given 企业 A 授信通过、企业 B 未授信通过，When 打开新增页企业下拉，Then 候选包含 A 不包含 B，且支持关键字模糊搜索。'],
+    ['02','Given 已选择企业 A，When 申请金融产品下拉加载，Then 候选=A 授信通过的金融产品集合，且支持模糊搜索。'],
+    ['03','Given 所选金融产品 P 配置品类集合 C，When 选择 P，Then 明细品类候选=C。【V3：产业项目不再由金融产品带出，改为乾链分组独立下拉（BR-06），本 AC 对应口径被推翻，待 T23 裁决后重写】'],
+    ['04','Given 币种=美元、资产价值(外币)=100800.00、汇率=6.2313，When 录入完成，Then 资产价值(人民币)显示 628,117.04（=100800.00×6.2313 四舍五入 2 位）【口径随 T02 裁决调整；注：按公式实算为 628,115.04，AC 原文数值待复核】。'],
+    ['05','Given 币种=人民币，When 录入，Then 资产价值(外币)与汇率禁填，资产价值(人民币)必填可录入。'],
+    ['06','Given 明细单价=2000、计件数量=1000，When 录入完成，Then 金额小计按公式计算；【V3：源截图合计显示 2,00/20,000.00 与规则值矛盾（T26），本 AC 数值待裁决后复核】。'],
+    ['07','Given 表单未填必填项，When 点击确定，Then 前端拦截并逐字段提示，不发起请求。'],
+    ['08','Given 绕过前端直接调 POST /api/assets 提交候选外企业，When 请求到达后端，Then 返回 400，无数据写入。'],
+    ['09','Given 已存在防重复口径（BR-18）命中的资产，When 再次提交相同值，Then 拦截并提示"该资产已存在"，无新增记录。'],
+    ['10','Given 两个用户并发提交相同防重复口径值，When 请求同时到达，Then 仅创建一条记录，后到请求返回已有记录。'],
+    ['11','Given 保存成功，When 查看资产列表，Then 新资产可见、融资状态=未融资、乾融创建时间=提交时刻，且审计日志与 asset.created 事件已产生。'],
+    ['12','Given 无权限用户访问 /api/assets POST，When 发起请求，Then 返回 403 + 审计日志。']],
+  oos:['不做批量导入与模板下载','不做资产编辑、删除（无原型依据，待独立 Spec 立项）','不做乾链订单自动同步与批量拉取（T01 裁决后另立 Spec）','不提供防重复命中后的"强制录入"选项（一期一律拦截）','不做多币种混合明细'],
+  chg:[['V0.1.0','2026-10-27','初稿（Agent 起草）'],['V0.2.0','2026-11-04','按 V2 截图重绘：新增乾链系统信息分组、乾融资产流水号字段（T21），人民币价值改空输入框（T02）'],['V0.3.0','2026-11-10','按 V3 截图重绘：乾链组扩 5 字段（+单据类型/产业项目）、新增进口服务商/核心企业、企业名称→融资企业、明细表列重构（去序号/操作、+计价单位、数量→计件数量）、移除乾融资产流水号/乾融创建时间（T22~T26）']]
+},
+detail:{
+  spec:'O01-F03 · V0.3.0', crumb:'资产详情',
+  meta:[['功能编号','O01-F03（Spec V0.1.0 草稿 + V0.3.0 截图重绘）'],['路由','/assets/{id}'],['页面目标','单条资产全量只读展示（乾链系统信息/基本信息/明细/关联融资）'],['覆盖用户故事','US-O01-005'],['页面状态','默认 / loading / error / 404 / 403']],
+  brs:[['BR-01','页面区块顺序固定为——乾链系统信息 → 资产基本信息 → 资产明细信息 → 融资信息（V3：乾链分组扩为 5 字段【T23】）。'],
+    ['BR-02','融资信息区块字段为融资编号、银行放款金额、放款时间，数据来源 F03 融资管理（L1 §9），本模块只读展示、不落库复制。'],
+    ['BR-03','资产未被融资业务引用（无关联融资记录）时，融资信息区块的展示方式【待确认-T16：候选 A 不展示该区块；候选 B 展示空态】。'],
+    ['BR-04','资产明细合计行——【V3】源截图显示 数量合计 2,00、金额合计 20,000.00（无￥），与 SUM 规则值矛盾，疑误延续 T20；单行金额小计取自存储值，不重算【T26】。'],
+    ['BR-05','【V3】源截图所有金额（资产价值/明细/合计/银行放款金额）均无￥前缀、放款时间为点分无秒（2019.02.05 18:30）——与 L0 §8 定谳（￥+千分位）及规范 §3.5 冲突；原型按截图忠实展示【T28】。'],
+    ['BR-06','【V3】资产编号（label 去掉「(标识)」后缀）——展示含义随资产单据类型变化（与 O01-F01 BR-10 同口径）：货柜号 / 业务合同号 / 提单号；V3 示例值 货柜号A。'],
+    ['BR-07','所有字段只读，页面不提供任何编辑、删除入口。'],
+    ['BR-08','【V3】资产基本信息移除「乾融资产流水号」（V2 新增被推翻，T21 需重审）；新增「进口服务商」「核心企业」字段（全联集采供应链管理（山东）有限公司，与新增页默认值 广东 不一致【T24】）；「交易时间」仍由乾链分组「资产形成时间」「乾链推送时间」承载。'],
+    ['BR-09','源截图资产价值(人民币)=670,500.00 与计算口径（100,800.00×6.2313=628,115.04）不符【待确认-T02】；明细合计行 2,00 / 20,000.00 疑为笔误（SUM 应为 2,000 / 40,000.00）【T26/T20】——V3 按截图忠实展示并标注。'],
+    ['BR-10','【V3】明细表列重构——*SKU编号/*SKU名称/*品类/单价*/计价数量*/*计件单位/金额小计；「件/价」用字与新增页（计件数量/*计价单位）交叉矛盾【T22】；SKU名称无规格后缀（印度去头虾），与新增页（30-40/40-50）不一致【T27】。']],
+  sms:'本功能为纯只读展示，不触发任何状态流转；状态机定义见 L1 §6。',
+  ents:[['Asset','O01 资产管理（本模块拥有）','本页只读','基本信息区块 ← GET /api/assets/{id}'],['AssetItem','O01 资产管理（N─1 Asset）','本页只读','明细区块 ← GET /api/assets/{id}'],['融资单','F03 融资管理（跨模块）','只读引用','融资信息区块 ← GET /api/assets/{id}/financing']],
+  wr:'无写操作（本页纯只读）。',
+  flow:[['从列表进入详情',1],['加载基本信息+明细',1],['加载融资信息（F03）',1],['查看',1],['返回列表',1]],
+  exs:[['EX-01','资产不存在（id 无效或已删除）','404','资产不存在'],
+    ['EX-02','资产存在但不在用户数据范围','403 + 审计日志','您没有权限执行该操作'],
+    ['EX-03','融资信息加载失败（F03 不可用）','【待确认-T17：候选 A 主区块正常展示+融资区块错误横幅；候选 B 整页报错】','融资信息加载失败'],
+    ['EX-04','id 参数格式非法','后端 400 + PARAM_INVALID','参数不合法']],
+  apis:[['/api/assets/{id}','GET','资产详情（含明细）','幂等（只读）','后端鉴权+数据范围过滤（L1 §3）；不存在返回 404'],
+    ['/api/assets/{id}/financing','GET','该资产关联融资信息（融资编号、银行放款金额、放款时间）','幂等（只读）','来源 F03；后端鉴权；加载失败按 EX-03 降级【待确认-T17】']],
+  acs:[['01','Given 资产 X 存在且关联已放款融资（融资编号 RZBH2026121245、放款金额 70,800.00、放款时间 2019.02.05 18:30），When 有权限用户打开 X 的详情页，Then 四个区块按 BR-01 顺序完整展示，融资信息区块显示 RZBH2026121245（蓝色链接）、70,800.00、2019.02.05 18:30（V3 截图口径，格式待 T28 裁决）。'],
+    ['02','Given 资产 X 存在且无关联融资记录，When 打开详情页，Then 融资信息区块按 T16 裁决结果处理（不展示或展示空态），页面不报错。'],
+    ['03','Given 资产 X 有 2 条明细（计价数量各 1,000；金额小计各 20,000.00），When 打开详情页，Then 合计行按 SUM 规则应显示 2,000 / 40,000.00；源截图显示 2,00 / 20,000.00，V3 按截图忠实展示并标注【T26】。'],
+    ['04','Given 企业 A 的用户访问企业 B 名下资产详情，When 发起请求，Then 返回 403 + 审计日志，页面整页 403。'],
+    ['05','Given id=不存在值，When 打开详情页，Then 显示 404 页面，不抛出服务端异常。']],
+  oos:['不做编辑、删除、打印、导出','不展示质押状态与质押操作（O02 职责）','不展示授信明细（F02 职责）','不在详情页内发起融资申请（F03 职责，仅只读展示结果）'],
+  chg:[['V0.1.0','2026-10-27','初稿（Agent 起草）'],['V0.2.0','2026-11-04','按 V2 截图重绘：新增乾链系统信息分组、乾融资产流水号字段；标注 670,500.00 与合计行疑误（T20/T21/T02）'],['V0.3.0','2026-11-10','按 V3 截图重绘：乾链组扩 5 字段、新增进口服务商/核心企业、移除乾融资产流水号、明细表列重构（件价交叉 T22/SKU 名称无后缀 T27）、放款时间点分无秒（T28）']]
+}};
+
+/* ================== Tooltip 注册表（规范 §10.7 五类模板） ================== */
+const TT={
+'f01-dorder':{t:'① 表单字段',s:'warn',ti:'乾链资产流水号（查询条件）',rows:[['状态/约束','非必填；文本输入'],['⚠ V2 变更','V2 截图由「乾链订单号」更名为「乾链资产流水号」；L2/ER 字段名是否同步【待确认-T19】'],['校验规则','匹配方式【待确认-T05：精确 / 模糊】'],['联动行为','与其它 3 项条件 AND 组合查询（BR-01）'],['异常提示','参数不合法 → 400 + 顶部横幅（EX-05 同类）']],lnk:['BR-02','BR-01','EX-01']},
+'f01-ent':{t:'① 表单字段',s:'info',ti:'企业名称（查询条件）',rows:[['状态/约束','非必填'],['校验规则','模糊匹配（BR-03）'],['异常提示','参数不合法 → 400 + 横幅']],lnk:['BR-03','BR-01']},
+'f01-imp':{t:'① 展示列',s:'warn',ti:'进口服务商 列（V2 新增）',rows:[['⚠ V2 变更','V2 截图新增列，L2 页面详细设计与 ER 模型均无定义【待确认-T18：字段语义、数据来源（企业主数据 / 购销合同）、空值口径】'],['展示规则','空值显示"-"（BR-09）；示例：全联集采供应链管理（山东）有限公司']],lnk:['BR-09','T18']},
+'f01-core':{t:'① 展示列',s:'warn',ti:'核心企业 列（V2 新增）',rows:[['⚠ V2 变更','V2 截图新增列，L2 页面详细设计与 ER 模型均无定义【待确认-T18：与供应链金融"核心企业"口径关系、是否参与风控授信】'],['展示规则','空值显示"-"（BR-09）；示例：全联集采水产品（广东）股份有限公司 / 广东德邦股份有限公司']],lnk:['BR-09','T18']},
+'f01-contract':{t:'① 表单字段',s:'warn',ti:'购销合同号（查询条件）',rows:[['状态/约束','非必填'],['校验规则','模糊匹配；取值口径【待确认-T06】'],['异常提示','参数不合法 → 400 + 横幅']],lnk:['BR-04','BR-01']},
+'f01-fin':{t:'① 表单字段',s:'warn',ti:'融资状态（查询条件）',rows:[['状态/约束','下拉单选；不选时视为不过滤'],['数据来源','L1 §6 资产融资状态全集【待确认-T04】'],['校验规则','服务端校验枚举值，非法值 → 400 + PARAM_INVALID'],['异常提示','「融资状态不合法」（EX-01）']],lnk:['BR-05','EX-01']},
+'f01-search':{t:'② 操作按钮',s:'info',ti:'搜索',rows:[['触发动作','GET /api/assets（分页参数+4 项条件，AND 组合）'],['系统行为','条件为空时按数据范围查全量（BR-01）；只读幂等'],['成功反馈','列表按条件刷新'],['异常反馈','EX-03 查询失败 → 顶部错误横幅 + 重试；EX-05 参数非法 → 400 + 横幅']],lnk:['BR-01','EX-03']},
+'f01-reset':{t:'② 操作按钮',s:'info',ti:'重置',rows:[['触发动作','清空 4 项查询条件'],['系统行为','页码回到第 1 页（BR-01）；不改变数据范围'],['成功反馈','恢复默认查询']],lnk:['BR-01']},
+'f01-new':{t:'② 操作按钮',s:'info',ti:'＋ 新增资产',rows:[['触发动作','跳转新增资产页（O01-F02）'],['系统行为','页面级跳转，无数据写入'],['权限','企业侧角色能否自录资产【待确认-T09】'],['异常反馈','无权限 → 403（EX-02）']],lnk:['BR-11','EX-02']},
+'f01-idcol':{t:'① 展示列',s:'info',ti:'资产编号(标识) 列',rows:[['数据来源','取值随资产单据类型变化：尾款订单、现货订单→货柜号；购销合同→业务合同号；提单→提单号（BR-10）'],['展示规则','空值显示"-"（BR-09）'],['关联 AC','AC-O01-F01-04']],lnk:['BR-10','BR-09']},
+'f01-fx':{t:'① 展示列',s:'info',ti:'资产价值(外币) 列',rows:[['展示规则','数字千分位分隔（L0 §8）；不加币种符号，币种见"外币-币种"列（BR-08）'],['空值','人民币计价资产显示"-"（BR-09）']],lnk:['BR-08','BR-09']},
+'f01-cny':{t:'① 展示列',s:'warn',ti:'资产价值(人民币) 列',rows:[['展示规则','按设计稿截图显示千分位数字（无币种符号前缀）'],['⚠ 冲突待裁决','设计稿无"￥"前缀 vs L0 §8「金额必须显示币种符号，默认￥」——当前按用户指示遵循设计稿；正式规则以变更裁决为准（BR-08 原文为"￥"+千分位）'],['待确认','外币计价资产的人民币价值展示口径【待确认-T02：计算值 / "-"】（AC-06）']],lnk:['BR-08','AC-06']},
+'f01-dt':{t:'① 展示列',s:'warn',ti:'资产形成时间 / 乾融创建时间 列',rows:[['⚠ V2 变更','V2 截图「交易时间」列更名为「资产形成时间」【待确认-T11/T19】'],['展示规则','按设计稿截图显示 2019.01.05 18:30 点分格式'],['⚠ 冲突待裁决','设计稿点分格式 vs 规范 §3.5 统一格式 YYYY-MM-DD HH:mm:ss——当前按用户指示遵循设计稿；正式规则以变更裁决为准'],['空值','显示"-"（BR-09）']],lnk:['BR-08','BR-09']},
+'f01-detail':{t:'② 操作按钮',s:'info',ti:'操作列 · 详情',rows:[['触发动作','进入资产详情页（O01-F03），GET /api/assets/{id}'],['系统行为','仅此一个操作，列表不提供编辑、删除（BR-11）'],['异常反馈','资产不存在 → 目标页 404（EX-06 场景）']],lnk:['BR-11','EX-06']},
+'f01-pager':{t:'① 展示组件',s:'warn',ti:'分页',rows:[['展示规则','默认每页 10 条【待确认-T08：可选 10/20/50/100】'],['排序','默认排序规则【待确认-T07】'],['异常反馈','分页参数非法 → 400（EX-05）']],lnk:['BR-07','EX-05']},
+'f01-ent-asset':{t:'实体徽章',s:'warn',ti:'E: Asset',rows:[['归属','O01 资产管理（本模块拥有）'],['本页读写性','只读（警告橙）'],['区块↔实体映射','列表区块 ← GET /api/assets（分页）'],['写操作影响','无（本页纯只读）']],lnk:['ENT']},
+'f02-dorder':{t:'① 表单字段',s:'warn',ti:'乾链资产流水号',rows:[['⚠ V3 状态','V3 截图仍居乾链系统信息分组第 1 行（可输入），源注释「乾链资产流水号唯一性校验」'],['⚠ V2 变更','V2 截图置于新增「乾链系统信息」分组（V3 沿用），label 由「乾链订单号」改为「乾链资产流水号」；字段属性（可输入）与 L2 定义冲突【待确认-T19/T21】'],['状态/约束','必填，≤32 字符（BR-01）'],['校验规则','提交前按防重复口径校验（BR-18）【待确认-T14】；是否调用乾链系统校验【待确认-T01/T12】'],['异常提示','「请输入乾链资产流水号」；防重复命中 →「该资产已存在…」（EX-07）']],lnk:['BR-01','BR-18','EX-07','T21']},
+'f02-ptime':{t:'③ 锁定字段',s:'warn',ti:'乾链推送时间（V2 新增）',rows:[['⚠ V2 变更','V2 截图新增只读字段（2019.01.06 18:30:32）；与详情页同名字段一致【待确认-T21：数据来源（乾链系统推送时刻 / 首次同步时间）】']],lnk:['T21']},
+'f02-dchain':{t:'④ 区块',s:'warn',ti:'乾链系统信息分组',rows:[['⚠ V3 变更','V3 截图分组扩为 5 字段：乾链资产流水号（可输入）/ 资产形成时间（只读）/ 乾链推送时间（只读）/ 单据类型（下拉·字典）/ 产业项目（下拉·字典）——后两字段由资产基本信息区移入/新增【待确认-T23】'],['V2 沿革','V2 新增分组：前 3 字段；L2 页面区块模型无此分组【待确认-T21】'],['源截图注释','乾链资产流水号唯一性校验；单据类型：字典；产业项目：字典']],lnk:['T21','T23']},
+'f02-ident':{t:'① 表单字段',s:'info',ti:'资产编号',rows:[['状态/约束','必填，≤64 字符（BR-03）'],['⚠ V3 变更','label 去掉「(标识)」后缀，placeholder=货柜号【T23】'],['校验规则','含义随资产单据类型变化：货柜号 / 业务合同号 / 提单号（单据类型在乾链分组选择）'],['异常提示','「请输入资产编号」（EX-01）']],lnk:['BR-03','BR-02']},
+'f02-ent':{t:'① 表单字段',s:'info',ti:'融资企业（下拉·V3 更名）',rows:[['状态/约束','必填；下拉单选，支持模糊搜索（BR-04）'],['⚠ V3 变更','label 由「企业名称」更名「融资企业」（详情页仍为「企业名称」，页间不一致）'],['数据来源','数据范围：授信通过的融资客户，GET /api/assets/candidate/enterprises（来源 F02）'],['校验规则','禁止提交候选集合之外的值（EX-02）'],['联动行为','选定后刷新金融产品候选（AC-01/02）']],lnk:['BR-04','EX-02','AC-01']},
+'f02-ttime':{t:'③ 锁定字段',s:'warn',ti:'资产形成时间（乾链系统信息）',rows:[['⚠ V2 变更','V2 截图由「交易时间」（可编辑）变为「资产形成时间」（只读），移入乾链系统信息分组【待确认-T11/T21：数据来源（乾链推送）、是否可编辑】'],['待确认','格式点分 2019.01.05 18:30:00 vs 规范 §3.5；是否允许晚于当前时间【待确认-T11】'],['异常提示','—']],lnk:['BR-11','T21']},
+'f02-fxval':{t:'① 表单字段',s:'info',ti:'资产价值(外币)',rows:[['状态/约束','币种=外币时必填，>0（BR-09）；币种=人民币时禁填（BR-08）'],['校验规则','失焦千分位格式化（BR-17）'],['异常提示','「请输入资产价值(外币)」（EX-04）']],lnk:['BR-09','EX-04']},
+'f02-ccy':{t:'① 表单字段',s:'info',ti:'外币-币种（下拉）',rows:[['状态/约束','必填；下拉单选（BR-07）'],['数据来源','数据字典币种集合（S08）——领域词典未提供，取值以字典为准'],['联动行为','选"人民币"→汇率锁定 1、外币价值禁填、人民币价值必填（BR-08）；选外币→人民币价值=外币×汇率（BR-09）【待确认-T02】']],lnk:['BR-07','BR-08','BR-09']},
+'f02-rate':{t:'① 表单字段',s:'warn',ti:'汇率',rows:[['状态/约束','币种=外币时必填；正数，小数 ≤4 位（BR-10）【待确认-T10】'],['联动行为','变更即重算资产价值(人民币)（BR-09）'],['异常提示','「请输入汇率」（EX-04）']],lnk:['BR-10','BR-09','EX-04']},
+'f02-cnyval':{t:'① 表单字段',s:'warn',ti:'资产价值(人民币)',rows:[['⚠ V3 状态','V3 截图为空输入框（未见只读底色/占位说明），可编辑性存疑；计算口径【待确认-T02】'],['计算口径','系统计算字段：=外币×汇率，四舍五入保留 2 位（BR-09）；绕过前端时服务端重算覆盖'],['展示规则','V3 源截图无￥前缀（与 L0 §8 冲突，T28）']],lnk:['BR-09','AC-04','T02']},
+'f02-product':{t:'① 表单字段',s:'info',ti:'申请金融产品（下拉）',rows:[['状态/约束','必填；下拉单选，支持模糊搜索（BR-05）'],['数据来源','候选=所选企业授信通过的金融产品集合，GET /api/assets/candidate/financial-products（来源 C02∩F02）'],['校验规则','禁止提交候选集合之外的值（EX-03）'],['联动行为','选定→带出产业项目（BR-06）+ 刷新明细品类候选（BR-14）（AC-03）']],lnk:['BR-05','EX-03','AC-03']},
+'f02-project':{t:'① 表单字段',s:'warn',ti:'产业项目（V3 移入乾链分组）',rows:[['⚠ V3 变更','由「资产基本信息·只读带出」移入乾链系统信息分组并改为下拉（字典，示例 联冻乾行；候选含 链数融乾/锆钛正乾）；原「金融产品带出只读」口径被推翻【待确认-T23】'],['状态/约束','必填（带星标）；下拉单选'],['候选来源','产业项目字典']],lnk:['BR-06','T23']},
+'f02-additem':{t:'② 操作按钮',s:'info',ti:'＋ 新增商品明细',rows:[['触发动作','明细表追加一行空明细（BR-13）'],['系统行为','条数下限【待确认-T13：≥1 / 允许 0】'],['⚠ V3 变更','V3 截图明细表无操作/删除列（V2 可删除行被推翻）【待确认-T25】'],['异常提示','低于下限时「请至少添加一条商品明细」（EX-01 同类）']],lnk:['BR-13','BR-14','T25']},
+'f02-price':{t:'① 表单字段',s:'info',ti:'明细 · 单价 *',rows:[['状态/约束','必填，>0（BR-14）；星号在字后（源截图）'],['⚠ V3 状态','源截图示例 1000/2000（整数、无千分位）'],['联动行为','金额小计=单价×数量实时重算（BR-15）'],['异常提示','「请输入单价」（EX-05）']],lnk:['BR-14','BR-15','EX-05']},
+'f02-qty':{t:'① 表单字段',s:'info',ti:'明细 · 计件数量 *（V3 更名）',rows:[['状态/约束','必填，>0（BR-14）；星号在字后（源截图）；label 由「数量」更名【T22】'],['联动行为','金额小计与合计行实时重算（BR-15/16）'],['异常提示','「请输入计件数量」（EX-05）']],lnk:['BR-14','BR-16','EX-05','T22']},
+'f02-sub':{t:'③ 锁定字段',s:'warn',ti:'明细 · 金额小计',rows:[['锁定原因','系统计算：=单价×数量，四舍五入保留 2 位（BR-15）'],['系统行为','服务端重算，不信任前端值'],['展示规则','千分位（BR-17）']],lnk:['BR-15','BR-17']},
+'f02-total':{t:'① 展示组件',s:'warn',ti:'合计行',rows:[['⚠ V3 变更','V3 原型按截图忠实展示 2,00 / 20,000.00（V2 曾按规则值 2,000/￥40,000.00 展示）；源截图疑误延续【待确认-T20/T26】'],['展示规则','规则口径：数量合计=SUM(计件数量)、金额合计=SUM(金额小计)（BR-16）；V3 截图无￥前缀（T28）'],['按规则实算','应为 2,000 / 40,000.00（两行小计各 20,000.00）'],['关联 AC','AC-O01-F02-06（待 T26 裁决后复核）']],lnk:['BR-16','BR-17','T20','T26']},
+'f02-cancel':{t:'② 操作按钮',s:'info',ti:'取消',rows:[['触发动作','离开新增页'],['系统行为','有未保存内容时二次确认（Spec §5 交互表：确认放弃 → 返回列表页；取消 → 留在表单）；无未保存内容直接返回'],['异常反馈','—'],['编号溯源','Spec 交互表未单列编号，无错挂编号']],lnk:[]},
+'f02-submit':{t:'② 操作按钮',s:'info',ti:'确定（提交）',rows:[['触发动作','POST /api/assets（含明细）'],['系统行为','前端校验→服务端校验（候选集合、计算字段重算、防重复）→事务整体提交'],['实体写入清单','Asset 新增 + AssetItem 整体替换式写入 + 审计日志 + 事件 asset.created（BR-19）'],['成功反馈','Toast「保存成功」→ 跳转资产列表（AC-11）'],['异常反馈','400 字段级提示（EX-01~06/12，数据保留）；防重复拦截（EX-07）；403（EX-08）；500 整体回滚可重试（EX-10）']],lnk:['BR-18','BR-19','EX-07']},
+'f02-ent-asset':{t:'实体徽章',s:'ok',ti:'E: Asset',rows:[['归属','O01 资产管理（本模块拥有）'],['本页读写性','新建（成功绿）'],['区块↔实体映射','基本信息区块 → POST /api/assets'],['写操作影响','Asset 新增（初始状态 NOT_FINANCED）']],lnk:['ENT']},
+'f02-ent-item':{t:'实体徽章',s:'ok',ti:'E: AssetItem（N─1 Asset）',rows:[['归属','O01 资产管理（本模块拥有）'],['本页读写性','新建（成功绿）'],['区块↔实体映射','明细区块 → POST /api/assets'],['写操作影响','整体替换式写入：未出现的既有记录物理删除、新增插入、保留更新']],lnk:['ENT']},
+'f03-base':{t:'③ 锁定字段',s:'warn',ti:'资产基本信息区块（页面级只读）',rows:[['锁定原因','详情页所有字段只读，页面不提供任何编辑、删除入口（BR-07）'],['系统行为','GET /api/assets/{id} 加载；不存在 → 404（EX-01）'],['展示规则','空值显示"-"；金额按 BR-05']],lnk:['BR-07','EX-01']},
+'f03-ident':{t:'③ 锁定字段',s:'info',ti:'资产编号',rows:[['⚠ V3 变更','label 去掉「(标识)」后缀；V3 示例值 货柜号A【T23】'],['展示规则','含义随资产单据类型变化（与 O01-F01 BR-10 同口径）：货柜号 / 业务合同号 / 提单号（BR-06）']],lnk:['BR-06','T23']},
+'f03-totalq':{t:'① 展示组件',s:'warn',ti:'合计 · 计价数量',rows:[['⚠ V3 状态','V3 截图显示 2,00（V2 曾按规则值 2,000 展示），疑误【T26/T20】'],['展示规则','规则口径：数量合计=SUM(数量)，千分位（BR-04）'],['关联 AC','AC-O01-F03-03（待裁决后复核）']],lnk:['BR-04','AC-03','T26']},
+'f03-total':{t:'① 展示组件',s:'warn',ti:'合计 · 金额',rows:[['⚠ V3 状态','V3 截图显示 20,000.00 且无￥前缀（V2 曾按规则值 ￥40,000.00 展示），疑误【T26/T20/T28】'],['展示规则','规则口径：金额合计=SUM(金额小计)；单行金额小计取自存储值，不重算（BR-04）'],['按规则实算','应为 40,000.00（两行小计各 20,000.00）'],['关联 AC','AC-O01-F03-03（待裁决后复核）']],lnk:['BR-04','AC-03','T20','T26']},
+'f03-cny':{t:'① 展示字段',s:'warn',ti:'资产价值(人民币)（详情）',rows:[['⚠ V2 变更','V2 截图值 670,500.00，与 BR-09 计算口径（100,800.00×6.2313=628,115.04）不符，且该资产币种=外币时 V1 口径显示"-"【待确认-T02：外币计价资产人民币价值展示口径 / 截图数据疑误】']],lnk:['BR-09','T02']},
+'f03-fin':{t:'③ 锁定字段',s:'warn',ti:'融资信息区块',rows:[['锁定原因','跨模块只读引用：数据来源 F03 融资管理，本模块不落库复制（BR-02）'],['系统行为','GET /api/assets/{id}/financing；加载失败降级【待确认-T17：候选 A 主区块正常+区块横幅；候选 B 整页报错】（EX-03）'],['展示规则','资产未被融资引用时【待确认-T16：不展示 / 空态】（BR-03）']],lnk:['BR-02','BR-03','EX-03']},
+'f03-loan':{t:'① 展示字段',s:'warn',ti:'银行放款金额',rows:[['⚠ V3 状态','V3 截图显示 70,800.00（无￥前缀）——与 L0 §8 定谳（￥+千分位）冲突【T28】'],['展示规则','规则口径："￥"+千分位（BR-05）'],['关联 AC','AC-O01-F03-01']],lnk:['BR-05','AC-01','T28']},
+'f03-loantime':{t:'① 展示字段',s:'warn',ti:'放款时间',rows:[['⚠ V3 状态','V3 截图显示 2019.02.05 18:30（点分、无秒）——与规范 §3.5（YYYY-MM-DD HH:mm:ss）冲突【T28】'],['展示规则','规则口径：YYYY-MM-DD HH:mm:ss（BR-05 / 规范 §3.5）'],['关联 AC','AC-O01-F03-01']],lnk:['BR-05','AC-01','T28']},
+'f03-back':{t:'② 操作按钮',s:'info',ti:'← 返回列表',rows:[['触发动作','返回资产列表页（O01-F01，/assets）'],['系统行为','纯页面导航，无数据写入（Spec §5 交互表）'],['异常反馈','—'],['编号溯源','Spec 交互表未单列编号，无错挂编号']],lnk:[]},
+'f03-ent-asset':{t:'实体徽章',s:'warn',ti:'E: Asset',rows:[['归属','O01 资产管理（本模块拥有）'],['本页读写性','只读（警告橙）'],['区块↔实体映射','基本信息区块 ← GET /api/assets/{id}'],['写操作影响','无']],lnk:['ENT']},
+'f03-ent-item':{t:'实体徽章',s:'warn',ti:'E: AssetItem（N─1 Asset）',rows:[['归属','O01 资产管理（本模块拥有）'],['本页读写性','只读（警告橙）'],['区块↔实体映射','明细区块 ← GET /api/assets/{id}'],['写操作影响','无']],lnk:['ENT']},
+'f02-dtype':{t:'① 表单字段',s:'warn',ti:'单据类型（V3 新增于乾链分组）',rows:[['⚠ V3 变更','V3 截图出现于「乾链系统信息」分组第 2 行（下拉·字典，示例值 尾款订单；详情页同组只读展示）；原 T12「新增页无该字段」被推翻【待确认-T23】'],['状态/约束','必填（带星标）；下拉单选'],['候选来源','单据类型字典；枚举全集【待确认-T15：尾款订单、现货订单、购销合同、提单】'],['联动行为','资产编号含义随单据类型变化（BR-03）']],lnk:['BR-02','T23','T15']},
+'f02-supplier':{t:'① 表单字段',s:'warn',ti:'进口服务商 / 核心企业（V3 新增）',rows:[['⚠ V3 变更','V3 截图新增两下拉字段（数据源注释：企业用户(核心企业)）【待确认-T24：字段语义、与 O01-F01 列表列（T18）的对应关系】'],['新增页取值','进口服务商=全联集采供应链管理（山东）；核心企业=全联集采供应链管理（广东）'],['详情页取值','两者均为 全联集采供应链管理（山东）有限公司——与新增页核心企业（广东）不一致，源设计疑误【T24】'],['状态/约束','必填（带星标）；下拉单选']],lnk:['T24','T18']},
+'f02-tblv3':{t:'④ 区块',s:'warn',ti:'资产明细表（V3 列重构）',rows:[['⚠ V3 变更','列头变更为 *SKU编号 / *SKU名称 / *品类 / 单价* / 计件数量* / *计价单位 / 金额小计：移除「序号」「操作」列（V2 可删除行被推翻），新增「计价单位」列（PCS），「数量」更名「计件数量」【待确认-T25】'],['⚠ 件/价交叉','新增页用字「计件数量+计价单位」而详情页为「计价数量+计件单位」——两页源设计用字矛盾【待确认-T22】'],['行样式','V3 截图第 1 行为只读文本、第 2 行为输入框（金额小计列只读）——混合态交互语义待确认【T25】'],['源注释','金额=单价*数量，四舍五入，保留2位']],lnk:['T22','T25','BR-14']},
+'f02-v3chg':{t:'④ 区块',s:'warn',ti:'V3 字段增删总览（资产基本信息）',rows:[['移除','乾融资产流水号（V2 新增·T21 被推翻）、乾融创建时间（详情页保留展示）、产业项目（移入乾链分组改下拉）'],['新增','进口服务商 / 核心企业（下拉·必填）【T24】'],['更名','企业名称→融资企业（详情页仍「企业名称」）；资产编号(标识)→资产编号（placeholder=货柜号）'],['待确认','T23：增删是否同步 L1/L2/ER；T21 需重审']],lnk:['T23','T24']},
+'f03-supplier':{t:'③ 锁定字段',s:'warn',ti:'进口服务商 / 核心企业（V3 新增·详情）',rows:[['⚠ V3 变更','V3 截图新增两只读字段（资产基本信息区块第 1 行），取值均为 全联集采供应链管理（山东）有限公司【待确认-T24】'],['页间不一致','新增页核心企业默认值（广东）与详情页（山东）不一致，源设计疑误【T24】'],['展示规则','空值显示"-"（BR-05 同口径）']],lnk:['T24']},
+'f03-tblv3':{t:'④ 区块',s:'warn',ti:'资产明细表（V3 列重构·详情）',rows:[['⚠ V3 变更','列头变更为 *SKU编号 / *SKU名称 / *品类 / 单价* / 计价数量* / *计件单位 / 金额小计；移除「序号」列，新增单位列【待确认-T25】'],['⚠ 件/价交叉','详情页用字「计价数量+计件单位」而新增页为「计件数量+计价单位」——源设计页间矛盾【待确认-T22】'],['⚠ SKU名称','详情页无规格后缀（印度去头虾），新增页有（30-40/40-50）【待确认-T27】'],['金额','源截图无￥前缀【T28】']],lnk:['T22','T25','T27']},
+'f03-v3chg':{t:'④ 区块',s:'warn',ti:'V3 字段增删总览（资产基本信息·详情）',rows:[['移除','乾融资产流水号（V2 新增·T21 被推翻）'],['新增','进口服务商 / 核心企业（只读）【T24】'],['更名','资产编号(标识)→资产编号（值 货柜号A）；申请金融产品括号改半角'],['保留','乾融创建时间 2019.01.05 18:30（新增页已移除该字段）'],['待确认','T23：增删是否同步 L1/L2/ER；T21 需重审']],lnk:['T23']},
+'f03-ent-fin':{t:'实体徽章',s:'info',ti:'E: 融资单（引用）',rows:[['归属','F03 融资管理（跨模块）'],['本页读写性','只读引用（信息蓝）'],['区块↔实体映射','融资信息区块 ← GET /api/assets/{id}/financing'],['写操作影响','无（本模块不复制数据，BR-02）']],lnk:['ENT']}
+};
+
+/* ================== 状态切换器（规范 §10.5 真实预览） ================== */
+const STATES={
+list:[['default','默认'],['empty','空态 EX-04'],['e400','参数错误 EX-01'],['error','查询失败 EX-03'],['403','越权 EX-02']],
+new:[['default','默认'],['valid','校验拦截 EX-01'],['dup','防重复 EX-07'],['error','保存失败 EX-10'],['403','越权 EX-08']],
+detail:[['default','默认'],['loading','loading'],['error','融资失败 EX-03'],['404','404 EX-01'],['403','403 EX-02']]
+};
+
+/* ================== 渲染逻辑 ================== */
+let curPage='list', pinned=null;
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+
+function renderPanel(key){
+  const d=PAGES[key];
+  $('#ph-spec').textContent=d.spec;
+  const fmt=s=>s.replace(/【待确认-(T\d+)[^】]*】/g,'<span class="badge-T">$1</span>');
+  let h='';
+  h+=sec('1','页面概述',d.meta.length,`<dl class="p-meta">${d.meta.map(m=>`<dt>${m[0]}</dt><dd>${fmt(m[1])}</dd>`).join('')}</dl>`);
+  h+=sec('2','业务规则（BR）',d.brs.length,d.brs.map(b=>`<div class="p-item" data-entry="${b[0]}"><span class="p-id">${b[0]}</span><span class="p-txt">${fmt(b[1])}</span></div>`).join(''));
+  h+=sec('3','状态机',1,`<div class="p-item"><span class="p-txt">${fmt(d.sms)}</span></div>
+    <table class="mini-tbl" style="margin-top:8px"><tr><th>状态</th><th>含义</th><th>触发方</th></tr>
+    <tr><td class="mono">NOT_FINANCED</td><td>未融资</td><td rowspan="3">F03 融资管理（L1 §6）</td></tr>
+    <tr><td class="mono">FINANCING</td><td>融资中</td></tr><tr><td class="mono">FINANCED</td><td>已融资</td></tr></table>`);
+  h+=sec('4','实体关系（含写操作清单）',d.ents.length,`<table class="mini-tbl"><tr><th>实体</th><th>归属模块</th><th>本页读写性</th><th>区块↔实体映射</th></tr>
+    ${d.ents.map(e=>`<tr><td class="mono">${e[0]}</td><td>${e[1]}</td><td>${e[2]}</td><td>${e[3]}</td></tr>`).join('')}</table>
+    <div class="p-item" style="margin-top:8px" data-entry="ENT"><b>写操作影响清单：</b><span class="p-txt">${d.wr}</span></div>`);
+  h+=sec('5','业务流程',d.flow.length,`<div class="flow-nodes">${d.flow.map((f,i)=>`<span class="fn${f[1]?' cur':''}">${f[0]}</span>${i<d.flow.length-1?'<span class="fa">→</span>':''}`).join('')}</div><div class="hint-t" style="margin-top:6px">高亮=本功能节点；端到端主流程见 L1 §5</div>`);
+  h+=sec('6','异常与边界（EX）',d.exs.length,`<table class="mini-tbl"><tr><th>编号</th><th>场景</th><th>处理</th><th>用户提示</th></tr>${d.exs.map(e=>`<tr><td class="mono" data-entry="${e[0]}">${e[0]}</td><td>${e[1]}</td><td>${fmt(e[2])}</td><td>${e[3]}</td></tr>`).join('')}</table>`);
+  h+=sec('7','接口约定',d.apis.length,`<table class="mini-tbl"><tr><th>路径</th><th>方法</th><th>说明</th><th>幂等性</th><th>安全与校验</th></tr>${d.apis.map(a=>`<tr><td class="mono">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td>${fmt(a[4])}</td></tr>`).join('')}</table>`);
+  const fNo=key==='list'?'F01':key==='new'?'F02':'F03';
+  h+=sec('8','验收标准（AC）',d.acs.length,d.acs.map(a=>`<div class="p-item" data-entry="AC-${a[0]}"><span class="p-id">AC-O01-${fNo}-${a[0]}</span><span class="p-txt">${a[1]}</span></div>`).join(''));
+  h+=sec('9','非功能需求',1,`<div class="p-item"><span class="p-txt">遵循《全局非功能需求》基线（本功能无特殊增量）。</span></div>`);
+  h+=sec('10','明确不做（Out of Scope）',d.oos.length,`<ul class="oos">${d.oos.map(o=>`<li>${o}</li>`).join('')}</ul>`);
+  h+=sec('11','变更记录',d.chg.length,`<table class="mini-tbl"><tr><th>版本</th><th>日期</th><th>变更内容</th></tr>${d.chg.map(c=>`<tr><td class="mono">${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td></tr>`).join('')}</table>`);
+  $('#panel-body').innerHTML=h;
+}
+function sec(no,title,cnt,body,open){
+  const isOpen=(open!==undefined?open:(no==='1'||no==='2'))?' open':'';
+  return `<div class="p-sec${isOpen}" id="psec-${no}"><div class="p-sec-h" onclick="this.parentNode.classList.toggle('open')"><b>分区${no} · ${title}</b><span><span class="cnt">${cnt}</span><span class="arr">▶</span></span></div><div class="p-body">${body}</div></div>`;
+}
+
+function showPage(key){
+  curPage=key; pinned=null; hideTT();
+  $$('.page').forEach(p=>p.classList.remove('on'));
+  $('#page-'+key).classList.add('on');
+  $$('.nav-item.child').forEach(n=>n.classList.toggle('active',n.dataset.page===key));
+  $('#crumb-cur').textContent=PAGES[key].crumb;
+  $('#tb-title').textContent=PAGES[key].spec.split(' · ')[0]+' '+PAGES[key].crumb;
+  resetStates(key); renderPanel(key); buildStates(key);
+  $('#viewport').scrollTop=0;
+}
+function buildStates(key){
+  const sw=$('#st-sw'); sw.innerHTML='<span>页面状态：</span>';
+  STATES[key].forEach(s=>{
+    const b=document.createElement('button'); b.textContent=s[1]; b.dataset.st=s[0];
+    if(s[0]==='default')b.classList.add('on');
+    b.onclick=()=>setState(key,s[0]);
+    sw.appendChild(b);
+  });
+}
+function resetStates(key){
+  $$('#page-'+key+' .banner').forEach(b=>b.classList.remove('show'));
+  $$('#page-'+key+' .full-state').forEach(b=>b.classList.remove('show'));
+  $('#list-empty').style.display='none'; $('#list-tbody').style.display='';
+  $('#det-body').style.display=''; $('#det-loading').style.display='none';
+  $$('#page-'+key+' .ipt').forEach(i=>i.classList.remove('err'));
+}
+function setState(key,st){
+  resetStates(key);
+  $$('#st-sw button').forEach(b=>b.classList.toggle('on',b.dataset.st===st));
+  if(st==='default')return;
+  const setB=(id,msg)=>{const b=$('#'+id);b.querySelector('.bt').textContent=msg;b.classList.add('show')};
+  if(key==='list'){
+    if(st==='empty'){$('#list-tbody').style.display='none';$('#list-empty').style.display='block';}
+    if(st==='e400'){setB('lb-list-e','参数不合法：融资状态值非法（EX-01，400 + PARAM_INVALID）');}
+    if(st==='error'){setB('lb-list-e','查询失败，请稍后重试（EX-03：查询超时或服务失败）');}
+    if(st==='403'){$('#fs-list-403').classList.add('show');}
+  }
+  if(key==='new'){
+    if(st==='valid'){$$('#page-new .f-col .ipt').forEach(i=>{if(i.value===''||i.value==='-')i.classList.add('err')});setB('lb-new-e','请完善必填项：逐字段提示，不发起请求（EX-01，前端拦截）');}
+    if(st==='dup'){setB('lb-new-e','该资产已存在，乾链订单号：zr20121212121（EX-07，防重复口径 BR-18【待确认-T14】）');}
+    if(st==='error'){setB('lb-new-e','保存失败，请稍后重试（EX-10：数据库写入失败，整体回滚，无半截数据——表单数据保留）');}
+    if(st==='403'){$('#fs-new-403').classList.add('show');}
+  }
+  if(key==='detail'){
+    if(st==='loading'){$('#det-body').style.display='none';$('#det-loading').style.display='block';}
+    if(st==='error'){setB('lb-det-e','融资信息加载失败（EX-03 降级候选 A：主区块正常展示+融资区块错误横幅【待确认-T17】）');}
+    if(st==='404'){$('#fs-det-404').classList.add('show');}
+    if(st==='403'){$('#fs-det-403').classList.add('show');}
+  }
+}
+
+/* ---- Tooltip（规范 §10.3） ---- */
+const tt=$('#tt');
+function ttHTML(k){
+  const t=TT[k];
+  const semName=t.s==='info'?'信息蓝':t.s==='warn'?'警告橙':t.s==='danger'?'危险红':'成功绿';
+  const rows=t.rows.map(r=>`<div class="tt-row"><b>${r[0]}：</b>${r[1].replace(/【待确认-(T\d+)[^】]*】/g,'<span class="badge-T">$1</span>')}</div>`).join('');
+  const links=t.lnk.map(l=>{
+    if(l==='ENT')return `<a onclick="jumpPanel('4','ENT')">分区4 实体</a>`;
+    const no=l.startsWith('AC')?'8':l.startsWith('BR')?'2':'6';
+    return `<a onclick="jumpPanel('${no}','${l}')">${l}</a>`;
+  }).join('');
+  return `<div class="tt-h"><span class="tt-type">${t.t}</span><span class="tt-sem ${t.s}">${semName}</span></div>
+  <div class="tt-b"><div class="tt-t">${t.ti}</div>${rows}
+  <div class="tt-links">编号溯源：${links}<span class="tt-pin">（单击空白处解除固定）</span></div></div>`;
+}
+function showTT(el){
+  tt.innerHTML=ttHTML(el.dataset.tt); tt.classList.add('show');
+  const r=el.getBoundingClientRect();
+  let x=r.right+8,y=r.top-4;
+  if(x+350>innerWidth)x=Math.max(8,r.left-348);
+  if(y+tt.offsetHeight>innerHeight-8)y=Math.max(8,innerHeight-tt.offsetHeight-8);
+  tt.style.left=x+'px';tt.style.top=y+'px';
+}
+function hideTT(){if(!pinned)tt.classList.remove('show')}
+function pinTT(el){
+  $$('.anchor.pin,.ebadge').forEach(a=>a.classList&&a.classList.remove('pin'));
+  el.classList.add('pin'); pinned=el; showTT(el);
+}
+document.addEventListener('mouseover',e=>{
+  const a=e.target.closest('.anchor,.ebadge');
+  if(a&&a.dataset.tt&&!pinned&&!document.body.classList.contains('anno-off'))showTT(a);
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||(!e.relatedTarget.closest('#tt')&&!e.relatedTarget.closest('.anchor')&&!e.relatedTarget.closest('.ebadge')))hideTT();
+});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('.anchor,.ebadge');
+  if(a&&a.dataset.tt){e.stopPropagation();e.preventDefault();pinTT(a);return}
+  if(!e.target.closest('#tt')&&pinned){pinned.classList.remove('pin');pinned=null;tt.classList.remove('show')}
+});
+function jumpPanel(secNo,entry){
+  const s=$('#psec-'+secNo); s.classList.add('open');
+  const item=s.querySelector(`[data-entry="${entry}"]`);
+  if(item){item.scrollIntoView({behavior:'smooth',block:'center'});item.classList.add('hl');setTimeout(()=>item.classList.remove('hl'),2000)}
+  const panel=$('#panel'); if(panel.classList.contains('collapsed'))togglePanel();
+}
+
+/* ---- 其他交互 ---- */
+function togglePanel(){$('#panel').classList.toggle('collapsed')}
+function toast(msg,type){
+  const t=$('#toast');t.textContent=msg;
+  t.className='toast show'+(type==='ok'?'':' err');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3600);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  $('#anno-sw').onclick=()=>{
+    $('#anno-sw').classList.toggle('off');
+    document.body.classList.toggle('anno-off');
+    if(document.body.classList.contains('anno-off')){tt.classList.remove('show');pinned=null}
+  };
+  $$('.nav-item.child').forEach(n=>{if(n.dataset.page)n.onclick=()=>showPage(n.dataset.page)});
+  /* V2 修复：列表长文本列 ellipsis 截断时，悬浮显示全文 */
+  $$('#list-tbody tr').forEach(tr=>{[3,4,5,12].forEach(i=>{const td=tr.children[i];if(td&&td.textContent.trim()&&td.textContent.trim()!=='-')td.title=td.textContent.trim()})});
+  renderPanel('list');buildStates('list');
+});
+</script>
+</body>
+</html>

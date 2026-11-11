@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乾融 · C03 额度账本 高保真原型（标注版 V1）</title>
+<style>
+/* ========== Design Token（乾融金融中台 UI规范 V1.4 §3，与 O01/O02/B02/B04/F03 一致） ========== */
+:root{
+  --c-primary:#1668DC; --c-primary-h:#2F7BE8;
+  --c-bg:#F5F7FA; --c-card:#FFFFFF;
+  --c-t1:#1F2937; --c-t2:#6B7280; --c-t3:#9CA3AF;
+  --c-ok:#10B981; --c-warn:#F59E0B; --c-danger:#EF4444; --c-info:#3B82F6;
+  --c-line:#E5E7EB; --c-dis:#D1D5DB;
+  --c-nav:#0F1B2D; --c-nav-sub:#132238; --c-nav-t:#DCE6F2; --c-nav-aux:#8FA3BC;
+  --c-nav-hover:#1A2D47; --c-nav-active:#1D3A5F; --c-nav-hl:#3B82F6;
+  --ff:"Source Han Sans SC","Noto Sans SC","思源黑体",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --fm:"SFMono-Regular","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--ff);font-size:14px;color:var(--c-t1);background:var(--c-bg);overflow:hidden;height:100vh;display:flex}
+.num,.mono{font-family:var(--fm);font-variant-numeric:tabular-nums;letter-spacing:0}
+a{color:var(--c-primary);text-decoration:none;cursor:pointer}
+
+/* ========== 侧边导航 ========== */
+.sidebar{width:220px;background:var(--c-nav);color:var(--c-nav-t);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.logo{height:52px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.logo-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#1668DC,#3B82F6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;margin-right:10px}
+.logo-name{font-size:16px;font-weight:600;letter-spacing:2px}
+.nav{flex:1;padding:8px 0 30px}
+.nav-item{display:flex;align-items:center;height:40px;padding:0 20px;color:var(--c-nav-aux);cursor:pointer;font-size:14px;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--c-nav-hover);color:var(--c-nav-t)}
+.nav-item.active{background:var(--c-nav-active);color:#fff;border-left:3px solid var(--c-nav-hl);padding-left:17px}
+.nav-item.child{height:36px;padding-left:46px;font-size:13px}
+.nav-item .ni{width:4px;height:4px;border-radius:50%;background:currentColor;margin-right:8px;opacity:.6}
+.nav-item .arr{margin-left:auto;font-size:11px;opacity:.7}
+.nav-cap{padding:14px 20px 4px;font-size:12px;color:#5A6E88;letter-spacing:1px}
+.nav-grp{display:none}
+.nav-grp.open{display:block}
+
+/* ========== 主区 ========== */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{height:52px;background:var(--c-card);border-bottom:1px solid var(--c-line);display:flex;align-items:center;padding:0 24px;flex-shrink:0;justify-content:space-between}
+.crumb{color:var(--c-t2);font-size:13px}
+.crumb b{color:var(--c-t1);font-weight:600}
+.topbar-r{display:flex;align-items:center;gap:14px;color:var(--c-t2);font-size:13px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--c-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.content{flex:1;display:flex;min-height:0}
+.viewport{flex:1;overflow-y:auto;padding:20px 24px;min-width:0}
+
+/* ========== 原型标注工具条（标注层，非业务 UI） ========== */
+.proto-toolbar{height:44px;background:#fff;border-bottom:2px dashed var(--c-info);display:flex;align-items:center;gap:16px;padding:0 20px;flex-shrink:0;z-index:60;flex-wrap:wrap}
+.pt-tag{font-size:12px;color:var(--c-info);border:1px dashed var(--c-info);border-radius:4px;padding:2px 8px;background:rgba(59,130,246,.06)}
+.pt-title{font-weight:600;font-size:13px}
+.st-sw{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--c-t2);flex-wrap:wrap}
+.st-sw button{border:1px solid var(--c-line);background:#fff;border-radius:4px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--c-t2);font-family:var(--ff)}
+.st-sw button.on{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.sw{position:relative;width:40px;height:20px;background:var(--c-primary);border-radius:10px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.sw.off{background:var(--c-dis)}
+.sw::after{content:"";position:absolute;top:2px;left:22px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.off::after{left:2px}
+.sw-lb{font-size:12px;color:var(--c-t2)}
+body.anno-off .anchor,body.anno-off .ebadge,body.anno-off .badge-T{display:none!important}
+body.anno-off .anno-el{outline:none!important}
+body.anno-off .panel{display:none}
+
+/* ========== 页面与卡片 ========== */
+.page{display:none;max-width:1440px;margin:0 auto}
+.page.on{display:block}
+.card{background:var(--c-card);border-radius:8px;border:1px solid var(--c-line);margin-bottom:16px;position:relative}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--c-line)}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-title::before{content:"";width:3px;height:14px;background:var(--c-primary);border-radius:2px}
+.card-bd{padding:20px}
+.hint-t{font-size:12px;color:var(--c-t3);line-height:18px}
+
+/* ========== 额度总览：头部 Tab + 总授信 ========== */
+.ov-top{display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.ov-tab{height:40px;padding:0 22px;border-radius:6px;background:var(--c-primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:var(--ff)}
+.ov-tab:hover{background:var(--c-primary-h)}
+.total-line{font-size:22px;font-weight:700;line-height:1.2;flex-wrap:wrap}
+.total-line .tl-val{color:var(--c-primary);font-family:var(--fm);margin-left:2px}
+
+/* ========== 产业项目胶囊 ========== */
+.pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.pill{height:32px;padding:0 16px;border-radius:16px;border:1px solid var(--c-line);background:#fff;color:var(--c-t2);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;font-family:var(--ff);transition:.15s}
+.pill:hover{border-color:var(--c-primary);color:var(--c-primary)}
+.pill.cur{background:var(--c-primary);border-color:var(--c-primary);color:#fff;font-weight:600}
+
+/* ========== 统计卡 ========== */
+.stat-cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.stat-card{background:#fff;border:1px solid var(--c-line);border-radius:8px;padding:12px 14px;min-width:0}
+.stat-card .sc-t{font-size:12px;color:var(--c-t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-card .sc-v{font-size:20px;color:var(--c-primary);font-family:var(--fm);font-weight:600;margin:6px 0 4px;white-space:nowrap}
+.stat-card .sc-s{font-size:11px;color:var(--c-t3)}
+@media (max-width:1200px){.stat-cards{grid-template-columns:repeat(3,1fr)}}
+
+/* ========== 视图切换 Tab ========== */
+.v-tabs{display:flex;gap:28px;border-bottom:2px solid var(--c-line);margin-bottom:16px}
+.v-tab{padding:10px 4px;font-size:14px;color:var(--c-t2);cursor:pointer;position:relative;user-select:none}
+.v-tab:hover{color:var(--c-primary)}
+.v-tab.on{color:var(--c-primary);font-weight:600}
+.v-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:3px;background:var(--c-primary);border-radius:2px}
+.vpane{display:none}
+.vpane.on{display:block}
+
+/* ========== 资金维度：银行卡片 ========== */
+.bank-card{background:#fff;border:1px solid var(--c-line);border-radius:8px;margin-bottom:16px;position:relative;overflow:hidden}
+.bk-hd{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--c-bg);border-bottom:1px solid var(--c-line);flex-wrap:wrap}
+.bk-logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1D5FD6,#3B82F6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.bk-name{font-size:17px;font-weight:600}
+.bk-tag{margin-left:2px}
+.bk-valid{margin-left:auto;color:var(--c-t2);font-size:13px;white-space:nowrap}
+.bk-bd{display:flex;gap:28px;padding:18px 20px;align-items:center;flex-wrap:wrap}
+.ring-blk{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:170px}
+.ring-note{font-size:11px;color:var(--c-t3);margin-top:8px;text-align:center;line-height:16px}
+.ind-cards{flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;min-width:340px}
+.ind-card{border:1px solid var(--c-line);border-radius:8px;padding:10px 12px;background:#fff;min-width:0}
+.ind-card .ic-t{font-size:11px;color:var(--c-t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ind-card .ic-v{font-size:17px;color:var(--c-primary);font-family:var(--fm);font-weight:600;margin-top:5px;white-space:nowrap}
+.bk-tbl-hd{padding:12px 20px 0;display:flex;align-items:center;gap:8px}
+.bk-tbl-hd .bt-t{font-size:14px;font-weight:600}
+.bk-tbl-hd .bt-t::before{content:"";display:inline-block;width:3px;height:13px;background:var(--c-primary);border-radius:2px;margin-right:8px;vertical-align:-1px}
+.bk-tbl-bd{padding:8px 20px 16px}
+
+/* ========== 表格 ========== */
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap;table-layout:fixed}
+.tbl th{background:var(--c-bg);color:var(--c-t2);font-weight:500;padding:9px 8px;text-align:left;border-bottom:1px solid var(--c-line)}
+.tbl th .anchor{top:0;height:14px;font-size:10px;margin-left:3px}
+.tbl td{padding:10px 8px;border-bottom:1px solid var(--c-line);color:var(--c-t1);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+.tbl tr:hover td{background:rgba(22,104,220,.03)}
+td.r,th.r{text-align:right}
+td.c,th.c{text-align:center}
+td.slash{color:var(--c-t3);text-align:right}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:14px 0 0;font-size:13px;color:var(--c-t2);flex-wrap:wrap;gap:8px}
+.pager-r{display:flex;gap:6px;align-items:center}
+.pg-btn{min-width:28px;height:28px;border:1px solid var(--c-line);background:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--c-t2)}
+.pg-btn.on{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+.pg-sep{color:var(--c-t3);font-size:12px}
+.pg-sel{height:26px;border:1px solid var(--c-line);border-radius:4px;font-size:12px;padding:0 4px;font-family:var(--fm)}
+.em-dash{color:var(--c-t3)}
+.dtag{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--c-t2);background:var(--c-bg);border:1px solid var(--c-line);border-radius:4px;padding:1px 6px}
+.dtag.blue{color:var(--c-primary);background:rgba(22,104,220,.06);border-color:rgba(22,104,220,.25)}
+
+/* ========== 企业维度：企业卡片 ========== */
+.search-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
+.f-item{display:flex;align-items:center;gap:8px}
+.f-item label{color:var(--c-t2);font-size:13px;white-space:nowrap}
+.ipt{height:32px;border:1px solid var(--c-line);border-radius:4px;padding:0 10px;font-size:13px;color:var(--c-t1);outline:none;width:200px;font-family:var(--ff);background:#fff}
+.ipt:focus{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(22,104,220,.12)}
+.ipt::placeholder{color:var(--c-t3)}
+.link-btn{color:var(--c-primary);font-size:13px;cursor:pointer}
+.link-btn:hover{text-decoration:underline}
+.ent-card{background:#fff;border:1px solid var(--c-line);border-radius:8px;margin-bottom:14px;position:relative}
+.et-hd{padding:14px 20px 12px}
+.et-row1{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.et-name{font-size:15px;font-weight:600}
+.et-row2{display:flex;flex-wrap:wrap;gap:6px 30px;margin-top:10px;font-size:13px}
+.et-row2 .kv{white-space:nowrap}
+.et-row2 .lab{color:var(--c-t2);margin-right:4px}
+.et-row2 .val{color:var(--c-t1)}
+.et-row2 .val.hl-b{color:var(--c-primary);font-family:var(--fm)}
+.et-det{border-top:1px dashed var(--c-line);padding:6px 20px 16px;display:none}
+.ent-card.open .et-det{display:block}
+.det-t{font-size:14px;font-weight:600;padding:12px 0 8px;border-bottom:1px solid var(--c-line);margin-bottom:4px}
+.rec{border-bottom:1px dashed var(--c-line);padding:10px 0}
+.rec:last-of-type{border-bottom:none}
+.rec-row{display:flex;flex-wrap:wrap;gap:6px 36px;line-height:24px}
+.rec-row .kv{white-space:nowrap}
+.rec-row .lab{color:var(--c-t2);margin-right:2px}
+.rec-row .val{color:var(--c-t1)}
+.rec-row .val.mono-v{font-family:var(--fm)}
+.rec-row .val.act{color:var(--c-primary);cursor:pointer}
+.rec-row .val.act:hover{text-decoration:underline}
+.empty-det{padding:26px 0;text-align:center;color:#98a2b3;font-size:13px}
+
+/* ========== 按钮文字链 ========== */
+.btn-text{color:var(--c-primary);font-size:13px;cursor:pointer;background:none;border:none;padding:2px 4px;font-family:var(--ff)}
+.btn-text:hover{text-decoration:underline}
+
+/* ========== 页面状态 ========== */
+.banner{display:none;margin-bottom:14px;padding:10px 14px;border-radius:6px;font-size:13px;align-items:center;gap:10px}
+.banner.show{display:flex}
+.banner.err{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.35);color:#B91C1C}
+.banner .b-retry{margin-left:auto}
+.full-state{display:none;position:absolute;inset:0;background:#fff;border-radius:8px;z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.full-state.show{display:flex}
+.fs-code{font-size:56px;font-weight:700;color:var(--c-dis);font-family:var(--fm)}
+.fs-t{font-size:16px;font-weight:600}
+.fs-d{font-size:13px;color:var(--c-t3)}
+#ov-loading{display:none;position:absolute;inset:0;background:rgba(255,255,255,.7);z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#ov-loading.show{display:flex}
+.spinner{width:36px;height:36px;border:3px solid var(--c-line);border-top-color:var(--c-primary);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#fund-empty{display:none;padding:40px 0;text-align:center;color:#98a2b3;font-size:13px;background:#fff;border:1px dashed var(--c-line);border-radius:8px;margin-bottom:16px}
+#fund-empty.show{display:block}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--c-ok);color:#065F46;padding:10px 18px;border-radius:6px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:none;z-index:200;max-width:80vw}
+.toast.err{border-color:var(--c-danger);color:#B91C1C}
+.toast.show{display:block}
+
+/* ========== 标注层：锚点 / 徽章 / Tooltip ========== */
+.anno-el{outline:1px dashed rgba(59,130,246,.55);outline-offset:2px;border-radius:4px}
+.anno-el.a-warn{outline-color:rgba(245,158,11,.7)}
+.anno-el.a-danger{outline-color:rgba(239,68,68,.6)}
+.anchor{display:inline-flex;align-items:center;height:16px;padding:0 4px;margin-left:4px;font-family:var(--fm);font-size:11px;line-height:1;border:1px dashed;border-radius:4px;background:#fff;cursor:pointer;vertical-align:middle;position:relative;top:-6px}
+.anchor.a-info{color:var(--c-info);border-color:var(--c-info)}
+.anchor.a-warn{color:#C77700;border-color:var(--c-warn)}
+.anchor.a-danger{color:var(--c-danger);border-color:var(--c-danger)}
+.anchor.a-ok{color:#047857;border-color:var(--c-ok)}
+.anchor:hover,.anchor.pin{box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.ebadge{position:absolute;bottom:8px;left:10px;font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:4px;border:1px dashed;cursor:pointer;z-index:5;background:#fff}
+.ebadge.b-ok{color:#047857;border-color:var(--c-ok)}
+.ebadge.b-warn{color:#C77700;border-color:var(--c-warn)}
+.ebadge.b-info{color:var(--c-info);border-color:var(--c-info)}
+.badge-T{display:inline-block;font-size:11px;color:#C77700;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.4);border-radius:3px;padding:0 4px;margin-left:4px;font-family:var(--fm);vertical-align:middle}
+#tt{position:fixed;z-index:300;background:#fff;border:1px solid var(--c-line);border-radius:8px;box-shadow:0 8px 28px rgba(15,27,45,.18);width:340px;font-size:12px;display:none;line-height:19px;color:var(--c-t1)}
+#tt.show{display:block}
+.tt-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--c-line);background:var(--c-bg);border-radius:8px 8px 0 0}
+.tt-type{font-family:var(--fm);font-size:11px;color:var(--c-t2)}
+.tt-sem{font-size:11px;padding:0 6px;border-radius:3px}
+.tt-sem.info{color:var(--c-info);background:rgba(59,130,246,.1)}
+.tt-sem.warn{color:#C77700;background:rgba(245,158,11,.12)}
+.tt-sem.danger{color:var(--c-danger);background:rgba(239,68,68,.1)}
+.tt-sem.ok{color:#047857;background:rgba(16,185,129,.1)}
+.tt-b{padding:10px 12px;max-height:320px;overflow-y:auto}
+.tt-t{font-weight:600;font-size:13px;margin-bottom:6px}
+.tt-row{margin-bottom:4px}
+.tt-row b{color:var(--c-t2);font-weight:500}
+.tt-links{border-top:1px dashed var(--c-line);margin-top:8px;padding-top:8px;color:var(--c-t2)}
+.tt-links a{font-family:var(--fm);font-size:11px;margin-right:8px}
+.tt-links a:hover{text-decoration:underline}
+.tt-pin{font-size:10px;color:var(--c-t3);float:right}
+
+/* ========== 右侧需求说明面板 ========== */
+.panel{width:360px;background:#fff;border-left:1px solid var(--c-line);display:flex;flex-direction:column;flex-shrink:0;transition:width .2s;font-size:12px}
+.panel.collapsed{width:40px}
+.panel-tab{width:40px;display:none;flex-direction:column;align-items:center;padding-top:10px;gap:8px;cursor:pointer;color:var(--c-primary)}
+.panel.collapsed .panel-tab{display:flex}
+.panel.collapsed .panel-main{display:none}
+.panel-main{display:flex;flex-direction:column;min-height:0;flex:1}
+.panel-hd{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--c-line);flex-shrink:0}
+.panel-hd b{font-size:13px}
+.panel-hd .ph-sub{font-size:11px;color:var(--c-t3);font-family:var(--fm);margin-left:6px}
+.panel-bd{flex:1;overflow-y:auto}
+.p-sec{border-bottom:1px solid var(--c-line)}
+.p-sec-h{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer}
+.p-sec-h b{font-size:12px}
+.p-sec-h .cnt{font-family:var(--fm);font-size:10px;color:var(--c-t3);margin-right:6px}
+.p-sec-h .arr{font-size:10px;color:var(--c-t3);transition:transform .15s}
+.p-sec.open .arr{transform:rotate(90deg)}
+.p-sec .p-body{display:none;padding:0 12px 10px}
+.p-sec.open .p-body{display:block}
+.p-item{padding:5px 0;font-size:11.5px;line-height:18px;display:flex;gap:6px}
+.p-item .p-id{font-family:var(--fm);color:var(--c-primary);font-size:11px;margin-right:6px;flex-shrink:0}
+.p-item .p-txt{color:var(--c-t1)}
+.p-item.hl{background:rgba(59,130,246,.12);border-radius:4px;padding:5px 6px}
+.p-meta{display:grid;grid-template-columns:76px 1fr;gap:4px 8px}
+.p-meta dt{color:var(--c-t3)}
+.p-meta dd{color:var(--c-t1)}
+.mini-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.mini-tbl th,.mini-tbl td{border:1px solid var(--c-line);padding:4px 6px;text-align:left;vertical-align:top;line-height:17px}
+.mini-tbl th{background:var(--c-bg);color:var(--c-t2);font-weight:500}
+.flow-nodes{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11px}
+.fn{padding:4px 8px;border:1px solid var(--c-line);border-radius:4px;background:var(--c-bg);color:var(--c-t2)}
+.fn.cur{border-color:var(--c-primary);background:rgba(22,104,220,.08);color:var(--c-primary);font-weight:600}
+.fa{color:var(--c-t3)}
+.oos{padding-left:16px}
+.oos li{margin-bottom:4px;color:var(--c-t1)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:4px}
+::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+
+<!-- ================= 侧边导航（业务 UI，按截图菜单树复刻） ================= -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">乾</div><div class="logo-name">乾融中台</div></div>
+  <nav class="nav">
+    <!-- 2026-11-06 指令：菜单项更名为「额度账本」，其余菜单全部隐藏 -->
+    <div class="nav-item active anno-el" data-tt="a-menu" onclick="toast('当前功能：C03 额度账本 · 额度总览')"><span class="ni"></span>额度账本<span class="anchor a-warn" data-tt="a-menu" style="top:-4px">T01</span><span class="badge-T">T02</span></div>
+  </nav>
+</aside>
+
+<!-- ================= 主区 ================= -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">数据金融配置 / 信用组件 / 额度账本 / <b id="crumb-cur">额度总览</b></div>
+    <div class="topbar-r"><span>欢迎你方雄敏</span><div class="avatar">方</div></div>
+  </div>
+
+  <div class="proto-toolbar">
+    <span class="pt-tag">原型标注层</span>
+    <span class="pt-title" id="tb-title">C03-F01 额度总览</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="sw" id="anno-sw" title="显示/隐藏标注层"></div>
+      <span class="sw-lb">标注总开关</span>
+    </div>
+    <div class="st-sw" id="st-sw"><span>页面状态：</span></div>
+  </div>
+
+  <div class="content">
+    <div class="viewport" id="viewport">
+
+      <!-- ============ 页面：额度总览（C03-F01，双视图） ============ -->
+      <div class="page on" id="page-ov" style="position:relative">
+        <div class="banner err" id="lb-ov-e"><span class="bt">参数不合法</span><button class="btn-text b-retry" onclick="toast('已重试（示例交互）')">重试</button></div>
+        <div id="ov-loading"><div class="spinner"></div><div style="color:var(--c-t2);font-size:13px">加载中…</div></div>
+        <div class="full-state" id="fs-ov-403"><div class="fs-code">403</div><div class="fs-t">您没有权限执行该操作</div><div class="fs-d">EX-04 · 已记录审计日志</div></div>
+
+        <!-- 头部：额度总览 Tab + 总授信 -->
+        <div class="ov-top">
+          <button class="ov-tab anno-el" data-tt="a-ovtab" onclick="toast('当前功能 Tab：额度总览')">额度总览<span class="anchor a-info" data-tt="a-ovtab">BR-01</span></button>
+          <div class="total-line anno-el a-warn" data-tt="a-total">总授信(万)：<span class="tl-val mono">285,000.00</span><span class="anchor a-warn" data-tt="a-total">T05</span></div>
+        </div>
+
+        <!-- 产业项目胶囊 -->
+        <div class="pill-row anno-el" data-tt="a-pill">
+          <button class="pill cur" data-pill="联冻乾行" onclick="selPill(this)">联冻乾行-3家银行</button>
+          <button class="pill" data-pill="链数融乾" onclick="selPill(this)">链数融乾-1家银行</button>
+          <button class="pill" data-pill="锆钛正乾" onclick="selPill(this)">锆钛正乾-1家银行</button>
+          <span class="anchor a-warn" data-tt="a-pill" style="top:0">BR-02</span><span class="badge-T">T04</span>
+        </div>
+
+        <!-- 六个统计卡 -->
+        <div class="stat-cards anno-el" data-tt="a-stats">
+          <div class="stat-card"><div class="sc-t">银行总批复额度(万)</div><div class="sc-v">230,000.00</div><div class="sc-s">2 家合作银行</div></div>
+          <div class="stat-card"><div class="sc-t">融资类型</div><div class="sc-v">4个</div><div class="sc-s">5 个 金融产品</div></div>
+          <div class="stat-card"><div class="sc-t">数字资产标的价值</div><div class="sc-v">750.00</div><div class="sc-s">7 个 货柜</div></div>
+          <div class="stat-card"><div class="sc-t">冻结中额度(万)</div><div class="sc-v">100.00</div><div class="sc-s">2 家合作银行</div></div>
+          <div class="stat-card"><div class="sc-t">已用额度</div><div class="sc-v">500.00</div><div class="sc-s">2 家合作银行</div></div>
+          <div class="stat-card"><div class="sc-t">可用额度</div><div class="sc-v">229,400.00</div><div class="sc-s">2 家合作银行</div></div>
+        </div>
+
+        <!-- 视图切换 Tab -->
+        <div class="v-tabs anno-el" data-tt="a-vtab">
+          <div class="v-tab on" data-v="fund" onclick="selView('fund')">资金维度视图</div>
+          <div class="v-tab" data-v="ent" onclick="selView('ent')">企业维度视图</div>
+          <span class="anchor a-info" data-tt="a-vtab" style="top:0">BR-04</span>
+        </div>
+
+        <!-- ============ 视图一：资金维度（按银行） ============ -->
+        <div class="vpane on" id="vp-fund">
+
+          <!-- 建设银行 -->
+          <div class="bank-card anno-el" data-tt="a-bk1">
+            <div class="bk-hd">
+              <div class="bk-logo">建</div>
+              <span class="bk-name">建设银行</span>
+              <span class="dtag blue bk-tag anno-el" data-tt="a-bk1tag">建行深南[2026]<span class="anchor a-warn" data-tt="a-bk1tag" style="top:-4px">T05</span></span>
+              <div class="bk-valid anno-el" data-tt="a-bk1valid">有效期间：2026-09-07 至 2027-09-07<span class="anchor a-warn" data-tt="a-bk1valid" style="top:-4px">T14</span></div>
+            </div>
+            <div class="bk-bd">
+              <div class="ring-blk anno-el a-warn" data-tt="a-ring">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#1668DC" stroke-width="10" stroke-linecap="round" stroke-dasharray="231.2 289.0" transform="rotate(-90 55 55)"/>
+                  <text x="55" y="53" text-anchor="middle" font-size="22" font-weight="700" fill="#1F2937" font-family="SFMono-Regular,Consolas,monospace">80%</text>
+                  <text x="55" y="72" text-anchor="middle" font-size="12" fill="#6B7280">用信率</text>
+                </svg>
+                <div class="ring-note">用信率=(冻品+已用)/授信额度<span class="anchor a-warn" data-tt="a-ringnote" style="top:-4px">T06</span><span class="badge-T">T07</span></div>
+              </div>
+              <div class="ind-cards anno-el" data-tt="a-ind">
+                <div class="ind-card"><div class="ic-t">银行总批复额度(万)</div><div class="ic-v">100,000.00</div></div>
+                <div class="ind-card"><div class="ic-t">数字资产标的价值</div><div class="ic-v">625.00</div></div>
+                <div class="ind-card"><div class="ic-t">冻结中额度(万)</div><div class="ic-v">100.00</div></div>
+                <div class="ind-card"><div class="ic-t">已用额度</div><div class="ic-v">400.00</div></div>
+                <div class="ind-card"><div class="ic-t">可用额度</div><div class="ic-v">99,500.00</div></div>
+              </div>
+            </div>
+            <div class="bk-tbl-hd"><span class="bt-t anno-el" data-tt="a-ptable">金融产品明细<span class="anchor a-info" data-tt="a-ptable" style="top:-2px">BR-05</span></span></div>
+            <div class="bk-tbl-bd tbl-wrap anno-el" data-tt="a-ptable">
+              <table class="tbl" id="t-ccb">
+                <colgroup><col style="width:34%"><col style="width:13%"><col style="width:14%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup>
+                <thead><tr>
+                  <th>产品名称</th><th class="r">产品额度</th><th class="r">产品冻结中额度</th><th class="r">已用额度</th><th class="r">可用额度</th><th class="r">数字资产标的价值</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td title="建行平台云贷(一级在途融)">建行平台云贷(一级在途融)</td><td class="slash r">/</td><td class="r num">50.00</td><td class="r num">200.00</td><td class="slash r">/</td><td class="r num">312.50</td></tr>
+                  <tr class="anno-el a-warn" data-tt="a-pempty"><td title="建行平台云贷(二级在途融)">建行平台云贷(二级在途融)</td><td></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td title="建行平台云贷(一级现货融)">建行平台云贷(一级现货融)</td><td class="slash r">/</td><td class="r num">50.00</td><td class="r num">200.00</td><td class="slash r">/</td><td class="r num">312.50</td></tr>
+                  <tr class="anno-el a-warn" data-tt="a-pempty"><td title="建行平台云贷(二级现货融)">建行平台云贷(二级现货融)</td><td></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+              <span class="anchor a-warn" data-tt="a-slash" style="margin-left:8px;top:-2px">T08</span><span class="badge-T">T09</span>
+            </div>
+            <div class="ebadge b-warn" data-tt="e-bank1">E: CreditLine·建行</div>
+          </div>
+
+          <!-- 上海银行 -->
+          <div class="bank-card anno-el" data-tt="a-bk2">
+            <div class="bk-hd">
+              <div class="bk-logo" style="background:linear-gradient(135deg,#0E9F6E,#34D399)">上行</div>
+              <span class="bk-name">上海银行</span>
+              <span class="dtag blue bk-tag anno-el" data-tt="a-bk2tag">上行深南[2026]<span class="anchor a-warn" data-tt="a-bk2tag" style="top:-4px">T05</span></span>
+              <div class="bk-valid anno-el" data-tt="a-bk1valid">有效期间：2026-07-07 至 2027-07-07<span class="anchor a-warn" data-tt="a-bk1valid" style="top:-4px">T14</span></div>
+            </div>
+            <div class="bk-bd">
+              <div class="ring-blk anno-el a-warn" data-tt="a-ring">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#1668DC" stroke-width="10" stroke-linecap="round" stroke-dasharray="231.2 289.0" transform="rotate(-90 55 55)"/>
+                  <text x="55" y="53" text-anchor="middle" font-size="22" font-weight="700" fill="#1F2937" font-family="SFMono-Regular,Consolas,monospace">80%</text>
+                  <text x="55" y="72" text-anchor="middle" font-size="12" fill="#6B7280">用信率</text>
+                </svg>
+                <div class="ring-note">用信率=(冻品+已用)/授信额度</div>
+              </div>
+              <div class="ind-cards anno-el" data-tt="a-ind">
+                <div class="ind-card"><div class="ic-t">银行总批复额度(万)</div><div class="ic-v">50,000.00</div></div>
+                <div class="ind-card"><div class="ic-t">数字资产标的价值</div><div class="ic-v">125.00</div></div>
+                <div class="ind-card"><div class="ic-t">冻结中额度(万)</div><div class="ic-v">0.00</div></div>
+                <div class="ind-card"><div class="ic-t">已用额度</div><div class="ic-v">100.00</div></div>
+                <div class="ind-card"><div class="ic-t">可用额度</div><div class="ic-v">49,900.00</div></div>
+              </div>
+            </div>
+            <div class="bk-tbl-hd"><span class="bt-t anno-el" data-tt="a-ptable">金融产品明细<span class="anchor a-info" data-tt="a-ptable" style="top:-2px">BR-05</span></span></div>
+            <div class="bk-tbl-bd tbl-wrap anno-el" data-tt="a-ptable">
+              <table class="tbl" id="t-bos">
+                <colgroup><col style="width:34%"><col style="width:13%"><col style="width:14%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup>
+                <thead><tr>
+                  <th>产品名称</th><th class="r">产品额度</th><th class="r">产品冻结中额度</th><th class="r">已用额度</th><th class="r">可用额度</th><th class="r">数字资产标的价值</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td title="上行易采购(一级在途融)">上行易采购(一级在途融)</td><td class="slash r">/</td><td class="r num">0.00</td><td class="r num">100.00</td><td class="slash r">/</td><td class="r num">125.00</td></tr>
+                  <tr class="anno-el a-warn" data-tt="a-pempty2"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="ebadge b-warn" data-tt="e-bank2">E: CreditLine·上行</div>
+          </div>
+
+          <div id="fund-empty">该产业项目下暂无银行授信数据</div>
+        </div>
+
+        <!-- ============ 视图二：企业维度（按企业） ============ -->
+        <div class="vpane" id="vp-ent">
+
+          <div class="search-row anno-el" data-tt="a-search">
+            <div class="f-item"><label>企业名称：</label><input class="ipt" id="ent-kw" placeholder="请输入企业名称"></div>
+            <span class="link-btn" onclick="toast('已按企业名称查询（示例交互）','ok')">搜索<span class="anchor a-info" data-tt="a-search" style="top:-4px">BR-07</span></span>
+            <span class="link-btn anno-el" data-tt="a-export" onclick="toast('导出任务已创建（示例交互）','ok')">导出<span class="anchor a-warn" data-tt="a-export" style="top:-4px">T15</span></span>
+          </div>
+
+          <!-- 企业卡片1（默认展开，额度使用最多） -->
+          <div class="ent-card open anno-el" data-tt="a-ent1" id="ec-1">
+            <div class="et-hd">
+              <div class="et-row1">
+                <span class="et-name">湛江市粤森水产有限公司</span>
+                <span class="btn-text" onclick="toggleEnt(this)">收起</span>
+              </div>
+              <div class="et-row2">
+                <span class="kv"><span class="lab">建行南山支行</span></span>
+                <span class="kv"><span class="lab">授信额度(万)：</span><span class="val hl-b">1000.00</span></span>
+                <span class="kv"><span class="lab">已用额度(万)：</span><span class="val">800.00</span></span>
+                <span class="kv anno-el a-warn" data-tt="a-ent1fz"><span class="lab">冻结中额度(万)：</span><span class="val em-dash">-</span><span class="anchor a-warn" data-tt="a-ent1fz" style="top:-4px">T10</span></span>
+                <span class="kv"><span class="lab">可用额度(万)：</span><span class="val">200.00</span></span>
+                <span class="kv"><span class="lab">授信期限：</span><span class="val">2026-09-09 至 2027-03-08</span></span>
+              </div>
+            </div>
+            <div class="et-det anno-el" data-tt="a-det">
+              <div class="det-t">使用明细<span class="anchor a-info" data-tt="a-det" style="top:-2px">BR-09</span></div>
+              <div class="rec anno-el" data-tt="a-rec">
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">融资编号：</span><span class="val mono-v">zr20121212123</span></span>
+                  <span class="kv"><span class="lab">产品：</span><span class="val">建行平台云贷(一级在途融)</span></span>
+                  <span class="kv anno-el" data-tt="a-recst"><span class="lab">融资状态：</span><span class="val">融资处理中</span><span class="anchor a-warn" data-tt="a-recst" style="top:-4px">T13</span></span>
+                  <span class="kv"><span class="lab">融资申请时间：</span><span class="val">2026-11-30 11:31:00</span></span>
+                </div>
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">额度动作类型：</span><span class="val act" onclick="toast('冻结：额度被占用（示例交互）')">冻结</span></span>
+                  <span class="kv"><span class="lab">申请金额：</span><span class="val mono-v">527,432.80</span></span>
+                  <span class="kv anno-el a-warn" data-tt="a-recavail"><span class="lab">当前可用额度：</span><span class="val mono-v">3,432.80</span><span class="anchor a-warn" data-tt="a-recavail" style="top:-4px">T12</span></span>
+                </div>
+              </div>
+              <div class="rec">
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">融资编号：</span><span class="val mono-v">zr20121212123</span></span>
+                  <span class="kv"><span class="lab">产品：</span><span class="val">建行平台云贷(一级在途融)</span></span>
+                  <span class="kv"><span class="lab">融资状态：</span><span class="val">待放款</span></span>
+                  <span class="kv"><span class="lab">融资申请时间：</span><span class="val">2026-11-24 11:31:00</span></span>
+                </div>
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">额度动作类型：</span><span class="val act" onclick="toast('冻结：额度被占用（示例交互）')">冻结</span></span>
+                  <span class="kv"><span class="lab">申请金额：</span><span class="val mono-v">527,432.80</span></span>
+                  <span class="kv"><span class="lab">当前可用额度：</span><span class="val mono-v">4,432.80</span></span>
+                </div>
+              </div>
+              <div class="rec">
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">融资编号：</span><span class="val mono-v">zr20121212125</span></span>
+                  <span class="kv"><span class="lab">产品：</span><span class="val">建行平台云贷(一级在途融)</span></span>
+                  <span class="kv"><span class="lab">融资状态：</span><span class="val">融资已取消</span></span>
+                  <span class="kv"><span class="lab">取消时间：</span><span class="val">2026-11-21 11:31:00</span></span>
+                </div>
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">额度动作类型：</span><span class="val act" onclick="toast('冻结释放：占用额度解除（示例交互）')">冻结释放</span></span>
+                  <span class="kv"><span class="lab">申请金额：</span><span class="val mono-v">527,432.80</span></span>
+                  <span class="kv"><span class="lab">当前可用额度：</span><span class="val mono-v">5,432.80</span></span>
+                </div>
+              </div>
+              <div class="rec">
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">融资编号：</span><span class="val mono-v">zr20121212125</span></span>
+                  <span class="kv"><span class="lab">产品：</span><span class="val">建行平台云贷(一级在途融)</span></span>
+                  <span class="kv"><span class="lab">融资状态：</span><span class="val">待还款</span></span>
+                  <span class="kv"><span class="lab">放款时间：</span><span class="val">2026-11-20 11:31:00</span></span>
+                </div>
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">额度动作类型：</span><span class="val act" onclick="toast('已用：放款占用额度（示例交互）')">已用</span></span>
+                  <span class="kv"><span class="lab">放款金额：</span><span class="val mono-v">527,432.80</span></span>
+                  <span class="kv"><span class="lab">当前可用额度：</span><span class="val mono-v">6,432.80</span></span>
+                </div>
+              </div>
+              <div class="rec">
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">融资编号：</span><span class="val mono-v">zr20121212125</span></span>
+                  <span class="kv"><span class="lab">产品：</span><span class="val">建行平台云贷(一级在途融)</span></span>
+                  <span class="kv"><span class="lab">融资状态：</span><span class="val">已结清</span></span>
+                  <span class="kv"><span class="lab">结清时间：</span><span class="val">2026-11-11 11:31:00</span></span>
+                </div>
+                <div class="rec-row">
+                  <span class="kv"><span class="lab">额度动作类型：</span><span class="val act" onclick="toast('已用释放：还款释放额度（示例交互）')">已用释放</span></span>
+                  <span class="kv"><span class="lab">还款本金：</span><span class="val mono-v">527,432.80</span></span>
+                  <span class="kv"><span class="lab">当前可用额度：</span><span class="val mono-v">7,432.80</span></span>
+                </div>
+              </div>
+              <div class="pager anno-el" data-tt="a-pager">
+                <div>共 15 条记录</div>
+                <div class="pager-r">
+                  <span>每页显示</span>
+                  <select class="pg-sel"><option selected>5</option><option>10</option><option>20</option></select>
+                  <span>条</span>
+                  <div class="pg-btn" onclick="toast('首页（示例交互）')">|&lt;</div>
+                  <div class="pg-btn" onclick="toast('上一页（示例交互）')">&lt;</div>
+                  <div class="pg-btn on">1</div>
+                  <div class="pg-btn" onclick="toast('第 2 页（示例交互）')">2</div>
+                  <div class="pg-btn" onclick="toast('第 3 页（示例交互）')">3</div>
+                  <span class="pg-sep">…</span>
+                  <div class="pg-btn" onclick="toast('第 7 页（示例交互）')">7</div>
+                  <div class="pg-btn" onclick="toast('第 8 页（示例交互）')">8</div>
+                  <div class="pg-btn" onclick="toast('第 9 页（示例交互）')">9</div>
+                  <div class="pg-btn" onclick="toast('下一页（示例交互）')">&gt;</div>
+                  <div class="pg-btn" onclick="toast('末页（示例交互）')">&gt;|</div>
+                </div>
+                <span class="anchor a-info" data-tt="a-pager" style="top:-4px">BR-10</span>
+              </div>
+            </div>
+            <div class="ebadge b-info" data-tt="e-ent1">E: CreditUsage·粤森</div>
+          </div>
+
+          <!-- 企业卡片2 -->
+          <div class="ent-card anno-el" data-tt="a-ent2" id="ec-2">
+            <div class="et-hd">
+              <div class="et-row1">
+                <span class="et-name">湛江市粤森水产有限公司</span>
+                <span class="btn-text" onclick="toggleEnt(this)">展开</span>
+              </div>
+              <div class="et-row2">
+                <span class="kv"><span class="lab">上行福田分行</span></span>
+                <span class="kv"><span class="lab">授信额度(万)：</span><span class="val hl-b">500.00</span></span>
+                <span class="kv"><span class="lab">已用额度(万)：</span><span class="val">400.00</span></span>
+                <span class="kv"><span class="lab">冻结中额度(万)：</span><span class="val">50.00</span></span>
+                <span class="kv"><span class="lab">可用额度(万)：</span><span class="val">50.00</span></span>
+                <span class="kv"><span class="lab">授信期限：</span><span class="val">2026-09-09 至 2027-03-08</span></span>
+              </div>
+            </div>
+            <div class="et-det"><div class="det-t">使用明细</div><div class="empty-det">暂无数据</div></div>
+            <div class="ebadge b-info" data-tt="e-ent2">E: CreditUsage·粤森</div>
+          </div>
+
+          <!-- 企业卡片3 -->
+          <div class="ent-card anno-el" data-tt="a-ent3" id="ec-3">
+            <div class="et-hd">
+              <div class="et-row1">
+                <span class="et-name">广东亚太水产有限公司</span>
+                <span class="btn-text" onclick="toggleEnt(this)">展开</span>
+              </div>
+              <div class="et-row2">
+                <span class="kv"><span class="lab">上行福田分行</span></span>
+                <span class="kv"><span class="lab">授信额度(万)：</span><span class="val hl-b">500.00</span></span>
+                <span class="kv"><span class="lab">已用额度(万)：</span><span class="val">400.00</span></span>
+                <span class="kv"><span class="lab">冻结中额度(万)：</span><span class="val">50.00</span></span>
+                <span class="kv"><span class="lab">可用额度(万)：</span><span class="val">50.00</span></span>
+                <span class="kv"><span class="lab">授信期限：</span><span class="val">2026-09-01 至 2027-03-01</span></span>
+              </div>
+            </div>
+            <div class="et-det"><div class="det-t">使用明细</div><div class="empty-det">暂无数据</div></div>
+            <div class="ebadge b-info" data-tt="e-ent3">E: CreditUsage·亚太</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ 右侧需求说明面板（标注层） ============ -->
+    <aside class="panel" id="panel">
+      <div class="panel-tab" onclick="togglePanel()"><span style="writing-mode:vertical-lr;letter-spacing:2px;font-size:12px">需求说明面板</span><span>❯</span></div>
+      <div class="panel-main">
+        <div class="panel-hd"><div><b>需求说明面板</b> <span class="ph-sub" id="ph-spec"></span></div><span style="cursor:pointer;font-size:12px;color:var(--c-t3)" onclick="togglePanel()">收起 ❯</span></div>
+        <div class="panel-bd" id="panel-body"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Tooltip 挂载点 -->
+<div id="tt"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================== 规格数据（C03 额度账本 · 额度总览） ================== */
+const PAGES={
+ov:{
+  spec:'C03-F01 · V0.1.1', crumb:'额度总览',
+  meta:[['功能编号','C03-F01（Spec V0.1.1 草稿）'],['模块','C03 额度账本（L0 §5：对额度动态变化进行记录、额度各维度管控逻辑）'],['路由','/credit-ledger/overview'],['页面目标','额度全景总览：产业项目→银行/企业两维度展示额度批复、冻结、已用、可用及额度动作流水'],['覆盖用户故事','US-C03-001 额度总览 / US-C03-002 额度使用明细查看'],['页面状态','默认 / 加载中 / 空态 / 越权403 / 参数错误400'],['数据来源','源系统截图 1 张（2699×1388，含资金维度与企业维度两视图拼接）；VLM 20+ 轮近形字仲裁（含 4x/6x/8x 放大终审）'],['菜单入口','额度账本（2026-11-06 指令：原「额度管理」更名，其余菜单全部隐藏）']],
+  brs:[['BR-01','页面入口：侧边菜单「额度账本」（唯一菜单项，2026-11-06 指令更名并隐藏其余菜单）；内容区顶部「额度总览」为当前功能 Tab（蓝色按钮态）。'],
+    ['BR-02','顶部指标区：产业项目胶囊（联冻乾行-3家银行/链数融乾-1家银行/锆钛正乾-1家银行，单选，选中蓝色填充）联动刷新 6 张统计卡（银行总批复额度/融资类型/数字资产标的价值/冻结中额度/已用额度/可用额度，卡片底部带口径小字）。'],
+    ['BR-03','「总授信(万)」为标题级大字展示（示例 285,000.00），与统计卡「银行总批复额度(万) 230,000.00」的口径关系【待确认-T05】。'],
+    ['BR-04','视图切换：资金维度视图（默认）/企业维度视图；Tab 蓝色下划线指示当前视图，切换为前端切换不整页刷新。'],
+    ['BR-05','资金维度视图：按银行分卡片；卡片头=logo+银行名称+批复版本标签（建行深南[2026]/上行深南[2026]）+有效期间；卡片体=用信率环形图+5 项指标；卡片底=金融产品明细表（产品名称/产品额度/产品冻结中额度/已用额度/可用额度/数字资产标的价值 6 列）。'],
+    ['BR-06','用信率公式注释：用信率=(冻品+已用)/授信额度【待确认-T06「冻品」按字形定稿，语义疑为「冻结」】。'],
+    ['BR-07','企业维度视图：按企业分卡片；支持「企业名称」模糊搜索与导出（蓝色链接式按钮）。'],
+    ['BR-08','企业卡片头部：企业名称（粗体）+支行名（无标签直显）+授信额度(万)/已用额度(万)/冻结中额度(万)/可用额度(万)/授信期限 字段横排；「展开/收起」切换使用明细，默认展开额度使用最多的企业（第一张）。'],
+    ['BR-09','使用明细：额度动作流水按时间倒序；每条记录两行字段（融资编号/产品/融资状态/时间 + 额度动作类型/金额/当前可用额度），时间列与金额列标签随融资状态动态变化（融资申请/取消/放款/结清时间 × 申请金额/放款金额/还款本金）；额度动作类型为蓝色链接，联动 F03 融资管理。'],
+    ['BR-10','使用明细分页：共 N 条记录 + 每页显示条数下拉 + 页码导航（首/上/页码/省略/末）。'],
+    ['BR-11','金额格式：千分位两位小数（L0 §8 统一规范）；产品表「产品额度/可用额度」无值时显示「/」，空行为空白单元格【待确认-T08/T09】。']],
+  sms:'本页为只读总览页，无独立状态机；页面承载的额度动作状态流转（冻结→冻结释放、已用→已用释放）随 F03 融资生命周期联动，见 F03 交付物状态机章节。',
+  wr:'本页无写操作（只读查询+导出）；导出创建异步任务。实体影响：LedgerEntry（额度动作流水，只读）、CreditLine（银行/产品维度额度）、CreditUsage（企业维度额度）。',
+  flow:[['额度批复',0],['准入',0],['授信',0],['融资申请',1],['放款',1],['还款/结清',1],['额度释放',1]],
+  exs:[['EX-01','产业项目下无银行授信','统计卡显示 0.00 / 空态提示','该产业项目下暂无银行授信数据'],
+    ['EX-02','使用明细查询失败','面板内错误条+重试','查询失败，请稍后重试'],
+    ['EX-03','导出任务创建失败','toast 错误提示','导出任务创建失败'],
+    ['EX-04','无权限访问','整页 403+审计日志','您没有权限执行该操作']],
+  apis:[['/api/credit-ledger/overview','GET','总览查询（产业项目→统计+双维度卡片）','否（查询）','数据范围隔离；产业项目入参白名单'],
+    ['/api/credit-ledger/products','GET','银行卡片下金融产品明细','否（查询）','同 overview 会话权限'],
+    ['/api/credit-ledger/enterprises','GET','企业维度列表（企业名称模糊）','是（同参同结果）','入参白名单校验'],
+    ['/api/credit-ledger/records','GET','使用明细流水分页','是（同参同结果）','融资编号/企业数据范围校验'],
+    ['/api/credit-ledger/export','POST','导出任务创建','是（任务号幂等）','权限校验+审计']],
+  acs:[['01','Given 选中「联冻乾行」胶囊，When 渲染，Then 胶囊呈选中蓝色填充，统计卡与银行卡片按该产业项目过滤刷新。'],
+    ['02','Given 点击「企业维度视图」，When 切换，Then 显示企业名称搜索行与企业卡片，视图 Tab 下划线切换且页面不整页刷新。'],
+    ['03','Given 企业卡片展开，When 加载使用明细，Then 默认返回第 1 页 5 条，按时间倒序排列，分页条显示总记录数。'],
+    ['04','Given 输入企业名称「粤森」，When 搜索，Then 仅显示「湛江市粤森水产有限公司」两张（建行/上行）企业卡片。'],
+    ['05','Given 融资状态=融资已取消的记录，When 渲染，Then 时间列标签显示「取消时间」、金额列标签显示「申请金额」。'],
+    ['06','Given 无权限用户访问，When 请求，Then 返回 403 整页态并记录审计日志。']],
+  oos:['不处理授信申请流程（F02 授信管理职责）','不处理融资申请/放款/还款过程（F03 融资管理职责）','不处理额度调整操作（仅展示，调整入口待 L2 细化）','不处理质押冻结的资产业务（O02 职责，本页仅呈现额度口径）'],
+  chg:[['V0.1.0','2026-11-06','初稿（Agent 起草；源截图 1 张双视图，VLM 20+ 轮仲裁，近形字：冻品/结、深南/深圳、方雄敏、联冻乾行等）'],['V0.1.1','2026-11-06','按用户指令：菜单项「额度管理」→「额度账本」，其余菜单全部隐藏（T01/T02 定谳）；面包屑同步更名']]
+}
+};
+const STATES={ov:['默认','加载中','空态','参数错误400','越权403']};
+const TLIST=[
+['T01','✅已定谳（2026-11-06 用户指令）：菜单项由「额度管理」更名为「额度账本」，与 L0 模块名（C03）统一'],
+['T02','✅已定谳（2026-11-06 用户指令）：除「额度账本」外其余菜单全部隐藏，本原型侧边栏仅保留本模块单入口（源截图菜单树见交付说明）'],
+['T03','源系统为浅色侧栏（#F8F8F8）+亮蓝主色（#34B8F3）；本原型沿用乾融中台深色导航 VI（与 O01/O02/B02/B04/F03 交付一致）'],
+['T04','胶囊「联冻乾行-3家银行」与统计卡小字「2 家合作银行」口径矛盾（3 家 vs 2 家）'],
+['T05','「总授信(万)：285,000.00」与「银行总批复额度(万) 230,000.00」及各银行卡片（100,000+50,000=150,000）均不相等——口径关系待定'],
+['T06','环形图注释「用信率=(冻品+已用)/授信额度」中「冻品」经 8x 放大按字形定稿（三口品字形）；语义上疑为「冻结」（对应冻结中额度）'],
+['T07','两银行卡片用信率均显示 80%，但按指标数值计算（建行 (100+400)/100,000 <1%）明显不符——疑演示数据'],
+['T08','产品表「产品额度」「可用额度」列值为「/」——含义（不适用 vs 未配置）待定'],
+['T09','建行产品表空行仅产品名称有值（二级在途融/二级现货融），上行产品表空行连产品名称为空——空行语义（未授信产品占位？）待定'],
+['T10','企业维度卡 1「冻结中额度(万)：-」与卡 2/3「50.00」格式不一致（空值显示规范）'],
+['T11','使用明细时间列/金额列标签随融资状态动态变化（融资申请/取消/放款/结清时间 × 申请金额/放款金额/还款本金）——L2 需固化字段映射'],
+['T12','使用明细「当前可用额度」随记录递增（3,432.80→7,432.80），与冻结/已用占用方向矛盾——疑演示数据'],
+['T13','融资状态为普通文字（无着色标签），与 F03 列表的状态着色规范不一致——统一样式待定'],
+['T14','「有效期间：」一处 2x 识读为「有效期问」，经 3x 仲裁按「有效期间」定稿'],
+['T15','导出入口仅见于企业维度视图；资金维度视图是否提供导出待定'],
+['T16','卡 1 与卡 2 企业同名（湛江市粤森水产有限公司）但支行不同（建行南山/上行福田）——企业维度列表是否按「企业+支行」去重待定']
+];
+
+/* ================== 锚点 Tooltip 数据 ================== */
+const TT={
+'a-menu':{t:'① 菜单入口',s:'ok',ti:'侧边导航 · 额度账本（唯一菜单项）',rows:[['层级','数据金融配置→信用组件→额度账本（面包屑保留全路径）'],['变更','2026-11-06 用户指令：原「额度管理」更名「额度账本」，其余菜单全部隐藏'],['源截图','原菜单树：工作台/数据金融配置(信用组件：准入·授信·额度)/风控/资产组件(质押·货值·盯市·提货·贷后·出入库·库存)/系统中心（见 T01/T02 定谳）']],lnk:['T01','T02','T03']},
+'a-ovtab':{t:'① 功能 Tab',s:'info',ti:'额度总览（当前功能）',rows:[['形态','蓝色主色按钮，白字'],['位置','内容区顶部左上'],['作用','标识当前功能页；本页唯一 Tab']],lnk:['BR-01']},
+'a-total':{t:'② 总授信',s:'warn',ti:'总授信(万)：285,000.00',rows:[['形态','标题级大字+主色数值'],['⚠ 口径','与银行总批复 230,000.00 及各行之和 150,000.00 均不等（T05）'],['联动','随产业项目胶囊切换']],lnk:['BR-03','T05']},
+'a-pill':{t:'③ 产业项目胶囊',s:'warn',ti:'联冻乾行-3家银行 / 链数融乾-1家银行 / 锆钛正乾-1家银行',rows:[['形态','圆角胶囊，选中蓝色填充白字；单选'],['命名','沿用 F03 定谳：联冻乾行/链数融乾/锆钛正乾'],['级联','产业项目→银行（与 F03 查询区一致）'],['⚠ 口径','「-3家银行」与统计卡「2 家合作银行」矛盾（T04）']],lnk:['BR-02','T04']},
+'a-stats':{t:'④ 统计卡',s:'info',ti:'6 张统计卡（随胶囊联动）',rows:[['卡片','银行总批复额度(万)/融资类型/数字资产标的价值/冻结中额度(万)/已用额度/可用额度'],['数值','主色等宽数字'],['底部小字','口径说明（2 家合作银行 / 5 个金融产品 / 7 个货柜）'],['示例','230,000.00 / 4个 / 750.00 / 100.00 / 500.00 / 229,400.00']],lnk:['BR-02','T04']},
+'a-vtab':{t:'⑤ 视图切换',s:'info',ti:'资金维度视图（默认） / 企业维度视图',rows:[['形态','Tab+蓝色下划线指示'],['切换','前端切换，不整页刷新'],['资金维度','按银行分卡片（本页默认视图）'],['企业维度','按企业分卡片+搜索/导出']],lnk:['BR-04']},
+'a-bk1':{t:'⑥ 银行卡片头',s:'info',ti:'建设银行 · 建行深南[2026]',rows:[['结构','logo 圆标 + 银行名称（粗体）+ 批复版本标签 + 有效期间（右对齐）'],['标签','建行深南[2026]（银行批复版本，沿用 F03 定谳）'],['有效期间','2026-09-07 至 2027-09-07']],lnk:['BR-05','T05']},
+'a-bk1tag':{t:'⑥ 批复版本标签',s:'warn',ti:'建行深南[2026]',rows:[['近形仲裁','2x 初读「深圳」，3x 终审「深南」（与 F03 交付一致）'],['含义','银行批复版本（支行+年度）']],lnk:['T05']},
+'a-bk1valid':{t:'⑥ 有效期间',s:'warn',ti:'有效期间：2026-09-07 至 2027-09-07',rows:[['近形仲裁','一处读为「有效期问」，3x 仲裁定「有效期间」（T14）'],['格式','YYYY-MM-DD 至 YYYY-MM-DD']],lnk:['T14']},
+'a-bk2':{t:'⑥ 银行卡片头',s:'info',ti:'上海银行 · 上行深南[2026]',rows:[['结构','同建设银行卡片'],['有效期间','2026-07-07 至 2027-07-07']],lnk:['BR-05','T14']},
+'a-bk2tag':{t:'⑥ 批复版本标签',s:'warn',ti:'上行深南[2026]',rows:[['近形仲裁','初读「上行-深圳[2026]」，2x 仲裁定「上行深南[2026]」'],['⚠ 待确认','建行与上行支行名同为「深南」——是否分属不同支行待核']],lnk:['T05']},
+'a-ring':{t:'⑦ 用信率环形图',s:'warn',ti:'80% · 用信率',rows:[['形态','SVG 圆环（主色 80% 弧）+环内大数字/小字'],['⚠ 数值','两行均 80%，与指标计算不符（T07 疑演示数据）']],lnk:['BR-06','T07']},
+'a-ringnote':{t:'⑦ 用信率公式',s:'warn',ti:'用信率=(冻品+已用)/授信额度',rows:[['近形仲裁','「冻品/冻结」经 8x 放大终审：字形为三口「品」（T06）'],['⚠ 语义','与「冻结中额度」对应疑为「冻结」；运算符为「/」非「>」']],lnk:['BR-06','T06']},
+'a-ind':{t:'⑧ 指标卡',s:'info',ti:'5 项指标（每银行）',rows:[['指标','银行总批复额度(万)/数字资产标的价值/冻结中额度(万)/已用额度/可用额度'],['建行','100,000.00 / 625.00 / 100.00 / 400.00 / 99,500.00'],['上行','50,000.00 / 125.00 / 0.00 / 100.00 / 49,900.00']],lnk:['BR-05']},
+'a-ptable':{t:'⑨ 金融产品明细',s:'info',ti:'产品维度 6 列表',rows:[['列','产品名称/产品额度/产品冻结中额度/已用额度/可用额度/数字资产标的价值'],['建行 4 行','一级在途融(有值)/二级在途融(空行)/一级现货融(有值)/二级现货融(空行)'],['上行 2 行','一级在途融(有值)/空行'],['示例','/、50.00、200.00、/、312.50']],lnk:['BR-05','BR-11']},
+'a-pempty':{t:'⑨ 空行（建行）',s:'warn',ti:'二级在途融/二级现货融空行',rows:[['现象','仅产品名称有值，其余列空白'],['⚠ 语义','未授信产品占位？（T09）']],lnk:['T09']},
+'a-pempty2':{t:'⑨ 空行（上行）',s:'warn',ti:'全空行',rows:[['现象','产品名称列也为空'],['⚠ 对比','建行空行有产品名，上行没有——数据缺失或占位差异（T09）']],lnk:['T09']},
+'a-slash':{t:'⑨ 空值符号',s:'warn',ti:'「/」与空白并存',rows:[['现象','产品额度/可用额度列显示「/」，空行显示空白'],['⚠ 含义','不适用 vs 未配置（T08）']],lnk:['T08','BR-11']},
+'a-search':{t:'⑩ 企业名称搜索',s:'info',ti:'企业名称：[输入框] 搜索 导出',rows:[['形态','标签+文本框+两个蓝色链接式按钮（非实心按钮）'],['交互','模糊搜索，回车触发']],lnk:['BR-07']},
+'a-export':{t:'⑩ 导出',s:'warn',ti:'导出（仅企业维度视图）',rows:[['形态','蓝色链接文字'],['⚠ 范围','资金维度视图未见导出入口（T15）']],lnk:['T15','EX-03']},
+'a-ent1':{t:'⑪ 企业卡片',s:'info',ti:'湛江市粤森水产有限公司 · 建行南山支行',rows:[['结构','企业名称（粗体）+展开链接；第二行支行+5 字段横排'],['字段','授信额度(万)/已用额度(万)/冻结中额度(万)/可用额度(万)/授信期限'],['默认','第一张（额度使用最多）展开'],['⚠ 同名','卡 2 同企业不同支行（T16）']],lnk:['BR-08','T16']},
+'a-ent2':{t:'⑪ 企业卡片 2',s:'warn',ti:'湛江市粤森水产 · 上行福田分行',rows:[['字段','500.00/400.00/50.00/50.00 · 2026-09-09 至 2027-03-08'],['⚠ 同名','与卡 1 同企业名不同支行——去重口径待定（T16）']],lnk:['T16']},
+'a-ent3':{t:'⑪ 企业卡片 3',s:'info',ti:'广东亚太水产 · 上行福田分行',rows:[['字段','500.00/400.00/50.00/50.00 · 2026-09-01 至 2027-03-01']],lnk:['BR-08']},
+'a-ent1fz':{t:'⑪ 冻结中额度',s:'warn',ti:'冻结中额度(万)：-',rows:[['现象','卡 1 显示「-」，卡 2/3 显示 50.00'],['⚠ 规范','空值显示格式不一致（T10）']],lnk:['T10']},
+'a-det':{t:'⑫ 使用明细',s:'info',ti:'额度动作流水（展开区）',rows:[['结构','标题+灰线分隔+记录块（每条两行）+分页'],['排序','时间倒序'],['联动','记录随 F03 融资生命周期产生']],lnk:['BR-09','BR-10']},
+'a-rec':{t:'⑫ 流水记录',s:'info',ti:'两行式字段块',rows:[['第一行','融资编号/产品/融资状态/时间'],['第二行','额度动作类型/金额/当前可用额度'],['动作类型','冻结/冻结释放/已用/已用释放（蓝色链接）']],lnk:['BR-09','T11']},
+'a-recst':{t:'⑫ 融资状态',s:'warn',ti:'动态时间/金额列标签',rows:[['变化','融资申请时间/取消时间/放款时间/结清时间 × 申请金额/放款金额/还款本金'],['⚠ 样式','普通文字无着色标签，与 F03 规范不一致（T13）']],lnk:['T11','T13']},
+'a-recavail':{t:'⑫ 当前可用额度',s:'warn',ti:'随记录递增（疑演示数据）',rows:[['数值','3,432.80 → 4,432.80 → 5,432.80 → 6,432.80 → 7,432.80'],['⚠ 矛盾','与冻结/已用占用方向相反（T12）']],lnk:['T12']},
+'a-pager':{t:'⑬ 分页',s:'info',ti:'共 15 条记录 · 每页 5 条',rows:[['结构','总条数+每页条数下拉+页码导航（|< < 1 2 3 … 7 8 9 > >|）'],['默认','第 1 页，每页 5 条']],lnk:['BR-10']},
+'e-bank1':{t:'E: 实体',s:'ok',ti:'CreditLine · 建设银行（建行深南[2026]）',rows:[['实体','CreditLine（银行/产品维度额度）'],['关键属性','银行总批复额度/冻结中/已用/可用/数字资产标的价值/有效期间'],['产品','建行平台云贷(一级/二级·在途融/现货融)']],lnk:['BR-05']},
+'e-bank2':{t:'E: 实体',s:'ok',ti:'CreditLine · 上海银行（上行深南[2026]）',rows:[['实体','CreditLine（银行/产品维度额度）'],['产品','上行易采购(一级在途融)']],lnk:['BR-05']},
+'e-ent1':{t:'E: 实体',s:'ok',ti:'CreditUsage · 湛江市粤森水产（建行南山支行）',rows:[['实体','CreditUsage（企业维度额度）'],['关键属性','授信额度/已用/冻结中/可用/授信期限'],['流水','LedgerEntry ×5（冻结→冻结释放/已用/已用释放）']],lnk:['BR-08','BR-09']},
+'e-ent2':{t:'E: 实体',s:'ok',ti:'CreditUsage · 湛江市粤森水产（上行福田分行）',rows:[['实体','CreditUsage（企业维度额度）'],['⚠ 同名','与建行南山支行同名企业（T16）']],lnk:['T16']},
+'e-ent3':{t:'E: 实体',s:'ok',ti:'CreditUsage · 广东亚太水产（上行福田分行）',rows:[['实体','CreditUsage（企业维度额度）']],lnk:['BR-08']}
+};
+
+/* ================== 渲染与交互 ================== */
+function $(s){return document.querySelector(s)}
+function $$(s){return document.querySelectorAll(s)}
+let pinned=null;
+const tt=$('#tt');
+
+function renderPanel(key){
+  const d=PAGES[key];
+  $('#ph-spec').textContent=d.spec;
+  const fmt=s=>String(s).replace(/【待确认-(T\d+)[^】]*】/g,'<span class="badge-T">$1</span>');
+  let h='';
+  h+=sec('1','页面概述',d.meta.length,`<dl class="p-meta">${d.meta.map(m=>`<dt>${m[0]}</dt><dd>${fmt(m[1])}</dd>`).join('')}</dl>`);
+  h+=sec('2','业务规则（BR）',d.brs.length,d.brs.map(b=>`<div class="p-item" data-entry="${b[0]}"><span class="p-id">${b[0]}</span><span class="p-txt">${fmt(b[1])}</span></div>`).join(''));
+  h+=sec('3','状态机',1,`<div class="p-item"><span class="p-txt">${fmt(d.sms)}</span></div>`);
+  h+=sec('4','写操作与实体',1,`<div class="p-item" data-entry="ENT"><b>写操作影响清单：</b><span class="p-txt">${d.wr}</span></div>`);
+  h+=sec('5','业务流程',d.flow.length,`<div class="flow-nodes">${d.flow.map((f,i)=>`<span class="fn${f[1]?' cur':''}">${f[0]}</span>${i<d.flow.length-1?'<span class="fa">→</span>':''}`).join('')}</div><div class="hint-t" style="margin-top:6px">高亮=本功能联动节点；额度批复→使用全链路见 L1 §5</div>`);
+  h+=sec('6','异常与边界（EX）',d.exs.length,`<table class="mini-tbl"><tr><th>编号</th><th>场景</th><th>处理</th><th>用户提示</th></tr>${d.exs.map(e=>`<tr><td class="mono" data-entry="${e[0]}">${e[0]}</td><td>${e[1]}</td><td>${fmt(e[2])}</td><td>${e[3]}</td></tr>`).join('')}</table>`);
+  h+=sec('7','接口约定',d.apis.length,`<table class="mini-tbl"><tr><th>路径</th><th>方法</th><th>说明</th><th>幂等性</th><th>安全与校验</th></tr>${d.apis.map(a=>`<tr><td class="mono">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td>${a[4]}</td></tr>`).join('')}</table>`);
+  h+=sec('8','验收标准（AC）',d.acs.length,d.acs.map(a=>`<div class="p-item" data-entry="AC-${a[0]}"><span class="p-id">AC-C03-F01-${a[0]}</span><span class="p-txt">${a[1]}</span></div>`).join(''));
+  h+=sec('9','非功能需求',1,`<div class="p-item"><span class="p-txt">遵循《全局非功能需求》基线（本功能无特殊增量）。</span></div>`);
+  h+=sec('10','明确不做（Out of Scope）',d.oos.length,`<ul class="oos">${d.oos.map(o=>`<li>${o}</li>`).join('')}</ul>`);
+  h+=sec('11','待确认清单 T01-T16',TLIST.length,TLIST.map(t=>`<div class="p-item"><span class="p-id">${t[0]}</span><span class="p-txt">${t[1]}</span></div>`).join(''));
+  h+=sec('12','变更记录',d.chg.length,`<table class="mini-tbl"><tr><th>版本</th><th>日期</th><th>变更内容</th></tr>${d.chg.map(c=>`<tr><td class="mono">${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td></tr>`).join('')}</table>`);
+  $('#panel-body').innerHTML=h;
+}
+function sec(no,title,cnt,body,open){
+  const isOpen=(open!==undefined?open:(no==='1'||no==='2'||no==='11'))?' open':'';
+  return `<div class="p-sec${isOpen}" id="psec-${no}"><div class="p-sec-h" onclick="this.parentNode.classList.toggle('open')"><b>${no}. ${title}</b><span><span class="cnt">${cnt}</span><span class="arr">▶</span></span></div><div class="p-body">${body}</div></div>`;
+}
+function buildStates(key){
+  const box=$('#st-sw');
+  box.innerHTML='<span>页面状态：</span>';
+  STATES[key].forEach((s,i)=>{
+    const b=document.createElement('button');b.textContent=s;
+    if(i===0)b.className='on';
+    b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');setPageState(key,s)};
+    box.appendChild(b);
+  });
+}
+function setPageState(key,state){
+  $('#lb-ov-e').classList.remove('show');
+  $('#fs-ov-403').classList.remove('show');
+  $('#ov-loading').classList.remove('show');
+  $('#fund-empty').classList.remove('show');
+  $$('#vp-fund .bank-card').forEach(c=>c.style.display='');
+  if(state==='加载中')$('#ov-loading').classList.add('show');
+  if(state==='空态'){$('#fund-empty').classList.add('show');$$('#vp-fund .bank-card').forEach(c=>c.style.display='none')}
+  if(state==='参数错误400'){$('#lb-ov-e').classList.add('show');$('#lb-ov-e .bt').textContent='参数不合法'}
+  if(state==='越权403')$('#fs-ov-403').classList.add('show');
+}
+
+/* ---- 业务交互 ---- */
+function selPill(el){
+  $$('.pill').forEach(p=>p.classList.remove('cur'));
+  el.classList.add('cur');
+  toast('已切换产业项目：'+el.dataset.pill+'（示例交互，数据未变）','ok');
+}
+function selView(v){
+  $$('.v-tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+  $('#vp-fund').classList.toggle('on',v==='fund');
+  $('#vp-ent').classList.toggle('on',v==='ent');
+}
+function toggleEnt(link){
+  const card=link.closest('.ent-card');
+  card.classList.toggle('open');
+  link.textContent=card.classList.contains('open')?'收起':'展开';
+  if(card.classList.contains('open')&&card.querySelector('.empty-det'))toast('该卡片暂无使用明细数据（示例交互）');
+}
+function grpToggle(item,id){
+  const grp=$('#'+id);
+  const open=grp.classList.toggle('open');
+  const arr=item.querySelector('.arr');
+  if(arr)arr.textContent=open?'▾':'▸';
+}
+
+/* ---- Tooltip 引擎（与 O01/F03 一致） ---- */
+function showTT(a){
+  const d=TT[a.dataset.tt];if(!d)return;
+  tt.innerHTML=`<div class="tt-h"><span class="tt-type">${d.t}</span><span class="tt-sem ${d.s}">${{info:'说明',warn:'待确认',danger:'风险',ok:'确认'}[d.s]}</span></div>
+  <div class="tt-b"><div class="tt-t">${d.ti}</div>${d.rows.map(r=>`<div class="tt-row"><b>${r[0]}：</b>${r[1]}</div>`).join('')}
+  <div class="tt-links">关联：${(d.lnk||[]).map(l=>`<a onclick="jumpPanel('${l.startsWith('T')?'11':(l.startsWith('AC')?'8':(l.startsWith('EX')?'6':'2'))}','${l}')">${l}</a>`).join(' ')}</div>
+  <div class="tt-pin">点击锚点=固定</div></div>`;
+  const r=a.getBoundingClientRect();
+  tt.style.left=Math.min(r.left,innerWidth-356)+'px';
+  tt.style.top=Math.max(8,Math.min(r.bottom+8,innerHeight-260))+'px';
+  tt.classList.add('show');
+}
+function hideTT(){if(!pinned)tt.classList.remove('show')}
+function pinTT(a){
+  if(pinned===a){pinned.classList.remove('pin');pinned=null;tt.classList.remove('show');return}
+  if(pinned)pinned.classList.remove('pin');
+  pinned=a;a.classList.add('pin');showTT(a);
+}
+function jumpPanel(secNo,entry){
+  const s=$('#psec-'+secNo); if(!s)return;
+  s.classList.add('open');
+  const item=s.querySelector(`[data-entry="${entry}"]`)||[...s.querySelectorAll('.p-item')].find(x=>x.textContent.includes(entry));
+  if(item){item.scrollIntoView({behavior:'smooth',block:'center'});item.classList.add('hl');setTimeout(()=>item.classList.remove('hl'),2000)}
+}
+function togglePanel(){$('#panel').classList.toggle('collapsed')}
+function toast(msg,type){
+  const t=$('#toast');t.textContent=msg;
+  t.className='toast show'+(type==='ok'?'':' err');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3600);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  $('#anno-sw').onclick=()=>{
+    $('#anno-sw').classList.toggle('off');
+    document.body.classList.toggle('anno-off');
+    if(document.body.classList.contains('anno-off')){tt.classList.remove('show');pinned=null}
+  };
+  /* 长文本列 title 悬浮全文（O01 V2 经验） */
+  $$('.bank-card table.tbl td').forEach(td=>{const v=td.textContent.trim();if(v&&v!=='/'&&v!=='-')td.title=v});
+  renderPanel('ov');buildStates('ov');
+});
+document.addEventListener('mouseover',e=>{
+  const a=e.target.closest('.anchor,.ebadge,.anno-el[data-tt]');
+  if(a&&a.dataset.tt&&!pinned&&!document.body.classList.contains('anno-off'))showTT(a);
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||(!e.relatedTarget.closest('#tt')&&!e.relatedTarget.closest('.anchor')&&!e.relatedTarget.closest('.ebadge')&&!e.relatedTarget.closest('.anno-el[data-tt]')))hideTT();
+});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('.anchor,.ebadge');
+  if(a&&a.dataset.tt){e.stopPropagation();e.preventDefault();pinTT(a);return}
+  if(!e.target.closest('#tt')&&pinned){pinned.classList.remove('pin');pinned=null;tt.classList.remove('show')}
+});
+</script>
+</body>
+</html>
