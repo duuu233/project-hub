@@ -6,6 +6,9 @@ paths:
   taiqian-front:
     transport: local
     path: 'D:/Work/tq-plus/front'
+  taiqian-h5:
+    transport: local
+    path: 'D:/Work/tq-plus/ftechain-zk-h5'
   flowerpot-app:
     transport: local
     path: 'D:/Work/learn/flowerpot'

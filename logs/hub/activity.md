@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-11｜work｜接入泰乾超级-qianrong H5
+
+Hub `main` 先快进到 `8f0adea`。注册独立项目 `taiqian-h5`，只新增 work 映射，建立五项私人挂载与本机忽略。H5 从 Codeup 同步 `master`，保留 `origin/master` 跟踪关系，通过新增 `mygithub` 将 `a6ef127` 首次推送到指定 GitHub 仓库并核对远端提交。拉取结果见当次迭代和项目总日志。
+
 ## 2026-10-29｜ssh｜「只推GitHub」规则改为work例外
 
 main干净先显式同名pull已最新。用户明确：ssh只管GitHub，work保持原样不改，只有work例外。AGENTS.md第0条与SSH段、ssh README远端节、泰乾/正矿context的远端口径同步改为「work以外只推GitHub，work沿用该机原有remote、不检查不改」。未改任何环境映射与业务仓库；同日work会话已按旧规则把泰乾、正矿origin改为GitHub，是否恢复由用户在work机决定。按main提交，push前再次显式同名pull。

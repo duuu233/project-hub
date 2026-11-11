@@ -9072,3 +9072,12 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - photo-album main-wifi/468cf86：已提交，再次同名 pull 后 push。docs/changes 与 docs/README 已更新。
 - 验证：无 node，测试未运行；未真机、未联调删除他人记录。git diff --check、信息隔离自查通过。
 - main 分支同一句拦截仍在，但 main 按用户查记录、列表只有本人照片，基本触发不到，未同步。
+
+---
+
+## 2026-11-11 work｜同步现有项目及接入泰乾超级-qianrong H5
+
+- Hub `main` 快进至 `8f0adea` 后登记 `taiqian-h5` 及 work 映射，按既有脚本建立五项私人挂载。
+- 泰乾超级 `dev/c0beb06` 已拉取，本地领先 Codeup 一项；花盆APP `main/a4bab94`、花盆后台 `main/bb847ab`、相册后台 `main/8e9ddfc`、相册APP `main/cad2bc4` 均已最新。相册小程序 `main-wifi` 快进至 `eb3a660`，CodeGraph 索引已刷新。
+- 正矿 `feature-v1.8.5/d0dcf3c` 的 `origin` 无同名分支，保留本地分支与远端配置。
+- H5 `master/a6ef127` 与 Codeup 同步。新建 `mygithub` 后把现有 `master` 推到 `duuu233/tq-plus-h5`，核对远端提交一致。H5 工作区干净，五项挂载均被本机 Git 忽略。此次无 H5 源码变更，未运行构建。

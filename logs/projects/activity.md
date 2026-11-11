@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-11｜taiqian-h5｜work｜master｜接入及首次备份到 GitHub
+
+接入 qianrong H5 独立仓库，建立五项私人挂载并核对未被业务 Git 跟踪。Codeup `origin/master` 已同步，`master/a6ef127` 已推送 `mygithub/master` 并核对提交。业务仓库没有新增提交。相册小程序本轮快进到 `eb3a660` 并刷新索引，正矿因 `origin` 缺少同名分支跳过。
+
 ## 2026-11-11｜taiqian-front｜ssh｜test｜字典数据页启用动态列
 
 字典数据页是固定路由，按路由匹配不到列表菜单 2506（system:dict:query，菜单与列配置本就有），页面直接指定 menuPerm。test/7f55b3b 已 push。无 Node，测试未跑。

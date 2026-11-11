@@ -23,6 +23,28 @@ projects:
       logs:
         target: logs
         type: directory
+  taiqian-h5:
+    name: 泰乾超级-qianrong H5
+    description: 泰乾超级 qianrong 的 H5 客户端，独立仓库
+    context: context/taiqian-h5.md
+    default_branch: master
+    enabled: true
+    private_mounts:
+      .codegraph:
+        target: .codegraph
+        type: directory
+      docs:
+        target: docs
+        type: directory
+      AGENTS.md:
+        target: instructions/AGENTS.md
+        type: file
+      AI_CONTEXT.md:
+        target: instructions/AI_CONTEXT.md
+        type: file
+      logs:
+        target: logs
+        type: directory
   flowerpot-app:
     name: 花盆APP
     description: 花盆移动应用

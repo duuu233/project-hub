@@ -41,6 +41,7 @@ Hub 只负责映射和分发任务，不维护具体项目的实现细节。每�
 | 相册APP | album-app |
 | 正矿 | minerals-admin |
 | 泰乾超级（qianrong 子应用简称「泰乾超级-qianrong」） | taiqian-front |
+| 泰乾超级-qianrong H5 | taiqian-h5 |
 
 可以直接使用名称发起任务，例如“花盆APP：修复设备列表刷新问题”。其他环境接入同名项目时，复用这些 ID，仅添加该环境自己的路径映射。
 
@@ -105,6 +106,8 @@ Agent 会解析当前环境位置，加载上下文，先同步各目标仓库�
 **默认不用这套机制。** 所有项目都按「文档 + CodeGraph」长期维护，但个人自有仓库（花盆 APP / 花盆后台、相册 APP / 后台 / 小程序）的 `AGENTS.md`、`AI_CONTEXT.md`、`docs/` 就提交在各自仓库里，`.codegraph/` 由各自 `.gitignore` 忽略、每台机器本地生成，Hub 不接管、不复制。
 
 **正矿（`minerals-admin`）与泰乾超级（`taiqian-front`）走私有化。** 按用户要求，这两个项目的私人文档、AI 规则、私有日志和 CodeGraph 索引都不提交进业务仓库，真实文件放在 Hub 的 `private/<project_id>/` 统一维护和同步，业务仓库里只留软链接。正矿映射 work / home，泰乾超级映射 work / home / ssh；各有效环境在 `environments/<env>/projects.local.yaml` 里配置自己的路径，`projects.yaml` 的 `private_mounts` 定义由已接入环境共用——因此在哪台机器上打开正矿，`docs/`、`logs/`、`AGENTS.md`、`AI_CONTEXT.md`、`.codegraph/` 指向的都是 Hub 里的同一份。唯一不进版本控制的是 CodeGraph 索引库 `codegraph.db`——它是可再生成的派生物，每台机器装好 CLI（`npm i -g @colbymchenry/codegraph`）后本地 `codegraph sync` 自建，避免多机提交同一个 33MB 二进制。新机器（或漏建链接的机器）执行下面的命令补齐链接即可。
+
+泰乾超级-qianrong H5 是独立仓库，使用 `taiqian-h5` 单独维护五项私人挂载，当前仅登记 work。仓库与远端约定见 [H5 项目上下文](context/taiqian-h5.md)。
 
 在新电脑初始化或需要一键恢复软链接时，执行：
 
