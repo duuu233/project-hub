@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-11 ssh｜分配用户页分页被遮挡、弹窗分页与按钮重叠（test）
+
+test 干净同名 pull 已最新（244f3bc）。list-page.scss 把 ListTablePanel 分页容器与分页条改回文档流（压过全局 ruoyi 的限高 + 绝对定位）；authUser.vue 删除不生效的 scoped padding；新增 native-pagination-style 测试。test/9bfa240 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建，未浏览器核对；信息隔离自查通过。
+
 ## 2026-11-11 ssh｜产业配置非必填、右上角显示当前系统、合同模板 docx 预览（test）
 
 test 干净同名 pull 已最新（7f55b3b）。handleDetail 去掉 H5 / PC 必填并过滤空 PC 块；IdentitySwitcher 加系统标签、identityNeedsNames 缺系统名也补；新增 DocxViewer + /file-preview 路由，合同模板详情弹窗加宽内嵌预览；package.json 加 docx-preview@0.3.7。README 与测试同步。test/244f3bc 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建；信息隔离自查通过。

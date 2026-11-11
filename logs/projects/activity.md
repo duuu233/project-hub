@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-11｜taiqian-front｜ssh｜test｜分配用户页分页被遮挡
+
+qianrong：列表面板（ListTablePanel）分页被全局分页样式限高 + 绝对定位挤成一列并裁掉，弹窗里与底部按钮重叠；改回文档流，7 个调用页一并修复。test/9bfa240 已 push。无 Node，测试 / 构建 / 浏览器未跑。
+
 ## 2026-11-11｜taiqian-front｜ssh｜test｜产业配置非必填、显示当前系统、合同模板 docx 预览
 
 qianrong：产业配置融资H5 / PC登录配置改非必填；右上角显示当前系统；合同模板详情内嵌 docx 预览（新页面打开、下载，新依赖 docx-preview）。test/244f3bc 已 push。无 Node，测试 / 构建未跑。

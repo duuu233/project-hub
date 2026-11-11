@@ -1,3 +1,13 @@
+## 2026-11-11 ssh｜泰乾超级-qianrong 分配用户页分页被遮挡、整体样式（test）
+
+- 需求（用户）：test 分支，分配用户页面下面的分页是不是被挡住了，优化整体样式，不要错乱和重叠。
+- 同步：Hub main 已最新；tq-plus 已在 test、工作区干净，同名 pull 已最新（244f3bc）；origin GitHub。
+- 原因：全局 ruoyi 分页样式（容器 height 25px + padding !important、el-pagination 绝对定位）进了列表面板 flex 分页行后，容器宽度塌到约 40px，分页条按钮逐个折行，伸出容器被面板 overflow:hidden 裁掉；「添加帐户」弹窗里分页条以 el-dialog 为参照绝对定位，盖到确定 / 取消上。
+- taiqian-front test/9bfa240（已 push）：list-page.scss 两条规则改回文档流（只作用于 .qr-native-pagination）；authUser.vue 删除被 !important 压住的 scoped padding；新增 tests/native-pagination-style.test.mjs。ListTablePanel 的 7 个调用页（分配用户、选择用户弹窗、分配角色、接口日志、操作 / 登录日志、菜单列字段设置、角色列模板）一并生效。
+- 验证：无 Node / 浏览器，测试、构建、实际渲染均未运行；新断言用 Python 核对，diff --check、信息隔离自查通过。需本地打开分配用户页与添加帐户弹窗确认。
+
+---
+
 ## 2026-11-11 ssh｜泰乾超级-qianrong 产业配置非必填、右上角显示当前系统、合同模板 docx 预览（test）
 
 - 需求（用户）：切到 test 分支：1. 新增产业配置的融资H5配置、PC登录配置下表单改为非必填；2. 登录后右上角显示当前登录的系统；3. 合同模板详情的 .docx 平铺在页面中，固定高度可滚动，旁边「新页面打开」「下载」两个按钮。

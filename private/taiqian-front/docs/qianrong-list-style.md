@@ -218,3 +218,12 @@
 - 改法：data.vue 的 withListGridStyle 直接传 `menuPerm: 'system:dict:query'`（同准入列表的页面指定方式），菜单未改；policy-columns 测试补一条。
 - 影响：strict 下列按接口渲染——「备注」（remark）未在 2506 列配置里，会不显示；需要的话在菜单管理给 2506 补 remark 字段。
 - 用户告知 test 分支后端为 https://test-qianrong.ftechain.com/api-qianrong；本次只用它查询菜单与列配置，vite.config.js 的 resUrl 仍为 dev，未改。未运行测试 / 构建。
+
+## 列表面板分页被遮挡（2026-11-11 ssh test/9bfa240，用户明确）
+
+- 现象：分配用户页（/organization/role-auth/user/:roleId）底部分页被挡住；同页「添加帐户」弹窗（selectUser）同样的分页会伸出面板、与「确定 / 取消」重叠。
+- 根因：全局 ruoyi.scss `.pagination-container { position: relative; height: 25px; padding: 10px 20px !important }` + `.pagination-container .el-pagination { position: absolute; right: 0 }`。放进 `.qr-native-pagination`（flex、靠右）后，容器只有内边距宽（约 40px），绝对定位的分页条按 40px 收缩、加上 list-page 给的 flex-wrap，按钮几乎逐个折行，向下伸出 25px 的容器，被面板 overflow:hidden 裁掉；原 list-page 的 `padding: 0` 被全局 !important 压住没生效。弹窗里 `.el-dialog .pagination-container { position: static !important }` 让分页条改以 el-dialog 为定位参照，不受面板裁剪，直接盖到底部按钮上。
+- 改法（list-page.scss，只作用于 ListTablePanel 的分页行）：`.qr-native-pagination .pagination-container` 设 static、height auto、`padding: 0 !important`、`flex: 1 1 auto; min-width: 0`；`.qr-native-pagination .pagination-container .el-pagination` 设 static，保留 flex-wrap / gap 8 / 靠右。全局 ruoyi 分页及 vxe 列表不动。
+- 影响范围：ListTablePanel 的 7 个调用页同时修复——分配用户、选择用户弹窗、分配角色（authRole）、接口日志、操作 / 登录日志（LogWorkspace）、菜单列字段设置、角色列模板。
+- 顺手：authUser.vue 删掉被 `.qr-list-page.app-container { padding: 0 !important }` 压住、不生效的 scoped `.app-container { padding: 20px }`。
+- 测试：新增 native-pagination-style（静态核对两条规则）。无 Node / 浏览器，测试与构建未运行，断言用 Python 核对；未实际渲染核对（800px 弹窗按布局估算全量分页约 660px，可一行放下）。
