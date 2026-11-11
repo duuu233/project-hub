@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-new-modules-static.md](qianrong-new-modules-static.md)：2026-11-11 ssh dev/c0beb06 按 V0.9 原型新增额度账本、认证管理、资产管理静态页面；接口新增菜单 2507–2517（含新顶级目录数字监管）；test 分支指向改动前 ba4b6dc。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-06 ssh dev/0b66c9a 23 个动态列列表的列表接口带上与 policyColumns 相同的 menuPerm（resolveListMenuPerm 一次解析共用、withMenuPerm 包参数；列表接口 Swagger 尚未声明，待联调）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-05 ssh dev/8efe678 多个字段拼成一列（页面列 responseKey 数组）至少一个字段可见就显示、只出一次、内容不含隐藏字段。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-04 ssh dev/c8e5279 发新版后页面文件 404 自动刷新一次（chunkReload）；列表数据列最小宽度适配小屏、操作列默认固定右侧。

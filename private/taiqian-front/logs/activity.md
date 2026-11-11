@@ -443,3 +443,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：列表接口也加参数 menuPerm，取值与列表前调的 policyColumns 相同。
 - **改动**：listGrid resolveListMenuPerm / withMenuPerm，main.js 注入 matchRouteMenuPerm；23 个标准列表 getList 包 withMenuPerm(gridOptions, …)；README、policy-columns 测试同步。dev 同名 pull 已最新，dev/0b66c9a 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；Python 核源码正则、git diff --check、信息隔离自查通过。列表接口 Swagger 尚未声明 menuPerm，待联调。
+
+## 2026-11-11 ssh｜qianrong 新增额度账本、认证管理、资产管理（静态）
+
+- **需求**：按 V0.9 三个原型、现有样式与交互实现三个模块，先静态页面 + 静态数据；调接口按其他模块规律自动新增菜单。中途追加：新建 test 分支为本次改动前的版本并推送 GitHub。
+- **改动**：dev 同名 pull 到 ba4b6dc；接口新增菜单 2507–2517；新增三模块页面（详见 docs/qianrong-new-modules-static.md）。dev/c0beb06 提交后再次 pull 并 push；test 分支建在 ba4b6dc 并 push origin（远端原无 test）。
+- **验证**：无 Node，构建 / 测试 / 浏览器未运行；静态核对模板配对、未用导入、信息隔离；getRouters 已返回新路由。

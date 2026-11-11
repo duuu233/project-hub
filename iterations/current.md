@@ -1,3 +1,15 @@
+## 2026-11-11 ssh｜泰乾超级-qianrong 新增额度账本、认证管理、资产管理（静态页面，dev）
+
+- 需求（用户）：按 V0.9 原型（F04 额度账本、F05 认证管理、O01 资产管理），用现有样式与交互实现，先静态页面 + 静态数据；通过接口查看其他模块菜单规律，自动新增三模块菜单（用户提供登录 token，未记录）。追加：新建 test 分支 = 本次改动前版本，推送 GitHub。
+- 同步：Hub main、tq-plus dev 同名 pull（dev 到 ba4b6dc）；origin 均 GitHub；无 codegraph CLI、无 Node。
+- 菜单（dev 后端 POST /system/menu，id 2507–2517）：供应链金融运营下 额度账本（+F 总览查询 / 导出）、认证管理（列表占位 + 详情）；新顶级 数字监管 → 资产管理（列表占位 + 新增 + 详情）。getRouters 已返回。挂载位置与权限字符为自行决定，见私人 docs/qianrong-new-modules-static.md。
+- taiqian-front dev/c0beb06（已 push）：views/supply-chain/credit-ledger、supply-chain/certification、digital-supervision/asset；静态列表关 policyColumns/responseColumns（全局 strict 下否则只剩序号与操作列）。
+- test 分支：建在 ba4b6dc（改动前 dev）并 push origin，远端原无 test；本地仍在 dev。
+- 验证：无 Node，构建 / 测试 / 浏览器未运行；静态核对模板配对、未用导入、信息隔离。
+- 待定：菜单未分配角色；权限字符待后端定稿；原型待确认项（口径 T05/T07、空值符号、明细删除列等）按系统现有口径处理。
+
+---
+
 ## 2026-11-11 ssh｜花盆APP 光照页周 / 月历史只有最后一天有日期（main）
 
 - 需求（用户）：光照状态页光照度周、月历史只有最后一天显示日期，前面都没有；检查其它页面是否同样问题并修复。
