@@ -1,3 +1,15 @@
+## 2026-11-11 ssh｜相册APP WiFi 配网页图标、输入框橙色边框、配网状态页键盘关不掉（main）
+
+- 需求（用户）：1. WiFi 配网页顶部图标与相册小程序一致（可直接复制小程序的图），WiFi 密码输入框橙色边框没正常展示；2. 设备配网页底部始终有键盘关不掉、进内页也关不掉、挡住按钮；仔细对比小程序，把 WiFi 版功能同步过来。
+- 同步：Hub main、flutter main/aa5d247、photo-album main/eb3a660 同名 pull 均已最新；origin 均 GitHub；无 .codegraph。
+- 原因：① 内层 TextField 只写 `border: none`，全局 inputDecorationTheme 的橙色 focusedBorder 仍画在 isCollapsed 内层上，紧贴文字被外框裁掉；② 「下一步」靠路由切换移走焦点，部分机型键盘没随输入连接断开收起，配网状态页无输入框，点空白也收不回；③ 头图等用 Material 图标拼，与小程序 svg 不同。
+- album-app main/42ae540（已 push）：新增 wifi_glyphs.dart，按小程序 wifi-provision-art / wifi-switch / eye-open / eye-closed / badge-wifi 五个 svg 的同一组坐标 CustomPaint 绘制（无 SVG 依赖，按工具链基线不引入 flutter_svg，沿用设备详情屏幕尺寸图标的做法——svg 文件本身没法直接用）；输入框内层边框全置空，聚焦时整框描 #FF6A24 边；离开 WiFi 配网页先 unfocus，配网状态页进来再 unfocus + TextInput.hide 兜底；状态列表（行高、分隔线、20 见方状态圈、执行中加粗）对齐小程序，固件升级页共用状态圈一并变化；配网跑完即恢复息屏（同小程序 finally）；WiFi 列表行图标换 badge-wifi。docs/history + docs/README 同步，新增 test/wifi_config_keyboard_test.dart。
+- 自行决定（可改）：聚焦橙边用页面主橙 #FF6A24、1.2 宽（小程序本身没有聚焦描边，按用户「橙色边框」的期望做成整框）。
+- 对照：配网流程本体（四步、MQTT 参数、国家码、绑定 isToHave/shareUserId、120 秒在线轮询）两端逐步一致，未改。
+- 验证：无 Flutter / Dart，analyze / test / 真机均未跑；新测试断言用 Python 对源码核对、括号配平、diff --check、信息隔离自查通过。需真机看图标、聚焦描边，以及密码框弹键盘后点下一步，配网状态页与后续页面不再残留键盘（Android 各厂商键盘与 iOS）。
+
+---
+
 ## 2026-11-11 ssh｜泰乾超级-qianrong 操作日志详细样式优化（test）
 
 - 需求（用户）：操作日志详细的样式优化，方便查看、美观，可以把参数放出来。
