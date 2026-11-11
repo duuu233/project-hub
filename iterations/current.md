@@ -1,3 +1,15 @@
+## 2026-11-11 ssh｜花盆APP 光照页周 / 月历史只有最后一天有日期（main）
+
+- 需求（用户）：光照状态页光照度周、月历史只有最后一天显示日期，前面都没有；检查其它页面是否同样问题并修复。
+- 同步：Hub main、flowerpot main 同名 pull 已最新；origin 均 GitHub；无 .codegraph。
+- 原因：10-28 补日期时沿用「N天前」的固定间隔——`dateBarLabels` 周每 7 根、月每 30 根（光照页 `every: 30`）才标一根，从最后一根往左数。周包常见 7 点、月包 ≤ 31 点，于是只剩最后一根（月 31 根时多第一根）。
+- flowerpot-app main/a4bab94（已 push）：新增 `HistoryPeriod.barLabelled`，间隔 = ⌈(count−1)/6⌉，≤ 7 根每根都标，多了整轴最多 7 个、最后一根必标（28 根标 2/7/…/27，180 根每 30 根）；`dateBarLabels` / `relativeBarLabels` 共用，光照页周 / 月统一调用。测试 status_history_date_window_test 更新 28 根取样位置并新增间隔用例；docs/history 新增、history/README、AI_CONTEXT、PRODUCT_RULES、光照页 UI 说明、10-28 改动说明第四节已更新。
+- 其它页面：需水（水位 / 土壤湿度）周 / 月是折线 `dateTicks` 等距 5 刻度、每个都有日期，无此问题；温度、湿度只有日视图（按时刻标整点）；报表页无入口、只标首尾。均未改。
+- 自行决定（可改）：上限 7 个标签（7 根时每根约 37px、`M/d` 约 30px，375 宽预计不重叠）。
+- 验证：本机无 Flutter，测试 / analyze 未运行；标字位置用 Python 按同公式推算核对；信息隔离自查通过；未真机。
+
+---
+
 ## 2026-11-11 ssh｜相册小程序 ＋ 相册APP 选择WiFi页搜一个显示一个（main-wifi）
 
 - 需求（用户）：检测搜索设备 WiFi——① WiFi 列表出来了头部还在显示搜索中；② 搜索 WiFi 很慢，是否设备原因；③ 能否像搜索蓝牙设备一样搜一个显示一个。
