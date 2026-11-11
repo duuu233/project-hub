@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-11｜work｜更正 qianrong H5 仓库映射
+
+用户更正目标为 `qianrong/h5` Flutter Web 仓库，复用 `taiqian-h5`。Hub `main` 先同步至 `57ff6b5`。替换 work 映射和项目资料，保留业务仓库已跟踪的规则和文档，五项私人挂载验证通过。配置 `mygithub`，GitHub `master` 仍指向旧仓库提交 `a6ef127`，试推无法快进，等待确认上传分支。
+
 ## 2026-11-11｜work｜接入泰乾超级-qianrong H5
 
 Hub `main` 先快进到 `8f0adea`。注册独立项目 `taiqian-h5`，只新增 work 映射，建立五项私人挂载与本机忽略。H5 从 Codeup 同步 `master`，保留 `origin/master` 跟踪关系，通过新增 `mygithub` 将 `a6ef127` 首次推送到指定 GitHub 仓库并核对远端提交。拉取结果见当次迭代和项目总日志。

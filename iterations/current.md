@@ -9081,3 +9081,11 @@ ode scripts/build.mjs --memory 1024 生产构建 32.2s 通过。
 - 泰乾超级 `dev/c0beb06` 已拉取，本地领先 Codeup 一项；花盆APP `main/a4bab94`、花盆后台 `main/bb847ab`、相册后台 `main/8e9ddfc`、相册APP `main/cad2bc4` 均已最新。相册小程序 `main-wifi` 快进至 `eb3a660`，CodeGraph 索引已刷新。
 - 正矿 `feature-v1.8.5/d0dcf3c` 的 `origin` 无同名分支，保留本地分支与远端配置。
 - H5 `master/a6ef127` 与 Codeup 同步。新建 `mygithub` 后把现有 `master` 推到 `duuu233/tq-plus-h5`，核对远端提交一致。H5 工作区干净，五项挂载均被本机 Git 忽略。此次无 H5 源码变更，未运行构建。
+
+---
+
+## 2026-11-11 work｜更正 qianrong H5 仓库及推送目标确认
+
+- 用户确认上次接入的是错误仓库，实际项目为 `qianrong/h5`（Flutter Web）。复用 `taiqian-h5`，仅更正 work 映射，更新项目规则和上下文。
+- `master/2fcdb27` 已从 Codeup 同步，工作区干净。保留版本控制中的 `AGENTS.md` 和 `docs/`，使用 `AGENTS.local.md`、`.local-docs/` 等五项私人挂载。挂载试运行及 Git 忽略检查通过，无源码改动。
+- `mygithub` 已配置到指定仓库。远端 `master/a6ef127` 来自上次误接的仓库，普通推送试运行拒绝更新。等待用户指定推送新分支或先备份旧分支再替换 `master`。

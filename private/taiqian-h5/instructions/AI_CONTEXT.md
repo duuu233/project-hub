@@ -1,5 +1,5 @@
 # 泰乾超级-qianrong H5 上下文
 
-- 本项目是 qianrong 的独立 H5 客户端，仓库目录名为 `ftechain-zk-h5`，`package.json` 中名称为 `zkh5`。
-- `README.md` 与 `package.json` 记录 uni-app 的开发和打包命令。H5 使用 `yarn dev:h5` 启动，使用 `yarn build:h5:prod` 打包，使用 `yarn type-check` 检查类型。
-- 本地维护入口为 `docs/README.md`，规则见 `AGENTS.md`。用户指定的 GitHub 仓库由 work 的 `mygithub` 远端访问。
+- 本项目是 qianrong 的移动 H5，使用 Flutter Web。项目入口、命令和架构见 `README.md`、`docs/h5-foundation.md`。
+- Flutter 与 Dart 版本以 `tool/flutter_version.json` 为准，使用仓库 `tool/` 下的校验脚本运行项目。
+- 项目规则见 `AGENTS.md`，本地补充规则和文档分别见 `AGENTS.local.md`、`.local-docs/README.md`。work 中使用 `mygithub` 访问用户指定的 GitHub 仓库。

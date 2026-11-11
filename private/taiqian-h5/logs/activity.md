@@ -1,5 +1,11 @@
 # 泰乾超级-qianrong H5 操作记录
 
+## 2026-11-11｜work｜更正为 Flutter Web 仓库
+
+- 用户确认目标为 `qianrong/h5`，从 Codeup 同步 `master/2fcdb27`，工作区干净。
+- 按原项目规则保留 Git 跟踪的 `AGENTS.md`、`docs/`，私人规则和文档改用 `AGENTS.local.md`、`.local-docs/`。五项挂载经验证已被本机 Git 忽略。
+- 配置 `mygithub`。远端 `master/a6ef127` 是前次误接仓库的提交，试推无法快进，等待确定 GitHub 目标分支。
+
 ## 2026-11-11｜work｜首次接入与 GitHub 备份
 
 - 核实独立仓库根目录，当前 `master` 与 Codeup `origin/master` 均为 `a6ef127`。
