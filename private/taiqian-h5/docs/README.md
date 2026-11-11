@@ -4,4 +4,4 @@
 - 补充规则和背景见 `AGENTS.local.md`、`AI_CONTEXT.md`。
 - 环境接入及实施记录见 `logs/activity.md`。
 
-work 环境从现有 `origin` 快进同步当前分支。推送 GitHub 使用 `mygithub`（`git@github.com:duuu233/tq-plus-h5.git`）。推送前核对目标分支属于此项目且可以快进。
+版本同步只使用 GitHub 仓库 `duuu233/tq-plus-h5`。按当前检出的分支快进拉取，核对 GitHub 同名分支后推送。本机配置由用户维护。

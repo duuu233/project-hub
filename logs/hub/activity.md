@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-11｜work｜明确 qianrong H5 仅对接 GitHub
+
+记录用户维护各项目本机 Git 配置的约定。`taiqian-h5` 在所有环境仅通过 GitHub 拉取和推送，项目明文规则同步更新。
+
 ## 2026-11-11｜work｜更正 qianrong H5 仓库映射
 
 用户更正目标为 `qianrong/h5` Flutter Web 仓库，复用 `taiqian-h5`。Hub `main` 先同步至 `57ff6b5`，更正 work 映射和项目资料，五项私人挂载验证通过。配置更正提交 `b26f25b` 已推送。经用户授权，GitHub `master` 已更新至正确仓库的 `2fcdb27`。
