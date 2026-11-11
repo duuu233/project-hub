@@ -73,3 +73,13 @@
 - 除明确授权新增菜单外，未真实变更角色/字段/日志数据，未部署。
 
 实施及提交记录见 [本次记录](history/2026-10-21-home-role-logs.md)。
+
+## 操作日志详细改版（2026-11-11 ssh test/174b694，用户明确）
+
+- 用户：操作日志详细的样式优化，方便查看、美观，可以把参数放出来。
+- 改前：el-form 两栏 label: value 堆叠，请求 / 返回参数是两段 max-height 280 的 JSON pre，状态纯文字，异常信息在最底部。
+- 布局（operlog/index.vue，弹窗 min(1120px, 94vw)）：摘要头卡（系统模块大字 + 操作类型标签；操作人 / IP / 时间带图标；右侧状态标签与耗时，耗时 ≥1000ms 橙、≥3000ms 红，阈值自行决定）→ 失败时异常信息（红色头）→ 信息格 4 列（日志编号、所属企业、操作人员、操作地址；请求地址带 GET/POST/PUT/DELETE 彩色标记、操作方法各占 2 列，等宽字体）→ 请求参数 / 返回参数并排（≤900px 视口上下排，信息格 2 列；≤560px 1 列）。
+- 参数组件 log-shared/LogPayload.vue：JSON 默认「字段」视图——路径 → 值两列（嵌套 a.b、数组 a[0]，超过 5 层整体紧凑 JSON，最多 200 个字段，超出提示切 JSON），数字 / 布尔 / null 着色；可切「JSON」原文；「复制」复制脱敏后的格式化文本（clipboard 失败回落 execCommand）。非 JSON 文本直接 pre，空值显示「无」。换一条日志视图重置为字段。
+- log-content.js：新增 parseLogContent、logFieldRows；formatLogContent 改为基于 parseLogContent。解析前把字符串外 ≥16 位且超安全整数的数字包成带 \u0000 标记的字符串，输出时还原，雪花 ID 不再被 JSON.parse 截断（第三方日志、清理记录的 formatLogContent 也受益）。小变化：内容本身是 JSON 字符串字面量（如 `"abc"`）时现在显示不带引号。嵌套在字符串里的 JSON 由 mask 重新序列化，仍可能丢精度（原有行为）。
+- 未改：登录日志无详情；第三方日志详情仍是 descriptions + 整段 JSON，后续可复用 LogPayload。
+- 测试：新增 tests/log-payload.test.mjs（解析 / 脱敏、大整数、字段展开 / 截断、详情模板）；README「角色与日志」加说明与回归命令。无 Node / 浏览器，测试、构建、渲染均未运行，断言逐条手推。

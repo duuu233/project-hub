@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-role-logs.md](qianrong-role-logs.md)末节：2026-11-11 ssh test/174b694 操作日志详细改版（摘要头 + 信息格 + 请求 / 返回参数字段视图 / JSON 切换 / 复制，长整型 ID 保精度）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-11 ssh test/9bfa240 列表面板（ListTablePanel）分页被全局 ruoyi 分页样式（限高 25px + 绝对定位）挤成一列并被裁掉，弹窗里与底部按钮重叠；改回文档流。
 - [qianrong-industry-optional-system-docx-preview.md](qianrong-industry-optional-system-docx-preview.md)：2026-11-11 ssh test/244f3bc 产业配置融资H5 / PC登录配置非必填（空 PC 块不提交）；右上角显示当前系统（口径改为系统 + 角色）；合同模板详情内嵌 docx 预览（docx-preview，新页面 /file-preview、下载）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-11 ssh test/7f55b3b 字典数据页（固定路由）匹配不到列表菜单 2506，页面直接指定 menuPerm=system:dict:query；菜单本来就有，未改。

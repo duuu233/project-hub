@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-11 ssh｜操作日志详细改版（test）
+
+test 干净同名 pull 已最新（9bfa240）。operlog 详情改为摘要头 + 信息格 + 并排参数面板；新增 LogPayload.vue（字段 / JSON 切换、复制）；log-content.js 加 parseLogContent / logFieldRows 与大整数保精度；新增 log-payload 测试，README 同步。test/174b694 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建，未浏览器核对；信息隔离自查通过。
+
 ## 2026-11-11 ssh｜分配用户页分页被遮挡、弹窗分页与按钮重叠（test）
 
 test 干净同名 pull 已最新（244f3bc）。list-page.scss 把 ListTablePanel 分页容器与分页条改回文档流（压过全局 ruoyi 的限高 + 绝对定位）；authUser.vue 删除不生效的 scoped padding；新增 native-pagination-style 测试。test/9bfa240 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建，未浏览器核对；信息隔离自查通过。

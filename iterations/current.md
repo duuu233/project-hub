@@ -1,3 +1,13 @@
+## 2026-11-11 ssh｜泰乾超级-qianrong 操作日志详细样式优化（test）
+
+- 需求（用户）：操作日志详细的样式优化，方便查看、美观，可以把参数放出来。
+- 同步：Hub main 已最新；tq-plus test 干净，同名 pull 已最新（9bfa240）；origin GitHub。
+- taiqian-front test/174b694（已 push）：operlog/index.vue 详情弹窗改为摘要头卡（模块 / 类型 / 操作人 / IP / 时间 + 状态、耗时）→ 失败时异常信息 → 4 列信息格（请求地址带请求方式标记）→ 请求 / 返回参数并排；新增 log-shared/LogPayload.vue（字段视图路径 → 值、JSON 切换、复制）；log-content.js 新增 parseLogContent / logFieldRows，超安全整数 ID 保留原文；新增 tests/log-payload.test.mjs；README 同步。
+- 自行决定（可改）：耗时 1 秒 / 3 秒分档着色；字段视图默认、最多 200 个字段、展开 5 层。
+- 验证：无 Node / 浏览器，测试、构建、渲染均未运行；断言逐条手推，diff --check、信息隔离自查通过。需本地打开操作日志「详细」确认效果。
+
+---
+
 ## 2026-11-11 ssh｜泰乾超级-qianrong 分配用户页分页被遮挡、整体样式（test）
 
 - 需求（用户）：test 分支，分配用户页面下面的分页是不是被挡住了，优化整体样式，不要错乱和重叠。
