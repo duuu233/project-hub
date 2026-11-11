@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乾融企业端 H5 · 融资原型（V2 按截图重制）</title>
+<!--
+  乾融（多产业可配置供应链金融平台）· 企业端 H5 原型 V2
+  ============================================================
+  依据：2026-11-06 用户提供的 4 张 Axure 原始截图——
+    ① 登录（泰乾数科·短信登录）
+    ② 首页（资产总览/授信额度×2/近期待还）+ 附属：支付密码、重置支付密码
+    ③ 融资列表（搜索 + 全部/未融资/已融资筛选 + 4 张货柜卡片）
+    ④ 我的-实名认证（未认证初始态/e签宝占位/认证成功/认证失败/企业信息/新增h5登录用户）
+  范围约定：未提供截图的模块（资产 Tab、查看资产列表、查看待还列表等）本次不生成，
+    交互以 toast 显性提示「待截图补充」，不入版本承诺。
+  视觉基线：截图为准（白色极简 + 湖蓝主色 #2AA8E0 + 薄荷青授信卡 + 我的页青蓝渐变头部），
+    组件工艺沿用中台 UI 规范 V1.4 移动端换算（圆角≤6px、tabular-nums、脱敏）。
+  数据契约：金额千分位两位小数；日期 YYYY-MM-DD；空值「—」；手机号中段脱敏。
+  屏幕清单（data-screen）：
+    login 登录 / home 首页 / finance 融资列表 / mine 我的 /
+    esign e签宝实名认证（占位） / ent-info 企业信息 / user-add 新增h5登录用户 /
+    pay-password 支付密码 / pay-reset 重置支付密码 /
+    pre-apply 融资预申请(资产+SKU+选产品·平铺) / auth-tip 温馨提示·授权书(整页) /
+    pre-apply-2 预申请·产品条款(不再途经，待裁决删除) / pre-result 授信结果 /
+    fin-apply 融资申请(有合同/无合同/失败态) / sign-tip 签署提示(资产详情) /
+    esign-sign E签宝·在线签署(占位) / apply-success 融资申请提交成功 /
+    repay-detail 融资详情·待还款 / repay-input 申请还款·还款模式(关联商品/不关联商品) / repay-confirm 还款确认 /
+    repay-result 还款结果 / repay-detail2 融资详情·部分还款 / repay-records 还款记录 / unpledge 申请解押 /
+    assets 资产列表(Tab) / asset-detail 资产详情(资产明细/库存信息/提货信息) /
+    pledge-info 质押解押信息(质押/解押2Tab) / pickup 发起提货(商品选择弹层+可提数量校验)
+  入口路由（融资列表卡片点击）：
+    未融资→pre-apply；融资处理中→fin-apply(有合同)；待放款→fin-apply(无合同·上行易采购)；
+    融资已取消→fin-apply(失败态)；待还款→repay-detail；部分还款→repay-detail2；已结清→toast待截图
+  预授信分叉（2026-11-10 22:03 调整：申请按钮直达分叉，不经条款页）：
+    选「建行平台云贷」走有授权（申请→温馨提示整页5份授权书→e签宝→结果页含附加提示）；
+    选其他产品走无授权（申请→银行APP已授权，直接结果页，无附加提示）
+  实名认证状态机：none（初始，红「实名认证」）→ esign → ok（蓝「已认证」）/ fail（红「认证失败」+蓝「重新认证」）
+  已知截图疑点（页面内以「待确认」小签显性标注，供评审裁决）：
+    ① 关闭（2026-11-09 高清截图裁决）：首页授信卡首行字段实为「银行总额度 1000万」（旧低清截图误读为已用额度），
+       额度计算口径以红框需求「见额度账本描述」为准
+    ② 关闭（2026-11-09 高清截图裁决）：近期待还剩余天数实为 3天/15天，与还款日 2026-11-15/11-28 间隔一致；
+       同批修正：编号前缀由贷款号改货柜号、还款日年份 2026、右上角链接改「查看融资列表」
+       （2026-11-10 17:22 用户裁决：货柜号全部改称资产编号，全文件生效）
+    ③ 「我的」页企业名截图两处 OCR 不一致（湛江伟昌铭钛/浙江伟晋益智），取首次读数，待用户提供清晰截图裁决
+    ④ 融资列表页签归属（2026-11-06 用户已裁决）：未融资/融资处理中/融资已取消/待放款 → 未融资页签；
+       已融资页签放 待还款/部分还款/已结清，字段为 资产价值/金融产品/放款金额（已还金额隐藏、融资金额改为放款金额，均已裁决）
+    ⑤ 还款流程截图为低分辨率，部分文案为 OCR 重构（还款确认蓝提示两条、解押黄色提示、赎回提示），
+       待原文核对；还款流程产品名 OCR 两读均为「捷行平台云贷」，与列表「建行平台云贷」不一致，页内挂【待确认】
+    ⑥ 待裁决（2026-11-09 首页红框需求）：额度卡片规则为「客户有授信时按授信通过几家银行展示几张卡，可左右滑动切换」，
+       但新截图仅见建行南山支行 1 张卡（含产品子表「平台云贷(一级海上融)」），上行深圳分行卡不再出现——
+       本版照截图渲染 1 卡，多银行滑动交互未演示；「展开」的具体内容（额度账本明细）无截图，点击 toast 占位；
+       近期待还演示资产编号 FBIU5835887 与融资列表「待放款」卡重号（各自照截图），数据联调时需注意；
+       近期待还右上角链接 OCR 三读：融资列表×2 / 资金列表×1，取「查看融资列表」（与底部 Tab「融资」同源）
+  需求描述侧栏（2026-11-09 新增，同日 09:52 补第4条；2026-11-10 按新截图口径更新）：首页截图标注规则逐字落档于手机壳右侧面板 #req-panel（≤460px 隐藏），
+    第4条为用户口述补充：融资列表、资产列表初始数据来源——乾链推送资产数据到乾融系统-资产模块
+    2026-11-10 口径变更（三读一致）：①资产总览规则改「没数据时显示0」；②资产总价值口径简化为「统计资产总价值」
+    （原五状态列举取消）；③「已放款」口径移除「已结清」（原：待还款/部分还款/已结清/已逾期）；④额度卡片措辞「银行+产品2级维度」
+  ⑦ 2026-11-10 截图修正记录：近期待还条目改版——前缀改「资产编号」、新增产品名行（捷行平台云贷(一级海上融)/上行易采购(一级海上融)），
+    第2条换为 OUIU5835834·¥7,550.00·2026-11-30·剩余15天；剩余天数 3/15 与还款日 11-15/11-30 间隔仍不一致（照截图）；
+    「已放款」中「待还/待还款」OCR 三读分歧（待还款×1/待还×2），取「待还款」与系统状态名一致；
+    近期待还产品名「捷行平台云贷」与融资列表「建行平台云贷」不一致——与疑点⑤同源，仍待裁决
+  ⑧ 2026-11-10 17:22 用户裁决（术语统一，全文件替换）：货柜号 → 资产编号（18处，含搜索占位/卡片/详情/空态文案/头注释）；
+    进口服务商 → 核心企业（5处，预申请资产信息/资产列表卡/资产详情，字段值仍为演示数据「全联集采（山东）供应链有限公司」）
+  ⑨ 2026-11-10 21:57 用户裁决（截图红框标注弹框区域）：融资预申请「选择金融产品」由底部弹框改为页面平铺——
+    三个产品选项（建行平台云贷/上行易采购/邮储小微易贷，均一级在途融）平铺于资产信息卡下方独立卡片，
+    默认选中建行，单选交互保留；「申请」按钮移入产品卡，点击直达产品条款页（原 取消/确认 弹框按钮随弹框移除）
+  ⑩ 2026-11-10 22:03 用户裁决（附整页截图）：平铺页「申请」点击后直达「温馨提示」整页（auth-tip，无返回栏/关闭钮）——
+    原「条款页提交后弹窗」改为独立整页（一、申请产品授信需先签署5份授权书；二、有效期6个月+e签宝确认提示；底部通栏确定）；
+    建行→auth-tip→确定→e签宝→授信结果；非建行→申请直达授信结果（无授权）；
+    产品条款页(pre-apply-2)不再途经，DOM保留待裁决是否删除（页内演示说明已同步标注）
+  ⑪ 2026-11-10 22:15 用户裁决（口述+申请还款页截图）：申请还款页新增「还款模式」选择——
+    还款(关联商品)=现状商品赎回数量输入；还款(不关联商品)=直接输入还款金额（校验：必填/正数/两位小数/≤全部应还¥10,398.06），
+    确认页双态渲染（商品行 or 模式+金额行），合计应还动态；模式切换控件与金额输入布局无截图，按组件工艺推演【待确认】
+  ⑫ 2026-11-11 09:11 用户裁决（术语统一，部分还款详情·还款概况(无商品)表头3列）：
+    已还金额(未核销) → 累计已还(未解押)；已还金额(已核销) → 已还(解押占用)；已还金额(含合计核销) → 已还(剩余未解押)；
+    数值演示数据未变（3,000.00/1,600.00/1,400.00）；同页「已还金额(预计核销)」「已还金额」未在裁决范围，保持原样
+  全部业务数据为演示数据，非真实凭证。
+-->
+<style>
+  :root{
+    --brand:#2AA8E0; --brand-deep:#1F93C7; --brand-weak:#E6F6FD;
+    --cyan:#00B7DE; --cyan-weak:#CFF0F7; --cyan-soft:#8FC3D6;
+    --mint:#A9EDF0; --mint-deep:#0B7C8C;
+    --orange:#F5A623; --red:#F53F3F; --link:#2E7CE6; --green:#23C343;
+    --t1:#1D2129; --t2:#4E5969; --t3:#86909C; --t4:#C9CDD4;
+    --bg:#F7F8FA; --card:#FFFFFF; --line:#E5E6EB; --line-weak:#F2F3F5;
+    --radius:6px; --shadow:0 1px 3px rgba(29,33,41,.05);
+    --num:"SF Mono","Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:#E8E8E4; font-family:"PingFang SC","HarmonyOS Sans SC","Noto Sans CJK SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    color:var(--t1); display:flex; align-items:center; justify-content:center;
+    -webkit-font-smoothing:antialiased; padding:24px 12px;
+  }
+  button{font-family:inherit; cursor:pointer; background:none; border:none; color:inherit}
+  input,select{font-family:inherit; font-size:14px; color:var(--t1)}
+
+  /* ============ 手机壳 390×844 ============ */
+  .phone-shell{
+    width:390px; height:844px; background:var(--bg); border-radius:44px;
+    border:10px solid #1A1A1A; box-shadow:0 24px 48px rgba(0,0,0,.28);
+    position:relative; overflow:hidden; display:flex; flex-direction:column; flex:none;
+  }
+  .status-bar{
+    height:44px; flex:none; background:#FFFFFF; color:#1D2129;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 26px 0 30px; font-size:13px; font-weight:600; letter-spacing:.2px;
+    border-bottom:0; position:relative; z-index:6;
+  }
+  .status-icons{display:flex; gap:6px; align-items:center}
+  .status-icons svg{width:16px;height:14px}
+
+  .app{position:relative; flex:1; overflow:hidden; background:var(--bg)}
+  .screen{
+    position:absolute; inset:0; display:none; flex-direction:column;
+    background:var(--bg); overflow-y:auto; overscroll-behavior:contain;
+  }
+  .screen.active{display:flex}
+  .screen.bg-white{background:#fff}
+  .screen-inner{padding:12px 14px 24px}
+  .screen-inner.has-tab{padding-bottom:96px}
+  .body{padding:12px 14px 24px; flex:1}
+
+  /* 子页头（白底 + 返回 + 居中标题） */
+  .sub-header{
+    position:sticky; top:0; z-index:5; flex:none; height:46px; background:var(--card);
+    border-bottom:1px solid var(--line); display:flex; align-items:center; gap:8px; padding:0 8px 0 4px;
+  }
+  .sub-header .back{
+    width:40px;height:40px; display:flex;align-items:center;justify-content:center;
+    border-radius:var(--radius); color:var(--t1);
+  }
+  .sub-header .back svg{width:20px;height:20px}
+  .sub-header h1{font-size:17px; font-weight:600; flex:1; text-align:center}
+  .sub-header .side{width:40px;height:40px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius); color:var(--t2)}
+
+  /* Tab 主页标题栏（融资页：浅灰底居中标题） */
+  .page-title{
+    flex:none; height:44px; background:#F2F2F2; display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:600; color:var(--t1);
+  }
+
+  /* 底部 Tab */
+  .tab-bar{
+    position:absolute; left:0; right:0; bottom:0; height:78px; flex:none; z-index:10;
+    background:var(--card); border-top:1px solid var(--line);
+    display:flex; padding:6px 8px calc(6px + env(safe-area-inset-bottom,0));
+  }
+  .tab-bar[hidden]{display:none}
+  .tab-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    font-size:10px; color:var(--t3); border-radius:var(--radius); padding-top:4px;
+  }
+  .tab-item svg{width:22px;height:22px}
+  .tab-item[aria-current="page"]{color:var(--brand); font-weight:600}
+
+  /* ============ 通用 ============ */
+  .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--line-weak); padding:14px; margin-bottom:12px}
+  .num{font-family:var(--num); font-variant-numeric:tabular-nums; letter-spacing:-.2px}
+  .tc{ /* 待确认小签（2026-11-06 用户裁决：页面上隐藏，疑点仍记录于文件头注释台账） */
+    display:none !important;
+  }
+  .demo-pill{font-size:10px; border:1px solid rgba(255,255,255,.55); color:rgba(255,255,255,.92); padding:2px 8px; border-radius:99px; flex:none}
+
+  .toast-wrap{position:absolute; top:96px; left:0; right:0; z-index:99; display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none}
+  .toast{
+    background:rgba(29,33,41,.9); color:#fff; font-size:13px; border-radius:8px;
+    padding:10px 16px; max-width:82%; line-height:1.5; animation:toastIn .18s ease;
+  }
+  @keyframes toastIn{from{opacity:0; transform:translateY(-6px)}to{opacity:1; transform:none}}
+
+  /* 底部弹层（切换企业） */
+  .sheet-mask{position:absolute; inset:0; background:rgba(29,33,41,.5); z-index:50; display:none}
+  .sheet-mask.open{display:block}
+  .sheet{
+    position:absolute; left:0; right:0; bottom:0; z-index:51; background:var(--card);
+    border-radius:16px 16px 0 0; display:none; flex-direction:column; padding-bottom:calc(14px + env(safe-area-inset-bottom,0));
+  }
+  .sheet.open{display:flex}
+  .sheet .grab{width:36px;height:4px;background:var(--t4);border-radius:99px;margin:10px auto 2px; flex:none}
+  .sheet .sheet-title{font-size:15px; font-weight:600; text-align:center; padding:10px 16px 6px; flex:none}
+  .sheet .sheet-note{font-size:11px; color:var(--t3); text-align:center; padding:0 20px 8px; line-height:1.6}
+  .sheet .opt{
+    display:flex; align-items:center; gap:8px; padding:13px 20px; font-size:14px; color:var(--t1);
+    border-top:1px solid var(--line-weak); text-align:left; width:100%;
+  }
+  .sheet .opt svg{width:16px;height:16px; color:var(--brand); flex:none; visibility:hidden}
+  .sheet .opt[aria-checked="true"] svg{visibility:visible}
+  .sheet .opt .sub{font-size:11px; color:var(--t3); margin-left:auto; flex:none}
+
+  /* 模态 */
+  .modal-mask{position:absolute; inset:0; background:rgba(29,33,41,.5); z-index:60; display:none}
+  .modal-mask.open{display:block}
+  .modal{
+    position:absolute; left:34px; right:34px; top:50%; transform:translateY(-50%); z-index:61;
+    background:var(--card); border-radius:12px; padding:22px 20px 16px; display:none;
+  }
+  .modal.open{display:block}
+  .modal h3{font-size:16px; font-weight:600; text-align:center; margin-bottom:12px}
+  .modal .m-body{font-size:13px; color:var(--t2); line-height:1.7; margin-bottom:14px; text-align:center}
+  .modal .m-foot{display:flex; gap:10px}
+  .modal .m-foot button{flex:1; height:40px; font-size:14px; border-radius:var(--radius); font-weight:600}
+  .m-cancel{border:1px solid var(--line); color:var(--t2); background:var(--card)}
+  .m-ok{background:var(--brand); color:#fff}
+  .m-danger{background:var(--red); color:#fff}
+
+  /* ============ 登录页 ============ */
+  .login-body{flex:1; background:#fff; padding:0 28px; display:flex; flex-direction:column; overflow-y:auto}
+  .login-logo{margin:56px auto 0; width:72px; height:72px; position:relative; flex:none}
+  .login-logo .diamond{
+    position:absolute; inset:0; transform:rotate(45deg);
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:4px;
+  }
+  .login-logo .b1{background:#1B5FD9; border-radius:5px}
+  .login-logo .b2{background:#3B82F6; border-radius:5px}
+  .login-logo .b3{background:#7BA7E8; border-radius:5px}
+  .login-logo .b4{background:#C5D9F5; border-radius:5px}
+  .login-logo .dot{position:absolute; right:-7px; top:-3px; width:13px; height:13px; background:#3B82F6; border-radius:3px; transform:rotate(45deg)}
+  .login-brand{text-align:center; font-size:20px; font-weight:700; color:var(--t1); margin-top:20px; letter-spacing:2px}
+  .login-sec{font-size:18px; font-weight:700; color:var(--t1); margin:64px 0 26px}
+  .l-field{display:flex; align-items:center; border-bottom:1px solid #E8E8E8; height:52px; gap:12px}
+  .l-field input{flex:1; border:none; outline:none; background:none; font-size:15px; height:100%}
+  .l-field input::placeholder{color:#B9BEC6}
+  .l-field.err{border-color:var(--red)}
+  .code-btn{
+    flex:none; min-width:92px; height:32px; border-radius:5px; font-size:12px; color:#fff;
+    background:#E3E5E9; pointer-events:none; transition:background .15s;
+  }
+  .code-btn.ready{background:var(--brand); pointer-events:auto}
+  .l-err{font-size:11px; color:var(--red); min-height:16px; padding-top:4px}
+  .login-btn{
+    margin-top:36px; height:46px; border-radius:23px; background:var(--brand); color:#fff;
+    font-size:16px; font-weight:600; width:100%; opacity:.5; pointer-events:none; transition:opacity .15s, background .12s;
+  }
+  .login-btn.ready{opacity:1; pointer-events:auto}
+  .login-btn:active{background:var(--brand-deep)}
+  .agree-row{display:flex; gap:7px; align-items:flex-start; margin-top:44px; font-size:12px; color:var(--t2); line-height:1.6; justify-content:center}
+  .agree-row input{width:15px;height:15px; flex:none; margin-top:2px; accent-color:var(--brand)}
+  .agree-row .lnk{color:var(--link)}
+  .login-note{margin-top:auto; padding:26px 0 18px; text-align:center; font-size:10px; color:#C2C6CC}
+
+  /* ============ 首页 ============ */
+  .ov-card{position:relative}
+  .ov-card h2{font-size:15px; font-weight:600; text-align:center}
+  .ov-card .more{position:absolute; right:14px; top:16px; font-size:12px; color:var(--brand)}
+  .ov-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+  .ov-grid .cell{background:var(--bg); border-radius:4px; padding:10px 8px}
+  .ov-grid .cl{font-size:11px; color:var(--t3); margin-bottom:4px}
+  .ov-grid .cv{font-size:16px; font-weight:700; font-family:var(--num); font-variant-numeric:tabular-nums}
+
+  .credit-card{background:var(--mint); border:none; padding:14px 16px}
+  .cc-top{display:flex; align-items:center; gap:8px}
+  .cc-ico{width:26px;height:26px;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--brand);flex:none}
+  .cc-ico svg{width:16px;height:16px}
+  .cc-top .bank{font-size:14px; font-weight:700; color:var(--t1)}
+  .cc-top .state{margin-left:auto; font-size:12px; color:var(--orange); font-weight:600}
+  .cc-avail-l{font-size:11px; color:var(--t2); margin:10px 0 3px}
+  .cc-avail{font-size:24px; font-weight:700; font-family:var(--num); font-variant-numeric:tabular-nums; color:#0B4A56}
+  .cc-meta{display:flex; flex-wrap:wrap; gap:4px 0; margin-top:10px; font-size:10px; color:var(--t2); align-items:center}
+  .cc-meta .it+.it::before{content:'|'; margin:0 8px; color:rgba(11,74,86,.35)}
+  /* ============ 额度卡·产品子表（2026-11-09 截图） ============ */
+  .cc-prod{margin-top:12px; background:rgba(255,255,255,.78); border-radius:6px; padding:10px 12px 12px}
+  .ccp-row{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .ccp-name{font-size:13px; font-weight:600; color:#0B4A56; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .ccp-tg{font-size:12px; color:var(--link); flex:none}
+  .ccp-tg:focus-visible{outline:2px solid var(--brand); outline-offset:2px; border-radius:2px}
+  .ccp-detail{display:flex; margin-top:9px; padding-top:9px; border-top:1px dashed rgba(11,74,86,.25)}
+  .ccp-it{flex:1; min-width:0; text-align:center}
+  .ccp-it+.ccp-it{border-left:1px solid rgba(11,74,86,.15)}
+  .ccp-it i{display:block; font-style:normal; font-size:10px; color:var(--t2); margin-bottom:3px; white-space:nowrap}
+  .ccp-it b{font-size:13px; font-weight:600; color:#0B4A56; font-family:var(--num); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  /* ============ 需求描述侧栏（2026-11-09 红框标注落档） ============ */
+  main{display:flex; align-items:center; gap:24px}
+  #req-panel{width:340px; flex:0 0 340px; max-height:844px; background:var(--card);
+    border:1px solid var(--line); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.08);
+    display:flex; flex-direction:column; overflow:hidden}
+  #req-panel.collapsed{width:36px; flex-basis:36px; cursor:pointer}
+  #req-panel.collapsed .rp-head,#req-panel.collapsed .rp-body{display:none}
+  #req-panel.collapsed::after{content:'需求描述 · 首页'; writing-mode:vertical-rl; letter-spacing:6px;
+    font-size:11px; color:var(--t2); white-space:nowrap; margin:auto}
+  .rp-head{padding:14px 18px 11px; border-bottom:1px solid var(--line-weak); display:flex; align-items:center; gap:8px; flex:none}
+  .rp-head .rp-ttl{font-size:14px; font-weight:700; color:var(--t1)}
+  .rp-head .rp-tag{font-size:10px; color:var(--brand-deep); background:var(--brand-weak); border-radius:3px; padding:2px 6px}
+  .rp-head .rp-x{margin-left:auto; font-size:11px; color:var(--t3); border:1px solid var(--line); border-radius:4px; padding:2px 8px}
+  .rp-head .rp-x:hover{color:var(--t1); border-color:var(--t4)}
+  .rp-head .rp-x:focus-visible{outline:2px solid var(--brand); outline-offset:2px}
+  .rp-body{padding:2px 18px 16px; overflow-y:auto; min-height:0}
+  .rp-sec{margin-top:12px}
+  .rp-sec h3{font-size:12px; font-weight:700; color:var(--brand-deep); display:flex; align-items:center; gap:6px; margin-bottom:6px}
+  .rp-sec h3 .n{display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; flex:none;
+    border-radius:50%; background:var(--brand-weak); color:var(--brand-deep); font-size:10px}
+  .rp-sec p{font-size:12px; line-height:1.7; color:var(--t2)}
+  .rp-sec p b{color:var(--t1); font-weight:600}
+  .rp-sec .sub{padding-left:14px; color:var(--t3); font-size:11px}
+  .rp-note{margin-top:14px; padding:10px 12px; background:var(--bg); border-radius:6px; font-size:11px; line-height:1.7; color:var(--t3)}
+  .rp-note b{color:var(--t2)}
+
+  .todo-item{display:flex; gap:10px; align-items:center; padding:10px; background:var(--bg); border:1px solid var(--line-weak); border-radius:4px; margin-top:8px}
+  .todo-item .no{display:flex; flex-wrap:wrap; justify-content:space-between; gap:2px 8px; align-items:baseline; font-size:11.5px; color:var(--t2)}
+  .todo-item .no b{color:var(--t1); font-weight:600}
+  .todo-item .pay{font-size:13px; font-weight:700; color:var(--red); font-family:var(--num); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .todo-item .sub{font-size:11px; color:var(--t3); margin-top:3px}
+  .todo-item .repay-btn{
+    flex:none; height:30px; padding:0 14px; border-radius:4px; background:var(--brand); color:#fff;
+    font-size:12px; font-weight:600;
+  }
+  .todo-item .repay-btn:active{background:var(--brand-deep)}
+
+  /* ============ 融资列表 ============ */
+  .fin-search{
+    display:flex; gap:8px; padding:10px 12px 2px; background:#fff; flex:none;
+  }
+  .fin-search .box{
+    flex:1; height:36px; background:#fff; border:1px solid var(--line); border-radius:99px;
+    display:flex; align-items:center; padding:0 6px 0 14px; gap:6px;
+  }
+  .fin-search input{flex:1; border:none; outline:none; background:none; font-size:13px}
+  .fin-search input::placeholder{color:#B9BEC6}
+  .fin-search .go{
+    flex:none; height:28px; padding:0 16px; border-radius:99px; background:var(--cyan); color:#fff;
+    font-size:12px; font-weight:600;
+  }
+  .fin-tabs{
+    display:flex; background:#fff; padding:4px 0 10px; flex:none; border-bottom:1px solid var(--line-weak);
+  }
+  .fin-tabs button{
+    flex:1; height:38px; font-size:14px; color:var(--t1); position:relative;
+  }
+  .fin-tabs button[aria-selected="true"]{color:var(--cyan); font-weight:700}
+  .fin-tabs button[aria-selected="true"]::after{
+    content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:0;
+    width:24px; height:3px; border-radius:2px; background:var(--cyan);
+  }
+  .fin-list{padding:12px 14px 24px}
+  .fin-card{background:var(--card); border:1px solid #EBEBEB; border-radius:4px; padding:12px 14px; margin-bottom:10px; box-shadow:var(--shadow)}
+  .fin-top{display:flex; align-items:center; gap:6px; margin-bottom:8px}
+  .fin-tag{
+    flex:none; font-size:11px; line-height:1; padding:3px 7px; border-radius:3px;
+    background:var(--cyan-weak); color:#0E8FAE; font-weight:500;
+  }
+  .fin-no{font-size:13px; font-weight:600; color:var(--t1); font-family:var(--num)}
+  .fin-state{margin-left:auto; font-size:12px; white-space:nowrap}
+  .fin-state.s1{color:var(--cyan)}
+  .fin-state.s2{color:var(--cyan-soft)}
+  .fin-kv{display:flex; justify-content:space-between; gap:12px; padding:5px 0; font-size:12px}
+  .fin-kv .k{color:var(--t3); flex:none}
+  .fin-kv .v{color:var(--t1); text-align:right; word-break:break-all}
+
+  .empty{padding:36px 24px; text-align:center}
+  .empty svg{width:40px;height:40px;color:var(--t4); margin:0 auto 10px; display:block}
+  .empty h3{font-size:14px; font-weight:600; color:var(--t2); margin-bottom:4px}
+  .empty p{font-size:12px; color:var(--t3)}
+
+  /* ============ 我的 ============ */
+  .mine-hero{
+    position:relative; overflow:hidden; border-radius:var(--radius); margin-bottom:12px;
+    background:linear-gradient(135deg,#1FB6A6 0%,#2BA6DF 100%);
+    padding:22px 16px 20px; color:#fff; display:flex; align-items:center; gap:14px;
+  }
+  .mine-hero::before{content:""; position:absolute; right:-26px; top:-30px; width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,.12)}
+  .mine-hero::after{content:""; position:absolute; left:-20px; bottom:-44px; width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,.08)}
+  .mine-avatar{
+    width:56px; height:56px; border-radius:50%; background:#fff; flex:none; z-index:1;
+    display:flex; align-items:center; justify-content:center; color:#B7C4CE;
+  }
+  .mine-avatar svg{width:30px;height:30px}
+  .mine-info{flex:1; z-index:1; min-width:0}
+  .mine-name{display:flex; align-items:center; gap:5px; font-size:15px; font-weight:700; line-height:1.4}
+  .mine-name .tri{flex:none; width:16px; height:16px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,.22)}
+  .mine-name .tri svg{width:10px;height:10px}
+  .mine-tel{font-size:12px; color:rgba(255,255,255,.85); margin-top:5px; font-family:var(--num)}
+
+  .menu-card{padding:2px 16px}
+  .menu-item{display:flex; align-items:center; gap:10px; padding:14px 0; border-top:1px solid var(--line-weak); width:100%; text-align:left}
+  .menu-item:first-of-type{border-top:none}
+  .menu-item .mi-ico{width:32px;height:32px;border-radius:6px;background:var(--brand-weak);color:var(--brand);display:flex;align-items:center;justify-content:center;flex:none}
+  .menu-item .mi-ico svg{width:17px;height:17px}
+  .menu-item .mi-txt{flex:1; font-size:14px; color:var(--t1)}
+  .menu-item .mi-val{font-size:13px; white-space:nowrap}
+  .menu-item .mi-val.link{color:var(--brand)}
+  .menu-item .mi-val.danger{color:var(--red)}
+  .menu-item .mi-arrow{color:var(--t4); flex:none}
+  .menu-item .mi-arrow svg{width:14px;height:14px}
+  .menu-item.disabled{pointer-events:none}
+  .menu-item.disabled .mi-ico{background:var(--line-weak); color:var(--t4)}
+  .menu-item.disabled .mi-txt{color:var(--t4)}
+  .logout-btn{
+    display:flex; align-items:center; justify-content:center; height:44px; width:100%;
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--card);
+    font-size:14px; color:var(--t2); margin-top:16px;
+  }
+  .mine-tip{font-size:10px; color:var(--t4); text-align:center; margin-top:14px; line-height:1.6}
+
+  /* ============ e签宝占位 ============ */
+  .esign-body{flex:1; background:#fff; padding:20px 16px; display:flex; flex-direction:column; overflow-y:auto}
+  .esign-frame{
+    flex:1; min-height:300px; border:1.5px dashed #C7D3DB; border-radius:8px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--t3);
+  }
+  .esign-frame svg{width:38px;height:38px;color:#B7C4CE}
+  .esign-frame .t1{font-size:14px; font-weight:600; color:var(--t2)}
+  .esign-frame .t2{font-size:12px; line-height:1.7; text-align:center; padding:0 24px}
+  .esign-demo{margin-top:14px}
+  .esign-demo .dt{font-size:11px; color:var(--t3); margin-bottom:8px}
+  .esign-demo .row{display:flex; gap:10px}
+  .esign-demo button{
+    flex:1; height:40px; border-radius:var(--radius); font-size:13px; font-weight:600;
+    border:1px solid var(--brand); color:var(--brand); background:#fff;
+  }
+  .esign-demo button.fail{border-color:var(--red); color:var(--red)}
+  .esign-demo button:active{background:var(--brand-weak)}
+
+  /* ============ 企业信息 ============ */
+  .grp-title{font-size:13px; font-weight:700; color:var(--brand); margin:14px 0 8px; display:flex; align-items:center; gap:6px}
+  .grp-title::before{content:""; width:3px; height:12px; background:var(--brand); border-radius:2px}
+  .kv{display:flex; justify-content:space-between; gap:14px; padding:9px 0; font-size:13px}
+  .kv + .kv{border-top:1px solid var(--line-weak)}
+  .kv .k{color:var(--t3); flex:none}
+  .kv .v{color:var(--t1); text-align:right; word-break:break-all}
+
+  /* ============ 新增h5登录用户 ============ */
+  .ua-table{width:100%; border-collapse:collapse; background:#fff; font-size:12px}
+  .ua-table th{
+    background:#F5F7FA; color:var(--t2); font-weight:600; padding:9px 8px;
+    border:1px solid var(--line); text-align:left;
+  }
+  .ua-table td{border:1px solid var(--line); padding:6px 8px; vertical-align:middle}
+  .ua-table .idx{color:var(--t3); text-align:center; width:36px; font-family:var(--num)}
+  .ua-table input{
+    width:100%; border:1px solid transparent; outline:none; background:none; height:30px; padding:0 4px; font-size:13px;
+  }
+  .ua-table input:focus{border-color:var(--brand); background:#fff; border-radius:3px}
+  .ua-table tr.err input{border-color:var(--red)}
+  .ua-op{display:flex; gap:6px; justify-content:center}
+  .ua-op button{
+    width:26px; height:26px; border-radius:4px; border:1px solid var(--brand); color:var(--brand);
+    font-size:15px; line-height:1; display:flex; align-items:center; justify-content:center;
+  }
+  .ua-op button.del{border-color:var(--red); color:var(--red)}
+  .ua-op button:active{background:var(--brand-weak)}
+  .ua-add{margin-top:10px; width:100%; height:36px; border:1px dashed var(--brand); color:var(--brand); border-radius:4px; font-size:13px}
+  .ua-rule{font-size:11px; color:var(--t3); line-height:1.7; margin-top:12px; background:var(--line-weak); border-radius:4px; padding:8px 10px}
+  .ua-confirm{
+    display:block; margin:18px auto 0; min-width:180px; height:42px;
+    border:1px solid #C0C4CC; border-radius:var(--radius); background:#fff; color:var(--t1);
+    font-size:14px; font-weight:600; padding:0 30px;
+  }
+
+  /* ============ 支付密码 ============ */
+  .pay-body{flex:1; background:#fff; padding:6px 24px; overflow-y:auto}
+  .pay-banner{
+    display:none; gap:8px; align-items:flex-start; background:var(--brand-weak);
+    border:1px solid #CBE9F7; color:#166F92; border-radius:var(--radius);
+    padding:9px 11px; font-size:11px; line-height:1.6; margin:10px 0 2px;
+  }
+  .pay-banner.show{display:flex}
+  .pay-banner svg{width:13px;height:13px;flex:none;margin-top:2px}
+  .p-field{border-bottom:1px solid #E8E8E8; padding:16px 0 10px}
+  .p-field label{display:block; font-size:14px; color:var(--t1); margin-bottom:8px}
+  .p-field .row{display:flex; gap:10px; align-items:center}
+  .p-field input{flex:1; border:none; outline:none; background:none; font-size:15px; letter-spacing:2px; height:26px}
+  .p-field input::placeholder{color:#B9BEC6; letter-spacing:0}
+  .p-field .mini{
+    flex:none; height:28px; padding:0 14px; border-radius:4px; background:var(--brand); color:#fff; font-size:12px;
+  }
+  .p-field .mini[disabled]{background:#E3E5E9; pointer-events:none}
+  .p-hint{font-size:11px; color:var(--orange); margin-top:6px; line-height:1.5}
+  .p-hint .lnk{color:var(--link)}
+  .p-note{font-size:11px; color:var(--t3); margin-top:8px; line-height:1.6}
+  .p-btn{
+    display:flex; align-items:center; justify-content:center; margin-top:30px;
+    height:44px; border-radius:var(--radius); font-size:15px; font-weight:600; width:100%;
+    white-space:nowrap;
+  }
+  .p-btn.solid{background:var(--brand); color:#fff}
+  .p-btn.solid:active{background:var(--brand-deep)}
+  .p-btn.plain{border:1px solid #C0C4CC; background:#fff; color:var(--t1)}
+  .p-err{font-size:11px; color:var(--red); min-height:16px; padding-top:4px}
+
+  /* 焦点可见性 */
+  .tab-item:focus-visible,.menu-item:focus-visible,.fin-tabs button:focus-visible,.fin-search .go:focus-visible,
+  .sub-header .back:focus-visible,.login-btn:focus-visible,.code-btn:focus-visible,.ua-op button:focus-visible,
+  .logout-btn:focus-visible,.todo-item .repay-btn:focus-visible,.sheet .opt:focus-visible,
+  .esign-demo button:focus-visible,.ua-add:focus-visible,.p-btn:focus-visible,.ov-card .more:focus-visible{
+    outline:2px solid var(--brand); outline-offset:2px;
+  }
+  input:focus-visible,select:focus-visible{outline:none}
+
+  /* ============ 预授信 / 融资申请 / 还款流程（V5 新增） ============ */
+  .sec-title{
+    display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--t1); margin:2px 0 8px;
+  }
+  .sec-title::before{content:""; width:3px; height:14px; border-radius:2px; background:var(--brand); flex:none}
+  .sec-title .lnk{margin-left:auto; font-size:12px; font-weight:400; color:var(--brand)}
+
+  /* 步骤条 ①签署合同→②融资审批→③融资成功 */
+  .steps{display:flex; align-items:center; justify-content:space-between; margin:4px 0 10px; font-size:11px; color:var(--t3)}
+  .steps .st{display:flex; align-items:center; gap:5px; white-space:nowrap}
+  .steps .dot{
+    width:18px; height:18px; border-radius:50%; border:1px solid var(--line); background:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--t3); flex:none;
+  }
+  .steps .st.done .dot{background:var(--brand); border-color:var(--brand); color:#fff}
+  .steps .st.done{color:var(--brand)}
+  .steps .st.fail{color:var(--red)}
+  .steps .st.fail .dot{border-color:var(--red); color:var(--red)}
+  .steps .bar{flex:1; height:1px; background:var(--line); margin:0 6px; min-width:12px}
+
+  .contract-item{display:flex; align-items:baseline; gap:6px; padding:7px 0; font-size:12.5px; line-height:1.55; border-top:1px dashed var(--line-weak)}
+  .contract-item:first-of-type{border-top:none}
+  .contract-item .who{color:var(--t2)}
+  .contract-item .doc{color:var(--t1); font-weight:600; white-space:nowrap}
+  .contract-item .st-wait{margin-left:auto; flex:none; color:var(--brand); font-size:12px}
+  .contract-item .st-done{margin-left:auto; flex:none; color:var(--orange); font-size:12px}
+  .fail-reason{margin-top:8px; padding:8px 10px; background:#FEF1F1; border:1px solid #F7C9C9; border-radius:4px; font-size:12px; color:var(--red); line-height:1.5}
+
+  /* 提示框 */
+  .tip{border-radius:4px; padding:10px 12px; font-size:12px; line-height:1.7; margin:10px 0}
+  .tip.blue{background:var(--brand-weak); color:#155B7E; border:1px solid #BEE4F5}
+  .tip.grey{background:var(--bg); color:var(--t2); border:1px solid var(--line)}
+  .tip.amber{background:#FFF7E8; color:#8A5A00; border:1px solid #F5DCA8}
+  .tip b{font-weight:600}
+
+  /* 单品选择行（赎回/解押） */
+  .goods-row{border:1px solid var(--line); border-radius:4px; padding:10px 12px; margin-bottom:8px; background:#fff}
+  .goods-row.err{border-color:var(--red); background:#FFFBFB}
+  .goods-row .g-top{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--t1)}
+  .goods-row .g-top .rball{
+    width:16px; height:16px; border-radius:50%; border:1.5px solid #C4C9D0; background:#fff; flex:none;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .goods-row.on .g-top .rball{border-color:var(--brand)}
+  .goods-row.on .g-top .rball::after{content:""; width:8px; height:8px; border-radius:50%; background:var(--brand)}
+  .goods-row .g-sub{display:flex; align-items:center; gap:10px; margin-top:8px; font-size:12px; color:var(--t3)}
+  .goods-row .g-sub .left{flex:1}
+  .goods-row .g-sub input{
+    width:76px; height:28px; border:1px solid var(--line); border-radius:4px; text-align:center;
+    font-size:12px; font-family:var(--num); background:#fff;
+  }
+  .goods-row .g-sub input:focus{border-color:var(--brand); outline:none}
+  .goods-row.err .g-sub input{border-color:var(--red)}
+  .g-err{display:none; margin-top:6px; font-size:11px; color:var(--red)}
+  .goods-row.err .g-err{display:block}
+  /* ============ 还款模式切换（2026-11-10 22:15 用户裁决新增） ============ */
+  .mode-switch{display:flex; gap:8px; margin-bottom:10px}
+  .mode-switch .ms-btn{flex:1; padding:9px 0; border:1px solid var(--line); border-radius:6px; font-size:13px; color:var(--t2); background:var(--card)}
+  .mode-switch .ms-btn.on{border-color:var(--brand); color:var(--brand); background:var(--brand-weak); font-weight:600}
+  .mode-switch .ms-btn:focus-visible{outline:2px solid var(--brand); outline-offset:2px}
+
+  /* 双按钮排 */
+  .btn-pair{display:flex; gap:12px; margin-top:16px}
+  .btn-pair .p-btn{flex:1}
+  .btn-pair .p-btn.solid{flex:1.4}
+
+  /* 结果页 */
+  .result-page{padding:44px 24px 20px; text-align:center}
+  .result-ico{
+    width:64px; height:64px; border-radius:16px; background:var(--brand-weak); color:var(--brand);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+  }
+  .result-ico svg{width:34px; height:34px}
+  .result-page h2{font-size:18px; color:var(--t1)}
+  .result-page p{font-size:12.5px; color:var(--t3); margin-top:8px; line-height:1.7}
+  .result-page .p-btn{width:78%; margin:28px auto 0; display:block}
+
+  /* 明细小表格（SKU / 商品明细） */
+  .mini-table{width:100%; border-collapse:collapse; background:#fff; font-size:11.5px; margin-top:8px}
+  .mini-table th{background:var(--bg); color:var(--t2); font-weight:600; border:1px solid var(--line); padding:5px 6px; text-align:center; white-space:nowrap}
+  .tbl-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .tbl-scroll .mini-table{min-width:max-content}
+  .tbl-hint{font-size:10px; color:var(--t3); margin-top:4px; text-align:right}
+  /* 提货商品选择弹层：按钮常显，仅表格区滚动 */
+  #pk-mask .pick-sheet{display:flex; flex-direction:column; max-height:78%}
+  #pk-mask .pick-sheet h3{flex:none}
+  #pk-mask .tbl-scroll{flex:1; min-height:0; overflow:auto}
+  .mini-table td{border:1px solid var(--line); padding:5px 6px; text-align:center; color:var(--t1); font-variant-numeric:tabular-nums}
+  .mini-table .sum td{background:var(--bg); font-weight:600}
+
+  /* 产品选择弹窗 */
+  .pick-mask{position:absolute; inset:0; background:rgba(29,33,41,.5); z-index:60; display:none; align-items:flex-end}
+  .pick-mask.open{display:flex}
+  .pick-sheet{
+    width:100%; background:#fff; border-radius:10px 10px 0 0; padding:16px 16px 18px;
+    max-height:72%; overflow:auto;
+  }
+  .pick-sheet h3{font-size:15px; color:var(--t1); text-align:center; margin-bottom:4px}
+  .pick-sheet .close{position:absolute; right:14px; top:12px}
+  /* ============ 金融产品平铺选择（2026-11-10 由弹框改页面平铺） ============ */
+  .prod-opt{display:flex; align-items:center; gap:10px; width:100%; padding:12px 2px; border-bottom:1px solid var(--line-weak); font-size:13.5px; color:var(--t1); text-align:left}
+  .prod-opt:last-of-type{border-bottom:none}
+  .prod-opt .rb{width:16px; height:16px; flex:none; border-radius:50%; border:1.5px solid #C4C9D0; position:relative}
+  .prod-opt.on{color:var(--brand); font-weight:600}
+  .prod-opt.on .rb{border-color:var(--brand)}
+  .prod-opt.on .rb::after{content:''; position:absolute; inset:3px; border-radius:50%; background:var(--brand)}
+  .prod-opt:focus-visible{outline:2px solid var(--brand); outline-offset:2px; border-radius:4px}
+
+  /* 温馨提示（授权书） */
+  .auth-doc{display:block; background:var(--bg); border-radius:4px; padding:8px 12px; margin-top:6px; font-size:12.5px; color:var(--t1)}
+  .auth-doc:active{background:var(--brand-weak)}
+
+  /* 授信/融资金额汇总条 */
+  .sum-bar{
+    display:flex; justify-content:space-between; align-items:baseline; padding:12px 2px 2px; font-size:13px; color:var(--t2);
+  }
+  .sum-bar b{font-size:18px; color:var(--red); font-family:var(--num); font-variant-numeric:tabular-nums}
+
+  /* 还款概览表 */
+  .ov-table{width:100%; border-collapse:collapse; font-size:11.5px; margin-top:6px}
+  .ov-table th{background:var(--bg); border:1px solid var(--line); padding:5px 4px; color:var(--t2); font-weight:600; text-align:center}
+  .ov-table td{border:1px solid var(--line); padding:6px 4px; text-align:center; font-variant-numeric:tabular-nums; color:var(--t1)}
+  .ov-table .lnk{color:var(--brand); white-space:nowrap}
+
+  /* 记录卡 */
+  .rec-item{border-bottom:1px solid var(--line-weak); padding:4px 0 12px; margin-bottom:4px}
+  .rec-item:last-child{border-bottom:none}
+  .rec-top{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--t2)}
+  .rec-top .ok-tag{color:var(--green); font-weight:600}
+  .pager{display:flex; gap:12px; margin-top:14px}
+  .pager .p-btn{flex:1}
+
+  /* 融资卡片可点击 */
+  .fin-card{cursor:pointer}
+  .fin-card:active{background:#FAFCFD}
+  .as-pickup{color:var(--brand); font-size:13px; font-weight:600}
+  .mini-table input[type="tel"]{
+    width:56px; height:26px; border:1px solid var(--line); border-radius:3px; text-align:center;
+    font-size:12px; font-family:var(--num); background:#fff;
+  }
+  .mini-table input[type="tel"]:focus{border-color:var(--brand); outline:none}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+  }
+  @media (max-width: 460px){
+    body{padding:0}
+    main{display:block}
+    #req-panel{display:none}
+    .phone-shell{border:none; border-radius:0; width:100vw; height:100vh; height:100dvh; box-shadow:none}
+    .status-bar{padding-top:env(safe-area-inset-top,0); height:calc(44px + env(safe-area-inset-top,0))}
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG 图标库（线性 24×24 / stroke 1.75 / currentColor） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10.5V20h4.5v-5h3v5H18v-9.5"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.6 3.1 2.9 7 2.9s7-1.3 7-2.9v-11"/><path d="M5 12c0 1.6 3.1 2.9 7 2.9s7-1.3 7-2.9"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M16 14.5h2"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.4 3.8-5 7-5s5.8 1.6 7 5"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 22 20H2z"/><path d="M12 10v5"/><path d="M12 17.6v.2"/></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 20h17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l3.5 3.5V21H6z"/><path d="M15 3v4h3.5"/><path d="M9 12h6M9 15.5h6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 20 6v6c0 5-3.5 7.7-8 9-4.5-1.3-8-4-8-9V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/></symbol>
+    <symbol id="i-user-add" viewBox="0 0 24 24"><circle cx="10" cy="8.5" r="3.5"/><path d="M3.5 20c1.1-3.2 3.5-4.8 6.5-4.8s5.4 1.6 6.5 4.8"/><path d="M18.5 8v6M15.5 11h6"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M6.5 14.5h4"/></symbol>
+  </defs>
+</svg>
+
+<main data-prototype="乾融企业端H5" data-platform="mobile" data-viewport="390×844" data-version="V2">
+<div class="phone-shell">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons" aria-hidden="true">
+      <svg viewBox="0 0 16 14" fill="currentColor"><rect x="0" y="9" width="3" height="4" rx="0.8"/><rect x="4.5" y="6.5" width="3" height="6.5" rx="0.8"/><rect x="9" y="4" width="3" height="9" rx="0.8"/></svg>
+      <svg viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 5.5a8 8 0 0 1 12 0"/><path d="M4.8 8.2a4.5 4.5 0 0 1 6.4 0"/><circle cx="8" cy="11" r="0.9" fill="currentColor" stroke="none"/></svg>
+      <svg viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="0.8" y="1" width="15" height="12" rx="3"/><rect x="2.5" y="2.7" width="10" height="8.6" rx="1.5" fill="currentColor" stroke="none"/><path d="M17.8 5v4" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+
+    <!-- ================= 登录 login ================= -->
+    <section class="screen bg-white" data-screen="login" id="scr-login">
+      <div class="login-body">
+        <div class="login-logo" aria-hidden="true">
+          <div class="diamond"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span></div>
+          <span class="dot"></span>
+        </div>
+        <div class="login-brand">泰乾数科</div>
+
+        <div class="login-sec">短信登录</div>
+
+        <div class="l-field" id="lg-phone-f">
+          <input type="tel" id="lg-phone" maxlength="11" inputmode="numeric" placeholder="请输入手机号码" aria-label="手机号码" autocomplete="off">
+        </div>
+        <p class="l-err" id="lg-phone-err" role="alert"></p>
+
+        <div class="l-field" id="lg-code-f">
+          <input type="text" id="lg-code" maxlength="4" inputmode="numeric" placeholder="请输入4位数字验证码" aria-label="短信验证码" autocomplete="off">
+          <button class="code-btn" id="lg-code-btn" type="button">获取验证码</button>
+        </div>
+        <p class="l-err" id="lg-code-err" role="alert"></p>
+
+        <button class="login-btn" id="lg-submit" type="button">登 录</button>
+
+        <label class="agree-row">
+          <input type="checkbox" id="lg-agree">
+          <span>我已阅读并同意<span class="lnk">《用户服务协议》</span>和<span class="lnk">《隐私协议》</span></span>
+        </label>
+        <p class="l-err" id="lg-agree-err" role="alert" style="text-align:center"></p>
+
+        <p class="login-note">演示原型 · 无需注册，账户由后台按手机号生成</p>
+      </div>
+    </section>
+
+    <!-- ================= 首页 home ================= -->
+    <section class="screen" data-screen="home" data-tab="home" id="scr-home">
+      <div class="screen-inner has-tab">
+
+        <div class="card ov-card">
+          <h2>资产总览</h2>
+          <button class="more" id="go-assets" type="button">查看资产列表 &gt;</button>
+          <div class="ov-grid">
+            <div class="cell">
+              <div class="cl">资产总价值(元)</div>
+              <div class="cv">9,578,000.00</div>
+            </div>
+            <div class="cell">
+              <div class="cl">资产在押价值(元)</div>
+              <div class="cv">2,359,000.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card credit-card">
+          <div class="cc-top">
+            <span class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span>
+            <span class="bank">建行南山支行</span>
+            <span class="state">生效中</span>
+          </div>
+          <div class="cc-avail-l">可用授信额度(元)</div>
+          <div class="cc-avail">4,800,000.00</div>
+          <div class="cc-meta">
+            <span class="it">银行总额度 1000万</span>
+            <span class="it">年化利率 3.4%</span>
+            <span class="it">授信期限 2026-01-01—2026-12-31</span>
+          </div>
+          <div class="cc-prod">
+            <div class="ccp-row">
+              <span class="ccp-name">平台云贷(一级海上融)</span>
+              <button class="ccp-tg" id="ccp-tg" type="button" aria-expanded="false">展开 &gt;</button>
+            </div>
+            <div class="ccp-detail">
+              <div class="ccp-it"><i>产品额度</i><b>600万</b></div>
+              <div class="ccp-it"><i>额度使用(含冻结)</i><b>200万</b></div>
+              <div class="ccp-it"><i>额度可用</i><b>400万</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card ov-card">
+          <h2>近期待还</h2>
+          <button class="more" id="go-finlist" type="button">查看融资列表 &gt;</button>
+          <div class="todo-item">
+            <div style="flex:1;min-width:0">
+              <div class="no">资产编号：<b>【FBIU5835887】</b></div>
+              <div class="no"><span>捷行平台云贷(一级海上融)</span>&nbsp;&nbsp;<span class="pay">待还款 ¥ 17,550.00</span></div>
+              <div class="sub">还款日 2026-11-15&nbsp;&nbsp;剩余3天</div>
+            </div>
+            <button class="repay-btn" type="button" data-no="FBIU5835887" data-amt="17,550.00" data-prod="捷行平台云贷(一级海上融)">还款</button>
+          </div>
+          <div class="todo-item">
+            <div style="flex:1;min-width:0">
+              <div class="no">资产编号：<b>【OUIU5835834】</b></div>
+              <div class="no"><span>上行易采购(一级海上融)</span>&nbsp;&nbsp;<span class="pay">待还款 ¥ 7,550.00</span></div>
+              <div class="sub">还款日 2026-11-30&nbsp;&nbsp;剩余15天</div>
+            </div>
+            <button class="repay-btn" type="button" data-no="OUIU5835834" data-amt="7,550.00" data-prod="上行易采购(一级海上融)">还款</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 融资列表 finance ================= -->
+    <section class="screen" data-screen="finance" data-tab="finance" id="scr-finance">
+      <div class="page-title">融资</div>
+      <div class="fin-search">
+        <div class="box">
+          <input type="text" id="fin-q" placeholder="资产标识(资产编号)" aria-label="按资产编号搜索" autocomplete="off">
+        </div>
+        <button class="go" id="fin-go" type="button">搜索</button>
+      </div>
+      <div class="fin-tabs" id="fin-tabs" role="tablist" aria-label="融资状态筛选">
+        <button role="tab" aria-selected="true" data-f="all" type="button">全部</button>
+        <button role="tab" aria-selected="false" data-f="unfin" type="button">未融资</button>
+        <button role="tab" aria-selected="false" data-f="fin" type="button">已融资</button>
+      </div>
+      <div class="fin-list" id="fin-list"></div>
+    </section>
+
+    <!-- ================= 我的 mine ================= -->
+    <section class="screen" data-screen="mine" data-tab="mine" id="scr-mine">
+      <div class="screen-inner has-tab">
+
+        <div class="mine-hero">
+          <div class="mine-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><use href="#i-user"/></svg>
+          </div>
+          <div class="mine-info">
+            <div class="mine-name">
+              <span id="mine-company">湛江伟昌铭钛新材料有限公司</span>
+              <button class="tri" id="btn-switch" type="button" aria-label="切换企业" aria-haspopup="dialog">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-down"/></svg>
+              </button>
+              <span class="demo-pill">演示</span>
+            </div>
+            <div class="mine-tel" id="mine-tel">1338767798</div>
+          </div>
+        </div>
+
+        <div class="card menu-card">
+          <button class="menu-item" id="mi-cert" type="button">
+            <span class="mi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-shield"/></svg></span>
+            <span class="mi-txt">企业信息</span>
+            <span class="mi-val danger" id="cert-state">实名认证</span>
+            <span class="mi-arrow" id="cert-arrow" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-right"/></svg></span>
+          </button>
+          <button class="menu-item disabled" id="mi-useradd" type="button">
+            <span class="mi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-user-add"/></svg></span>
+            <span class="mi-txt">新增h5登录用户</span>
+            <span class="mi-arrow" id="ua-arrow" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-right"/></svg></span>
+          </button>
+        </div>
+
+        <button class="logout-btn" id="btn-logout" type="button">退出登录</button>
+        <p class="mine-tip">一个手机号可绑定多个企业，登录后可切换，数据随企业刷新</p>
+
+      </div>
+    </section>
+
+    <!-- ================= e签宝实名认证（占位） esign ================= -->
+    <section class="screen bg-white" data-screen="esign" id="scr-esign">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>e签宝实名认证</h1><span class="side"></span>
+      </div>
+      <div class="esign-body">
+        <div class="esign-frame">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-shield"/></svg>
+          <div class="t1">e签宝 · H5 实名认证</div>
+          <div class="t2">此处为第三方 e签宝 认证页占位<br>实际跳转外部页面完成企业实名认证，原型不模拟其内部流程</div>
+        </div>
+        <div class="esign-demo">
+          <div class="dt">演示控制（非界面元素，用于驱动「我的」页认证状态）：</div>
+          <div class="row">
+            <button type="button" id="esign-ok">模拟认证成功</button>
+            <button type="button" class="fail" id="esign-fail">模拟认证失败</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 企业信息 ent-info ================= -->
+    <section class="screen bg-white" data-screen="ent-info" id="scr-ent-info">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>企业信息</h1><span class="side"></span>
+      </div>
+      <div class="screen-inner" style="background:#fff">
+        <div class="card" style="margin-top:2px">
+          <div class="grp-title" style="margin-top:2px">管理员信息</div>
+          <div class="kv"><span class="k">企业管理员</span><span class="v">张三</span></div>
+          <div class="kv"><span class="k">管理员联系电话</span><span class="v num">13581233512</span></div>
+        </div>
+        <div class="card">
+          <div class="grp-title" style="margin-top:2px">企业信息</div>
+          <div class="kv"><span class="k">企业名称</span><span class="v">湛江智鲜水产贸易有限公司</span></div>
+          <div class="kv"><span class="k">统一信用社会代码</span><span class="v num">9465546788A4068643</span></div>
+          <div class="kv"><span class="k">法人代表名称</span><span class="v">张三</span></div>
+          <div class="kv"><span class="k">法人代表手机号</span><span class="v num">18620197954</span></div>
+          <div class="kv"><span class="k">法人代表身份证号码</span><span class="v num">500236198703151520</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 新增h5登录用户 user-add ================= -->
+    <section class="screen bg-white" data-screen="user-add" id="scr-user-add">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>新增h5登录用户</h1><span class="side"></span>
+      </div>
+      <div class="screen-inner" style="background:#fff">
+        <table class="ua-table" aria-label="操作员列表">
+          <thead>
+            <tr><th style="text-align:center">序号</th><th>操作员名称</th><th>操作员手机号</th><th style="width:66px">操作</th></tr>
+          </thead>
+          <tbody id="ua-tbody"></tbody>
+        </table>
+        <button class="ua-add" id="ua-add" type="button">＋ 新增一行</button>
+        <p class="ua-rule">操作员名称限 10 个字符以内；手机号为 11 位数字；仅企业管理员可新增/删除 h5 登录用户。</p>
+        <button class="ua-confirm" id="ua-confirm" type="button">确 认</button>
+      </div>
+    </section>
+
+    <!-- ================= 支付密码 pay-password ================= -->
+    <section class="screen bg-white" data-screen="pay-password" id="scr-pay-password">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>支付密码</h1><span class="side"></span>
+      </div>
+      <div class="pay-body">
+        <div class="pay-banner" id="pay-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-warn"/></svg>
+          <span id="pay-banner-txt"></span>
+        </div>
+        <div class="p-field">
+          <label for="pay-old">支付密码：</label>
+          <input type="password" id="pay-old" maxlength="20" placeholder="请输入支付密码" autocomplete="off">
+        </div>
+        <p class="p-err" id="pay-old-err" role="alert"></p>
+        <button class="p-btn solid" id="pay-reset-go" type="button">重置密码</button>
+      </div>
+    </section>
+
+    <!-- ================= 重置支付密码 pay-reset ================= -->
+    <section class="screen bg-white" data-screen="pay-reset" id="scr-pay-reset">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>重置支付密码</h1><span class="side"></span>
+      </div>
+      <div class="pay-body">
+        <div class="p-field">
+          <label for="pr-pw1">支付密码：</label>
+          <input type="password" id="pr-pw1" maxlength="20" placeholder="请输入新支付密码" autocomplete="off">
+          <p class="p-hint">请8-20位数字或字母</p>
+        </div>
+        <div class="p-field">
+          <label for="pr-pw2">确认密码：</label>
+          <input type="password" id="pr-pw2" maxlength="20" placeholder="请再次输入新支付密码" autocomplete="off">
+          <p class="p-hint">请再次重复<span class="lnk">数字密码</span></p>
+        </div>
+        <div class="p-field">
+          <label for="pr-code">验证码：</label>
+          <div class="row">
+            <input type="text" id="pr-code" maxlength="6" inputmode="numeric" placeholder="请输入短信验证码" autocomplete="off">
+            <button class="mini" id="pr-code-btn" type="button">获取</button>
+          </div>
+          <p class="p-note">我们将通过 ****89 发送短信验证码</p>
+        </div>
+        <p class="p-err" id="pr-err" role="alert"></p>
+        <button class="p-btn plain" id="pr-confirm" type="button">确 认</button>
+      </div>
+    </section>
+
+    <!-- ================= 融资预申请（预授信入口） pre-apply ================= -->
+    <section class="screen bg-white" data-screen="pre-apply" data-tab="finance" id="scr-pre-apply">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资预申请</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="sec-title">资产信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b>【FBIU5835865】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">1,000,000.00</span></div>
+          <div class="kv"><span class="k">资产形成时间</span><span class="v num">2025-03-20 12:34:23</span></div>
+          <div class="kv"><span class="k">核心企业</span><span class="v">全联集采（山东）供应链有限公司</span></div>
+          <table class="mini-table">
+            <thead><tr><th>SKU名称</th><th>品类</th><th>单价</th><th>数量</th></tr></thead>
+            <tbody>
+              <tr><td>白虾1</td><td>虾</td><td>20</td><td>100</td></tr>
+              <tr><td>白虾2</td><td>虾</td><td>20</td><td>100</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- 2026-11-10 用户裁决：选择金融产品由底部弹框改为页面平铺 -->
+        <div class="card">
+          <div class="sec-title">请选择金融产品</div>
+          <div id="prod-list">
+            <button class="prod-opt on" type="button" data-p="建行平台云贷(一级在途融)">
+              <span class="rb" aria-hidden="true"></span>建行平台云贷(一级在途融)
+            </button>
+            <button class="prod-opt" type="button" data-p="上行易采购(一级在途融)">
+              <span class="rb" aria-hidden="true"></span>上行易采购(一级在途融)
+            </button>
+            <button class="prod-opt" type="button" data-p="邮储小微易贷(一级在途融)">
+              <span class="rb" aria-hidden="true"></span>邮储小微易贷(一级在途融)
+            </button>
+          </div>
+          <button class="p-btn solid" id="pa-apply" type="button" style="width:100%; margin-top:16px">申请</button>
+        </div>
+        <p style="font-size:10px; color:var(--t3); margin-top:8px">演示：选择「建行平台云贷」走有授权流程（温馨提示整页→e签宝签署授权书→授信结果）；选择其他产品走无授权流程（银行APP已完成授权，直接提交至授信结果）。</p>
+      </div>
+    </section>
+
+    <!-- ================= 温馨提示·授权书 auth-tip（2026-11-10 22:03 由弹窗改整页，申请直达） ================= -->
+    <section class="screen bg-white" data-screen="auth-tip" data-tab="finance" id="scr-auth-tip">
+      <div class="body" style="padding:26px 20px 20px">
+        <h2 style="font-size:16px; font-weight:600; text-align:center; color:var(--t1)">温馨提示</h2>
+        <div style="font-size:12.5px; line-height:1.8; color:var(--t2); margin-top:14px">
+          <p>一、申请「<b id="at-product" style="color:var(--t1)">建行平台云贷</b>」产品授信，需先签署以下协议授权书：</p>
+          <a class="auth-doc" href="javascript:void(0)" onclick="return false">《平台云贷业务授权书（企业）》</a>
+          <a class="auth-doc" href="javascript:void(0)" onclick="return false">《授权书》</a>
+          <a class="auth-doc" href="javascript:void(0)" onclick="return false">《个人征信授权书》</a>
+          <a class="auth-doc" href="javascript:void(0)" onclick="return false">《企业征信授权书》</a>
+          <a class="auth-doc" href="javascript:void(0)" onclick="return false">《中国建设银行平台云贷个人信息授权书》</a>
+          <p style="margin-top:12px">二、授权书有效期6个月，到期后需重新授权。</p>
+          <p>您即将打开第三方e签宝电子签署页面，是否确认？</p>
+        </div>
+        <button class="p-btn solid" id="at-ok" type="button" style="width:100%; margin-top:22px">确定</button>
+      </div>
+    </section>
+
+    <!-- ================= 预申请·产品条款 pre-apply-2 ================= -->
+    <section class="screen bg-white" data-screen="pre-apply-2" data-tab="finance" id="scr-pre-apply-2">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资预申请</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="sec-title" id="pa2-product">建行平台云贷(一级在途融)</div>
+          <div class="kv"><span class="k">还款方式</span><span class="v">可提前还本，到期或最后一笔还本息</span></div>
+          <div class="kv"><span class="k">融资期限</span><span class="v">最长6个月</span></div>
+          <div class="kv"><span class="k">年化利率</span><span class="v num">3.5%</span></div>
+        </div>
+        <div class="card">
+          <div class="sec-title">资产信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b>【FBIU5835865】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">1,000,000.00</span></div>
+          <div class="kv"><span class="k">资产形成时间</span><span class="v num">2025-03-20 12:34:23</span></div>
+          <div class="kv"><span class="k">核心企业</span><span class="v">全联集采（山东）供应链有限公司</span></div>
+        </div>
+        <button class="p-btn solid" id="pa2-apply" type="button" style="width:100%; margin-top:4px">申请</button>
+        <p style="font-size:10px; color:var(--t3); margin-top:10px; line-height:1.6">
+          演示说明：本条款页自 2026-11-10 流程调整后不再途经（申请按钮直达温馨提示整页），保留待裁决是否删除。
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= 授信结果 pre-result ================= -->
+    <section class="screen bg-white" data-screen="pre-result" id="scr-pre-result">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>授信结果</h1><span class="side"></span>
+      </div>
+      <div class="result-page">
+        <div class="result-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg></div>
+        <h2>融资预申请成功</h2>
+        <p id="pre-result-tip">您的授信申请已提交，请耐心等待审批结果</p>
+        <button class="p-btn solid" id="pre-result-back" type="button">返回列表</button>
+      </div>
+    </section>
+
+    <!-- ================= 融资申请（有合同/无合同/失败态） fin-apply ================= -->
+    <section class="screen bg-white" data-screen="fin-apply" data-tab="finance" id="scr-fin-apply">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资申请</h1><span class="side"></span>
+      </div>
+      <div class="body">
+
+        <div class="card" id="fa-contract" hidden>
+          <div class="sec-title">合同信息</div>
+          <div class="steps" id="fa-steps">
+            <span class="st" data-step="1"><span class="dot">1</span><span class="lb">签署合同</span></span>
+            <span class="bar"></span>
+            <span class="st" data-step="2"><span class="dot">2</span><span class="lb">融资审批</span></span>
+            <span class="bar"></span>
+            <span class="st" data-step="3"><span class="dot">3</span><span class="lb">融资成功</span></span>
+          </div>
+          <div class="contract-item">
+            <span class="who">申请人(李彦孟/186****7954)签署</span>
+            <span class="doc">《借款合同》</span>
+            <span class="st-wait" data-cs="wait">待签署</span>
+            <span class="st-done" data-cs="done" hidden>已签署</span>
+          </div>
+          <div class="contract-item">
+            <span class="who">全联集采水产品(广东)股份有限公司签署</span>
+            <span class="doc">《动产质押合同》</span>
+            <span class="st-wait" data-cs="wait">待签署</span>
+            <span class="st-done" data-cs="done" hidden>已签署</span>
+          </div>
+          <div class="fail-reason" id="fa-fail-reason" hidden>失败原因：不符合行内审批政策2</div>
+        </div>
+
+        <div class="card">
+          <div class="sec-title" id="fa-product" style="color:var(--brand)">建行平台云贷(一级在途融)</div>
+          <div class="kv"><span class="k">还款方式</span><span class="v">可提前还本，到期或最后一笔还本息</span></div>
+          <div class="kv"><span class="k">融资期限</span><span class="v">最长6个月</span></div>
+          <div class="kv"><span class="k">年化利率</span><span class="v num">3.5%</span></div>
+        </div>
+
+        <div class="card">
+          <div class="sec-title">资产信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b id="fa-no">【FBIU5835889】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">1,000,000.00</span></div>
+          <div class="kv"><span class="k">可融资金额</span><span class="v num">800,000.00</span></div>
+          <div class="kv"><span class="k">资产形成时间</span><span class="v num">2025-03-20 12:34:23</span></div>
+        </div>
+
+        <div class="btn-pair">
+          <button class="p-btn plain" id="fa-cancel" type="button">取消融资</button>
+          <button class="p-btn solid" id="fa-go" type="button">签署合同</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 签署提示页（资产详情） sign-tip ================= -->
+    <section class="screen bg-white" data-screen="sign-tip" id="scr-sign-tip">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>资产详情</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="sec-title" id="st-product" style="color:var(--brand)">建行平台云贷(一级在途融)</div>
+          <div class="tip blue">
+            <b>提示：</b>您还未进行申请融资文件签署，请先进行签署。<br>
+            <span style="font-size:11px; color:var(--t3)">演示：签署过程跳转 e签宝，合同模块根据金融产品—合同配置动态加载，需在线签署合同的产品才显示合同信息。</span>
+          </div>
+        </div>
+        <div class="btn-pair">
+          <button class="p-btn plain" data-back type="button">取消</button>
+          <button class="p-btn solid" id="st-sign" type="button">签署</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= E签宝·在线签署占位 esign-sign ================= -->
+    <section class="screen bg-white" data-screen="esign-sign" id="scr-esign-sign">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>E签宝·在线签署</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="sec-title">第三方签署页面（占位）</div>
+          <div style="border:1px dashed var(--line); border-radius:6px; min-height:180px; display:flex; align-items:center; justify-content:center; color:var(--t4); font-size:13px; background:var(--bg)">
+            e签宝 H5 签署页面占位区
+          </div>
+          <p style="font-size:11px; color:var(--t3); margin-top:10px; line-height:1.7">
+            演示：此处为第三方 e签宝 电子签署页面（实际由跳转打开）。<br>
+            当前签署场景：<b id="esign-sign-ctx">借款合同 / 动产质押合同</b>
+          </p>
+          <div class="btn-pair">
+            <button class="p-btn plain" data-back type="button">返回</button>
+            <button class="p-btn solid" id="esign-sign-done" type="button">签署完成（演示）</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 融资申请提交成功 apply-success ================= -->
+    <section class="screen bg-white" data-screen="apply-success" id="scr-apply-success">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资申请</h1><span class="side"></span>
+      </div>
+      <div class="result-page">
+        <div class="result-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg></div>
+        <h2>融资申请提交成功</h2>
+        <p>您的申请已提交银行，请耐心等待审核结果</p>
+        <button class="p-btn solid" id="apply-success-back" type="button">返回融资列表</button>
+      </div>
+    </section>
+
+    <!-- ================= 融资详情·待还款 repay-detail ================= -->
+    <section class="screen bg-white" data-screen="repay-detail" id="scr-repay-detail">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资详情</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--t2); padding:2px 4px 10px">
+          <span>放款日期：<span class="num">2024-11-13</span></span>
+          <span>放款金额 <span class="num">10,368.00</span></span>
+        </div>
+        <div class="card" style="padding:12px 14px">
+          <div style="display:flex; align-items:center; gap:10px">
+            <span class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span>
+            <div>
+              <div style="font-size:14px; font-weight:700; color:var(--t1)">捷行平台云贷(一级在线)<span class="tc" title="截图OCR两读均为「捷行」，与融资列表「建行平台云贷」不一致，待裁决">待确认</span></div>
+              <div style="font-size:12px; color:var(--brand); margin-top:2px" id="rd-state">融资状态：部分还款</div>
+            </div>
+          </div>
+          <div style="margin-top:12px; text-align:center">
+            <div style="font-size:11px; color:var(--t3)">全部应还(元)</div>
+            <div class="num" style="font-size:24px; font-weight:700; color:#0B4A56; margin-top:2px">¥ 10,398.06</div>
+            <div style="font-size:11px; color:var(--t3); margin-top:4px">2025年09月11日 到期</div>
+          </div>
+          <div class="kv" style="margin-top:10px"><span class="k">借据号</span><span class="v num">JU2788400050567</span></div>
+          <div class="kv"><span class="k">应还本金</span><span class="v num">¥ 10,368.00</span></div>
+          <div class="kv"><span class="k">应还利息</span><span class="v num">¥ 30.06</span></div>
+          <div class="kv"><span class="k">年化利率</span><span class="v num">4.35%</span></div>
+        </div>
+        <div class="card">
+          <div class="sec-title">资产信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b>【FBIU58358965】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">170,000.00</span></div>
+          <div class="sec-title" style="margin-top:14px">融资商品</div>
+          <table class="mini-table">
+            <thead><tr><th>商品名称</th><th>规格</th><th>数量</th></tr></thead>
+            <tbody>
+              <tr><td>印度去头虾</td><td>A-30/40</td><td>10</td></tr>
+              <tr class="sum"><td colspan="2">合计</td><td>30</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="btn-pair">
+          <button class="p-btn plain" id="rd-part" type="button">部分还款</button>
+          <button class="p-btn solid" id="rd-all" type="button">全部结清</button>
+        </div>
+        <p style="font-size:10px; color:var(--t3); margin-top:8px">演示：全部结清无需输入赎回数量，直接进入还款确认。</p>
+      </div>
+    </section>
+
+    <!-- ================= 申请还款·还款模式(关联商品/不关联商品) repay-input ================= -->
+    <section class="screen bg-white" data-screen="repay-input" id="scr-repay-input">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>申请还款</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <!-- 2026-11-10 22:15 用户裁决：新增还款模式选择——关联商品=商品赎回数量；不关联商品=直接输入还款金额 -->
+        <div class="mode-switch" id="ri-mode" role="tablist" aria-label="还款模式">
+          <button class="ms-btn on" role="tab" aria-selected="true" data-m="goods" type="button">还款(关联商品)</button>
+          <button class="ms-btn" role="tab" aria-selected="false" data-m="amount" type="button">还款(不关联商品)</button>
+        </div>
+        <div class="tip grey" id="ri-tip">请输入需要赎回的单品数量，不可超过剩余未还数量</div>
+        <div id="ri-goods-wrap">
+          <div id="ri-list"></div>
+        </div>
+        <div id="ri-amount-wrap" hidden>
+          <div class="card" style="padding:12px 14px">
+            <div class="kv"><span class="k">还款金额(元)</span><span class="v"><input type="tel" id="ri-amt" inputmode="decimal" placeholder="请输入还款金额" aria-label="还款金额" autocomplete="off" style="width:150px; text-align:right; border:none; border-bottom:1px solid var(--line); font-family:var(--num); padding:2px 0"></span></div>
+            <p class="g-err" id="ri-amt-err" style="display:none"></p>
+            <p style="font-size:10px; color:var(--t3); margin-top:8px">全部应还 ¥ 10,398.06（应还本金 10,368.00 + 应还利息 30.06），还款金额不可超过该上限</p>
+          </div>
+        </div>
+        <button class="p-btn solid" id="ri-go" type="button" style="width:100%; margin-top:8px">立即还款</button>
+      </div>
+    </section>
+
+    <!-- ================= 还款确认 repay-confirm ================= -->
+    <section class="screen bg-white" data-screen="repay-confirm" id="scr-repay-confirm">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>还款确认</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="tip blue">
+          1.还款金额为预估金额，最终以银行实际扣款数据为准。<br>
+          2.请确保银行还款账户内可用余额充足后再提交申请，以避免扣款失败。
+        </div>
+        <div class="card" id="rc-list" style="padding:12px 14px"></div>
+        <div class="sum-bar"><span>合计应还</span><b id="rc-sum">¥ 1,000.00</b></div>
+        <button class="p-btn solid" id="rc-go" type="button" style="width:100%; margin-top:16px">确认还款</button>
+      </div>
+    </section>
+
+    <!-- ================= 还款结果 repay-result ================= -->
+    <section class="screen bg-white" data-screen="repay-result" id="scr-repay-result">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>还款结果</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="result-page" style="padding-top:28px">
+          <div class="result-ico" style="background:#E8F8EE; color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg></div>
+          <h2>还款成功</h2>
+        </div>
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px">
+            <span class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span>
+            <span style="font-size:14px; font-weight:700; color:var(--t1)">捷行平台云贷(一级在线)<span class="tc" title="截图OCR两读均为「捷行」，待裁决">待确认</span></span>
+          </div>
+          <div class="kv"><span class="k">还款金额</span><span class="v num">1,000.00</span></div>
+          <div class="kv"><span class="k">还款账户</span><span class="v num">4425**************0032</span></div>
+          <div class="kv"><span class="k">还款类型</span><span class="v">部分还款</span></div>
+        </div>
+        <div class="card">
+          <div class="sec-title">资产信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b>【FBIU5835898】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">1,000,000.00</span></div>
+          <div class="kv"><span class="k">放款金额</span><span class="v num">800,000.00</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 融资详情·部分还款 repay-detail2 ================= -->
+    <section class="screen bg-white" data-screen="repay-detail2" id="scr-repay-detail2">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>融资详情</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--t2); padding:2px 4px 10px">
+          <span>放款日期：<span class="num">2024-11-13</span></span>
+          <span>放款金额 <span class="num">10,368.00</span></span>
+        </div>
+        <div class="card" style="padding:12px 14px">
+          <div style="display:flex; align-items:center; gap:10px">
+            <span class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span>
+            <div>
+              <div style="font-size:14px; font-weight:700; color:var(--t1)">捷行平台云贷(一级在线)<span class="tc" title="截图OCR两读均为「捷行」，待裁决">待确认</span></div>
+              <div style="font-size:12px; color:var(--brand); margin-top:2px">融资状态：部分还款</div>
+            </div>
+          </div>
+          <div style="margin-top:12px; text-align:center">
+            <div style="font-size:11px; color:var(--t3)">全部应还(元)</div>
+            <div class="num" style="font-size:24px; font-weight:700; color:#0B4A56; margin-top:2px">¥ 10,398.06</div>
+            <div style="font-size:11px; color:var(--t3); margin-top:4px">2025年09月11日 到期</div>
+          </div>
+          <div class="kv" style="margin-top:10px"><span class="k">应还本金</span><span class="v num">¥ 10,368.00</span></div>
+          <div class="kv"><span class="k">应还利息</span><span class="v num">¥ 30.06</span></div>
+          <div class="kv"><span class="k">年化利率</span><span class="v num">4.35%</span></div>
+        </div>
+
+        <div class="card">
+          <div class="sec-title">还款信息<span class="lnk" id="rd2-records" role="button" tabindex="0">还款记录查看 &gt;</span></div>
+          <div class="ov-table-wrap">
+            <div class="sec-title" style="font-size:12.5px; margin-top:4px">还款概览(关联商品)<span class="lnk" style="font-size:11px">收起</span></div>
+            <div class="kv"><span class="k">已还金额</span><span class="v num">2,000.00</span></div>
+            <div class="kv"><span class="k">还款次数</span><span class="v num">2</span></div>
+          </div>
+          <div class="sec-title" style="font-size:12.5px; margin-top:14px">还款概况(无商品)<span class="lnk" style="font-size:11px">收起</span></div>
+          <table class="ov-table">
+            <thead><tr><th>累计已还(未解押)</th><th>已还(解押占用)</th><th>已还(剩余未解押)</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="num">3,000.00</td><td class="num">1,600.00</td><td class="num">1,400.00</td>
+                <td class="lnk" id="rd2-unpledge" role="button" tabindex="0">申请解押商品</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="sec-title">资产信息<span class="lnk" style="font-size:11px">展开</span></div>
+          <div class="kv"><span class="k">资产编号</span><span class="v"><b>【FBIU58358965】</b></span></div>
+          <div class="kv"><span class="k">资产价值</span><span class="v num">170,000.00</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 还款记录 repay-records ================= -->
+    <section class="screen bg-white" data-screen="repay-records" id="scr-repay-records">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>还款记录</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card" id="rr-list" style="padding:12px 14px">
+          <div class="rec-item">
+            <div class="rec-top"><span>还款时间：<span class="num">2024-11-13 10:23:45</span></span><span class="ok-tag">✓ 还款成功</span></div>
+            <div class="kv"><span class="k">还款金额</span><span class="v num">1,000.00</span></div>
+            <div class="kv"><span class="k">还款流水号</span><span class="v num">47889999067</span></div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-top"><span>还款时间：<span class="num">2024-11-03 10:23:45</span></span><span class="ok-tag">✓ 还款成功</span></div>
+            <div class="kv"><span class="k">还款金额</span><span class="v num">1,000.00</span></div>
+            <div class="kv"><span class="k">还款流水号</span><span class="v num">47889999067</span></div>
+            <div class="kv"><span class="k">商品明细</span><span class="v lnk" id="rr-expand" role="button" tabindex="0">收起</span></div>
+            <table class="mini-table" id="rr-detail">
+              <thead><tr><th>商品名称</th><th>规格</th><th>还款数量</th></tr></thead>
+              <tbody>
+                <tr><td>印度去头虾</td><td>A-20/30</td><td>10</td></tr>
+                <tr><td>印度去头虾</td><td>A-30/40</td><td>90</td></tr>
+                <tr><td>印度去头虾</td><td>A-40/50</td><td>80</td></tr>
+                <tr class="sum"><td colspan="2">合计</td><td>30</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="rec-item">
+            <div class="rec-top"><span>还款时间：<span class="num">2024-11-03 10:23:45</span></span><span class="ok-tag">✓ 还款成功</span></div>
+            <div class="kv"><span class="k">还款金额</span><span class="v num">1,000.00</span></div>
+            <div class="kv"><span class="k">还款流水号</span><span class="v num">47889999067</span></div>
+          </div>
+        </div>
+        <div class="pager">
+          <button class="p-btn plain" type="button">上一页</button>
+          <button class="p-btn plain" type="button">下一页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 申请解押 unpledge ================= -->
+    <section class="screen bg-white" data-screen="unpledge" id="scr-unpledge">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>申请解押</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="tip amber">1.提交后将按选中的商品数量进行解押，并核销已还款（剩余可解押金额）。</div>
+        <div id="up-list"></div>
+        <div class="card" style="padding:12px 14px; margin-top:4px">
+          <div class="kv"><span class="k">已还金额(预计核销)</span><span class="v num" style="color:var(--red); font-weight:700">¥ 1,500.00</span></div>
+          <div class="kv"><span class="k">已还款(剩余可解押金额)</span><span class="v num">¥ 1,400.00</span></div>
+        </div>
+        <div class="fail-reason" style="text-align:left">提示：解押核销金额不可超过剩余可解押金额，不满足时请重新修改商品数量或追加还款金额后再操作。</div>
+        <button class="p-btn solid" id="up-go" type="button" style="width:100%; margin-top:14px">确认解押</button>
+      </div>
+    </section>
+
+    <!-- ================= 资产列表 assets ================= -->
+    <section class="screen" data-screen="assets" data-tab="assets" id="scr-assets">
+      <div class="page-title">资产</div>
+      <div class="fin-search">
+        <div class="box">
+          <input type="text" id="as-q" placeholder="资产标识(资产编号)" aria-label="按资产编号搜索" autocomplete="off">
+        </div>
+        <button class="go" id="as-go" type="button">搜索</button>
+      </div>
+      <div class="screen-inner" id="as-list" style="padding-top:10px"></div>
+    </section>
+
+    <!-- ================= 资产详情 asset-detail（3 Tab） ================= -->
+    <section class="screen bg-white" data-screen="asset-detail" id="scr-asset-detail">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>资产详情</h1><span class="side"></span>
+      </div>
+      <div class="fin-tabs" id="ad-tabs" role="tablist">
+        <button type="button" data-ad="detail" aria-selected="true">资产明细</button>
+        <button type="button" data-ad="stock" aria-selected="false">库存信息</button>
+        <button type="button" data-ad="pickup" aria-selected="false">提货信息</button>
+      </div>
+      <div class="body">
+        <div id="ad-p-detail">
+          <div class="card">
+            <div class="sec-title">资产信息</div>
+            <div class="kv"><span class="k">资产编号</span><span class="v"><b id="ad-no">【FBIU5835865】</b></span></div>
+            <div class="kv"><span class="k">资产价值</span><span class="v num">1,000,000.00</span></div>
+            <div class="kv"><span class="k">资产形成时间</span><span class="v num">2025-03-20 12:34:23</span></div>
+            <div class="kv"><span class="k">核心企业</span><span class="v">全联集采（山东）供应链有限公司</span></div>
+            <table class="mini-table">
+              <thead><tr><th>SKU名称</th><th>品类</th><th>单价</th><th>数量</th></tr></thead>
+              <tbody>
+                <tr><td>白虾1</td><td>虾</td><td>20</td><td>150.0000</td></tr>
+                <tr><td>白虾2</td><td>虾</td><td>20</td><td>150.0000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="sec-title">融资信息</div>
+            <div class="kv"><span class="k">借据号</span><span class="v" style="color:var(--brand)">JU2789400050567</span></div>
+            <div class="kv"><span class="k">放款日期</span><span class="v num">2024-11-13</span></div>
+            <div class="kv"><span class="k">放款金额</span><span class="v num">10,368.00</span></div>
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12.5px">
+              <span style="color:var(--t2)">质押/解押信息</span>
+              <span style="color:var(--brand); cursor:pointer" id="ad-pledge" role="button" tabindex="0">查看详情 &gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="ad-p-stock" hidden>
+          <div class="card" style="padding:12px">
+            <div style="display:flex; gap:8px; align-items:center">
+              <span style="font-size:12.5px; color:var(--t2); flex:none">商品名称：</span>
+              <input type="text" id="ad-sk-q" placeholder="请输入商品名称" aria-label="按商品名称搜索" style="flex:1; height:32px; border:1px solid var(--line); border-radius:4px; padding:0 10px; font-size:12.5px">
+              <button class="p-btn solid" type="button" style="height:32px; padding:0 14px; flex:none; width:auto; margin-top:0" id="ad-sk-go">搜索</button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px">
+              <span style="font-size:13.5px; font-weight:700; color:var(--t1); flex:none; white-space:nowrap">库存台账</span>
+              <button class="p-btn plain" type="button" style="height:30px; padding:0 14px; flex:none; width:auto; margin-top:0" id="ad-sk-export">导出</button>
+            </div>
+            <div class="tip grey" style="margin:10px 0 0">库存可用数量 = 已入库 − 已出库 − 出库在途</div>
+            <div class="tbl-scroll">
+            <table class="mini-table">
+              <thead><tr><th>SKU名称</th><th>监管仓库</th><th>库存可用数量</th><th>已入库数量</th><th>已出库数量</th><th>出库在途数量</th></tr></thead>
+              <tbody>
+                <tr><td>白虾1</td><td>仓库A</td><td>150.0000</td><td>200.0000</td><td>20.0000</td><td>30.0000</td></tr>
+                <tr><td>白虾2</td><td>仓库B</td><td>150.0000</td><td>200.0000</td><td>50.0000</td><td>—</td></tr>
+              </tbody>
+            </table>
+            </div>
+            <p class="tbl-hint">← 左右滑动查看完整表格 →</p>
+          </div>
+        </div>
+
+        <div id="ad-p-pickup" hidden>
+          <div class="card">
+            <div class="sec-title">提货信息</div>
+            <div class="kv"><span class="k">资产编号</span><span class="v num">RZ20220121872</span></div>
+            <div class="kv"><span class="k">企业名称</span><span class="v">湛江铭钛新材料有限公司</span></div>
+            <div class="kv"><span class="k">计划出库日期</span><span class="v num">2026-11-05</span></div>
+            <div class="kv"><span class="k">监管仓库</span><span class="v">湛江监管仓库A</span></div>
+            <div class="kv"><span class="k">状态</span><span class="v" style="color:var(--orange)">待出库</span></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">提货商品详情</div>
+            <table class="mini-table">
+              <thead><tr><th>商品名称</th><th>规格</th><th>可提数量</th></tr></thead>
+              <tbody>
+                <tr><td>商品A</td><td>54/REO</td><td>5</td></tr>
+                <tr><td>商品B</td><td>54/REO</td><td>4</td></tr>
+                <tr class="sum"><td colspan="2">合计</td><td>9</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 质押/解押信息 pledge-info（2 Tab） ================= -->
+    <section class="screen bg-white" data-screen="pledge-info" id="scr-pledge-info">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>质押/解押信息</h1><span class="side"></span>
+      </div>
+      <div class="fin-tabs" id="pi-tabs" role="tablist">
+        <button type="button" data-pi="pledge" aria-selected="true">质押信息</button>
+        <button type="button" data-pi="unpledge" aria-selected="false">解押信息</button>
+      </div>
+      <div class="body">
+        <div id="pi-p-pledge">
+          <div class="card">
+            <div class="sec-title">质押信息</div>
+            <div class="kv"><span class="k">借据号</span><span class="v" style="color:var(--brand)">JU2789400050567</span></div>
+            <div class="kv"><span class="k">出质人</span><span class="v">全联集采（山东）供应链有限公司</span></div>
+            <div class="kv"><span class="k">质权人</span><span class="v">建设银行南山支行</span></div>
+            <div class="kv"><span class="k">质押登记日期</span><span class="v num">2025-02-28</span></div>
+            <div class="kv"><span class="k">中登登记编号</span><span class="v num">（质）2154541235</span></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">商品信息</div>
+            <div class="tbl-scroll">
+            <table class="mini-table">
+              <thead><tr><th>SKU名称</th><th>规格</th><th>质押数量</th><th>已解押</th><th>剩余未解押</th></tr></thead>
+              <tbody>
+                <tr><td>白虾1</td><td>30/40</td><td>150.0000</td><td>50.0000</td><td>100.0000</td></tr>
+                <tr><td>白虾2</td><td>40/50</td><td>150.0000</td><td>50.0000</td><td>100.0000</td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+        <div id="pi-p-unpledge" hidden>
+          <div class="card">
+            <div class="sec-title">解押信息1</div>
+            <div class="kv"><span class="k">还款流水号</span><span class="v" style="color:var(--brand)">47889999067</span></div>
+            <div class="kv"><span class="k">还款日期</span><span class="v num">2026-03-03</span></div>
+            <div class="kv"><span class="k">还款金额</span><span class="v num">¥ 22,219.83</span></div>
+            <div class="sec-title" style="margin-top:12px; font-size:13px">解押商品</div>
+            <table class="mini-table">
+              <thead><tr><th>商品名称</th><th>规格</th><th>解押数量</th></tr></thead>
+              <tbody>
+                <tr><td>印度去头虾</td><td>A-20/30</td><td>10.0000</td></tr>
+                <tr><td>印度去头虾</td><td>A-30/40</td><td>90.0000</td></tr>
+                <tr><td>印度去头虾</td><td>A-40/50</td><td>80.0000</td></tr>
+                <tr class="sum"><td colspan="2">合计</td><td>180.0000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="sec-title">解押信息2</div>
+            <div class="kv"><span class="k">预提货流水号</span><span class="v num">YTH83959903</span></div>
+            <div class="kv"><span class="k">预提货日期</span><span class="v num">2026-03-01</span></div>
+            <div class="kv"><span class="k">还款金额(提货)</span><span class="v num">¥ 22,219.83</span></div>
+            <div class="sec-title" style="margin-top:12px; font-size:13px">解押商品</div>
+            <table class="mini-table">
+              <thead><tr><th>商品名称</th><th>规格</th><th>解押数量</th></tr></thead>
+              <tbody>
+                <tr><td>印度去头虾</td><td>A-20/30</td><td>10.0000</td></tr>
+                <tr><td>印度去头虾</td><td>A-30/40</td><td>90.0000</td></tr>
+                <tr class="sum"><td colspan="2">合计</td><td>100.0000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 发起提货 pickup ================= -->
+    <section class="screen bg-white" data-screen="pickup" id="scr-pickup">
+      <div class="sub-header">
+        <button class="back" data-back type="button" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg></button>
+        <h1>发起提货</h1><span class="side"></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="sec-title">提货信息</div>
+          <div class="kv"><span class="k">资产编号</span><span class="v num">RZ20220121872</span></div>
+          <div class="kv"><span class="k">企业名称</span><span class="v">湛江铭钛新材料有限公司</span></div>
+          <div class="kv"><span class="k">计划出库日期</span>
+            <span class="v"><input type="text" id="pk-date" placeholder="YYYY-MM-DD" value="2026-11-10" aria-label="计划出库日期，格式YYYY-MM-DD" style="border:none; text-align:right; font-size:13px; color:var(--t1); font-family:var(--num); background:none; outline:none; width:120px"></span>
+          </div>
+          <div class="kv"><span class="k">监管仓库</span><span class="v">湛江监管仓库A</span></div>
+        </div>
+        <div class="card">
+          <div class="sec-title">提货商品详情
+            <span class="lnk" id="pk-pick" role="button" tabindex="0">+ 选择提货商品</span>
+          </div>
+          <table class="mini-table">
+            <thead><tr><th>商品名称</th><th>规格</th><th>提货数量</th><th>可提数量</th></tr></thead>
+            <tbody id="pk-tbody"></tbody>
+          </table>
+          <p class="g-err" id="pk-err" style="display:none"></p>
+        </div>
+        <div class="btn-pair">
+          <button class="p-btn plain" data-back type="button">取消</button>
+          <button class="p-btn solid" id="pk-submit" type="button">提交提货</button>
+        </div>
+      </div>
+      <div class="pick-mask" id="pk-mask">
+        <div class="pick-sheet">
+          <h3>商品信息</h3>
+          <div style="display:flex; gap:8px; margin:10px 0 4px">
+            <input type="text" id="pk-q" placeholder="货物名称/规格" aria-label="搜索商品" style="flex:1; height:32px; border:1px solid var(--line); border-radius:4px; padding:0 10px; font-size:12.5px">
+            <span style="color:var(--brand); font-size:13px; align-self:center; cursor:pointer" id="pk-q-go" role="button" tabindex="0">搜索</span>
+          </div>
+          <p style="font-size:10px; color:var(--t3); line-height:1.6; margin:6px 0">过滤条件：该笔融资标的资产的 SKU 有解押记录且 SKU 有入库；可提数量 = min(解押可用, 入库可用)。</p>
+          <div class="tbl-scroll">
+          <table class="mini-table">
+            <thead><tr><th>选择</th><th>SKU名称</th><th>规格</th><th>解押可用数量</th><th>入库可用数量</th></tr></thead>
+            <tbody id="pk-pick-body"></tbody>
+          </table>
+          </div>
+          <p class="tbl-hint" style="flex:none">← 左右滑动查看完整表格 →</p>
+          <div class="btn-pair" style="margin-top:12px">
+            <button class="p-btn plain" id="pk-pick-cancel" type="button">取消</button>
+            <button class="p-btn solid" id="pk-pick-ok" type="button">确定</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 底部 Tab ================= -->
+    <nav class="tab-bar" id="tabbar" hidden>
+      <button class="tab-item" data-go="home" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg>首页
+      </button>
+      <button class="tab-item" data-go="finance" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-coins"/></svg>融资
+      </button>
+      <button class="tab-item" data-go="assets" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wallet"/></svg>资产
+      </button>
+      <button class="tab-item" data-go="mine" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-user"/></svg>我的
+      </button>
+    </nav>
+
+    <!-- 切换企业弹层 -->
+    <div class="sheet-mask" id="sheet-mask"></div>
+    <div class="sheet" id="sheet-company" role="dialog" aria-label="切换企业">
+      <div class="grab"></div>
+      <div class="sheet-title">切换企业</div>
+      <div class="sheet-note">一个手机号绑定了多个企业，切换后页面数据随企业刷新</div>
+      <button class="opt" type="button" data-co="湛江伟昌铭钛新材料有限公司" aria-checked="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+        <span>湛江伟昌铭钛新材料有限公司</span><span class="sub">当前</span>
+      </button>
+      <button class="opt" type="button" data-co="湛江智鲜水产贸易有限公司" aria-checked="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+        <span>湛江智鲜水产贸易有限公司</span>
+      </button>
+    </div>
+
+    <!-- 通用模态 -->
+    <div class="modal-mask" id="modal-mask"></div>
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <h3 id="modal-title"></h3>
+      <div class="m-body" id="modal-body"></div>
+      <div class="m-foot" id="modal-foot"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-wrap" id="toast-wrap"></div>
+
+  </div>
+</div>
+
+<!-- ============ 需求描述侧栏（首页截图标注逐字落档，2026-11-10 截图口径更新） ============ -->
+<aside id="req-panel" aria-label="首页需求描述">
+  <div class="rp-head">
+    <span class="rp-ttl">需求描述 · 首页</span>
+    <span class="rp-tag">2026-11-10 截图</span>
+    <button class="rp-x" id="rp-collapse" type="button" aria-expanded="true">收起</button>
+  </div>
+  <div class="rp-body">
+    <div class="rp-sec">
+      <h3><span class="n">1</span>资产总览卡片</h3>
+      <p>· 没数据时显示 0</p>
+      <p>· <b>资产总价值</b>：统计资产总价值</p>
+      <p>· <b>资产在押价值</b>：已放款的资产价值 − 已解押资产价值（根据解押记录统计）</p>
+      <p class="sub">已放款：包含待还款、部分还款、已逾期的融资状态</p>
+    </div>
+    <div class="rp-sec">
+      <h3><span class="n">2</span>额度卡片</h3>
+      <p>· <b>银行+产品 2级维度</b>展示</p>
+      <p>· 客户无授信时，默认展示银行-项目制金融方案批复（当前生效中）最高的那个银行</p>
+      <p>· 客户有授信时，按授信通过几个银行，展示几个银行，可左右滑动银行切换</p>
+      <p>· 主表为银行维度，子表为银行下具体金融产品（客户授信通过几个展示几个）</p>
+      <p>· 额度计算：见额度账本描述</p>
+    </div>
+    <div class="rp-sec">
+      <h3><span class="n">3</span>近期待还卡片</h3>
+      <p>· 无值时隐藏卡片，有值时显示卡片</p>
+      <p>· 最多展示最近 3 条待还款的资产，按剩余天数正序排列</p>
+    </div>
+    <div class="rp-sec">
+      <h3><span class="n">4</span>数据来源</h3>
+      <p>· <b>融资列表、资产列表</b>初始数据来源：<b>乾链推送资产数据到乾融系统-资产模块</b></p>
+    </div>
+    <div class="rp-note">
+      <b>演示说明：</b>当前演示数据仅建行南山支行 1 家银行授信通过（产品子表「平台云贷(一级海上融)」），
+      故按截图渲染 1 张额度卡；多银行左右滑动切换规则已录入需求描述（见文件头注释疑点⑥），待裁决后补演示。
+      「展开」的具体展开内容（额度账本明细）暂无截图，点击以 toast 占位。
+      口径变更提示：2026-11-10 截图「已放款」口径已不含「已结清」，联调时以最新口径为准。
+    </div>
+  </div>
+</aside>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s){ return document.querySelector(s); };
+  var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  /* ================= 路由 ================= */
+  var histStack = [];
+  var tabbar = $('#tabbar');
+
+  function renderTabbar(scr){
+    var tab = scr.getAttribute('data-tab');
+    if(tab){ tabbar.hidden = false; }
+    else{ tabbar.hidden = true; return; }
+    $$('#tabbar .tab-item').forEach(function(t){
+      if(t.getAttribute('data-go') === tab){ t.setAttribute('aria-current','page'); }
+      else{ t.removeAttribute('aria-current'); }
+    });
+  }
+  function show(id, push){
+    var target = document.getElementById('scr-' + id);
+    if(!target) return;
+    var cur = $('.screen.active');
+    if(cur && push && cur !== target){ histStack.push(cur.getAttribute('data-screen')); }
+    $$('.screen').forEach(function(s){ s.classList.remove('active'); });
+    target.classList.add('active');
+    target.scrollTop = 0;
+    renderTabbar(target);
+  }
+  function go(id){ show(id, true); }
+  function back(){
+    var prev = histStack.pop();
+    show(prev || 'home', false);
+  }
+  $$('[data-back]').forEach(function(b){ b.addEventListener('click', back); });
+
+  /* Tab 点击 */
+  $$('#tabbar .tab-item').forEach(function(t){
+    t.addEventListener('click', function(){
+      histStack = [];
+      show(t.getAttribute('data-go'), false);
+    });
+  });
+
+  /* ================= Toast / Modal ================= */
+  var toastWrap = $('#toast-wrap');
+  function toast(msg, ms){
+    var el = document.createElement('div');
+    el.className = 'toast'; el.textContent = msg;
+    toastWrap.appendChild(el);
+    setTimeout(function(){ el.remove(); }, ms || 1800);
+  }
+  var modal = $('#modal'), modalMask = $('#modal-mask');
+  function openModal(title, body, btns){
+    $('#modal-title').textContent = title;
+    $('#modal-body').innerHTML = body;
+    var foot = $('#modal-foot'); foot.innerHTML = '';
+    btns.forEach(function(b){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = b.cls; btn.textContent = b.txt;
+      btn.addEventListener('click', function(){ closeModal(); if(b.fn) b.fn(); });
+      foot.appendChild(btn);
+    });
+    modal.classList.add('open'); modalMask.classList.add('open');
+  }
+  function closeModal(){ modal.classList.remove('open'); modalMask.classList.remove('open'); }
+  modalMask.addEventListener('click', closeModal);
+
+  /* ================= 登录 ================= */
+  var lgPhone = $('#lg-phone'), lgCode = $('#lg-code'), lgCodeBtn = $('#lg-code-btn'),
+      lgSubmit = $('#lg-submit'), lgAgree = $('#lg-agree'),
+      lgPhoneErr = $('#lg-phone-err'), lgCodeErr = $('#lg-code-err'), lgAgreeErr = $('#lg-agree-err');
+  var phoneOk = false, codeOk = false, cdTimer = null, cdLeft = 0;
+
+  function phoneValid(){ return /^1\d{10}$/.test(lgPhone.value.trim()); }
+  function codeValid(){ return /^\d{4}$/.test(lgCode.value.trim()); }
+  function refreshLoginState(){
+    phoneOk = phoneValid(); codeOk = codeValid();
+    lgCodeBtn.classList.toggle('ready', phoneOk && cdLeft === 0);
+    lgSubmit.classList.toggle('ready', phoneOk && codeOk);
+  }
+  lgPhone.addEventListener('input', function(){
+    lgPhone.value = lgPhone.value.replace(/\D/g,'').slice(0,11);
+    lgPhoneErr.textContent = '';
+    refreshLoginState();
+  });
+  lgCode.addEventListener('input', function(){
+    lgCode.value = lgCode.value.replace(/\D/g,'').slice(0,4);
+    lgCodeErr.textContent = '';
+    refreshLoginState();
+  });
+  lgCodeBtn.addEventListener('click', function(){
+    if(!phoneValid()){
+      lgPhoneErr.textContent = '请先输入 11 位大陆手机号';
+      lgPhone.focus();
+      return;
+    }
+    cdLeft = 60;
+    lgCodeBtn.classList.remove('ready');
+    var tick = function(){
+      if(cdLeft > 0){
+        lgCodeBtn.textContent = cdLeft + 's后重发';
+        cdLeft--;
+        cdTimer = setTimeout(tick, 1000);
+      }else{
+        lgCodeBtn.textContent = '获取验证码';
+        refreshLoginState();
+      }
+    };
+    tick();
+    toast('验证码已发送（演示）');
+  });
+  lgSubmit.addEventListener('click', function(){
+    if(!phoneValid()){ lgPhoneErr.textContent = '请输入 11 位大陆手机号'; lgPhone.focus(); return; }
+    if(!codeValid()){ lgCodeErr.textContent = '请输入 4 位数字验证码'; lgCode.focus(); return; }
+    if(!lgAgree.checked){ lgAgreeErr.textContent = '请先阅读并勾选用户服务协议与隐私协议'; lgAgree.focus(); return; }
+    lgAgreeErr.textContent = '';
+    if(cdTimer){ clearTimeout(cdTimer); cdTimer = null; }
+    cdLeft = 0; lgCodeBtn.textContent = '获取验证码';
+    histStack = [];
+    certState = 'none'; renderCert();
+    show('home', false);
+    toast('登录成功，欢迎回来');
+  });
+
+  /* ================= 首页 ================= */
+  $('#go-assets').addEventListener('click', function(){
+    histStack = [];
+    show('assets', false);
+  });
+  $('#go-finlist').addEventListener('click', function(){
+    histStack = [];
+    show('finance', false);
+  });
+  /* 产品子表「展开」：额度账本明细无截图，toast 占位（疑点⑥） */
+  $('#ccp-tg').addEventListener('click', function(){
+    toast('产品额度明细（额度账本）原型待截图补充', 2200);
+  });
+  $$('.repay-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var banner = $('#pay-banner');
+      $('#pay-banner-txt').innerHTML = '还款操作需验证支付密码：资产编号【' + b.getAttribute('data-no') + '】· ' +
+        b.getAttribute('data-prod') + '，待还款 <b class="num">¥ ' + b.getAttribute('data-amt') + '</b>（演示上下文）';
+      banner.classList.add('show');
+      go('pay-password');
+    });
+  });
+
+  /* ================= 需求描述侧栏 ================= */
+  (function(){
+    var panel = $('#req-panel'), btn = $('#rp-collapse');
+    function expand(){
+      panel.classList.remove('collapsed');
+      btn.textContent = '收起';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (panel.classList.contains('collapsed')) { expand(); }
+      else {
+        panel.classList.add('collapsed');
+        btn.textContent = '展开';
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    panel.addEventListener('click', function(){
+      if (panel.classList.contains('collapsed')) { expand(); }
+    });
+  })();
+
+  /* ================= 融资列表 ================= */
+  /* 2026-11-06 用户裁决：融资未完成的 4 个状态（未融资/融资处理中/融资已取消/待放款）归「未融资」页签；
+     「已融资」页签放还款生命周期数据（待还款/部分还款/已结清）——该 3 条无截图，字段结构按融资后口径推演，挂【待确认】 */
+  var FIN_DATA = [
+    /* —— 未融资页签 —— */
+    { tag:'尾款', no:'FBIU5835865', status:'未融资',   cls:'s1', value:'1,000,000.00', product:'—', amount:'—' },
+    { tag:'现货', no:'FBIU5835889', status:'融资处理中', cls:'s1', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00' },
+    { tag:'现货', no:'FBIU5835888', status:'融资已取消', cls:'s2', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00' },
+    { tag:'现货', no:'FBIU5835887', status:'待放款',   cls:'s2', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00' },
+    /* —— 已融资页签（推演数据，待截图核对） —— */
+    { tag:'现货', no:'FBIU5835901', status:'待还款',   cls:'s1', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00', loan:'—', repay:'—', tc:true },
+    { tag:'现货', no:'FBIU5835902', status:'部分还款', cls:'s1', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00', loan:'800,000.00', repay:'350,000.00', tc:true },
+    { tag:'现货', no:'FBIU5835903', status:'已结清',   cls:'s2', value:'1,000,000.00', product:'建行平台云货贷(一级现货融)', amount:'800,000.00', loan:'800,000.00', repay:'800,000.00', tc:true }
+  ];
+  var UNFIN_STATUS = ['未融资','融资处理中','融资已取消','待放款'];
+  function isUnfin(d){ return UNFIN_STATUS.indexOf(d.status) !== -1; }
+  var finFilter = 'all', finQuery = '';
+  function renderFinList(){
+    var list = FIN_DATA.filter(function(d){
+      if(finFilter === 'unfin' && !isUnfin(d)) return false;
+      if(finFilter === 'fin' && isUnfin(d)) return false;
+      if(finQuery && d.no.toUpperCase().indexOf(finQuery) === -1) return false;
+      return true;
+    });
+    var host = $('#fin-list');
+    if(!list.length){
+      host.innerHTML =
+        '<div class="empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-search"/></svg>' +
+        '<h3>未找到匹配的资产</h3><p>请更换资产编号或切换筛选条件后重试</p></div>';
+      return;
+    }
+    host.innerHTML = list.map(function(d){
+      var rows;
+      if(d.tc){
+        /* 已融资口径（2026-11-06 用户裁决）：隐藏已还金额，融资金额改为放款金额 */
+        rows =
+          '<div class="fin-kv"><span class="k">资产价值</span><span class="v num">' + d.value + '</span></div>' +
+          '<div class="fin-kv"><span class="k">金融产品</span><span class="v">' + d.product + '</span></div>' +
+          '<div class="fin-kv"><span class="k">放款金额</span><span class="v num">' + d.amount + '</span></div>';
+      }else{
+        rows =
+          '<div class="fin-kv"><span class="k">资产价值</span><span class="v num">' + d.value + '</span></div>' +
+          '<div class="fin-kv"><span class="k">金融产品</span><span class="v">' + d.product + '</span></div>' +
+          '<div class="fin-kv"><span class="k">可融资金额</span><span class="v num">' + d.amount + '</span></div>';
+      }
+      return '<div class="fin-card" data-no="' + d.no + '" role="button" tabindex="0" aria-label="查看' + d.no + '详情">' +
+        '<div class="fin-top">' +
+          '<span class="fin-tag">' + d.tag + '</span>' +
+          '<span class="fin-no">资产编号：【' + d.no + '】</span>' +
+          '<span class="fin-state ' + d.cls + '">' + d.status + '</span>' +
+        '</div>' + rows +
+      '</div>';
+    }).join('');
+  }
+  $$('#fin-tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      $$('#fin-tabs button').forEach(function(x){ x.setAttribute('aria-selected','false'); });
+      b.setAttribute('aria-selected','true');
+      finFilter = b.getAttribute('data-f');
+      renderFinList();
+    });
+  });
+  function doFinSearch(){
+    finQuery = $('#fin-q').value.trim().toUpperCase();
+    renderFinList();
+    if(finQuery && !$('#fin-list .fin-card')){ /* 空态已渲染 */ }
+  }
+  $('#fin-go').addEventListener('click', doFinSearch);
+  $('#fin-q').addEventListener('keydown', function(e){ if(e.key === 'Enter') doFinSearch(); });
+  renderFinList();
+
+  /* ================= 我的 · 实名认证状态机 ================= */
+  var certState = 'none'; /* none | ok | fail */
+  var certStateEl = $('#cert-state'), certArrow = $('#cert-arrow'),
+      miUserAdd = $('#mi-useradd'), uaArrow = $('#ua-arrow');
+  function renderCert(){
+    certArrow.hidden = false;
+    certStateEl.className = 'mi-val';
+    if(certState === 'none'){
+      certStateEl.classList.add('danger');
+      certStateEl.textContent = '实名认证';
+    }else if(certState === 'ok'){
+      certStateEl.classList.add('link');
+      certStateEl.textContent = '已认证';
+      certArrow.hidden = false;
+    }else if(certState === 'fail'){
+      certStateEl.classList.add('danger');
+      certStateEl.textContent = '认证失败，请重新认证';
+    }
+    var unlocked = (certState === 'ok');
+    miUserAdd.classList.toggle('disabled', !unlocked);
+    uaArrow.hidden = !unlocked;
+  }
+  $('#mi-cert').addEventListener('click', function(){
+    if(certState === 'ok'){ go('ent-info'); }
+    else{ go('esign'); }
+  });
+  $('#esign-ok').addEventListener('click', function(){
+    certState = 'ok'; renderCert();
+    histStack = [];
+    show('mine', false);
+    toast('实名认证成功');
+  });
+  $('#esign-fail').addEventListener('click', function(){
+    certState = 'fail'; renderCert();
+    histStack = [];
+    show('mine', false);
+    toast('实名认证失败，请重新认证');
+  });
+
+  /* 切换企业 */
+  var sheetMask = $('#sheet-mask'), sheet = $('#sheet-company');
+  $('#btn-switch').addEventListener('click', function(){
+    sheet.classList.add('open'); sheetMask.classList.add('open');
+  });
+  sheetMask.addEventListener('click', function(){
+    sheet.classList.remove('open'); sheetMask.classList.remove('open');
+  });
+  $$('#sheet-company .opt').forEach(function(o){
+    o.addEventListener('click', function(){
+      var name = o.getAttribute('data-co');
+      $$('#sheet-company .opt').forEach(function(x){
+        x.setAttribute('aria-checked', x === o ? 'true' : 'false');
+        var sub = x.querySelector('.sub'); if(sub) sub.remove();
+      });
+      var cur = document.createElement('span');
+      cur.className = 'sub'; cur.textContent = '当前';
+      o.appendChild(cur);
+      $('#mine-company').textContent = name;
+      sheet.classList.remove('open'); sheetMask.classList.remove('open');
+      toast('已切换至「' + name + '」，数据已刷新');
+    });
+  });
+
+  /* 新增h5登录用户入口 */
+  miUserAdd.addEventListener('click', function(){
+    if(certState === 'ok'){ go('user-add'); }
+  });
+
+  /* 退出登录 */
+  $('#btn-logout').addEventListener('click', function(){
+    openModal('退出登录', '确定要退出当前账号吗？', [
+      { txt:'取消', cls:'m-cancel' },
+      { txt:'退出', cls:'m-danger', fn:function(){
+        lgPhone.value = ''; lgCode.value = ''; lgAgree.checked = false;
+        refreshLoginState();
+        /* 会话状态重置：认证状态 / 操作员表 / 企业切换 均回到初始 */
+        certState = 'none'; renderCert();
+        UA_ROWS = [ { name:'张三', tel:'18620197954' }, { name:'李四', tel:'13178822345' } ];
+        renderUA();
+        $('#mine-company').textContent = '湛江伟昌铭钛新材料有限公司';
+        $$('#sheet-company .opt').forEach(function(x, i){
+          x.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+          var sub = x.querySelector('.sub'); if(i > 0 && sub) sub.remove();
+          if(i === 0 && !x.querySelector('.sub')){
+            var cur = document.createElement('span');
+            cur.className = 'sub'; cur.textContent = '当前';
+            x.appendChild(cur);
+          }
+        });
+        histStack = [];
+        show('login', false);
+      }}
+    ]);
+  });
+
+  /* ================= 新增h5登录用户 ================= */
+  var UA_ROWS = [
+    { name:'张三', tel:'18620197954' },
+    { name:'李四', tel:'13178822345' }
+  ];
+  var uaTbody = $('#ua-tbody');
+  function renderUA(){
+    uaTbody.innerHTML = UA_ROWS.map(function(r, i){
+      return '<tr>' +
+        '<td class="idx">' + (i+1) + '</td>' +
+        '<td><input type="text" data-ua="name" maxlength="10" value="' + r.name + '" placeholder="请输入名称" aria-label="操作员名称"></td>' +
+        '<td><input type="tel" data-ua="tel" maxlength="11" value="' + r.tel + '" placeholder="请输入手机号" aria-label="操作员手机号"></td>' +
+        '<td><div class="ua-op"><button type="button" class="del" data-del="' + i + '" aria-label="删除该行">−</button></div></td>' +
+      '</tr>';
+    }).join('');
+    uaTbody.querySelectorAll('[data-ua]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var tr = inp.closest('tr'); tr.classList.remove('err');
+        if(inp.getAttribute('data-ua') === 'tel'){
+          inp.value = inp.value.replace(/\D/g,'').slice(0,11);
+        }
+      });
+    });
+    uaTbody.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var i = parseInt(btn.getAttribute('data-del'), 10);
+        UA_ROWS.splice(i,1);
+        renderUA();
+      });
+    });
+  }
+  $('#ua-add').addEventListener('click', function(){
+    UA_ROWS.push({ name:'', tel:'' });
+    renderUA();
+    var inputs = uaTbody.querySelectorAll('input');
+    if(inputs.length){ inputs[inputs.length-2].focus(); }
+  });
+  $('#ua-confirm').addEventListener('click', function(){
+    var rows = Array.prototype.slice.call(uaTbody.querySelectorAll('tr'));
+    var ok = true, firstBad = null;
+    rows.forEach(function(tr){
+      tr.classList.remove('err');
+      var name = tr.querySelector('[data-ua="name"]').value.trim();
+      var tel = tr.querySelector('[data-ua="tel"]').value.trim();
+      var bad = false;
+      if(!name || name.length > 10){ bad = true; }
+      if(!/^1\d{10}$/.test(tel)){ bad = true; }
+      if(bad){ tr.classList.add('err'); ok = false; if(!firstBad) firstBad = tr; }
+    });
+    if(!ok){
+      if(firstBad){ firstBad.querySelector('input').focus(); }
+      toast('请检查标红行：名称 ≤10 字符、手机号 11 位数字', 2400);
+      return;
+    }
+    UA_ROWS = rows.map(function(tr){
+      return {
+        name: tr.querySelector('[data-ua="name"]').value.trim(),
+        tel: tr.querySelector('[data-ua="tel"]').value.trim()
+      };
+    });
+    openModal('保存成功', '已保存 ' + UA_ROWS.length + ' 个 h5 登录用户', [
+      { txt:'知道了', cls:'m-ok' }
+    ]);
+  });
+  renderUA();
+
+  /* ================= 支付密码 ================= */
+  var payOld = $('#pay-old'), payOldErr = $('#pay-old-err');
+  $('#pay-reset-go').addEventListener('click', function(){
+    if(!payOld.value){
+      payOldErr.textContent = '请先输入支付密码';
+      payOld.focus();
+      return;
+    }
+    payOldErr.textContent = '';
+    go('pay-reset');
+  });
+  payOld.addEventListener('input', function(){ payOldErr.textContent = ''; });
+
+  /* ================= 重置支付密码 ================= */
+  var prPw1 = $('#pr-pw1'), prPw2 = $('#pr-pw2'), prCode = $('#pr-code'),
+      prBtn = $('#pr-code-btn'), prErr = $('#pr-err');
+  var prCdTimer = null, prCdLeft = 0;
+  prPw1.addEventListener('input', function(){ prErr.textContent = ''; });
+  prPw2.addEventListener('input', function(){ prErr.textContent = ''; });
+  prCode.addEventListener('input', function(){
+    prCode.value = prCode.value.replace(/\D/g,'').slice(0,6);
+    prErr.textContent = '';
+  });
+  prBtn.addEventListener('click', function(){
+    if(prCdLeft > 0) return;
+    prCdLeft = 60;
+    var tick = function(){
+      if(prCdLeft > 0){
+        prBtn.textContent = prCdLeft + 's';
+        prCdLeft--;
+        prCdTimer = setTimeout(tick, 1000);
+      }else{
+        prBtn.textContent = '获取';
+      }
+    };
+    tick();
+    toast('验证码已发送至 ****89（演示）');
+  });
+  $('#pr-confirm').addEventListener('click', function(){
+    var pw1 = prPw1.value, pw2 = prPw2.value, code = prCode.value.trim();
+    if(!/^[0-9A-Za-z]{8,20}$/.test(pw1)){
+      prErr.textContent = '支付密码须为 8-20 位数字或字母';
+      prPw1.focus(); return;
+    }
+    if(pw1 !== pw2){
+      prErr.textContent = '两次输入的密码不一致，请重新输入';
+      prPw2.focus(); return;
+    }
+    if(!/^\d{4,6}$/.test(code)){
+      prErr.textContent = '请输入短信验证码';
+      prCode.focus(); return;
+    }
+    prErr.textContent = '';
+    prPw1.value = ''; prPw2.value = ''; prCode.value = '';
+    openModal('重置成功', '支付密码已重置，请牢记新密码', [
+      { txt:'知道了', cls:'m-ok', fn:function(){ back(); } }
+    ]);
+  });
+
+  /* ================= 预授信 / 融资申请 / 还款流程（V5 新增） ================= */
+  function backToFinance(){ histStack = []; show('finance', false); }
+
+  /* ---- 融资列表卡片路由 ---- */
+  $('#fin-list').addEventListener('click', function(e){
+    var card = e.target.closest('.fin-card');
+    if(!card) return;
+    var no = card.getAttribute('data-no');
+    var d = null;
+    FIN_DATA.forEach(function(x){ if(x.no === no) d = x; });
+    if(!d) return;
+    if(d.status === '未融资'){ go('pre-apply'); }
+    else if(d.status === '融资处理中'){ openFinApply({ no:d.no, product:d.product, mode:'contract' }); }
+    else if(d.status === '待放款'){ openFinApply({ no:d.no, product:'上行易采购(一级在途融)', mode:'nocontract' }); }
+    else if(d.status === '融资已取消'){ openFinApply({ no:d.no, product:d.product, mode:'fail' }); }
+    else if(d.status === '待还款'){ $('#rd-state').textContent = '融资状态：待还款'; go('repay-detail'); }
+    else if(d.status === '部分还款'){ go('repay-detail2'); }
+    else if(d.status === '已结清'){ toast('「已结清」详情原型待截图补充，本次未生成', 2200); }
+  });
+
+  /* ---- 预授信：选择产品（2026-11-10 由弹框改页面平铺） ---- */
+  var pickedProduct = '建行平台云贷(一级在途融)';
+  var PRE_AUTH = false, ESIGN_NEXT = null;
+  $$('#prod-list .prod-opt').forEach(function(o){
+    o.addEventListener('click', function(){
+      $$('#prod-list .prod-opt').forEach(function(x){ x.classList.remove('on'); });
+      o.classList.add('on');
+      pickedProduct = o.getAttribute('data-p');
+    });
+  });
+  $('#pa-apply').addEventListener('click', function(){
+    if(pickedProduct.indexOf('建行') !== -1){
+      /* 2026-11-10 22:03 用户裁决：申请直达「温馨提示」整页（原为条款页提交后弹窗） */
+      PRE_AUTH = true; ESIGN_NEXT = 'pre-result';
+      $('#at-product').textContent = pickedProduct.split('(')[0];
+      go('auth-tip');
+    }else{
+      PRE_AUTH = false;
+      $('#pre-result-tip').textContent = '';
+      go('pre-result');
+    }
+  });
+  $('#at-ok').addEventListener('click', function(){
+    $('#esign-sign-ctx').textContent = '授信授权书（5份）';
+    go('esign-sign');
+  });
+
+  /* ---- 预申请：提交（有授权/无授权分叉） ---- */
+  $('#pa2-apply').addEventListener('click', function(){
+    if(pickedProduct.indexOf('建行') !== -1){
+      PRE_AUTH = true; ESIGN_NEXT = 'pre-result';
+      openModal('温馨提示',
+        '<div style="text-align:left; font-size:12.5px; line-height:1.7">' +
+        '一、申请「建行平台云贷」产品授信，需先签署以下协议授权书：' +
+        '<a class="auth-doc" href="javascript:void(0)">《平台云贷业务授权书（企业）》</a>' +
+        '<a class="auth-doc" href="javascript:void(0)">《授权书》</a>' +
+        '<a class="auth-doc" href="javascript:void(0)">《个人征信授权书》</a>' +
+        '<a class="auth-doc" href="javascript:void(0)">《企业征信授权书》</a>' +
+        '<a class="auth-doc" href="javascript:void(0)">《中国建设银行平台云贷个人信息授权书》</a>' +
+        '<p style="margin-top:8px">二、授权书有效期6个月，到期后需重新授权。</p>' +
+        '<p>您即将打开第三方e签宝电子签署页面，是否确认？</p></div>',
+        [{ txt:'确定', cls:'m-ok', fn:function(){
+          $('#esign-sign-ctx').textContent = '授信授权书（5份）';
+          go('esign-sign');
+        }}]);
+    }else{
+      PRE_AUTH = false;
+      $('#pre-result-tip').textContent = '';
+      go('pre-result');
+    }
+  });
+  $('#pre-result-back').addEventListener('click', backToFinance);
+
+  /* ---- 融资申请（有合同/无合同/失败态） ---- */
+  var FA_MODE = 'contract', FA_STATE = 'wait';
+  function openFinApply(ctx){
+    FA_MODE = ctx.mode; FA_STATE = 'wait';
+    $('#fa-product').textContent = ctx.product;
+    $('#st-product').textContent = ctx.product;
+    $('#fa-no').textContent = '【' + ctx.no + '】';
+    renderFinApply();
+    go('fin-apply');
+  }
+  function renderFinApply(){
+    var showContract = FA_MODE !== 'nocontract';
+    var fail = FA_MODE === 'fail';
+    var signed = FA_STATE === 'signed';
+    $('#fa-contract').hidden = !showContract;
+    var st1 = $('#fa-steps .st[data-step="1"]'),
+        st3 = $('#fa-steps .st[data-step="3"]');
+    st1.className = 'st' + (signed ? ' done' : '');
+    st3.className = 'st' + (fail ? ' fail' : '');
+    st3.querySelector('.lb').textContent = fail ? '融资失败' : '融资成功';
+    $$('#fa-contract [data-cs="wait"]').forEach(function(x){ x.hidden = signed; });
+    $$('#fa-contract [data-cs="done"]').forEach(function(x){ x.hidden = !signed; });
+    $('#fa-fail-reason').hidden = !fail;
+    var go_ = $('#fa-go');
+    if(fail){ go_.textContent = '重新申请'; }
+    else if(FA_MODE === 'nocontract' || signed){ go_.textContent = '立即申请'; }
+    else{ go_.textContent = '签署合同'; }
+  }
+  $('#fa-go').addEventListener('click', function(){
+    if(FA_MODE === 'fail'){
+      FA_MODE = 'contract'; FA_STATE = 'wait'; renderFinApply();
+      toast('已重置为待签署状态（演示）');
+      return;
+    }
+    if(FA_MODE === 'nocontract' || FA_STATE === 'signed'){ go('apply-success'); return; }
+    go('sign-tip');
+  });
+  $('#fa-cancel').addEventListener('click', function(){
+    openModal('取消融资', '确定要取消本次融资申请吗？', [
+      { txt:'取消', cls:'m-cancel' },
+      { txt:'确定', cls:'m-ok', fn: backToFinance }
+    ]);
+  });
+  $('#st-sign').addEventListener('click', function(){
+    ESIGN_NEXT = 'fin-apply-signed';
+    $('#esign-sign-ctx').textContent = '借款合同 / 动产质押合同';
+    go('esign-sign');
+  });
+  $('#esign-sign-done').addEventListener('click', function(){
+    var next = ESIGN_NEXT; ESIGN_NEXT = null;
+    if(next === 'pre-result'){
+      $('#pre-result-tip').textContent = PRE_AUTH ? '您的授信申请已提交，请耐心等待审批结果' : '';
+      go('pre-result');
+    }else{
+      FA_STATE = 'signed'; renderFinApply();
+      histStack = ['finance']; show('fin-apply', false);
+      toast('合同已签署');
+    }
+  });
+  $('#apply-success-back').addEventListener('click', backToFinance);
+
+  /* ---- 还款流程 ---- */
+  var RI_GOODS = [
+    { name:'印度去头虾A_20/30', left:10, apply:10 },
+    { name:'印度去头虾A_30/40', left:100, apply:90 },
+    { name:'印度去头虾A_40/50', left:8, apply:8 },
+    { name:'印度去头虾A_50/60', left:9, apply:1 }
+  ];
+  function goodsRowHTML(g, i, label, iname){
+    return '<div class="goods-row on" data-i="' + i + '">' +
+      '<div class="g-top"><span class="rball"></span>' + g.name + '</div>' +
+      '<div class="g-sub"><span class="left">剩余' + label + ' <b class="num">' + g.left + '</b> 件</span>' +
+      '<span>' + iname + ' <input type="tel" data-gi="' + i + '" value="' + g.apply + '" aria-label="' + iname + '数量"></span></div>' +
+      '<p class="g-err">' + iname + '数量不可超过剩余' + label + '数量（' + g.left + ' 件）</p></div>';
+  }
+  function renderRiList(){
+    $('#ri-list').innerHTML = RI_GOODS.map(function(g, i){
+      return goodsRowHTML(g, i, '未还', '申请还款');
+    }).join('');
+  }
+  function renderRcList(rows){
+    $('#rc-list').innerHTML = rows.map(function(g){
+      return '<div class="kv"><span class="k">' + g.name + '</span>' +
+        '<span class="v">剩余未还 ' + g.left + ' 件 · 申请还款 <b class="num">' + g.apply + '</b></span></div>';
+    }).join('');
+    $('#rc-sum').textContent = '¥ 1,000.00';
+  }
+  function renderRcAmount(amt){
+    $('#rc-list').innerHTML =
+      '<div class="kv"><span class="k">还款模式</span><span class="v">还款(不关联商品)</span></div>' +
+      '<div class="kv"><span class="k">还款金额</span><span class="v num">¥ ' + amt + '</span></div>';
+    $('#rc-sum').textContent = '¥ ' + amt;
+  }
+  /* ---- 还款模式切换（2026-11-10 22:15 用户裁决） ---- */
+  var riMode = 'goods';
+  function setRiMode(m){
+    riMode = m;
+    var goods = m === 'goods';
+    $$('#ri-mode .ms-btn').forEach(function(b){
+      var on = b.getAttribute('data-m') === m;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $('#ri-goods-wrap').hidden = !goods;
+    $('#ri-amount-wrap').hidden = goods;
+    $('#ri-tip').textContent = goods ? '请输入需要赎回的单品数量，不可超过剩余未还数量'
+                                     : '请输入还款金额，不可超过全部应还金额';
+  }
+  $$('#ri-mode .ms-btn').forEach(function(b){
+    b.addEventListener('click', function(){ setRiMode(b.getAttribute('data-m')); });
+  });
+  $('#rd-part').addEventListener('click', function(){
+    RI_GOODS[0].apply = 10; RI_GOODS[1].apply = 90; RI_GOODS[2].apply = 8; RI_GOODS[3].apply = 1;
+    renderRiList(); setRiMode('goods'); go('repay-input');
+  });
+  $('#rd-all').addEventListener('click', function(){
+    renderRcList(RI_GOODS.map(function(g){ return { name:g.name, left:g.left, apply:g.left }; }));
+    go('repay-confirm');
+  });
+  $('#ri-go').addEventListener('click', function(){
+    if(riMode === 'amount'){
+      var v = $('#ri-amt').value.trim();
+      var err = $('#ri-amt-err');
+      if(!/^\d+(\.\d{1,2})?$/.test(v) || parseFloat(v) <= 0){
+        err.textContent = '请输入正确的还款金额（最多两位小数）'; err.style.display = 'block'; return;
+      }
+      if(parseFloat(v) > 10398.06){
+        err.textContent = '还款金额不可超过全部应还金额（¥ 10,398.06）'; err.style.display = 'block'; return;
+      }
+      err.style.display = 'none';
+      renderRcAmount(v); go('repay-confirm');
+      return;
+    }
+    var bad = false, picked = [];
+    RI_GOODS.forEach(function(g, i){
+      var inp = $('#ri-list input[data-gi="' + i + '"]');
+      var v = parseInt(inp.value, 10);
+      var row = inp.closest('.goods-row');
+      if(isNaN(v) || v < 0 || v > g.left){ row.classList.add('err'); bad = true; }
+      else{ row.classList.remove('err'); g.apply = v; if(v > 0) picked.push(g); }
+    });
+    if(bad){ toast('请修正标红行的申请还款数量', 2000); return; }
+    if(!picked.length){ toast('请至少为一件商品填写还款数量', 2000); return; }
+    renderRcList(picked); go('repay-confirm');
+  });
+  $('#rc-go').addEventListener('click', function(){ go('repay-result'); });
+
+  /* 部分还款详情入口 */
+  $('#rd2-records').addEventListener('click', function(){ go('repay-records'); });
+  var UP_GOODS = [
+    { name:'印度去头虾A_30/40', left:100, apply:10 },
+    { name:'印度去头虾A_40/50', left:100, apply:90 }
+  ];
+  function renderUpList(){
+    $('#up-list').innerHTML = UP_GOODS.map(function(g, i){
+      return goodsRowHTML(g, i, '待解押', '申请解押');
+    }).join('');
+  }
+  $('#rd2-unpledge').addEventListener('click', function(){
+    UP_GOODS[0].apply = 10; UP_GOODS[1].apply = 90;
+    renderUpList(); go('unpledge');
+  });
+  $('#up-go').addEventListener('click', function(){
+    var bad = false;
+    UP_GOODS.forEach(function(g, i){
+      var inp = $('#up-list input[data-gi="' + i + '"]');
+      var v = parseInt(inp.value, 10);
+      var row = inp.closest('.goods-row');
+      if(isNaN(v) || v < 0 || v > g.left){ row.classList.add('err'); bad = true; }
+    });
+    if(bad){ toast('请修正标红行的申请解押数量', 2000); return; }
+    openModal('解押申请已提交', '已按选中商品数量提交解押申请，并核销已还款（剩余可解押金额）。（演示）', [
+      { txt:'知道了', cls:'m-ok', fn: backToFinance }
+    ]);
+  });
+  $('#rr-expand').addEventListener('click', function(){
+    var t = $('#rr-detail');
+    t.hidden = !t.hidden;
+    this.textContent = t.hidden ? '展开' : '收起';
+  });
+
+  /* ================= 资产模块（V8 新增） ================= */
+  var AS_DATA = [
+    { tag:'尾款', no:'FBIU5835865', status:'未融资',  cls:'s1', value:'1,000,000.00', time:'2025-03-20 12:34:23', svc:'全联集采（山东）供应链有限公司', unpledged:null },
+    { tag:'现货', no:'FBIU5835889', status:'已质押',  cls:'s2', value:'1,000,000.00', time:'2025-03-20 12:34:23', svc:'全联集采（山东）供应链有限公司', unpledged:null },
+    { tag:'现货', no:'FBIU5835888', status:'部分解押', cls:'s1', value:'1,000,000.00', time:'2025-03-20 12:34:23', svc:'全联集采（山东）供应链有限公司', unpledged:'100.0000' }
+  ];
+  var asQuery = '';
+  function renderAsList(){
+    var list = AS_DATA.filter(function(d){
+      if(asQuery && d.no.toUpperCase().indexOf(asQuery) === -1) return false;
+      return true;
+    });
+    var host = $('#as-list');
+    if(!list.length){
+      host.innerHTML = '<div class="empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#i-search"/></svg>' +
+        '<h3>未找到匹配的资产</h3><p>请更换资产编号后重试</p></div>';
+      return;
+    }
+    host.innerHTML = list.map(function(d){
+      return '<div class="fin-card" data-no="' + d.no + '" role="button" tabindex="0" aria-label="查看' + d.no + '详情">' +
+        '<div class="fin-top">' +
+          '<span class="fin-tag">' + d.tag + '</span>' +
+          '<span class="fin-no">资产编号：【' + d.no + '】</span>' +
+          '<span class="fin-state ' + d.cls + '">' + d.status + '</span>' +
+        '</div>' +
+        '<div class="fin-kv"><span class="k">资产价值</span><span class="v num">' + d.value + '</span></div>' +
+        '<div class="fin-kv"><span class="k">资产形成时间</span><span class="v num">' + d.time + '</span></div>' +
+        '<div class="fin-kv"><span class="k">核心企业</span><span class="v">' + d.svc + '</span></div>' +
+        (d.unpledged !== null ? '<div class="fin-kv"><span class="k">已解押数量</span><span class="v num">' + d.unpledged + '</span></div>' +
+          '<div style="border-top:1px solid var(--line-weak); margin-top:8px; padding-top:8px; text-align:right">' +
+          '<span class="as-pickup" role="button" tabindex="0" data-no="' + d.no + '">发起提货 &gt;</span></div>' : '') +
+      '</div>';
+    }).join('');
+  }
+  function doAsSearch(){ asQuery = $('#as-q').value.trim().toUpperCase(); renderAsList(); }
+  $('#as-go').addEventListener('click', doAsSearch);
+  $('#as-q').addEventListener('keydown', function(e){ if(e.key === 'Enter') doAsSearch(); });
+  renderAsList();
+
+  /* 卡片点击 → 资产详情（点击「发起提货」除外） */
+  $('#as-list').addEventListener('click', function(e){
+    var pick = e.target.closest('.as-pickup');
+    if(pick){ e.stopPropagation(); initPickup(); go('pickup'); return; }
+    var card = e.target.closest('.fin-card');
+    if(!card) return;
+    $('#ad-no').textContent = '【' + card.getAttribute('data-no') + '】';
+    $$('#ad-tabs button').forEach(function(b, i){
+      b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    });
+    $('#ad-p-detail').hidden = false; $('#ad-p-stock').hidden = true; $('#ad-p-pickup').hidden = true;
+    go('asset-detail');
+  });
+  $$('#ad-tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      $$('#ad-tabs button').forEach(function(x){ x.setAttribute('aria-selected','false'); });
+      b.setAttribute('aria-selected','true');
+      var t = b.getAttribute('data-ad');
+      $('#ad-p-detail').hidden = t !== 'detail';
+      $('#ad-p-stock').hidden = t !== 'stock';
+      $('#ad-p-pickup').hidden = t !== 'pickup';
+    });
+  });
+  $('#ad-sk-go').addEventListener('click', function(){ toast('库存台账搜索为演示功能'); });
+  $('#ad-sk-export').addEventListener('click', function(){ toast('库存台账导出为演示功能'); });
+  $('#ad-pledge').addEventListener('click', function(){
+    $$('#pi-tabs button').forEach(function(b, i){
+      b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    });
+    $('#pi-p-pledge').hidden = false; $('#pi-p-unpledge').hidden = true;
+    go('pledge-info');
+  });
+  $$('#pi-tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      $$('#pi-tabs button').forEach(function(x){ x.setAttribute('aria-selected','false'); });
+      b.setAttribute('aria-selected','true');
+      var t = b.getAttribute('data-pi');
+      $('#pi-p-pledge').hidden = t !== 'pledge';
+      $('#pi-p-unpledge').hidden = t !== 'unpledge';
+    });
+  });
+
+  /* ---- 发起提货 ---- */
+  /* 商品池：可提数量 = min(解押可用, 入库可用)（截图注释口径） */
+  var PK_POOL = [
+    { sku:'商品A', spec:'54/REO、22.5/Pr+Nd', unp:6,  inb:5,  sel:true,  apply:5 },
+    { sku:'商品B', spec:'55/REO、34.5/Pr+Nd', unp:5,  inb:20, sel:true,  apply:4 }
+  ];
+  function pkAvail(g){ return Math.min(g.unp, g.inb); }
+  function renderPkPick(){
+    $('#pk-pick-body').innerHTML = PK_POOL.map(function(g, i){
+      return '<tr>' +
+        '<td><input type="checkbox" data-pk="' + i + '"' + (g.sel ? ' checked' : '') + ' aria-label="选择' + g.sku + '"></td>' +
+        '<td>' + g.sku + '</td><td>' + g.spec + '</td>' +
+        '<td>' + g.unp + '</td><td>' + g.inb + '</td></tr>';
+    }).join('');
+  }
+  function renderPkTable(){
+    var rows = PK_POOL.filter(function(g){ return g.sel; });
+    var html = rows.map(function(g){
+      return '<tr>' +
+        '<td>' + g.sku + '</td><td>' + g.spec.split('、')[0] + '</td>' +
+        '<td><input type="tel" data-pka="' + g.sku + '" value="' + g.apply + '" aria-label="' + g.sku + '提货数量"></td>' +
+        '<td>' + pkAvail(g) + '</td></tr>';
+    }).join('');
+    var total = rows.reduce(function(s, g){ return s + (parseInt(g.apply, 10) || 0); }, 0);
+    html += '<tr class="sum"><td colspan="2">合计</td><td colspan="2">' + total + '</td></tr>';
+    $('#pk-tbody').innerHTML = html;
+  }
+  function initPickup(){
+    PK_POOL[0].sel = true; PK_POOL[1].sel = true;
+    PK_POOL[0].apply = 5; PK_POOL[1].apply = 4;
+    renderPkTable();
+  }
+  $('#pk-pick').addEventListener('click', function(){
+    renderPkPick();
+    $('#pk-mask').classList.add('open');
+  });
+  $('#pk-pick-cancel').addEventListener('click', function(){ $('#pk-mask').classList.remove('open'); });
+  $('#pk-pick-ok').addEventListener('click', function(){
+    $$('#pk-pick-body input[data-pk]').forEach(function(cb){
+      PK_POOL[parseInt(cb.getAttribute('data-pk'), 10)].sel = cb.checked;
+    });
+    if(!PK_POOL.some(function(g){ return g.sel; })){ toast('请至少选择一件提货商品', 2000); return; }
+    renderPkTable();
+    $('#pk-mask').classList.remove('open');
+  });
+  $('#pk-q-go').addEventListener('click', function(){ toast('商品搜索为演示功能'); });
+  $('#pk-submit').addEventListener('click', function(){
+    var date = $('#pk-date').value.trim();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){
+      openModal('提示', '请先选择计划出库日期（格式 YYYY-MM-DD）', [{ txt:'知道了', cls:'m-ok' }]);
+      return;
+    }
+    var bad = false, total = 0;
+    $$('#pk-tbody input[data-pka]').forEach(function(inp){
+      var g = null;
+      PK_POOL.forEach(function(x){ if(x.sku === inp.getAttribute('data-pka')) g = x; });
+      var v = parseInt(inp.value, 10);
+      if(isNaN(v) || v <= 0 || v > pkAvail(g)){
+        inp.style.borderColor = 'var(--red)';
+        bad = true;
+      }else{
+        inp.style.borderColor = '';
+        g.apply = v; total += v;
+      }
+    });
+    if(bad){
+      var err = $('#pk-err');
+      err.style.display = 'block';
+      err.textContent = '提货数量须为正整数且不超过可提数量（解押可用与入库可用的较小值）';
+      return;
+    }
+    if(!total){ toast('请填写提货数量', 2000); return; }
+    $('#pk-err').style.display = 'none';
+    openModal('提货申请已提交',
+      '预提货流水号：<b class="num">YTH83959904</b><br>合计提货 ' + total + ' 件，计划出库日期 ' + date + '（演示）',
+      [{ txt:'知道了', cls:'m-ok', fn:function(){
+        histStack = [];
+        $$('#ad-tabs button').forEach(function(b){
+          b.setAttribute('aria-selected', b.getAttribute('data-ad') === 'pickup' ? 'true' : 'false');
+        });
+        $('#ad-p-detail').hidden = true; $('#ad-p-stock').hidden = true; $('#ad-p-pickup').hidden = false;
+        show('asset-detail', false);
+      }}]);
+  });
+
+  /* ================= 初始 ================= */
+  renderCert();
+  show('login', false);
+})();
+</script>
+</body>
+</html>
