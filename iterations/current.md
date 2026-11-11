@@ -1,3 +1,13 @@
+## 2026-11-11 ssh｜泰乾超级-qianrong 产业配置非必填、右上角显示当前系统、合同模板 docx 预览（test）
+
+- 需求（用户）：切到 test 分支：1. 新增产业配置的融资H5配置、PC登录配置下表单改为非必填；2. 登录后右上角显示当前登录的系统；3. 合同模板详情的 .docx 平铺在页面中，固定高度可滚动，旁边「新页面打开」「下载」两个按钮。
+- 同步：Hub main 已最新；tq-plus 已在 test、工作区干净，同名 pull 已最新（7f55b3b）；origin GitHub。
+- taiqian-front test/244f3bc（已 push）：handleDetail 仅留产业项目、融资对象必填，新加的全空 PC 块不提交；IdentitySwitcher 加「系统」标签（覆盖 11-03 不显示系统名的口径）；新增 DocxViewer 组件与 /file-preview 独立页，合同模板详情弹窗加宽到 960px 内嵌预览；package.json 加 docx-preview@0.3.7。README、测试同步。
+- 待用户：本地 `yarn` 安装新依赖后跑测试与构建；.doc 只提示下载；文件服务跨域 / 不收 Authorization 头时预览与下载会失败。
+- 验证：无 Node，测试 / 构建 / 浏览器未运行；新断言正则用 Python 对源码核对；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-11 ssh｜相册小程序 ↔ 相册APP 功能同步核对（main，只读）
 
 - 需求（用户）：合并为单分支后，检查 APP 与小程序两端功能是否同步。

@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-11｜taiqian-front｜ssh｜test｜产业配置非必填、显示当前系统、合同模板 docx 预览
+
+qianrong：产业配置融资H5 / PC登录配置改非必填；右上角显示当前系统；合同模板详情内嵌 docx 预览（新页面打开、下载，新依赖 docx-preview）。test/244f3bc 已 push。无 Node，测试 / 构建未跑。
+
 ## 2026-11-11｜taiqian-h5｜ssh｜master｜登录、资产、我的（演示数据）
 
 ssh 接入 tq-plus-h5（私有挂载同泰乾超级）。按原型实现短信登录、资产模块、我的页面，静态演示数据。master/45dee66 已 push。无 flutter，analyze/test 未跑。

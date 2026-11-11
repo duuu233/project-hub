@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-11 ssh｜产业配置非必填、右上角显示当前系统、合同模板 docx 预览（test）
+
+test 干净同名 pull 已最新（7f55b3b）。handleDetail 去掉 H5 / PC 必填并过滤空 PC 块；IdentitySwitcher 加系统标签、identityNeedsNames 缺系统名也补；新增 DocxViewer + /file-preview 路由，合同模板详情弹窗加宽内嵌预览；package.json 加 docx-preview@0.3.7。README 与测试同步。test/244f3bc 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建；信息隔离自查通过。
+
 ## 2026-11-05 ssh｜多个字段拼成的列任一字段可见就显示
 
 dev 干净同名 pull 已最新（c8e5279）。mergePolicyColumns 加多字段列规则（place / inPlaced / visibleFormatter），地区并入同一套。policy-columns 新增用例、README 同步。dev/8efe678 提交后再次同名 pull 并 push。无 node 未跑测试；信息隔离自查通过。

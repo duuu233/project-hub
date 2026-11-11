@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-industry-optional-system-docx-preview.md](qianrong-industry-optional-system-docx-preview.md)：2026-11-11 ssh test/244f3bc 产业配置融资H5 / PC登录配置非必填（空 PC 块不提交）；右上角显示当前系统（口径改为系统 + 角色）；合同模板详情内嵌 docx 预览（docx-preview，新页面 /file-preview、下载）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-11 ssh test/7f55b3b 字典数据页（固定路由）匹配不到列表菜单 2506，页面直接指定 menuPerm=system:dict:query；菜单本来就有，未改。
 - [qianrong-new-modules-static.md](qianrong-new-modules-static.md)：2026-11-11 ssh dev/c0beb06 按 V0.9 原型新增额度账本、认证管理、资产管理静态页面；接口新增菜单 2507–2517（含新顶级目录数字监管）；test 分支指向改动前 ba4b6dc。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-06 ssh dev/0b66c9a 23 个动态列列表的列表接口带上与 policyColumns 相同的 menuPerm（resolveListMenuPerm 一次解析共用、withMenuPerm 包参数；列表接口 Swagger 尚未声明，待联调）。
