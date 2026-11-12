@@ -4,7 +4,7 @@
 - 同步：Hub main、flutter main/c76c09b 同名 pull 已最新；origin GitHub。
 - album-app main/4866002（已 push）：新增 deploy/share/share.html（单文件、图标内联、四语种）：微信 / 企业微信内遮罩引导浏览器打开；浏览器内自动拉起 `boltstar://share/accept?<原 query>`（安卓 intent:// + 没装回落 #no-app、900ms 补试朴素 scheme）并保留按钮，2.5 秒仍在本页判定没装 → 下载 + 三步说明 +「已安装，打开 App」；缺 d / k 显示链接无效；可折叠调试日志。新增 docs/runbooks/WIFI_SHARE_H5.md，history、README 同步。
 - 自行决定（可改）：链接参数沿用小程序卡片 d/p/u/n/o/t，整串透传给 App（已兼容将来只带分享凭证 k）；检测 2.5 秒；建议部署到 API 域名下（同 PayPal 中转页，安卓下载地址可同源调 getAndroidDownload）。
-- 追加（同日，用户确认）：下载地址改取版本管理接口——getLastVersion（appVersionNo=0.0.0，terminal 安卓 1 / iOS 2）取 downloadPath，安卓没给再试 getAndroidDownload；进页预取；API_BASE 默认同源。album-app main 已 push（见下条提交号）。
+- 追加（同日，用户确认）：下载地址改取版本管理接口——getLastVersion（appVersionNo=0.0.0，terminal 安卓 1 / iOS 2）取 downloadPath，安卓没给再试 getAndroidDownload；进页预取；API_BASE 默认同源。album-app main/1099d62 已 push。
 - 待用户：部署页面并给线上网址；后台版本管理里 iOS 那条下载地址填 App Store 链接。之后做 App 侧：分享改发网页卡片 / 复制链接，安卓登记 boltstar://share/accept、iOS 加 boltstar scheme，新增接受页（照搬小程序 wifi-share-accept）。发版前已安装旧版的手机点链接拉不起 App。
 - 验证：无浏览器 / node，页面未实际打开；脚本括号配平、DOM id 引用用 Python 核对，diff --check、信息隔离自查通过。
 
