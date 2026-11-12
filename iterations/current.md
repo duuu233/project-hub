@@ -1,3 +1,13 @@
+## 2026-11-12 ssh｜泰乾超级-qianrong：组织与权限空值统一显示「-」（test → dev）
+
+- 需求（用户）：组织与权限下的页面，数据为空都显示「-」占位。
+- 同步：Hub main 已最新；tq-plus 在 test、干净，同名 pull 快进到 685fcd7。沿用今天 qianrong 的「test 改完 cherry-pick 到 dev」。
+- taiqian-front test/d1a49dc（已 push），cherry-pick 到 dev/d5960b3（已 push），仓库回到 test。范围：企业用户、账户、部门、角色的列表 + 详情；列表 withListGridStyle 新增 emptyCell（只这四页开，动态列同样生效），插槽列逐页补；详情头卡 emptyText（默认仍 --）、只读表单 placeholder 详情页为「-」。详见 private/taiqian-front/docs/qianrong-org-empty-cell.md。
+- 自行决定（可改）：空值含纯空白与空数组，0 不算空；区块级空态（暂未关联系统、整表暂无数据）不改；个人中心不在该菜单下未改；越界弹窗与权限预览一并改为「-」。
+- 验证：无 node，测试 / 构建 / 浏览器未跑；新增 org-empty-cell 测试，源码断言 Python 核对，diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：分享改为直接调系统分享（main）
 
 - 需求（用户）：点「分享设备」直接调系统分享（先问能否调系统级分享，答复已在「更多应用」里接好）。

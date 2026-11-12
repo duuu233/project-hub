@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜taiqian-front｜ssh｜test → dev｜组织与权限空值统一显示「-」
+
+qianrong：企业用户、账户、部门、角色的列表与详情空值统一显示「-」（列表 emptyCell 选项 + 插槽列，详情头卡与只读字段）。test/d1a49dc、dev/d5960b3 已 push。无 Node，测试 / 构建 / 浏览器未跑。
+
 ## 2026-11-12｜album-app｜ssh｜main｜分享改为直接调系统分享
 
 点「分享设备」直接弹系统分享面板，去掉自定义弹层与微信网页卡片（wifi_wechat_share.dart 删除）。main/050f028 已 push。无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑。

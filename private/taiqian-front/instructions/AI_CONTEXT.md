@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-12 ssh test/d1a49dc、dev/d5960b3：组织与权限（企业用户、账户、部门、角色）空值统一显示「-」：withListGridStyle 新增 emptyCell（只这四个列表开），插槽列各自 orEmpty；详情 DetailHeaderCard emptyText（默认仍 --）、只读表单 placeholder 用 ph()。详见 docs/qianrong-org-empty-cell.md。
 2026-11-12 ssh test/2987018、dev/af9f98f：操作日志「详细」改调详情接口 getOperlog（GET /monitor/logOper/{operId}），行数据只作占位，失败可重试。
 2026-11-12 ssh test/4847276、dev/8268c1d：菜单列表在菜单名称后加「菜单类型」（M 目录 / C 菜单 / F、B 按钮）与「是否显示」（visible，字典 sys_show_hide）两列。
 2026-11-12 ssh test/b0e9531、dev/8973d51：账户管理列表去掉左侧部门树（含按部门筛选），所属部门列取行字段 deptName。详见 docs/qianrong-user-paging-role-notice.md 第 3 节。

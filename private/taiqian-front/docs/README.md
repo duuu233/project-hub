@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-org-empty-cell.md](qianrong-org-empty-cell.md)：2026-11-12 ssh test/d1a49dc（dev/d5960b3）组织与权限（企业用户、账户、部门、角色）列表与详情空值统一显示「-」（列表 emptyCell 选项 + 插槽列、详情头卡 emptyText 与只读 placeholder）。
 - [qianrong-role-logs.md](qianrong-role-logs.md)末节：2026-11-12 ssh test/2987018（dev/af9f98f）操作日志详细改调 GET /monitor/logOper/{operId}，不再用受列字段控制的列表行。
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-11-12 ssh test/4847276（dev/8268c1d）菜单列表新增菜单类型、是否显示两列。
 - [qianrong-user-paging-role-notice.md](qianrong-user-paging-role-notice.md)：2026-11-12 ssh dev/95a30a5 账户管理翻页一直传第 1 页（getList 没带分页器页码）已修，其余列表核对无同类问题；角色列表新增越界标记列（unreadNoticeCount）与「查看越界」弹窗（notice/list 加载后 notice/read 标已读）。
