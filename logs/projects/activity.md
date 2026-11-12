@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜WiFi 分享弹层改图标宫格、加系统分享
+
+分享弹层改图标宫格：微信好友（装了才显示）/ 更多应用（原生系统分享，兼容 WhatsApp、LINE 等海外社交）/ 复制链接；无新增依赖。main/770d64f 已 push。无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑。
+
 ## 2026-11-12｜album-app｜ssh｜main｜WiFi 分享产品 ID 改取设备详情
 
 列表接口不下发 productId，分享页取缓存恒为 0 一直置灰；改取 getUserProductDetail 的 productId / deviceId，缓存兜底。main/7aa0118 已 push。无 Flutter，analyze / test / 真机未跑。

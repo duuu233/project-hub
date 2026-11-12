@@ -1,3 +1,15 @@
+## 2026-11-12 ssh｜相册APP：WiFi 分享弹层改图标宫格、加系统分享（main）
+
+- 需求（用户）：共享设备的「分享设备」弹框（发给微信好友 / 复制链接）改成带图标的样式，兼容海外社交分享。
+- 同步：Hub main、flutter main/7aa0118 同名 pull 已最新；origin GitHub。
+- 依据：项目 runbook WIFI_SHARE_H5 已列「网页卡片 / 系统分享 / 复制链接」三种发法。
+- album-app main/770d64f（已 push）：弹层改图标宫格 + 取消——微信好友（pay-wechat.png，装了微信才出现）/ 更多应用（原生系统分享面板，文案 + 链接纯文本，WhatsApp、LINE、Messenger 等）/ 复制链接；系统分享走 device_api 通道 shareText（Android ACTION_SEND 选择器、iOS UIActivityViewController + iPad popover 锚点），不加 share_plus，pubspec.lock 不动；新增源码断言测试；docs / runbook / AI_CONTEXT 同步。
+- 自行决定（可改）：海外用户不单列 WhatsApp / LINE 等图标，统一走系统面板（单列需各家 SDK 或包名判断）；未装微信时隐藏微信格；微信标签改短为「微信好友 / WeChat」；第二格叫「更多应用」。
+- 待用户：重新打包看弹层样式，iPad 与 Android 系统面板能否正常弹出。
+- 验证：无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑；断言 Python 对源码核对，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：WiFi 分享产品 ID 改取设备详情（main）
 
 - 需求（用户）：联调日志「分享按钮置灰：设备没有产品ID（productId=0）」，同页详情接口返回 productId 20，问原因并按方案修。
