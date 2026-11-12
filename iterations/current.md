@@ -1,3 +1,15 @@
+## 2026-11-12 ssh｜相册APP：分享改发 H5 链接，App 拉起与接受页（main）
+
+- 需求（用户）：设备共享邀请 H5 已部署到 https://iot.boltfox.cn/h5/share.html，接上 App 侧。
+- 同步：Hub main、flutter main/1099d62 同名 pull 已最新；origin GitHub。
+- 核对：线上页面与 deploy/share/share.html 一致（仅 CRLF）；iot.boltfox.cn 的 /Client/* 与 api.boltfox.cn 返回相同、跨域已放行，但 getLastVersion / getAndroidDownload 未登录返回 406「请重新登录」→ 页面取不到下载地址，需后端改免登录（页面不用改）。
+- album-app main/bbe207a（已 push）：分享改为 H5 链接（微信网页卡片 / 复制链接，去掉小程序原始 ID 依赖，删 wifi_share_card.dart）；Android ShareLinkActivity + iOS boltstar scheme / SceneDelegate（含冷启动）收 boltstar://share/accept，consumeShareLink → WifiShareInbox，根组件闪屏后 / 登录后 / 回前台打开；新增 WifiShareAcceptPage（chkTimeValid、本人 / 已在列表、addUserProduct 非所有者）与 BoltFoxApi.chkTimeValid；四语种文案；docs/history、runbook、BUILD_RELEASE、README、AI_CONTEXT 同步；新增 test/wifi_share_link_test.dart。
+- 自行决定（可改）：分享方式只做「发给微信好友 / 复制链接」两项（系统分享需新增依赖，未加）；未登录时链接留在内存等登录后打开，进程被杀即丢。
+- 待用户：后端放开两个版本接口免登录；含本次改动的 App 发版前，旧版点链接拉不起 App。
+- 验证：无 Flutter / Xcode / Android SDK，analyze / test / 构建 / 真机未跑；iOS willConnectTo 覆写未经编译验证；断言、括号、plist / manifest 解析、diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：账户 / 企业表单按原型收字段，账户与角色列表去分配类功能（test → dev）
 
 - 需求（用户）：test 分支：1. 账户管理列表去掉分配角色等相关功能和代码；2. 账号新增 / 编辑 / 详情按 S06 原型核对、去多余表单，改完合并到 dev 一起推送；3. 企业管理按 S04 原型字段核对、多余去掉；4.（追加）角色管理列表操作栏去掉列字段配置、数据权限、分配用户三个按钮及相关功能。

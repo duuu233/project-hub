@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜分享改发 H5 链接、App 拉起与接受页
+
+WiFi 版分享改发 https://iot.boltfox.cn/h5/share.html 链接（微信网页卡片 / 复制链接）；Android / iOS 收 boltstar://share/accept，App 接受页校验有效期后按非所有者绑定。main/bbe207a 已 push。无 Flutter，analyze / test / 真机未跑；落地页下载地址接口需后端放开登录。
+
 ## 2026-11-12｜taiqian-front｜ssh｜test → dev｜账户 / 企业表单按原型收字段、去分配类功能
 
 qianrong：账户列表去分配角色；账号（S06）、企业（S04）新增 / 编辑 / 详情按原型去多余字段；角色列表去列字段配置、数据权限、分配用户及其页面 / 接口。test/7d409c2 push，合并 dev/1bb7c16 push。无 Node，测试 / 构建 / 浏览器未跑。
