@@ -1,3 +1,15 @@
+## 2026-11-12 ssh｜相册APP：WiFi 分享产品 ID 改取设备详情（main）
+
+- 需求（用户）：联调日志「分享按钮置灰：设备没有产品ID（productId=0）」，同页详情接口返回 productId 20，问原因并按方案修。
+- 同步：Hub main、flutter main/40b49c0 同名 pull 已最新；origin GitHub。
+- 原因：分享页用本地设备缓存 `_device.productId`，缓存由列表接口 getUserProductList 映射，该接口不下发 productId → 恒为 0、所有者永远置灰；进页面调的 getUserProductDetail 只拿来判所有者。小程序 wifi-share 取 getDeviceDetail，不受影响。
+- album-app main/7aa0118（已 push）：_load 存下详情的 productId / deviceId（canonicalDeviceSerial），`_productId` / `_serial` 详情优先、缓存兜底，置灰判断、原因日志、成员列表、h5Url 参数全改用；新增源码断言测试；docs 历史记录、docs/README、AI_CONTEXT 同步。
+- 自行决定（可改）：设备号也一并改为详情优先（同小程序）；productId 兼容数字与字符串。
+- 待用户：用 ≥ 7aa0118 重新打包验证分享按钮可点、链接 p 参数为真实产品 ID。
+- 验证：无 Flutter，analyze / test / 真机未跑；断言 Python 对源码核对，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：操作日志详细改调详情接口（test → dev）
 
 - 需求（用户）：新增操作日志详情接口 GET /monitor/logOper/{operId}（返回 requestMethod、method），列表行受列字段控制不能用，替换。

@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜WiFi 分享产品 ID 改取设备详情
+
+列表接口不下发 productId，分享页取缓存恒为 0 一直置灰；改取 getUserProductDetail 的 productId / deviceId，缓存兜底。main/7aa0118 已 push。无 Flutter，analyze / test / 真机未跑。
+
 ## 2026-11-12｜taiqian-front｜ssh｜test → dev｜操作日志详细改调详情接口
 
 qianrong：操作日志「详细」改调 GET /monitor/logOper/{operId} 取完整数据（含请求方式、操作方法），不再用受列字段控制的列表行。test/2987018、dev/af9f98f 已 push。无 Node，测试 / 构建 / 浏览器未跑。
