@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-12 ssh｜账户 / 企业表单按原型收字段，账户与角色列表去分配类功能（test → dev）
+
+test 干净同名 pull 已最新（174b694）。user/index 删分配角色与不可达旧弹窗，authRole 页 / 路由 / API 删除；user 表单按 S06 收为 10 项（新建初始密码手机号后 6 位、类型变更确认）；企业表单按 S04 去 6 类字段、加法人信息区块；角色列表去三按钮，authUser / selectUser / RoleDataScopeDialog 及 5 个 API 删除。三个测试按有意改动改写。test/7d409c2 push；切 dev 同名 pull 后 `merge --no-ff test`（1bb7c16，无冲突）push，回到 test。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。
+
 ## 2026-11-11 ssh｜操作日志详细改版（test）
 
 test 干净同名 pull 已最新（9bfa240）。operlog 详情改为摘要头 + 信息格 + 并排参数面板；新增 LogPayload.vue（字段 / JSON 切换、复制）；log-content.js 加 parseLogContent / logFieldRows 与大整数保精度；新增 log-payload 测试，README 同步。test/174b694 提交后再次同名 pull 并 push。无 node 未跑测试 / 构建，未浏览器核对；信息隔离自查通过。

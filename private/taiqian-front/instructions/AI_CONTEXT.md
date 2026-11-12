@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-12 ssh test/7d409c2 → dev/1bb7c16（用户明确，test 改完合并 dev）：账户管理去掉分配角色（authRole 页、路由、API 删除）；账号表单按 S06 只留所属企业 / 账号类型 / 账户编号 / 用户名 / 手机号 / 角色 / 部门 / 邮箱 / 头像（编辑页不显示）/ 备注，新建初始密码 = 手机号后 6 位、nickName = userName，编辑类型改动二次确认（覆盖 10-28 密码输入口径）；企业表单按 S04 去银行类型、企业简称、币种、法人电话、实控人电话与身份证号，新增法人信息区块，信用代码编辑只读；角色列表去列字段配置 / 数据权限 / 分配用户（authUser、selectUser、RoleDataScopeDialog 删除，RoleColumnDialog 保留）。详见 docs/qianrong-prototype-trim-2026-11-12.md。
 2026-11-11 ssh test/244f3bc（用户明确，在 test 分支）：产业配置融资H5 / PC登录配置全部非必填（页面类型仅查重，新加的全空 PC 块不提交）；右上角切换系统处显示当前系统（系统 + 角色两个标签，口径覆盖 2e66dd1）；合同模板详情用 components/DocxViewer 内嵌 docx（新依赖 docx-preview@0.3.7，需本地 yarn），新页面 /file-preview。详见 docs/qianrong-industry-optional-system-docx-preview.md。
 2026-11-11 ssh test/7f55b3b（用户明确，在 test 分支）：字典数据页 /config-audit/dict-data/index/:dictId 为固定路由、按路由匹配不到列表菜单（2506 system:dict:query 作用在字典管理页），data.vue 直接指定 menuPerm；remark 未在列配置里会被 strict 隐藏。test 分支后端 test-qianrong（用户告知，vite resUrl 未改）。
 2026-11-11 ssh dev/c0beb06（用户明确）：新增额度账本（supply-chain/credit-ledger）、认证管理（supply-chain/certification）、资产管理（digital-supervision/asset）三模块静态页面与静态数据，列表显式关 policyColumns/responseColumns，对接接口时恢复；dev 后端菜单 2507–2517 已建（新顶级目录数字监管），权限字符为前端拟定待后端定稿。origin 新建 test 分支 = 改动前 dev（ba4b6dc）。详见 docs/qianrong-new-modules-static.md。

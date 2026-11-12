@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜taiqian-front｜ssh｜test → dev｜账户 / 企业表单按原型收字段、去分配类功能
+
+qianrong：账户列表去分配角色；账号（S06）、企业（S04）新增 / 编辑 / 详情按原型去多余字段；角色列表去列字段配置、数据权限、分配用户及其页面 / 接口。test/7d409c2 push，合并 dev/1bb7c16 push。无 Node，测试 / 构建 / 浏览器未跑。
+
 ## 2026-11-12｜album-app｜ssh｜main｜WiFi 版设备共享邀请 H5 落地页
 
 新增 deploy/share/share.html：微信内引导在浏览器打开；浏览器里先拉起 App（boltstar://share/accept），没装引导下载、装好后再打开接受。main/4866002 已 push。页面未实际打开；待用户部署给网址、补下载地址后做 App 侧（分享链接、scheme 登记、接受页）。
