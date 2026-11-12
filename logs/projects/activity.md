@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜联调日志默认开启、分享置灰原因写进提示
+
+APP_DEBUG_TOOLS 默认开（TestFlight / release 包也显示浮窗，正式上架传 false）；测试包分享置灰时提示带原因。main/40b49c0 已 push。无 Flutter，analyze / test / 真机未跑。
+
 ## 2026-11-12｜taiqian-front｜ssh｜test → dev｜账户管理去部门树、所属部门取 deptName
 
 qianrong：账户管理列表去掉左侧部门树，所属部门列改取 deptName。test/b0e9531、dev/8973d51 已 push。无 Node，测试 / 构建 / 浏览器未跑。

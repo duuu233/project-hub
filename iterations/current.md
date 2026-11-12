@@ -1,3 +1,14 @@
+## 2026-11-12 ssh｜相册APP：联调日志默认开启、分享置灰原因写进提示（main）
+
+- 需求（用户）：iOS 端没看到调试日志；分享仍提示「暂时无法分享，请稍后重试」。
+- 同步：Hub main、flutter main/905b81a 同名 pull 已最新；origin GitHub。
+- 原因：① 浮窗开关原默认 !kReleaseMode，iOS 测试走 Archive / TestFlight 是 release 包 → 不显示；② 「暂时无法分享」现只在非所有者 / 无 userId / 无产品 ID / 无设备号 / 取不到 getCurrentTime 时出现；bbe207a 之前的包缺小程序原始 ID 必出这句，测试包若早于今天的提交即为此。本机无用户账号，无法确定具体哪条。
+- album-app main/40b49c0（已 push）：APP_DEBUG_TOOLS 默认 true（同花盆APP），正式上架包传 false（BUILD_RELEASE 配置表与 AAB / IPA 命令补提示）；开了日志的包分享置灰时 toast 带具体原因；测试与 docs / AI_CONTEXT 同步。
+- 待用户：用 ≥ 40b49c0 重新打 iOS 包验证，若仍提示，把 toast 括号里的原因或日志里「[WiFi分享]」几行发回；正式上架记得传 APP_DEBUG_TOOLS=false。
+- 验证：无 Flutter，analyze / test / 真机未跑；断言 Python 核对，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：账户管理去部门树、所属部门取 deptName（test → dev）
 
 - 需求（用户）：账户管理列表去掉左边 tree，只保留列表；所属部门取字段 deptName。
