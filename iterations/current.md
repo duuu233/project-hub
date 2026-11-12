@@ -1,3 +1,14 @@
+## 2026-11-12 ssh｜相册APP：WiFi 版设备共享邀请 H5 落地页（main）
+
+- 需求（用户）：分享改成生成链接、H5 打开、App 里调接口与房主建立关系；微信内只提示「点右上角在浏览器打开」；打开 H5 先判断是否装了 App，没装先引导安装，再走分享绑定；H5 写好放项目里，用户部署后给网址再改 App。
+- 同步：Hub main、flutter main/c76c09b 同名 pull 已最新；origin GitHub。
+- album-app main/4866002（已 push）：新增 deploy/share/share.html（单文件、图标内联、四语种）：微信 / 企业微信内遮罩引导浏览器打开；浏览器内自动拉起 `boltstar://share/accept?<原 query>`（安卓 intent:// + 没装回落 #no-app、900ms 补试朴素 scheme）并保留按钮，2.5 秒仍在本页判定没装 → 下载 + 三步说明 +「已安装，打开 App」；缺 d / k 显示链接无效；可折叠调试日志。新增 docs/runbooks/WIFI_SHARE_H5.md，history、README 同步。
+- 自行决定（可改）：链接参数沿用小程序卡片 d/p/u/n/o/t，整串透传给 App（已兼容将来只带分享凭证 k）；检测 2.5 秒；建议部署到 API 域名下（同 PayPal 中转页，安卓下载地址可同源调 getAndroidDownload）。
+- 待用户：部署页面并给线上网址；提供 App Store 地址与安卓下载地址（或确认同源接口可用）。之后做 App 侧：分享改发网页卡片 / 复制链接，安卓登记 boltstar://share/accept、iOS 加 boltstar scheme，新增接受页（照搬小程序 wifi-share-accept）。发版前已安装旧版的手机点链接拉不起 App。
+- 验证：无浏览器 / node，页面未实际打开；脚本括号配平、DOM id 引用用 Python 核对，diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-12 ssh｜相册小程序 ＋ 相册APP：首页设备卡进列表默认对应 Tab；APP 分享设备置灰排查；APP 联调日志浮窗（main）
 
 - 需求（用户）：1. 小程序 / APP 首页点蓝牙版设备卡，跳到列表默认显示蓝牙版 Tab，WiFi 同理；2. 查 APP「分享设备」为什么点不了（提示「暂时无法分享，请稍后重试」），先分清后端还是前端原因；APP 左下角加联调日志，同小程序或花盆APP。
