@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-12 ssh｜菜单列表加菜单类型、是否显示（test → dev）
+
+test 干净同名 pull 已最新（b0e9531）。menu/index 加两列与 sys_show_hide 字典；新增 menu-list-columns 测试。test/4847276 push；dev 同名 pull 后 cherry-pick 为 dev/8268c1d push，回到 test。无 node 未跑测试 / 构建 / 浏览器。
+
 ## 2026-11-12 ssh｜账户管理去部门树、所属部门取 deptName（test → dev）
 
 test 干净同名 pull 已最新（cd2fec5）。user/index 删左侧部门树与相关代码，部门列改 deptName；测试补一条。test/b0e9531 push；切 dev 同名 pull 后 cherry-pick 为 dev/8973d51 push，回到 test。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。

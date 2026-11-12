@@ -42,3 +42,9 @@
 - 保留：搜索、列字段设置入口（showColumnSettings / menuId）、修改 / 新增 / 详情 / 删除、useRefreshWhenStale、扁平过滤结果父级不在时作根展示。
 - 风险：未在浏览器验证虚拟滚动下固定列、ListRowActions 下拉、v-list-grid 操作列测宽；同级序号非连续时一次拖拽会把整组重编号（与原实现同样全量提交）；updateMenu 收到的是列表行字段（不含 children）。
 - 测试 tests/menu-tree-grid.test.mjs（排序 / 同级重编 / 跨级拒绝 / payload / 页面配置，Python 模拟核过）；list-column-custom 计数改 25、policy-columns 将菜单页列为特殊列表（policyColumns: false、不等列就绪）。无 Node，未运行。
+
+## 菜单列表显示菜单类型、是否显示（2026-11-12 ssh test/4847276，cherry-pick 到 dev/8268c1d）
+
+- 用户：菜单列表需要显示「菜单类型」和「是否显示」两列。
+- 改法：`menu/index.vue` 在菜单名称后加两列：菜单类型（`menuType`：M 目录 / C 菜单 / F、B 按钮，其他值原样、空为「—」，el-tag plain）、是否显示（`visible` 按字典 `sys_show_hide` 的 dict-tag，空为「—」）；useDict 补 `sys_show_hide`。菜单列表是树形（不走动态列字段配置），两列直接显示。
+- 测试：新增 `tests/menu-list-columns.test.mjs`。无 node 未运行；断言与模板配平用 Python 核对。
