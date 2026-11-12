@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S06 用户账号管理 · 高保真交互原型（标注版）</title>
+<style>
+/* ============ Design Tokens (§3.1 唯一色板，禁止自造色值) ============ */
+:root{
+  --page-bg:#F5F7FA; --card:#FFFFFF; --primary:#1668DC;
+  --nav-bg:#0F1B2D; --nav-sub:#132238; --nav-text:#DCE6F2; --nav-aux:#8FA3BC;
+  --nav-hover:#1A2D47; --nav-active:#1D3A5F; --nav-hl:#3B82F6;
+  --t1:#1F2937; --t2:#6B7280; --t3:#9CA3AF;
+  --success:#10B981; --warn:#F59E0B; --danger:#EF4444; --info:#3B82F6;
+  --line:#E5E7EB; --disabled:#D1D5DB;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Source Han Sans SC","思源黑体","Inter",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--page-bg);color:var(--t1);font-size:14px;line-height:22px}
+.mono{font-family:"JetBrains Mono","SFMono-Regular",Consolas,monospace;font-variant-numeric:tabular-nums}
+/* ============ 布局骨架：深色侧边导航 + 浅色主内容 + 360px 面板 ============ */
+#app{display:flex;min-height:100vh}
+#sidebar{width:208px;background:var(--nav-bg);color:var(--nav-text);flex-shrink:0;position:sticky;top:0;height:100vh}
+#sidebar .logo{padding:20px 16px 16px;font-size:16px;font-weight:600;color:#fff;border-bottom:1px solid var(--nav-sub)}
+#sidebar .logo small{display:block;font-size:12px;color:var(--nav-aux);font-weight:400;margin-top:2px}
+.nav-item{padding:10px 16px;font-size:14px;color:var(--nav-text);display:flex;align-items:center;gap:8px;cursor:pointer}
+.nav-item:hover{background:var(--nav-hover)}
+.nav-item.active{background:var(--nav-active);box-shadow:inset 3px 0 0 var(--nav-hl);color:#fff}
+.nav-item .sub{margin-left:24px;font-size:12px;color:var(--nav-aux)}
+.nav-group-title{padding:14px 16px 4px;font-size:12px;color:var(--nav-aux)}
+#main{flex:1;min-width:0;display:flex;flex-direction:column}
+#toolbar{position:sticky;top:0;z-index:60;background:var(--card);border-bottom:1px solid var(--line);padding:8px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+#toolbar .tb-label{font-size:12px;color:var(--t2)}
+.tb-group{display:flex;align-items:center;gap:6px}
+.tb-btn{font-size:12px;padding:4px 12px;border:1px solid var(--line);background:var(--card);color:var(--t2);border-radius:4px;cursor:pointer}
+.tb-btn:hover{border-color:var(--info);color:var(--info)}
+.tb-btn.on{background:var(--primary);border-color:var(--primary);color:#fff}
+#content-wrap{flex:1;display:flex;min-width:0}
+#stage{flex:1;min-width:0;padding:24px;position:relative}
+#page-panel{width:360px;flex-shrink:0;background:var(--card);border-left:1px solid var(--line);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto}
+/* ============ 页面基础 ============ */
+.page{display:none}
+.page.show{display:block}
+.page-title{font-size:20px;line-height:28px;font-weight:600;margin-bottom:4px}
+.page-desc{font-size:12px;color:var(--t2);margin-bottom:16px}
+.card{background:var(--card);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:16px 24px;margin-bottom:16px}
+.card-title{font-size:16px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* ============ 表格 ============ */
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--t2);font-weight:500;text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);background:#F5F7FA;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
+tr:hover td{background:#F5F7FA}
+td.num,th.num{text-align:right}
+.op-col{position:sticky;right:0;background:var(--card)}
+th.op-col{background:#F5F7FA}
+.link-btn{font-size:12px;color:var(--primary);cursor:pointer;margin-right:12px;background:none;border:none;padding:0}
+.link-btn.danger{color:var(--danger)}
+.link-btn:disabled,.link-btn.disabled{color:var(--disabled);cursor:not-allowed}
+.link-btn:disabled:hover::after{content:attr(data-hover);position:absolute;background:var(--t1);color:#fff;font-size:12px;padding:4px 8px;border-radius:4px;margin-top:18px;white-space:nowrap;z-index:50}
+/* 状态标签（语义色统一） */
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:1px 8px;border-radius:4px;border:1px solid}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.on{color:var(--success);border-color:var(--success)}
+.tag.off{color:var(--t2);border-color:var(--t2)}
+.tag.del{color:var(--danger);border-color:var(--danger)}
+/* 筛选区 / 表单 */
+.filter-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:var(--t2)}
+.field label .req{color:var(--danger)}
+input,select,textarea{font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:4px;color:var(--t1);background:#fff;outline:none;min-width:180px}
+input:focus,select:focus,textarea:focus{border-color:var(--primary)}
+input[readonly]{background:#F5F7FA;color:var(--t2)}
+textarea{min-width:360px;min-height:72px;resize:vertical}
+.btn{font-size:14px;padding:6px 16px;border-radius:4px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--primary)}
+.btn.danger{background:var(--danger);border-color:var(--danger)}
+.btn:disabled{background:var(--disabled);border-color:var(--disabled);cursor:not-allowed}
+.btn.sm{font-size:12px;padding:3px 10px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;max-width:860px}
+.hint{font-size:12px;color:var(--t3)}
+.err{font-size:12px;color:var(--danger);display:none}
+/* 分页 */
+.pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding-top:12px;font-size:12px;color:var(--t2)}
+.pager button{min-width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;font-size:12px;color:var(--t2)}
+.pager button.on{border-color:var(--primary);color:var(--primary)}
+/* ============ 弹窗 ============ */
+.modal-mask{position:fixed;inset:0;background:rgba(15,27,45,.45);display:none;align-items:center;justify-content:center;z-index:200}
+.modal-mask.open{display:flex}
+.modal{background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.08);width:440px;padding:24px}
+.modal h3{font-size:16px;margin-bottom:8px}
+.modal p{font-size:14px;color:var(--t2);margin-bottom:20px}
+.modal .m-foot{display:flex;justify-content:flex-end;gap:8px}
+/* ============ 标注层（§10.2） ============ */
+.anno{position:relative}
+.anno::after{content:attr(data-rule);position:absolute;top:-9px;right:-6px;font-size:12px;line-height:18px;font-family:Consolas,monospace;color:var(--info);border:1px dashed var(--info);border-radius:4px;padding:0 4px;background:#fff;z-index:5;cursor:pointer;white-space:nowrap}
+.anno.warn::after{color:var(--warn);border-color:var(--warn)}
+.anno.danger::after{color:var(--danger);border-color:var(--danger)}
+.anno.success::after{color:var(--success);border-color:var(--success)}
+.anno{outline:1px dashed var(--info);outline-offset:2px}
+.anno.warn{outline-color:var(--warn)}
+.anno.danger{outline-color:var(--danger)}
+.anno.success{outline-color:var(--success)}
+body.no-anno .anno::after{display:none}
+body.no-anno .anno{outline:none}
+/* Tooltip */
+#tooltip{position:fixed;z-index:300;display:none;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.08);max-width:360px;font-size:12px;line-height:18px;padding:10px 12px;color:var(--t1)}
+#tooltip .tt-rule{color:var(--info);text-decoration:underline;cursor:pointer;margin-right:6px}
+#tooltip.pinned{display:block}
+/* 实体徽章（§10.9 区块级） */
+.ent-badge{position:absolute;left:12px;bottom:-9px;font-size:12px;line-height:18px;padding:0 6px;border-radius:4px;background:#fff;border:1px dashed var(--info);color:var(--info);font-family:Consolas,monospace;z-index:4}
+.ent-badge.ref{border-color:var(--warn);color:var(--warn)}
+.card{position:relative}
+/* ============ 右侧面板 ============ */
+#panel .p-head{padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:2}
+#panel .p-head button{font-size:12px;color:var(--t2);background:none;border:none;cursor:pointer}
+.p-sec{border-bottom:1px solid var(--line)}
+.p-sec>h4{font-size:14px;padding:10px 16px 6px;cursor:pointer;display:flex;justify-content:space-between}
+.p-sec>h4 .cnt{font-size:12px;color:var(--t3);font-weight:400}
+.p-sec .p-body{padding:0 16px 12px;font-size:12px;line-height:18px;color:var(--t2)}
+.p-sec .p-body.hidden{display:none}
+.p-item{padding:6px 8px;border-radius:4px;margin-bottom:4px}
+.p-item .rid{font-family:Consolas,monospace;color:var(--info);margin-right:6px}
+.p-item.hl{background:rgba(59,130,246,0.08);transition:background .3s}
+.p-item .quote{color:var(--t1)}
+/* 页面状态：错误横幅 / 403 / 空 / 骨架屏 */
+.state-layer{display:none}
+.state-banner{display:flex;align-items:center;gap:8px;background:rgba(239,68,68,0.06);border:1px solid var(--danger);color:var(--danger);font-size:14px;padding:8px 16px;border-radius:4px;margin-bottom:16px}
+.state-full{position:absolute;inset:24px;background:var(--card);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:40}
+.state-full .code{font-size:48px;color:var(--t3);font-weight:600}
+.skel{background:linear-gradient(90deg,#F5F7FA 25%,#E5E7EB 50%,#F5F7FA 75%);background-size:400% 100%;animation:sk 1.2s infinite;border-radius:4px;height:16px}
+@keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
+.empty-box{display:flex;flex-direction:column;align-items:center;gap:8px;padding:64px 0;color:var(--t3);font-size:14px}
+/* 详情页 */
+.detail-grid{display:grid;grid-template-columns:140px 1fr 140px 1fr;gap:12px 16px;font-size:14px}
+.detail-grid .k{color:var(--t2)}
+.audit-row{display:flex;gap:16px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--t2)}
+.audit-row .mono{color:var(--t1)}
+.masked-view{display:inline-flex;align-items:center;gap:8px}
+.section-anno-note{font-size:12px;color:var(--info)}
+.plat-admin-only{display:none}
+body.view-plat-admin .plat-admin-only{display:inline-flex}
+body.view-ent-user .view-content{display:none !important}
+body.view-ent-user .view-403{display:flex !important}
+@media (max-width:1280px){#page-panel{width:320px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- ================= 深色侧边导航（§4.1 唯一定义） ================= -->
+  <aside id="sidebar">
+    <div class="logo">乾融金融中台<small>Qianrong Admin Console</small></div>
+    <div class="nav-group-title">工作台</div>
+    <div class="nav-item">📊 工作台首页</div>
+    <div class="nav-group-title">业务管理</div>
+    <div class="nav-item">🏢 企业用户 <span class="sub">S04</span></div>
+    <div class="nav-item">🎭 角色管理 <span class="sub">S05</span></div>
+    <div class="nav-item">🗂 部门管理 <span class="sub">S07</span></div>
+    <div class="nav-item active">👤 用户账号管理 <span class="sub">S06</span></div>
+    <div class="nav-group-title">系统</div>
+    <div class="nav-item">📜 操作日志 <span class="sub">S09</span></div>
+    <div class="nav-item">🔑 统一登录 SSO</div>
+    <div class="nav-item">⚙️ 系统配置</div>
+  </aside>
+  <div id="main">
+    <!-- ================= 原型工具条（§10.1） ================= -->
+    <div id="toolbar">
+      <span class="tb-label">页面</span>
+      <div class="tb-group" id="pg-switch">
+        <button class="tb-btn on" data-page="p1">P1 账号列表</button>
+        <button class="tb-btn" data-page="p2">P2 新建账号</button>
+        <button class="tb-btn" data-page="p3">P3 编辑账号</button>
+        <button class="tb-btn" data-page="p4">P4 账号详情</button>
+      </div>
+      <span class="tb-label">操作人视角</span>
+      <div class="tb-group" id="role-switch">
+        <button class="tb-btn on" data-role="ent-admin">企业系统管理员</button>
+        <button class="tb-btn" data-role="ent-user">企业一般用户</button>
+        <button class="tb-btn" data-role="plat-user">平台一般用户</button>
+        <button class="tb-btn" data-role="plat-admin">平台系统管理员</button>
+      </div>
+      <span class="tb-label">页面状态</span>
+      <div class="tb-group" id="state-switch">
+        <button class="tb-btn on" data-state="normal">正常</button>
+        <button class="tb-btn" data-state="loading">加载中</button>
+        <button class="tb-btn" data-state="error">接口失败</button>
+        <button class="tb-btn" data-state="p403">403</button>
+        <button class="tb-btn" data-state="empty">空数据</button>
+      </div>
+      <div class="tb-group" style="margin-left:auto">
+        <button class="tb-btn on" id="anno-toggle">标注：开</button>
+      </div>
+    </div>
+    <div id="content-wrap">
+      <div id="stage" class="view-content">
+        <!-- 操作人 = 企业一般用户 → 整页 403（BR-25/EX-16） -->
+        <div class="state-full view-403" style="display:none;position:fixed;inset:60px 24px 24px 24px;background:var(--card);border-radius:6px;z-index:50;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+          <div class="code">403</div>
+          <div style="font-size:16px">您没有权限访问账号管理模块</div>
+          <div class="hint">操作人账号类型 = 企业一般用户 → 本模块所有接口返回 403 + 审计日志（BR-25 / EX-16）</div>
+        </div>
+        <!-- ================= P1 账号列表（F02） ================= -->
+        <section class="page show" id="page-p1">
+          <div class="page-title">账号列表</div>
+          <div class="page-desc">路由 /system/accounts ｜ 功能 S06-F02 ｜ 覆盖 US-004/005 ｜ 默认排序创建时间倒序，每页 20 条（BR-16）</div>
+
+          <div class="card">
+            <span class="ent-badge">E: Account（本模块拥有 · 本页只读）</span>
+            <div class="filter-bar">
+              <div class="field anno" data-rule="BR-14" data-tip="BR-14|查询·数据范围|非平台运营组操作人，结果 enterpriseId 必须 = 操作人本企业；越权访问 403 + 审计日志（L1 §3）。|企业筛选参数仅平台运营组可用；非平台运营组携带该参数 → 400「非法的筛选参数」（EX-15）。||BR-14;EX-15">
+                <label>关键字搜索</label>
+                <input placeholder="用户名 + 手机号" style="width:220px">
+              </div>
+              <div class="field anno" data-rule="BR-16" data-tip="BR-16|状态筛选|状态筛选（启用/禁用），默认全部；空列表显示「暂无账号」。||BR-16">
+                <label>状态</label>
+                <select style="width:120px"><option>全部</option><option>启用</option><option>禁用</option></select>
+              </div>
+              <div class="field anno plat-only" data-rule="BR-14" data-tip="BR-14|企业筛选（仅平台运营组视图渲染）|非平台运营组不可见本筛选与「企业」列；仅状态=启用的企业进入选项。携带该参数 → 400（EX-15）。||BR-14;EX-15">
+                <label>企业 <span style="color:var(--t3);font-weight:400">（仅平台运营组）</span></label>
+                <select style="width:180px"><option>全部企业</option><option>乾元商贸有限公司（企业A）</option><option>海川供应链集团（企业B）</option></select>
+              </div>
+              <div class="field">
+                <button class="btn ghost sm">查询</button>
+              </div>
+              <div class="field" style="margin-left:auto">
+                <button class="btn anno" data-rule="F01" data-tip="F01|新建账号|跳转 /system/accounts/new 独立表单页；创建成功即启用、初始密码=手机号后6位（BR-07/08）。||BR-01~08" onclick="switchPage('p2')">+ 新建账号</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0">
+            <span class="ent-badge">E: Account（N─1 S04 企业用户 · 只读引用）</span>
+            <table id="acct-table">
+              <thead>
+                <tr>
+                  <th class="anno" data-rule="BR-23" data-tip="BR-23|账户编号|ZH+YYYYMMDD+10位随机数；全局唯一索引；不可编辑；删除后不复用；等宽数字、不换行、悬浮可复制（§3.5）。示例：ZH202609150012345678（示例非规范）。||BR-23;AC-031">账户编号</th>
+                  <th>用户名</th>
+                  <th class="anno" data-rule="BR-04" data-tip="BR-04|手机号脱敏展示|AES 加密存储；脱敏 = 前三位 + **** + 后四位（§6.5）；脱敏字段默认不允许悬浮显示原文。||BR-04;AC-014">手机号</th>
+                  <th class="anno warn" data-rule="BR-05" data-tip="BR-05|角色（跨模块只读引用 S05）|仅可选择/展示启用中的角色；字段未填显示「-」。||BR-05">角色</th>
+                  <th class="anno warn" data-rule="BR-06" data-tip="BR-06|部门（跨模块只读引用 S07）|仅可选择/展示启用中的部门；字段未填显示「-」。||BR-06">部门</th>
+                  <th class="anno warn plat-only" data-rule="BR-14" data-tip="BR-14|企业列（仅平台运营组视图渲染）|非平台运营组不可见本列。||BR-14">企业</th>
+                  <th class="anno" data-rule="L1§6" data-tip="ENABLED|状态标签|启用：可正常登录。可流转至：禁用（F04）。本页影响：删除按钮置灰。||L1§6;BR-22">状态</th>
+                  <th class="anno" data-rule="BR-16" data-tip="BR-16|创建时间|UTC 存储，Asia/Shanghai 展示 yyyy-MM-dd HH:mm:ss；默认倒序。||BR-16">创建时间</th>
+                  <th class="op-col" style="min-width:280px">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono" title="点击复制">ZH202609210001234501</td>
+                  <td>张伟</td>
+                  <td class="mono">138****1234</td>
+                  <td>系统管理员</td><td>信息技术部</td>
+                  <td class="plat-only">乾元商贸（企业A）</td>
+                  <td><span class="tag on">启用</span></td>
+                  <td class="mono">2026-09-21 14:32:05</td>
+                  <td class="op-col">
+                    <button class="link-btn" onclick="switchPage('p3')">编辑</button>
+                    <button class="link-btn anno" data-rule="BR-13" data-tip="F06|重置密码|前置：目标存在且状态∈{启用,禁用}；重置后密码=当前手机号后6位；旧密码及已签发会话/Token 同事务内立即失效（同步 SSO）；目标=自己 → 403（EX-04）。||BR-13;EX-11;AC-012" onclick="openModal('m-reset')">重置密码</button>
+                    <button class="link-btn anno" data-rule="BR-02" data-tip="F04|禁用|前置：行状态=启用；确认弹窗「禁用后该账号将立即退出登录且无法登录」→ POST /api/accounts/{id}/disable；SSO 同步失败整体回滚。||BR-02;BR-03;EX-05" onclick="openModal('m-disable')">禁用</button>
+                    <button class="link-btn danger disabled" disabled data-hover="请先禁用">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mono">ZH202609200004567802</td>
+                  <td>李娜</td>
+                  <td class="mono">139****5678</td>
+                  <td>-</td><td>风控部</td>
+                  <td class="plat-only">乾元商贸（企业A）</td>
+                  <td><span class="tag off">禁用</span></td>
+                  <td class="mono">2026-09-20 09:15:44</td>
+                  <td class="op-col">
+                    <button class="link-btn" onclick="switchPage('p3')">编辑</button>
+                    <button class="link-btn" onclick="openModal('m-reset')">重置密码</button>
+                    <button class="link-btn anno" data-rule="BR-01" data-tip="F04|启用|前置：行状态=禁用；POST /api/accounts/{id}/enable；禁止对自己启用（403）。||BR-01;AC-023" onclick="openModal('m-enable')">启用</button>
+                    <button class="link-btn danger anno" data-rule="BR-04" data-tip="F05|删除|前置：行状态=禁用（启用态删除一律 409）；二次确认弹窗，不强制填删除原因；逻辑删除，释放手机号唯一索引；不可恢复。||BR-04~08;AC-025/026" onclick="openModal('m-del')">删除</button>
+                  </td>
+                </tr>
+                <tr class="anno warn" data-rule="自我红线" data-tip="L1§3|本人账号整行操作锁定|目标账号 = 操作人自己时，编辑/启用/禁用/删除/重置密码全部置灰；后端仍强制校验 403 + 审计（EX-03/04）。||L1§3;EX-03" style="outline-offset:0">
+                  <td class="mono">ZH202609180007890123</td>
+                  <td>王强（本人）</td>
+                  <td class="mono">137****9012</td>
+                  <td>系统管理员</td><td>总经办</td>
+                  <td class="plat-only">乾元商贸（企业A）</td>
+                  <td><span class="tag on">启用</span></td>
+                  <td class="mono">2026-09-18 17:03:12</td>
+                  <td class="op-col">
+                    <button class="link-btn disabled" disabled data-hover="不能操作自己的账号">编辑</button>
+                    <button class="link-btn disabled" disabled>重置密码</button>
+                    <button class="link-btn disabled" disabled>禁用</button>
+                    <button class="link-btn danger disabled" disabled>删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mono">ZH202609170003210987</td>
+                  <td>赵敏</td>
+                  <td class="mono">150****3456</td>
+                  <td>一线用户</td><td>-</td>
+                  <td class="plat-only">海川供应链（企业B）</td>
+                  <td><span class="tag on">启用</span></td>
+                  <td class="mono">2026-09-17 11:47:29</td>
+                  <td class="op-col">
+                    <button class="link-btn">编辑</button>
+                    <button class="link-btn" onclick="openModal('m-reset')">重置密码</button>
+                    <button class="link-btn" onclick="openModal('m-disable')">禁用</button>
+                    <button class="link-btn danger disabled" disabled data-hover="请先禁用">删除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 骨架屏状态 -->
+            <div class="state-layer" data-state="loading" style="padding:16px 24px">
+              <div class="skel" style="width:100%;height:38px;margin-bottom:8px"></div>
+              <div class="skel" style="width:96%;margin-bottom:12px"></div>
+              <div class="skel" style="width:98%;margin-bottom:12px"></div>
+              <div class="skel" style="width:94%;margin-bottom:12px"></div>
+              <div class="skel" style="width:97%;margin-bottom:12px"></div>
+            </div>
+            <!-- 空数据状态 -->
+            <div class="state-layer" data-state="empty">
+              <div class="empty-box">📭<br>暂无账号<br><span class="hint">可点击右上角「新建账号」创建首个账号</span></div>
+            </div>
+            <div style="padding:0 24px 16px">
+              <div class="pager anno" data-rule="BR-16" data-tip="BR-16|分页|默认每页 20 条；排序可切创建时间正/倒序。||BR-16;AC-008">
+                <span>共 25 条</span>
+                <button>‹</button><button class="on">1</button><button>2</button><button>›</button>
+                <select style="min-width:90px"><option>20 条/页</option><option>50 条/页</option></select>
+              </div>
+            </div>
+          </div>
+          <!-- 接口失败横幅（EX-08/10） -->
+          <div class="state-layer" data-state="error">
+            <div class="state-banner">⚠️ 账号列表加载失败，请稍后重试。<button class="link-btn" style="margin-left:auto">重试</button></div>
+          </div>
+          <!-- 403 整页 -->
+          <div class="state-layer state-full" data-state="p403">
+            <div class="code">403</div>
+            <div style="font-size:16px">您没有权限执行该操作</div>
+            <div class="hint">企业一般用户调用本模块任何接口 → 403 + 审计日志（BR-25 / EX-16）</div>
+          </div>
+        </section>
+        <!-- ================= P2 新建账号（F01） ================= -->
+        <section class="page" id="page-p2">
+          <div class="page-title">新建账号</div>
+          <div class="page-desc">路由 /system/accounts/new ｜ 功能 S06-F01 ｜ 覆盖 US-001/002/003/015 ｜ 创建成功即启用，初始密码 = 手机号后 6 位（BR-07/08）</div>
+          <div class="card">
+            <span class="ent-badge">E: Account（本模块拥有 · 本页创建 → 初始状态 启用）</span>
+            <div class="form-grid">
+              <div class="field anno plat-only" data-rule="BR-18/19" data-tip="BR-18/19|所属企业（跨模块只读引用 S04）|创建必填；仅状态=启用的企业进入选项；仅平台侧账号视图渲染本字段，且可选任意企业（含为新企业开通首个管理员）。企业系统管理员请求传入其他 enterpriseId → 400 + 审计（EX-13）。企业系统管理员可创建多个，不强制（BR-20）。||BR-18;BR-19;BR-20;EX-13;AC-015/016/017">
+                <label>所属企业 <span class="req">*</span> <span class="hint">（仅平台侧视图渲染；数据源 S04 只读接口 /api/enterprises?status=启用）</span></label>
+                <select><option>请选择所属企业</option><option>乾元商贸有限公司（启用）</option><option>海川供应链集团（启用）</option></select>
+                <div class="err">请选择所属企业 ／ 所选企业不可用</div>
+              </div>
+              <div class="field anno" data-rule="BR-24/25" data-tip="BR-24/25|账号类型（必填）|四值枚举：企业系统管理员 / 企业一般用户 / 平台系统管理员 / 平台一般用户。默认 = 企业一般用户（BR-24）。可选域按操作人身份：企业系统管理员仅可选企业侧两项；平台一般用户仅可选企业侧两项；平台系统管理员四值可选；企业一般用户无本模块权限（403）。提交不在允许集合内 → 400 + 审计（EX-18/19）。||BR-24;BR-25;BR-28;EX-18;EX-19;AC-032~036">
+                <label>账号类型 <span class="req">*</span> <span class="hint">（决定数据范围与模块可见性）</span></label>
+                <select id="account-type-new">
+                  <option value="ent-user" selected>企业一般用户</option>
+                  <option value="ent-admin">企业系统管理员</option>
+                  <option value="plat-user plat-admin-only">平台一般用户</option>
+                  <option value="plat-admin plat-admin-only">平台系统管理员</option>
+                </select>
+                <div class="err">请选择账号类型 ／ 所选账号类型不在可授予范围内</div>
+              </div>
+              <div class="field">
+                <label>账户编号 <span class="hint">（创建成功后系统生成，只读）</span></label>
+                <input readonly placeholder="创建成功后生成，格式 ZH+日期+10位随机数" style="color:var(--t3)">
+              </div>
+              <div class="field anno" data-rule="BR-01/02" data-tip="BR-01/02|用户名|必填；去除首尾空格后非空；≤20 字符；字符集 = 中文、字母、数字、下划线。错误提示：「请输入用户名」／「用户名≤20字，仅支持中文、字母、数字、下划线」。||BR-01;BR-02;AC-001">
+                <label>用户名 <span class="req">*</span></label>
+                <input placeholder="请输入用户名" maxlength="20">
+                <div class="err">用户名≤20字，仅支持中文、字母、数字、下划线</div>
+              </div>
+              <div class="field anno" data-rule="BR-03/04" data-tip="BR-03/04|手机号|必填；11 位数字（不附加号段规则）；全库部分唯一索引（排除已删除，删除后可再次注册）；失焦异步唯一性校验。错误提示：「请输入 11 位数字手机号」／「该手机号已被使用」。||BR-03;BR-04;AC-002/004/005">
+                <label>手机号 <span class="req">*</span></label>
+                <input placeholder="请输入 11 位数字手机号" maxlength="11">
+                <div class="err">该手机号已被使用</div>
+              </div>
+              <div class="field anno warn" data-rule="BR-05" data-tip="BR-05|角色（跨模块只读引用 S05）|选填；仅启用中角色；打开时加载 S05，超时 3 秒置灰可重试；提交瞬间被停用 → 400「所选角色已失效，请重新选择」。||BR-05;EX-02;AC-006">
+                <label>角色 <span class="hint">（选填；数据源 S05 只读接口）</span></label>
+                <select><option>不分配角色</option><option>系统管理员（启用）</option><option>一线用户（启用）</option></select>
+                <div class="err">所选角色已失效，请重新选择</div>
+              </div>
+              <div class="field anno warn" data-rule="BR-06" data-tip="BR-06|部门（跨模块只读引用 S07）|选填；仅启用中部门；加载口径同角色；停用部门 → 400「所选部门已失效，请重新选择」。||BR-06;AC-019">
+                <label>部门 <span class="hint">（选填；数据源 S07 只读接口）</span></label>
+                <select><option>不分配部门</option><option>信息技术部（启用）</option><option>风控部（启用）</option></select>
+                <div class="err">所选部门已失效，请重新选择</div>
+              </div>
+              <div class="field anno" data-rule="BR-09" data-tip="BR-09|邮箱|选填；正则 ^[^\s@]+@[^\s@]+\.[^\s@]+$；错误提示：「邮箱格式不正确」。||BR-09;AC-020">
+                <label>邮箱 <span class="hint">（选填）</span></label>
+                <input placeholder="name@example.com">
+                <div class="err">邮箱格式不正确</div>
+              </div>
+              <div class="field anno" data-rule="BR-10" data-tip="BR-10|头像|选填；仅 jpg/png；≤2MB；上传后立即预览；不做在线裁剪/压缩（§12 明确不做）。||BR-10">
+                <label>头像 <span class="hint">（选填；jpg/png ≤2MB）</span></label>
+                <input type="file" accept=".jpg,.png" style="padding:4px">
+                <div class="err">仅支持 jpg/png 格式 ／ 文件不能超过 2MB</div>
+              </div>
+              <div class="field anno" data-rule="BR-21" data-tip="BR-21|备注|选填；≤200 字；错误提示：「备注不能超过 200 字」。||BR-21" style="grid-column:1/-1">
+                <label>备注 <span class="hint">（选填；≤200 字）</span></label>
+                <textarea maxlength="200" placeholder="选填备注"></textarea>
+                <div class="err">备注不能超过 200 字</div>
+              </div>
+            </div>
+            <div style="margin-top:24px;display:flex;gap:12px">
+              <button class="btn anno" data-rule="F01" data-tip="F01|提交创建|系统行为：POST /api/accounts；事务内生成账户编号（BR-23）、状态=启用、初始密码=手机号后6位同步 SSO（失败回滚 EX-11）、发审计事件（EX-09 失败回滚）、手机号 AES 加密。成功 → 跳列表 + Toast「创建成功，初始密码为手机号后 6 位」。同手机号并发创建由部分唯一索引兜底，后到 409（EX-05）。||BR-01~08;BR-23;AC-003/013" onclick="fakeSubmit('创建成功，初始密码为手机号后 6 位')">提交创建</button>
+              <button class="btn ghost" onclick="switchPage('p1')">取消</button>
+              <span class="hint" style="align-self:center">绕过前端直调接口，必填为空 → 400 + 字段级错误码（AC-001）</span>
+            </div>
+          </div>
+          <div class="state-layer" data-state="error"><div class="state-banner">⚠️ 保存失败，请稍后重试。<button class="link-btn" style="margin-left:auto">重试</button></div></div>
+          <div class="state-layer state-full" data-state="p403"><div class="code">403</div><div style="font-size:16px">您没有权限执行该操作</div><div class="hint">企业一般用户 → 403 + 审计（BR-25 / EX-16）</div></div>
+        </section>
+
+        <!-- ================= P3 编辑账号（F03） ================= -->
+        <section class="page" id="page-p3">
+          <div class="page-title">编辑账号</div>
+          <div class="page-desc">路由 /system/accounts/:id/edit ｜ 功能 S06-F03 ｜ 覆盖 US-006/007/013 ｜ 目标状态 ∈ {启用, 禁用} 可编辑；已删除 → 404（BR-11）</div>
+          <div class="card">
+            <span class="ent-badge">E: Account（本模块拥有 · 本页可写）</span>
+            <div class="form-grid">
+              <div class="field anno warn" data-rule="BR-23" data-tip="BR-23|账户编号：只读 / 创建后锁定|锁定原因：全局唯一编号，删除后保留且不复用，不允许人工分配或改号。后端兜底：请求体携带编号字段 → 忽略。||BR-23;AC-031">
+                <label>账户编号 <span style="color:var(--warn)">🔒 创建后锁定</span></label>
+                <input readonly class="mono" value="ZH202609200004567802">
+              </div>
+              <div class="field anno" data-rule="BR-26" data-tip="BR-26|账号类型（可编辑）|编辑时允许修改账号类型；前端须二次确认（文案：修改账号类型将改变该账号的权限范围）；后端校验操作人具备目标类型的授予权限（BR-25 集合）；变更写入审计事件，记录原值→新值；操作人不可修改自己的账号类型（EX-20）。||BR-26;EX-20;EX-21;AC-037;AC-038">
+                <label>账号类型 <span class="req">*</span> <span class="hint">（变更须二次确认 + 审计）</span></label>
+                <select id="account-type-edit">
+                  <option value="ent-user" selected>企业一般用户</option>
+                  <option value="ent-admin">企业系统管理员</option>
+                  <option value="plat-user plat-admin-only">平台一般用户</option>
+                  <option value="plat-admin plat-admin-only">平台系统管理员</option>
+                </select>
+                <div class="err">所选账号类型不在可授予范围内</div>
+              </div>
+              <div class="field">
+                <label>用户名 <span class="req">*</span></label>
+                <input value="李娜" maxlength="20">
+              </div>
+              <div class="field anno" data-rule="BR-04/12" data-tip="BR-04/12|手机号（编辑）|唯一性校验排除自身 ID；编辑后「默认密码」口径 = 新手机号最后 6 位，本条不追溯修改既有密码。||BR-04;BR-12;AC-011">
+                <label>手机号 <span class="req">*</span></label>
+                <input value="13900005678" maxlength="11">
+                <div class="err">该手机号已被使用</div>
+              </div>
+              <div class="field">
+                <label>角色 <span class="hint">（选填）</span></label>
+                <select><option>不分配角色</option><option>系统管理员（启用）</option></select>
+              </div>
+              <div class="field">
+                <label>部门 <span class="hint">（选填）</span></label>
+                <select><option>风控部（启用）</option><option>信息技术部（启用）</option></select>
+              </div>
+              <div class="field">
+                <label>邮箱 <span class="hint">（选填）</span></label>
+                <input value="lina@example.com">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>备注 <span class="hint">（选填；≤200 字）</span></label>
+                <textarea maxlength="200">临时借调，2026-10 归队。</textarea>
+              </div>
+            </div>
+            <div style="margin-top:24px;display:flex;gap:12px">
+              <button class="btn anno" data-rule="F03" data-tip="F03|提交编辑|系统行为：PUT /api/accounts/{id} 全量覆盖（重复提交结果一致）；目标=自己 → 403（EX-04）；提交瞬间目标被删 → 404，状态被并发变更 → 409。账号类型变更须先经二次确认弹窗（BR-26）。成功返回详情。||BR-11;BR-26;EX-04;EX-06/07;EX-20" onclick="saveEdit()">保存修改</button>
+              <button class="btn ghost" onclick="switchPage('p1')">取消</button>
+              <span class="hint anno" data-rule="BR-11" data-tip="BR-11|编辑与状态联动|禁用状态的账号允许编辑（AC-009）；已删除账号不可编辑 → 404。||BR-11;AC-009" style="align-self:center">当前目标状态：禁用 —— 允许编辑（BR-11）</span>
+            </div>
+          </div>
+          <div class="state-layer" data-state="error"><div class="state-banner">⚠️ 保存失败，请稍后重试。</div></div>
+          <div class="state-layer state-full" data-state="p403"><div class="code">403</div><div style="font-size:16px">不能操作自己的账号</div><div class="hint">编辑目标 = 操作人自己 → 403 + 审计（EX-04）</div></div>
+          <div class="state-layer state-full" data-state="empty"><div class="code">404</div><div style="font-size:16px">该账号不存在</div><div class="hint">目标账号已删除 → 404，不在任何查询中出现（BR-11/15）</div></div>
+        </section>
+
+        <!-- ================= P4 账号详情 ================= -->
+        <section class="page" id="page-p4">
+          <div class="page-title">账号详情</div>
+          <div class="page-desc">单页分区布局（§5.3A）｜ 基本信息 / 组织归属 / 状态与审计 ｜ 本页实体归本模块，组织归属区块为跨模块只读引用</div>
+
+          <div class="card">
+            <div class="card-title">基本信息</div>
+            <span class="ent-badge">E: Account（本模块拥有 · 本页只读）</span>
+            <div class="detail-grid">
+              <div class="k">账户编号</div><div class="mono">ZH202609200004567802 <span class="hint">（全局唯一，不可编辑 BR-23）</span></div>
+              <div class="k">用户名</div><div>李娜</div>
+              <div class="k anno" data-rule="BR-24" data-tip="BR-24|账号类型|决定数据范围与模块可见性；四值枚举见 BR-24。当前账号 = 企业一般用户（业务执行者，数据范围 = 本部门及子部门）。与 S05 业务角色并存、互不联动（BR-27）。||BR-24;BR-27">账号类型</div><div><span class="tag" style="color:var(--info);border-color:var(--info)">企业一般用户</span></div>
+              <div class="k anno" data-rule="§6.5" data-tip="§6.5|手机号·敏感字段|默认脱敏 139****5678，不允许悬浮显示原文；「查看」前鉴权、查看行为写审计日志、短时展示后自动恢复掩码；复制得到脱敏值。||§6.5">手机号</div>
+              <div><span class="masked-view"><span class="mono" id="phone-masked">139****5678</span><button class="btn ghost sm" id="btn-view-phone">查看</button></span><span class="hint" style="margin-left:8px">查看原文 = 鉴权 + 审计（§6.5）</span></div>
+              <div class="k">邮箱</div><div>lina@example.com</div>
+              <div class="k">头像</div><div>-</div>
+              <div class="k">备注</div><div>临时借调，2026-10 归队。</div>
+              <div class="k">创建信息</div><div class="mono">2026-09-20 09:15:44 · 操作人 admin_zhang</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">组织归属</div>
+            <span class="ent-badge ref">E: Enterprise / Role / Dept（S04/S05/S07 · 跨模块只读引用）</span>
+            <div class="detail-grid">
+              <div class="k anno warn" data-rule="L1§7" data-tip="L1§7|所属企业（S04 拥有）|账号 N─1 企业用户；只读引用，无编辑入口；企业状态联动见 BR-12/13（企业禁用 → 不可登录；企业删除 → 批量禁用）。||L1§7;BR-12;BR-13">所属企业</div><div>乾元商贸有限公司（启用）</div>
+              <div class="k anno warn" data-rule="BR-05" data-tip="BR-05|角色（S05 拥有）|N─1；仅启用中角色可引用；只读。||BR-05">角色</div><div>-</div>
+              <div class="k anno warn" data-rule="BR-06" data-tip="BR-06|部门（S07 拥有）|N─1；仅启用中部门可引用；只读。||BR-06">部门</div><div>风控部（启用）</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">状态与审计</div>
+            <span class="ent-badge ref">审计承载：S09 操作日志（本模块发事件，S09 承载）</span>
+            <div class="detail-grid" style="margin-bottom:8px">
+              <div class="k">当前状态</div>
+              <div><span class="tag off anno" data-rule="L1§6" data-tip="DISABLED|禁用|不可登录，数据保留，可编辑。可流转至：启用（F04）、已删除（F05 二次确认）。企业删除联动亦进入本状态（BR-13）。||L1§6;BR-13">禁用</span></div>
+              <div class="k anno" data-rule="L1§6" data-tip="L1§6|可登录条件|账号 启用 且 所属企业 = 启用；企业禁用时名下账号存量会话立即失效（BR-12）。||L1§6;BR-12">可登录条件</div>
+              <div>账号启用 <b>且</b> 企业启用 → 当前 <span style="color:var(--danger)">不可登录</span></div>
+            </div>
+            <div class="audit-row anno" data-rule="BR-09" data-tip="BR-09|审计事件|每次状态变更发送审计事件至 S09：操作人、时间、账号 ID、动作、原状态、新状态（结构化变更前后值，L1 §9）。||BR-09;L1§9">
+              <span class="mono">2026-09-21 10:02:31</span><span>admin_zhang</span><span>禁用</span><span class="mono">启用 → 禁用</span>
+            </div>
+            <div class="audit-row">
+              <span class="mono">2026-09-20 09:15:44</span><span>admin_zhang</span><span>创建</span><span class="mono">— → 启用</span>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:12px">
+              <button class="btn ghost" onclick="switchPage('p3')">编辑资料</button>
+              <button class="btn ghost" onclick="openModal('m-enable')">启用</button>
+              <button class="btn ghost" onclick="openModal('m-del')">删除</button>
+            </div>
+          </div>
+          <div class="state-layer state-full" data-state="p403"><div class="code">403</div><div style="font-size:16px">您没有权限执行该操作</div><div class="hint">跨企业详情 → 403 + 审计（EX-03）</div></div>
+        </section>
+      </div><!-- /stage -->
+      <!-- ================= 右侧需求说明面板（§10.4，11 个固定分区） ================= -->
+      <aside id="page-panel">
+        <div class="p-head">需求说明面板 <button onclick="togglePanel()">折叠 ⇥</button></div>
+
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">1. 页面概述 <span class="cnt">S06</span></h4>
+          <div class="p-body">
+            <b>S06 用户账号管理</b> · L1 PRD V0.8.0 ｜ Spec 维护 V1.1.0-rc ｜ 生命周期 V1.1.0-rc<br>
+            本原型覆盖 4 页面（列表/新建/编辑/详情）+ 5 弹窗；权限按四值账号类型模型（BR-24~28）：企业系统管理员管本企业账号、企业一般用户 403、平台一般用户可跨企业管企业侧账号、平台系统管理员管全部四类账号。<br>
+            页面状态：loading / error / 403 / 空数据（工具条切换器真实预览，§10.5）。<br>
+            操作人视角：工具条切换四类账号身份，视图联动企业列/筛选/所属企业字段/账号类型可选项。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">2. 业务规则 BR <span class="cnt">×42（维护28+生命周期14）</span></h4>
+          <div class="p-body" id="sec-br"></div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">3. 状态机 <span class="cnt">L1 §6</span></h4>
+          <div class="p-body">
+            <span style="color:var(--success)">启用 ENABLED</span> ⇄（F04）<span style="color:var(--t2)">禁用 DISABLED</span> →（F05 二次确认）<span style="color:var(--danger)">已删除 DELETED（终态）</span><br>
+            企业删除联动批量禁用（BR-13）；非法流转（启用→已删除）→ 409 INVALID_STATE_TRANSITION；删除逻辑删除、释放手机号唯一索引、可再次注册；可登录 = 账号启用 且 企业启用。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">4. 实体关系 <span class="cnt">L1 §7 / L2 §6</span></h4>
+          <div class="p-body">
+            <b>E: Account</b>（本模块拥有）— 页面徽章见各卡片左下。<br>
+            Account 关键字段：<b>accountType（账号类型，必填，四值枚举：企业系统管理员/企业一般用户/平台系统管理员/平台一般用户）</b>，决定数据范围与模块可见性；accountNo（账户编号 ZH+日期+10位随机、全局唯一、删除后不复用）；enterpriseId（N─1 Enterprise，S04 只读引用）；roleId（N─1 Role，S05 只读引用，与 accountType 并存、互不联动 BR-27）；deptId（N─1 Dept，S07 只读引用）；头像文件本模块存储供账户详情模块消费。<br>
+            状态变更日志由 S09 承载（accountType 变更须记原值→新值 BR-26）；密码归 SSO，本模块不存储。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">5. 业务流程 <span class="cnt">L1 §5</span></h4>
+          <div class="p-body">
+            创建（F01：校验→企业有效性→手机号唯一→保存+编号+审计）→ 查询（F02）／编辑（F03）／重置密码（F06）→ 状态变更（F04 启用⇄禁用，禁用即会话失效）→ 删除（F05，禁用→已删除）；S04 企业禁用 → 名下账号不可登录；S04 企业删除 → 名下账号批量禁用（幂等）。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">6. 异常与边界 EX <span class="cnt">维护21+生命周期13</span></h4>
+          <div class="p-body" id="sec-ex"></div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">7. 接口约定 <span class="cnt">§8</span></h4>
+          <div class="p-body">
+            POST /api/accounts（创建）· GET /api/accounts（列表，企业筛选仅平台运营）· GET/PUT/DELETE /api/accounts/{id} · POST /{id}/enable · /{id}/disable · /{id}/password/reset；选项接口：/api/enterprises?status=启用（S04）·/api/roles?status=启用（S05）·/api/departments?status=启用（S07）；消费 S04 事件 enterprise.status.changed（至少一次投递，幂等消费）。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">8. 验收标准 AC <span class="cnt">×48（001-038）</span></h4>
+          <div class="p-body" id="sec-ac"></div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">9. 非功能需求 <span class="cnt">§11</span></h4>
+          <div class="p-body">
+            手机号 AES 加密 + 脱敏展示；列表 P95 ≤ 500ms；禁用/企业禁用 → SSO 会话失效端到端 ≤ 2s；企业事件至少一次投递下最终一致（幂等、无重复审计）；其余遵循《全局非功能需求基线》。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">10. 明确不做 <span class="cnt">§12</span></h4>
+          <div class="p-body">
+            不做批量导入/批量创建、批量启用/禁用/删除；不做回收站/已删除列表/恢复；不做删除原因；不做高级搜索；不做员工自助改密；不做头像裁剪压缩；不做启用/禁用定时；不做企业删除级联删除账号（仅批量禁用）；不做 S04 建企自动联动建管；账户编号不可编辑/不改号。
+          </div>
+        </div>
+        <div class="p-sec">
+          <h4 onclick="toggleSec(this)">11. 变更记录 <span class="cnt">§13</span></h4>
+          <div class="p-body">
+            <b>V1.1.0-rc / V0.8.0（2026-10-14，CR-S06-0003）</b>：新增字段账号类型 accountType（BR-24~28）；权限矩阵重写为四值模型；平台侧账号仅平台系统管理员可建；编辑改类型需二次确认+审计；原型同步加账号类型字段、操作人视角切换器、类型变更确认弹窗、AC-032~038。<br>
+            V1.0.1-rc（2026-09-15，CR-S06-0002）：两份 L2 新增账户编号字段（BR-23，维护/生命周期同步），新增 AC-031。<br>
+            V1.0.0-rc / V0.7.0（2026-09-15，CR-S06-0001）：定稿全部访谈决策（状态机联动、自我红线、企业归属创建、枚举中文口径等）。
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 4 个确认弹窗（§4.9：标题=动作、主按钮重复动作、删除含不可恢复） ================= -->
+<div class="modal-mask" id="m-disable">
+  <div class="modal">
+    <h3>确认禁用该账号？</h3>
+    <p>禁用后该账号将立即退出登录且无法登录（BR-02/03）。</p>
+    <div class="m-foot"><button class="btn ghost" onclick="closeModal('m-disable')">取消</button><button class="btn" onclick="doModal('m-disable','已禁用，该账号已退出登录')">确认禁用</button></div>
+  </div>
+</div>
+<div class="modal-mask" id="m-enable">
+  <div class="modal">
+    <h3>确认启用该账号？</h3>
+    <p>启用后该账号可正常登录系统（BR-01）。</p>
+    <div class="m-foot"><button class="btn ghost" onclick="closeModal('m-enable')">取消</button><button class="btn" onclick="doModal('m-enable','已启用')">确认启用</button></div>
+  </div>
+</div>
+<div class="modal-mask" id="m-reset">
+  <div class="modal">
+    <h3>确认重置该账号密码？</h3>
+    <p>密码将重置为当前手机号后 6 位，该账号已退出登录（BR-13）。</p>
+    <div class="m-foot"><button class="btn ghost" onclick="closeModal('m-reset')">取消</button><button class="btn" onclick="doModal('m-reset','密码已重置为手机号后 6 位，该账号已退出登录')">确认重置密码</button></div>
+  </div>
+</div>
+<div class="modal-mask" id="m-del">
+  <div class="modal" style="border-top:3px solid var(--danger)">
+    <h3 style="color:var(--danger)">确认删除该账号？</h3>
+    <p style="color:var(--danger)">删除后不可恢复，该手机号可重新注册（BR-05/06/07）。仅禁用状态的账号可删除。</p>
+    <div class="m-foot"><button class="btn ghost" onclick="closeModal('m-del')">取消</button><button class="btn danger" onclick="doModal('m-del','已删除')">确认删除</button></div>
+  </div>
+</div>
+<div class="modal-mask" id="m-type-change">
+  <div class="modal" style="border-top:3px solid var(--warn)">
+    <h3 style="color:var(--warn)">确认修改账号类型？</h3>
+    <p>修改账号类型将改变该账号的权限范围与数据可见性。本次变更将写入审计日志，记录原值→新值（BR-26）。</p>
+    <div class="m-foot"><button class="btn ghost" onclick="closeModal('m-type-change')">取消</button><button class="btn" onclick="doModal('m-type-change','账号类型已修改，审计已记录')">确认修改</button></div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+<div id="toast" style="position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--t1);color:#fff;font-size:14px;padding:8px 20px;border-radius:4px;display:none;z-index:400"></div>
+<script>
+/* ================= 面板数据源（编号与源文档逐字一致，§10.6） ================= */
+const BR_M=["BR-01 创建必填：用户名/手机号/所属企业/账号类型，任一为空或纯空格拒绝","BR-02 用户名：去空格非空；≤20字；中文/字母/数字/下划线","BR-03 手机号：11位数字，不附加号段规则","BR-04 手机号全库唯一；部分唯一索引排除已删除；编辑排除自身","BR-05 角色：仅启用中（S05 供给），选填（业务岗位标签，与账号类型并存）","BR-06 部门：仅启用中（S07 供给），选填","BR-07 创建初始状态=启用，无中间态","BR-08 初始密码=手机号数字串末6位；存储与认证归 SSO","BR-09 邮箱选填，正则 ^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$","BR-10 头像选填；jpg/png；≤2MB","BR-11 编辑前置状态∈{启用,禁用}；已删除→404","BR-12 编辑手机号后默认密码口径=新手机后6位，不追溯既有密码","BR-13 重置密码：密码=当前手机后6位；旧密码及会话同事务立即失效（同步 SSO）","BR-14 查询数据范围：企业系统管理员 enterpriseId=本企业；企业筛选仅平台侧账号，越参400","BR-15 查询结果不含已删除账号","BR-16 默认排序创建时间倒序（可切正序）；默认每页20条","BR-17 每个写操作发审计事件至 S09","BR-18 enterpriseId 必填；平台侧可选任意企业；企业系统管理员传他企→400+审计","BR-19 所选企业必须存在于 S04 且状态=启用，否则400","BR-20 首管语义：可多个，不强制；账号类型不强制（选填）","BR-21 备注选填 ≤200字","BR-22 枚举统一中文：状态（启用/禁用/已删除）+ 账号类型（企业系统管理员/企业一般用户/平台系统管理员/平台一般用户）","BR-23 账户编号 ZH+YYYYMMDD+10位随机；全局唯一；不可编辑；删除后不复用；同事务落库","BR-24 账号类型默认值：创建未指定 → 落库「企业一般用户」","BR-25 账号类型可选域：企业系统管理员仅可选企业侧两项；平台一般用户仅可选企业侧两项；平台系统管理员四值可选；企业一般用户无本模块权限（403）；越集合→400+审计","BR-26 账号类型编辑：允许修改，前端二次确认；后端校验授予集合；审计记原值→新值；不可改自己的账号类型","BR-27 账号类型与 S05 roleId 并存：账号类型决定数据范围/模块可见性；roleId 仅业务岗位标签，互不联动","BR-28 平台侧账号（平台系统管理员/平台一般用户）仅可由平台系统管理员创建；其他操作人提交→400+审计"];
+const BR_L=["BR-01 启用：仅禁用账号可启用；禁止对自己启用","BR-02 禁用：仅启用账号可禁用；禁止对自己禁用","BR-03 禁用同事务内已签发会话/Token立即失效（同步SSO）；失败整体回滚+告警","BR-04 删除：仅禁用账号可删除；启用态删除409；禁止对自己删除","BR-05 逻辑删除：状态置已删除，记录保留，业务查询移除","BR-06 删除不可逆：保留审计链路引用完整性；编号不复用","BR-07 删除成功即释放手机号唯一索引，可再次注册","BR-08 删除须二次确认弹窗；不强制填写删除原因","BR-09 每次状态变更发审计事件（操作人/时间/账号/动作/原态/新态）","BR-10 越权访问 403+审计日志","BR-11 禁用账号允许编辑；已删除不可编辑（404）","BR-12 可登录=账号启用且企业启用；企业禁用→名下账号不可登录+会话立即失效","BR-13 企业删除→名下账号批量禁用（不删账号）；每账号一条审计，操作人=事件触发人；已禁用跳过不重复审计","BR-14 S04事件至少一次投递；本模块幂等消费；失败重试队列+告警"];
+document.getElementById('sec-br').innerHTML=[...BR_M.map(b=>'<div class="p-item" data-rid="'+b.slice(0,5)+'"><span class="rid">'+b.slice(0,5)+'</span>'+b.slice(6)+'</div>'),...BR_L.map((b,i)=>'<div class="p-item" data-rid="LB'+(i+1)+'" data-brn="BR-'+b.slice(4,6)+'"><span class="rid">生命周期 BR-'+b.slice(4,6)+'</span>'+b.slice(6)+'</div>')].join('');
+
+const EXS=["EX-01 非法输入→400+字段级错误码（前端拦截）","EX-02 角色/部门非启用中→400+审计","EX-03 跨企业操作→403+审计","EX-04 编辑/重置目标=自己→403+审计","EX-05 并发同手机号创建→唯一索引兜底，后到409","EX-06 提交瞬间目标被删→404；状态并发变更→409","EX-07 重复提交：创建409；编辑全量覆盖结果一致","EX-08 数据库写入失败→整体回滚","EX-09 审计发送失败→主事务回滚+重试队列+告警","EX-10 S04/S05/S07选项超时3秒→置灰+重试按钮","EX-11 SSO同步失败→整体回滚+告警","EX-12 已删除手机号再次注册→允许201","EX-13 企业系统管理员传他企enterpriseId→400+审计","EX-14 企业不存在/禁用/已删除→400","EX-15 企业侧账号携带企业筛选→400","EX-16 企业一般用户调接口→403+审计","EX-17 重置目标已删除→404","EX-18 提交的账号类型不在操作人可授予集合→400+审计","EX-19 平台一般用户/企业系统管理员尝试创建平台侧账号→400+审计","EX-20 操作人尝试修改自己账号的账号类型→403+审计","EX-21 编辑时账号类型变更但未二次确认（直调接口绕过前端）→后端拒绝","EX-L01 非法状态流转→409 INVALID_STATE_TRANSITION","EX-L02/L03 越权（他企/自己）→403+审计","EX-L04 并发操作同一账号→先到生效，后到409/404","EX-L05 禁用SSO同步失败→回滚保持启用+告警","EX-L06 审计失败→回滚+重试队列","EX-L07 库写失败→整体回滚","EX-L08 删除后手机号重注册→新账号独立","EX-L09 删除确认取消→无操作无审计","EX-L10 删除瞬间被并发启用→事务内重读→409","EX-L11 企业事件消费失败→重试队列+告警，不回滚","EX-L12 联动时账号已禁用→跳过不重复审计","EX-L13 企业一般用户调接口→403+审计"];
+document.getElementById('sec-ex').innerHTML=EXS.map(e=>'<div class="p-item">'+e+'</div>').join('');
+
+const ACS=["AC-001 必填为空/纯空格→前端拦截，直调400","AC-002 手机号12345→400；13800001234通过","AC-003 合法创建→201，状态启用，初始密码=手机后6位，审计到达","AC-004 同手机号创建→409无新增","AC-005 已删除手机号再注册→201","AC-006 停用角色→400","AC-007 跨企业查询/编辑/重置→403+审计","AC-008 25正常+1已删除→返回25条，倒序，首页20条","AC-009 禁用账号编辑备注→200","AC-010 编辑自己→403+审计","AC-011 改手机号后重置→新密码=当前手机后6位","AC-012 重置→旧密码失效+会话立即失效；SSO不可用回滚","AC-013 并发同手机号→仅建1条，后到409","AC-014 手机号13800001234→展示138****1234","AC-015 平台侧指定企业B创建→201，enterpriseId=B","AC-016 企业系统管理员传他企enterpriseId→400+审计","AC-017 企业禁用/已删除→400；启用→通过","AC-018 角色留空创建→201，roleId空","AC-019 停用部门→400","AC-020 非法邮箱→拦截/400","AC-021 禁用启用态账号→状态禁用，会话立即失效，审计到达","AC-022 SSO不可用禁用→状态保持启用，无审计，告警","AC-023 禁用账号启用→状态启用，审计到达","AC-024 禁用中操作人启用自己→403+审计","AC-025 启用态删除→409，状态不变","AC-026 禁用态二次确认删除→已删除，列表消失，手机号可再注册","AC-027 已删除恢复/编辑→404，记录保留","AC-028 删除点取消→无变更无审计","AC-029 并发操作同一账号→仅一个成功，另一个409/404","AC-030 企业禁用→账号登录拒绝/会话立即失效","AC-031 创建成功→编号ZH+日期+10位随机，全局唯一，同事务落库","AC-032 创建未指定账号类型→落库「企业一般用户」","AC-033 企业系统管理员提交账号类型=平台系统管理员→400+审计","AC-034 平台一般用户提交账号类型=平台一般用户→400+审计","AC-035 平台系统管理员提交四值→201","AC-036 企业一般用户直调POST /api/accounts→403","AC-037 操作人编辑自己账号并改账号类型→403+审计","AC-038 平台系统管理员把企业一般用户改为企业系统管理员（二次确认通过）→200，审计记原值→新值"];
+document.getElementById('sec-ac').innerHTML=ACS.map(a=>'<div class="p-item"><span class="rid">'+a.slice(0,7)+'</span>'+a.slice(8)+'</div>').join('');
+
+/* ================= 页面切换 ================= */
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(s=>s.classList.remove('show'));
+  document.getElementById('page-'+p).classList.add('show');
+  document.querySelectorAll('#pg-switch .tb-btn').forEach(b=>b.classList.toggle('on',b.dataset.page===p));
+  applyState(currentState);
+}
+document.querySelectorAll('#pg-switch .tb-btn').forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+
+/* ================= 操作人视角切换（四值账号类型模型） ================= */
+let currentRole='ent-admin';
+function applyRole(){
+  // 视角：ent-admin / ent-user / plat-user / plat-admin
+  // plat-only = 仅平台侧（plat-user + plat-admin）可见的企业列/筛选/所属企业字段
+  // plat-admin-only = 仅平台系统管理员可见的平台侧账号类型选项
+  const showPlat = (currentRole==='plat-user'||currentRole==='plat-admin');
+  document.querySelectorAll('.plat-only').forEach(el=>el.style.display=showPlat?'':'none');
+  document.body.classList.toggle('view-plat-admin', currentRole==='plat-admin');
+  document.body.classList.toggle('view-ent-user', currentRole==='ent-user');
+  document.querySelectorAll('#role-switch .tb-btn').forEach(b=>b.classList.toggle('on',b.dataset.role===currentRole));
+}
+document.querySelectorAll('#role-switch .tb-btn').forEach(b=>b.onclick=()=>{currentRole=b.dataset.role;applyRole();});
+
+/* ================= 页面状态切换器（§10.5 真实预览） ================= */
+let currentState='normal';
+function applyState(st){
+  currentState=st;
+  const page=document.querySelector('.page.show');if(!page)return;
+  page.querySelectorAll('.state-layer').forEach(l=>l.style.display='none');
+  const layer=page.querySelector('[data-state="'+st+'"]');
+  const hasReal = st==='normal' || !!layer;
+  // 正常态隐藏状态层；非空数据类状态隐藏真实表格内容区（P1 表格卡片）
+  const card=page.querySelector('#acct-table');
+  if(page.id==='page-p1'){
+    const cardBox=card.closest('.card');
+    if(st==='loading'||st==='empty'||st==='p403'){
+      card.style.display='none';card.nextElementSibling.nextElementSibling.style.display='none';
+      const pager=card.parentElement.querySelector('.pager'); if(pager) pager.parentElement.style.display='none';
+    }else{
+      card.style.display=''; 
+      const pager=card.parentElement.querySelector('.pager'); if(pager) pager.parentElement.style.display='';
+    }
+  }
+  if(layer)layer.style.display= st==='p403'?'flex':'block';
+  if(st==='error'){
+    const banner=page.querySelector('[data-state="error"]');
+    if(banner)banner.style.display='block';
+  }
+  document.querySelectorAll('#state-switch .tb-btn').forEach(b=>b.classList.toggle('on',b.dataset.state===st));
+}
+document.querySelectorAll('#state-switch .tb-btn').forEach(b=>b.onclick=()=>applyState(b.dataset.state));
+
+/* ================= 标注总开关 ================= */
+document.getElementById('anno-toggle').onclick=function(){
+  document.body.classList.toggle('no-anno');
+  const off=document.body.classList.contains('no-anno');
+  this.textContent='标注：'+(off?'关':'开');this.classList.toggle('on',!off);
+  if(off)hideTip(true);
+};
+
+/* ================= Tooltip（§10.3 高密度模板 + 编号联动） ================= */
+const tip=document.getElementById('tooltip');let pinned=false;
+function showTip(el,x,y){
+  const d=(el.dataset.tip||'').split('|');
+  let ids=(d[5]||'').split(';').filter(Boolean);
+  tip.innerHTML='<b>'+d[0]+'</b> ｜ '+d[1]+'<br>'+d[2]+
+    (d[3]?'<br><span style="color:var(--danger)">错误提示：「'+d[3]+'」</span>':'')+
+    (ids.length?'<br><span style="color:var(--t3)">规则来源：</span>'+ids.map(i=>'<span class="tt-rule" data-t="'+i+'">'+i+'</span>').join(''):'');
+  tip.style.display='block';
+  const r=tip.getBoundingClientRect();
+  tip.style.left=Math.min(x+14,innerWidth-r.width-12)+'px';
+  tip.style.top=Math.min(y+14,innerHeight-r.height-12)+'px';
+  tip.querySelectorAll('.tt-rule').forEach(t=>t.onclick=()=>jumpToRule(t.dataset.t));
+}
+function hideTip(force){if(!pinned||force){tip.style.display='none';pinned=false;}}
+document.addEventListener('mouseover',e=>{
+  const a=e.target.closest('[data-tip]');
+  if(a&&!document.body.classList.contains('no-anno')){showTip(a,e.clientX,e.clientY);}
+});
+document.addEventListener('mousemove',e=>{
+  const a=e.target.closest('[data-tip]');
+  if(a&&!pinned&&!document.body.classList.contains('no-anno'))showTip(a,e.clientX,e.clientY);
+  else if(!a&&!pinned)hideTip();
+});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-tip]');
+  if(a&&!e.target.closest('#tooltip')){pinned=!pinned;if(pinned)showTip(a,e.clientX,e.clientY);else hideTip(true);}
+  else if(!e.target.closest('#tooltip'))hideTip(true);
+});
+function jumpToRule(id){
+  const panel=document.getElementById('page-panel');
+  panel.querySelectorAll('.p-body').forEach(b=>b.classList.remove('hidden'));
+  let target=panel.querySelector('[data-rid="'+id+'"]');
+  if(!target){ // BR-编号模糊匹配（先维护 Spec，后生命周期 Spec）
+    const num=id.match(/\d+/);
+    if(num)target=panel.querySelector('[data-rid="BR-'+num[0]+'"]')||panel.querySelector('[data-brn="BR-'+num[0]+'"]');
+  }
+  if(target){panel.scrollTo({top:target.offsetTop-80,behavior:'smooth'});
+    panel.querySelectorAll('.p-item').forEach(i=>i.classList.remove('hl'));
+    target.classList.add('hl');setTimeout(()=>target.classList.remove('hl'),2000);}
+}
+
+/* ================= 面板交互 ================= */
+function toggleSec(h){h.nextElementSibling.classList.toggle('hidden');}
+function togglePanel(){
+  const p=document.getElementById('page-panel');
+  const collapsed=p.style.width==='40px';
+  p.style.width=collapsed?'360px':'40px';
+  p.querySelectorAll('.p-sec,.p-head').forEach(el=>el.style.display=collapsed?'':'none');
+}
+
+/* ================= 弹窗与 Toast ================= */
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function doModal(id,msg){closeModal(id);toast(msg);}
+document.querySelectorAll('.modal-mask').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2200);}
+function fakeSubmit(msg){toast(msg);}
+/* P3 编辑：账号类型变更 → 二次确认弹窗（BR-26） */
+function saveEdit(){
+  const sel=document.getElementById('account-type-edit');
+  const changed = sel && sel.value !== sel.dataset.orig;
+  if(changed){ openModal('m-type-change'); }
+  else { toast('保存成功'); }
+}
+document.querySelectorAll('#account-type-edit').forEach(s=>s.dataset.orig=s.value);
+document.querySelectorAll('.modal-mask .btn.ghost')[0].focus();
+
+/* ================= P4 查看原文（§6.5：鉴权+审计+短时展示） ================= */
+document.getElementById('btn-view-phone').onclick=function(){
+  const el=document.getElementById('phone-masked');
+  if(el.textContent.includes('*')){el.textContent='13900005678';this.textContent='隐藏';
+    toast('已鉴权并记录审计日志，短时展示后自动恢复掩码');
+    el._h=setTimeout(()=>{el.textContent='139****5678';document.getElementById('btn-view-phone').textContent='查看';},5000);
+  }else{clearTimeout(el._h);el.textContent='139****5678';this.textContent='查看';}
+};
+
+applyRole();applyState('normal');
+</script>
+</body>
+</html>
