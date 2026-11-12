@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-user-paging-role-notice.md](qianrong-user-paging-role-notice.md)：2026-11-12 ssh dev/95a30a5 账户管理翻页一直传第 1 页（getList 没带分页器页码）已修，其余列表核对无同类问题；角色列表新增越界标记列（unreadNoticeCount）与「查看越界」弹窗（notice/list 加载后 notice/read 标已读）。
 - [qianrong-prototype-trim-2026-11-12.md](qianrong-prototype-trim-2026-11-12.md)：2026-11-12 ssh test/7d409c2（合并 dev/1bb7c16）账户列表去分配角色；账号（S06）、企业（S04）表单按原型收字段（账号去昵称 / 密码 / 性别 / 状态 / 岗位 / 地区，新建初始密码 = 手机号后 6 位；企业去银行类型 / 简称 / 币种 / 法人电话 / 实控人电话与身份证号，新增法人信息区块）；角色列表去列字段配置、数据权限、分配用户。
 - [qianrong-role-logs.md](qianrong-role-logs.md)末节：2026-11-11 ssh test/174b694 操作日志详细改版（摘要头 + 信息格 + 请求 / 返回参数字段视图 / JSON 切换 / 复制，长整型 ID 保精度）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-11 ssh test/9bfa240 列表面板（ListTablePanel）分页被全局 ruoyi 分页样式（限高 25px + 绝对定位）挤成一列并被裁掉，弹窗里与底部按钮重叠；改回文档流。
