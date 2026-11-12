@@ -2,7 +2,7 @@
 
 ## 2026-11-12 ssh｜账户列表翻页参数、角色越界提醒（dev）
 
-test 干净；按默认切 dev 同名 pull 已最新（1bb7c16）。user/index getList 追加分页器页码；核对 19 个 vxe 接口分页列表与 el-pagination / 本地切页页面无同类问题。dev Swagger 只读核对 notice 契约与 unreadNoticeCount；新增 RoleNoticeDialog、两个 API、越界标记列与查看越界按钮、测试。dev/95a30a5 提交后再次同名 pull 并 push；test 未同步。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。
+test 干净；按默认切 dev 同名 pull 已最新（1bb7c16）。user/index getList 追加分页器页码；核对 19 个 vxe 接口分页列表与 el-pagination / 本地切页页面无同类问题。dev Swagger 只读核对 notice 契约与 unreadNoticeCount；新增 RoleNoticeDialog、两个 API、越界标记列与查看越界按钮、测试。dev/95a30a5 提交后再次同名 pull 并 push；用户追问 test 后切 test 同名 pull，cherry-pick 为 test/cd2fec5（无冲突）并 push。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。
 
 ## 2026-11-12 ssh｜账户 / 企业表单按原型收字段，账户与角色列表去分配类功能（test → dev）
 

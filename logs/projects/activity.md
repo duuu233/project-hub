@@ -8,7 +8,7 @@
 
 ## 2026-11-12｜taiqian-front｜ssh｜dev｜账户列表翻页参数、角色越界提醒
 
-qianrong：账户管理翻页请求补上分页器页码（其余列表核对无同类问题）；角色列表新增越界标记列与查看越界弹窗（notice/list 加载后 notice/read）。dev/95a30a5 已 push，test 未同步。无 Node，测试 / 构建 / 浏览器未跑。
+qianrong：账户管理翻页请求补上分页器页码（其余列表核对无同类问题）；角色列表新增越界标记列与查看越界弹窗（notice/list 加载后 notice/read）。dev/95a30a5 已 push；同日 cherry-pick 到 test/cd2fec5 已 push。无 Node，测试 / 构建 / 浏览器未跑。
 
 ## 2026-11-12｜album-app｜ssh｜main｜共享邀请 H5 立即下载跳官网
 

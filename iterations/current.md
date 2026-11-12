@@ -15,7 +15,8 @@
 - 同步：Hub main 已最新；tq-plus 原在 test、工作区干净，用户未指定分支，按项目默认切 dev，同名 pull 已最新（1bb7c16）；origin GitHub。
 - 结论：① 账户列表 getList 只带写死 pageNum:1 的 queryParams，没带分页器页码；其余 19 个接口分页 vxe 列表与 el-pagination / 本地切页页面均正常。② 越界标记未开发；dev Swagger 核对：行字段 unreadNoticeCount，notice/list 参数 roleId，notice/read 体 { roleId, noticeIds }。
 - taiqian-front dev/95a30a5（已 push）：改动见 private/taiqian-front/docs/qianrong-user-paging-role-notice.md。
-- 自行决定（可改）：「查看越界」按钮借 system:role:query；弹窗带 pageNum / pageSize（Swagger 未声明，不分页时本地切页）；弹窗内阅读状态保持打开时的样子，关闭后刷新列表未读数；本次只在 dev，未合 test。
+- 自行决定（可改）：「查看越界」按钮借 system:role:query；弹窗带 pageNum / pageSize（Swagger 未声明，不分页时本地切页）；弹窗内阅读状态保持打开时的样子，关闭后刷新列表未读数。
+- 追加：用户重发需求并问 test 是否改了 → 切 test 同名 pull 后 cherry-pick 为 test/cd2fec5（无冲突，已 push），仓库当前在 test。
 - 验证：无 node，测试 / 构建 / 浏览器未跑，notice 接口未联调；断言与模板配平用 Python 核对，diff --check、信息隔离自查通过。
 
 ---
