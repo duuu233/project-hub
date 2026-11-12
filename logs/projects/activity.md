@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜修复 release 打包三处类型编译错误
+
+相册删除 recordResult 的类型补 failedIds；WifiCastResultPage.state 改为可空，为空时回退到「产品未配置」；WiFi 分享页 owner 判空后存成非空 final 再进 setState。main/287ac4f 已 push。无 Flutter / Android SDK，analyze / test / 编译未跑，待本地重新打包。
+
 ## 2026-11-12｜taiqian-front｜ssh｜test → dev｜组织与权限空值统一显示「-」
 
 qianrong：企业用户、账户、部门、角色的列表与详情空值统一显示「-」（列表 emptyCell 选项 + 插槽列，详情头卡与只读字段）。test/d1a49dc、dev/d5960b3 已 push。无 Node，测试 / 构建 / 浏览器未跑。

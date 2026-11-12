@@ -1,3 +1,15 @@
+## 2026-11-12 ssh｜相册APP：修复 release 打包三处类型编译错误（main）
+
+- 需求（用户）：Android assembleRelease 在 compileFlutterBuildRelease 报 3 处类型错误（gallery_page:602、cast_preview_page:1438、wifi_share_page:142）。
+- 同步：Hub main、flutter main/050f028 同名 pull 已最新；origin GitHub。
+- 原因：都是 WiFi 版合进来时留下的类型不匹配，没编译过。① 57b5f07 给 deleteCastRecords 的返回值加了 failedIds，蓝牙删除那里声明的 recordResult 还是 `({int total, int failed})?`；② 57b5f07 的 WiFi 投屏分支把可空的 CastPreviewPage.state 传给要求非空的 WifiCastResultPage.state；③ bc6200a 的 `bool? owner` 判空后，setState 闭包里读它时类型提升不保留。
+- album-app main/287ac4f（已 push）：① recordResult 类型补 failedIds；② WifiCastResultPage.state 改为可空，state 为空时 screenType / renderMode 按「产品未配置」回退（现有入口都会传 state，行为不变）；③ 判空后存成 `final isOwner` 再用；docs/history 新增记录，docs/README 同步。
+- 自行决定（可改）：② 改结果页让它接受可空 state，没有把 CastPreviewPage.state 改成必填，因为改必填要连带 casting_progress_page 等多处。
+- 待用户：本地重新执行 release 打包；编译器一次会报出全部错误，理论上这三处修完就能过，若还有新报错直接贴出来。
+- 验证：无 Flutter / Dart / Android SDK，analyze / test / 编译未跑；diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：组织与权限空值统一显示「-」（test → dev）
 
 - 需求（用户）：组织与权限下的页面，数据为空都显示「-」占位。
