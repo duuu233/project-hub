@@ -1,3 +1,16 @@
+## 2026-11-12 ssh｜相册小程序 ＋ 相册APP：首页设备卡进列表默认对应 Tab；APP 分享设备置灰排查；APP 联调日志浮窗（main）
+
+- 需求（用户）：1. 小程序 / APP 首页点蓝牙版设备卡，跳到列表默认显示蓝牙版 Tab，WiFi 同理；2. 查 APP「分享设备」为什么点不了（提示「暂时无法分享，请稍后重试」），先分清后端还是前端原因；APP 左下角加联调日志，同小程序或花盆APP。
+- 同步：Hub main、photo-album main/eb3a660、flutter main/42ae540、flowerpot main/a4bab94（只读参考）同名 pull 均已最新；origin 均 GitHub；无 .codegraph。
+- 分享结论：**前端打包配置问题，不是后端**。按钮置灰 = `_canShare` 为假，其中 `WifiWeChatShare.configured` 依赖 `--dart-define=WECHAT_MINI_PROGRAM_USERNAME`（小程序原始 ID gh_…），没有默认值，打包命令与 launch.json 都没传 → 必然置灰（10-29 加分享时已写明）。后端只影响另一条路径：按钮不灰、点了后 getCurrentTime 取不到时间戳，提示同一句；userId（getUserInfo 出参）取不到也会置灰，现在日志能区分。仓库里没有原始 ID，未写默认值。
+- album-miniapp main/a511838（已 push）：首页 `.device-carousel` 加 data-tab，goDeviceList 从卡片进来带 `?tab=wifi/ble`；list.js onLoad 认 tab、按用户选过处理（没有该类设备显示空态），选相框模式不认；六宫格等入口不变。tests/device-list-wifi-group 补用例；docs/changes + README + AI_CONTEXT 同步。
+- album-app main/c76c09b（已 push）：① 首页卡片按 isWifi 传路由参数 `MyDevicesTab`，MyDevicesPage.initialTab 进页即视为用户选过；② 新增 shared/debug_log.dart（接管 debugPrint、500 行内存、打码同小程序正则、微任务合并通知）与 shared/widgets/debug_log_overlay.dart（MaterialApp.builder 上，左下角「日志 N」、复制 / 清空 / 关闭；路由观察者记「页面 → 路由」）；[HTTP] 日志随开关打，IoT 每次请求一行、WS 状态 / 收发（不记心跳）；③ 分享页把置灰原因逐条写进日志。docs/history、README、BUILD_RELEASE（补 WECHAT_MINI_PROGRAM_USERNAME、APP_DEBUG_TOOLS 两行）、AI_CONTEXT 同步；新增 test/debug_log_test.dart、test/my_devices_initial_tab_test.dart。
+- 自行决定（可改）：日志开关 `APP_DEBUG_TOOLS` 默认 debug / profile 开、release 关（对应小程序正式版不显示；花盆APP 是默认开），release 联调包需传 true；药丸 bottom 安全区 + 110（同小程序 220rpx），日志框 56% 屏高；按小程序口径做「全局 debugPrint 汇总」，没照花盆的逐条业务日志 + DP 快照。
+- 待用户：提供小程序原始 ID（gh_ 开头，小程序后台「账号信息」），并确认小程序与 App 在同一微信开放平台账号下；拿到后打包加 dart-define 或写成默认值。
+- 验证：无 node / Flutter / Dart，小程序 tests、flutter analyze / test、真机均未跑；新断言与打码正则用 Python 对源码核对通过，括号配平、diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-11 ssh｜相册APP WiFi 配网页图标、输入框橙色边框、配网状态页键盘关不掉（main）
 
 - 需求（用户）：1. WiFi 配网页顶部图标与相册小程序一致（可直接复制小程序的图），WiFi 密码输入框橙色边框没正常展示；2. 设备配网页底部始终有键盘关不掉、进内页也关不掉、挡住按钮；仔细对比小程序，把 WiFi 版功能同步过来。

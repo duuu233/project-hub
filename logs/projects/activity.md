@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-miniapp ＋ album-app｜ssh｜main｜设备卡默认 Tab、分享置灰排查、APP 联调日志
+
+两端首页点 WiFi 版 / 蓝牙版设备卡进列表默认停在对应 Tab；APP「分享设备」置灰确认为打包缺 WECHAT_MINI_PROGRAM_USERNAME（前端配置，非后端），置灰原因写进日志；APP 新增左下角联调日志浮窗（debugPrint 汇总 + IoT / WS 摘要，release 默认关）。小程序 main/a511838、APP main/c76c09b 已 push。无 node / Flutter，测试 / analyze / 真机未跑；待用户提供小程序原始 ID。
+
 ## 2026-11-11｜album-app｜ssh｜main｜WiFi 配网页图标、输入框描边、配网状态页键盘
 
 WiFi 配网页头图、切换、小眼睛与 WiFi 列表图标按小程序 svg 坐标绘制；输入框内层不再画主题橙框，聚焦整框描橙边；离开配网页先收键盘、配网状态页兜底收起；状态列表样式对齐小程序、跑完即恢复息屏。main/42ae540 已 push。无 Flutter，analyze / test / 真机未跑。
