@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-miniapp + album-app｜ssh｜main｜WiFi 投屏进度页加步骤、去日志面板；OTA 页加进度条
+
+两端同口径：WiFi 投屏结果页进度条下方加四步（准备投屏 / 图片上传中 / 图片处理中 / 已发送，屏幕即将刷新，同配网步骤样式），去掉黑底投屏日志面板；WiFi 固件升级页步骤上方加进度条，按 progress 分档匀速前进（停 19/39/59/79、不上报 98、VERIFYING 100）。photo-album main/959325b、flutter main/e16fd03 已 push。无 node / Flutter，测试 / 编译 / 真机未跑，OTA 进度未联调。
+
 ## 2026-11-12｜album-app｜ssh｜main｜修复 release 打包三处类型编译错误
 
 相册删除 recordResult 的类型补 failedIds；WifiCastResultPage.state 改为可空，为空时回退到「产品未配置」；WiFi 分享页 owner 判空后存成非空 final 再进 setState。main/287ac4f 已 push。无 Flutter / Android SDK，analyze / test / 编译未跑，待本地重新打包。

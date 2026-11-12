@@ -1,3 +1,14 @@
+## 2026-11-12 ssh｜相册小程序 + 相册APP：WiFi 投屏进度页加步骤、去日志面板；OTA 页加进度条（main）
+
+- 需求（用户）：① 投屏进度页按进度文案加四步（准备投屏 / 图片上传中 / 图片处理中 / 已发送，屏幕即将刷新），样式和交互同配网步骤；② OTA 页加进度条，文案对应步骤文案；`ota/status` 与 WS `ota.result` 新增 `progress`（182/184/186/188 → 20/40/60/80，VERIFYING 100，不上报为 null），前端匀速前进，停在 19/39/59/79 等上报，null 涨到 98 停；③ 两端投屏页下方黑底投屏日志去掉。
+- 同步：Hub main、photo-album main/a511838、flutter main/287ac4f 同名 pull 均已最新；origin 均为 GitHub。
+- album-miniapp main/959325b（已 push）：wifi-result 进度卡下方加步骤卡（不同分包不能 @import，样式照搬配网页一份），上传 / 处理按 projectOne 的 onStage 推进，SENT / UPLOADED 第 4 步打勾，失败在当时那一步打叉；日志面板、复制与样式删除，页面日志改 console（开发版「日志」浮窗可看）。wifi-ota 步骤上方加进度条卡，逻辑在 utils/wifi-ota（parseProgress / progressCap / activeStep），每 200ms 走 1%；最大进度存进 ota_inflight 记录。tests、AI_CONTEXT、docs/changes、docs/README 同步。
+- album-app main/e16fd03（已 push）：同口径——投屏结果页复用 WifiStepIcon 加步骤卡、删日志面板与 4 条只给它用的文案、日志改 debugPrint；OTA 页加进度条（otaProgressCap 等在 wifi_ota.dart，WifiOtaRecord 加 progress）；test/wifi_ota_test 加一组；AI_CONTEXT、docs/history、docs/README 同步。
+- 自行决定（可改）：① 80 之后的上限取 98（与 null 同），不用 99；② 收到过数值后偶发的 null 不把上限放到 98，只有进入 DOWNLOADING 一直没值才算「不上报」；进入 FLASHING 也直接放到 98；③ VERIFYING 时从当前值匀速走到 100（一般只差 2%），不是瞬间跳；④ 进度条文案沿用现有四步映射（VERIFYING =「升级完成」），没有照示例把 VERIFYING 写成「设备写入固件中」；⑤ 速度 1%/200ms（一档约 4 秒，接近示例节奏）；⑥ 多张投屏时步骤跟着当前那张走，结束有失败按最后一张失败的步骤打叉；⑦ 失败时进度条停住并转红。
+- 验证：无 node / Flutter，两端测试、analyze、编译、真机均未跑，OTA progress 未联调；小程序新增与原有相关断言的正则用 Python 对实际文件核对通过，括号配平与改动前一致；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：修复 release 打包三处类型编译错误（main）
 
 - 需求（用户）：Android assembleRelease 在 compileFlutterBuildRelease 报 3 处类型错误（gallery_page:602、cast_preview_page:1438、wifi_share_page:142）。
