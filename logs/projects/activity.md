@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜修复 release 编译错误（parseOtaProgress 变量同名）
+
+parseOtaProgress 局部变量与参数同名导致编译失败，改名 rounded。已 push。无 Flutter，编译未跑。
+
 ## 2026-11-12｜album-app｜ssh｜main｜开关关闭样式同小程序、加载转圈统一橙色
 
 新增 AppSwitch（关闭浅灰底白圆钮、无描边），消息中心、轮播设置、TF 卡、投屏预览开关换用；主题转圈默认橙色，WiFi 各页首屏加载用 PageLoading。main/e7ab1da 已 push。无 Flutter，analyze / test / 编译 / 真机未跑。

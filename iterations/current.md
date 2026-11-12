@@ -1,3 +1,12 @@
+## 2026-11-12 ssh｜相册APP：修复 release 编译错误 parseOtaProgress 变量同名（main）
+
+- 需求（用户）：assembleRelease 报 wifi_ota.dart:122~130「Local variable 'value' can't be referenced before it is declared」。
+- 原因：本日 e16fd03 之后把 clamp 改写成手写比较时，局部变量取名 value，与参数同名，Dart 局部作用域整块生效。
+- album-app main（已 push）：局部变量改名 rounded；docs/history 当日记录补一节。
+- 验证：无 Flutter，编译未跑；其余今日新增函数已排查无同类同名。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：开关关闭样式同小程序、加载转圈统一橙色（main）
 
 - 需求（用户）：消息中心开关关闭样式同步小程序（没有描边），轮播设置的关闭也一样；加载图标统一橙色。
