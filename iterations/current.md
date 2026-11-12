@@ -1,3 +1,13 @@
+## 2026-11-12 ssh｜泰乾超级-qianrong：操作日志详细改调详情接口（test → dev）
+
+- 需求（用户）：新增操作日志详情接口 GET /monitor/logOper/{operId}（返回 requestMethod、method），列表行受列字段控制不能用，替换。
+- 同步：Hub main 已最新；tq-plus 在 test、干净，同名 pull 已最新（4847276）。
+- taiqian-front test/2987018（已 push），cherry-pick 到 dev/af9f98f（已 push），仓库回到 test。详见 private/taiqian-front/docs/qianrong-role-logs.md 末节。
+- 自行决定（可改）：接口回来前先用行数据占位（避免空白），回来后整份替换；失败保留占位并提示重试。
+- 验证：无 node，测试 / 构建 / 浏览器未跑，接口未联调；断言与模板配平用 Python 核对。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：菜单列表加菜单类型、是否显示（test → dev）
 
 - 需求（用户）：菜单列表显示「菜单类型」「是否显示」两列。

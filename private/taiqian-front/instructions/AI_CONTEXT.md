@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-12 ssh test/2987018、dev/af9f98f：操作日志「详细」改调详情接口 getOperlog（GET /monitor/logOper/{operId}），行数据只作占位，失败可重试。
 2026-11-12 ssh test/4847276、dev/8268c1d：菜单列表在菜单名称后加「菜单类型」（M 目录 / C 菜单 / F、B 按钮）与「是否显示」（visible，字典 sys_show_hide）两列。
 2026-11-12 ssh test/b0e9531、dev/8973d51：账户管理列表去掉左侧部门树（含按部门筛选），所属部门列取行字段 deptName。详见 docs/qianrong-user-paging-role-notice.md 第 3 节。
 2026-11-12 ssh dev/95a30a5、test/cd2fec5（先按默认 dev，用户追问后 cherry-pick 到 test）：账户管理 getList 改带 pagerConfig 的 pageNum / pageSize（原只带写死 1 的 queryParams）；角色列表新增「越界标记」列（unreadNoticeCount，>0 可点）与操作栏「查看越界」（system:role:query），同开 RoleNoticeDialog：notice/list?roleId 加载成功后把未读 id 调 notice/read，关闭时刷新列表。详见 docs/qianrong-user-paging-role-notice.md。

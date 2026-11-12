@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜taiqian-front｜ssh｜test → dev｜操作日志详细改调详情接口
+
+qianrong：操作日志「详细」改调 GET /monitor/logOper/{operId} 取完整数据（含请求方式、操作方法），不再用受列字段控制的列表行。test/2987018、dev/af9f98f 已 push。无 Node，测试 / 构建 / 浏览器未跑。
+
 ## 2026-11-12｜taiqian-front｜ssh｜test → dev｜菜单列表加菜单类型、是否显示
 
 qianrong：菜单列表新增菜单类型、是否显示两列。test/4847276、dev/8268c1d 已 push。无 Node，测试 / 构建 / 浏览器未跑。

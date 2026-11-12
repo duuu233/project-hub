@@ -83,3 +83,9 @@
 - log-content.js：新增 parseLogContent、logFieldRows；formatLogContent 改为基于 parseLogContent。解析前把字符串外 ≥16 位且超安全整数的数字包成带 \u0000 标记的字符串，输出时还原，雪花 ID 不再被 JSON.parse 截断（第三方日志、清理记录的 formatLogContent 也受益）。小变化：内容本身是 JSON 字符串字面量（如 `"abc"`）时现在显示不带引号。嵌套在字符串里的 JSON 由 mask 重新序列化，仍可能丢精度（原有行为）。
 - 未改：登录日志无详情；第三方日志详情仍是 descriptions + 整段 JSON，后续可复用 LogPayload。
 - 测试：新增 tests/log-payload.test.mjs（解析 / 脱敏、大整数、字段展开 / 截断、详情模板）；README「角色与日志」加说明与回归命令。无 Node / 浏览器，测试、构建、渲染均未运行，断言逐条手推。
+
+## 操作日志详细改调详情接口（2026-11-12 ssh test/2987018，cherry-pick 到 dev/af9f98f）
+
+- 用户：新增操作日志详情接口 `GET /monitor/logOper/{operId}`（返回 requestMethod、method 等全字段）；列表行受列字段配置控制、不能直接用于详情，替换掉。
+- 改法：`api/system/operlog.js` 新增 `getOperlog`；`operlog/index.vue` 的「详细」打开弹窗后先用行数据占位，再按 `operId` 调详情接口，以返回的 `data` 替换整份 form；加载中遮罩、失败弹窗顶部提示 +「重试」，关闭弹窗作废在途请求（序号防迟到覆盖）。弹窗版式与 LogPayload 不变。
+- 测试：log-payload 补「详情改走接口」用例。无 node 未运行；断言与模板配平用 Python 核对。未联调详情接口。

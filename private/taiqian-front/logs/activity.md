@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-12 ssh｜操作日志详细改调详情接口（test → dev）
+
+test 干净同名 pull 已最新（4847276）。operlog.js 加 getOperlog；operlog/index 详细弹窗按 operId 取详情（占位、loading、失败重试、防迟到）；log-payload 测试补用例。test/2987018 push；dev cherry-pick 为 af9f98f push，回到 test。无 node 未跑测试 / 构建 / 浏览器，未联调。
+
 ## 2026-11-12 ssh｜菜单列表加菜单类型、是否显示（test → dev）
 
 test 干净同名 pull 已最新（b0e9531）。menu/index 加两列与 sys_show_hide 字典；新增 menu-list-columns 测试。test/4847276 push；dev 同名 pull 后 cherry-pick 为 dev/8268c1d push，回到 test。无 node 未跑测试 / 构建 / 浏览器。
