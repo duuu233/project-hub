@@ -1,3 +1,13 @@
+## 2026-11-12 ssh｜泰乾超级-qianrong：账户管理去部门树、所属部门取 deptName（test → dev）
+
+- 需求（用户）：账户管理列表去掉左边 tree，只保留列表；所属部门取字段 deptName。
+- 同步：Hub main 已最新；tq-plus 在 test、干净，同名 pull 已最新（cd2fec5）。
+- taiqian-front test/b0e9531（已 push），cherry-pick 到 dev/8973d51（已 push），仓库回到 test。详见 private/taiqian-front/docs/qianrong-user-paging-role-notice.md 第 3 节。
+- 自行决定（可改）：部门列标题改「所属部门」；按部门筛选随树去掉（搜索区没有部门条件）；沿上一轮做法同时同步到 dev。
+- 验证：无 node，测试 / 构建 / 浏览器未跑；断言、模板配平用 Python 核对，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜相册后台：IoT 菜单改名与设备管理并入（main）
 
 - 需求（用户）：1. 产品设备改名设备管理，放到 IoT 菜单；2. 原设备管理改名设备监控；3. IoT监控改名 IoT管理。用户另给临时管理员 userToken 供本次写菜单（未记录）。

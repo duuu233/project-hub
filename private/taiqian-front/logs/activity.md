@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-12 ssh｜账户管理去部门树、所属部门取 deptName（test → dev）
+
+test 干净同名 pull 已最新（cd2fec5）。user/index 删左侧部门树与相关代码，部门列改 deptName；测试补一条。test/b0e9531 push；切 dev 同名 pull 后 cherry-pick 为 dev/8973d51 push，回到 test。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。
+
 ## 2026-11-12 ssh｜账户列表翻页参数、角色越界提醒（dev）
 
 test 干净；按默认切 dev 同名 pull 已最新（1bb7c16）。user/index getList 追加分页器页码；核对 19 个 vxe 接口分页列表与 el-pagination / 本地切页页面无同类问题。dev Swagger 只读核对 notice 契约与 unreadNoticeCount；新增 RoleNoticeDialog、两个 API、越界标记列与查看越界按钮、测试。dev/95a30a5 提交后再次同名 pull 并 push；用户追问 test 后切 test 同名 pull，cherry-pick 为 test/cd2fec5（无冲突）并 push。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。

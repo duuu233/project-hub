@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜taiqian-front｜ssh｜test → dev｜账户管理去部门树、所属部门取 deptName
+
+qianrong：账户管理列表去掉左侧部门树，所属部门列改取 deptName。test/b0e9531、dev/8973d51 已 push。无 Node，测试 / 构建 / 浏览器未跑。
+
 ## 2026-11-12｜album-admin｜ssh｜main｜IoT 菜单改名与设备管理并入
 
 后台菜单已写入：IoT监控→IoT管理，原设备管理→设备监控，产品设备→设备管理并移入 IoT 分组（按原 id 移动，权限不变）。代码 main/99c366a 已 push（同步脚本支持移动、标题同步、测试更新）。无 node，测试 / 构建未跑。

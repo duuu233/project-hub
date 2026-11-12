@@ -18,3 +18,9 @@
 ## 验证
 
 无 node：测试、构建、浏览器均未运行；新断言用 Python 对源码核对，模板配平、diff --check、信息隔离自查通过；未联调 notice 接口（id 按 JSON 原值回传，与全项目一致未做大整数处理）。
+
+## 3. 账户管理列表去掉部门树、所属部门取 deptName（2026-11-12 ssh test/b0e9531，cherry-pick 到 dev/8973d51）
+
+- 用户：列表页去掉左边的部门树，只保留列表；所属部门取行字段 `deptName`（如「产品部」）。
+- 改法：删左侧 `container-left`（部门搜索 + el-tree）与 getDeptTree / filterNode / handleNodeClick / deptTreeSelect 导入及两栏样式，查询区与列表直接放在页面下（同其它列表页）；部门列 field 由 `dept.deptName` 改为 `deptName`、标题「所属部门」，单元格显示 `row.deptName`。按部门筛选（原点树带 deptId）随树一起去掉。
+- 测试：list-paging-role-notice 补一条（无树、列取 deptName）。无 node 未运行；断言用 Python 核对，模板配平、diff --check 通过。
