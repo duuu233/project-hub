@@ -1,3 +1,13 @@
+## 2026-11-12 ssh｜相册APP：开关关闭样式同小程序、加载转圈统一橙色（main）
+
+- 需求（用户）：消息中心开关关闭样式同步小程序（没有描边），轮播设置的关闭也一样；加载图标统一橙色。
+- 同步：Hub main、flutter main/e16fd03、photo-album main/959325b（只读对照）同名 pull 已最新；origin GitHub。
+- album-app main/e7ab1da（已 push）：新增 AppSwitch（CupertinoSwitch，开 #FF6A20、关 #E5E5E5、白圆钮、无描边），消息中心「只看未读」、轮播设置各启用开关换用；主题 progressIndicatorTheme 设 #EB5F1B；WiFi 消息中心 / 轮播 / 休眠 / 设备信息 / 共享设备首屏加载改用 PageLoading；三处下拉刷新补橙色；新增 switch_loading_style_test；docs/history、docs/README 同步。
+- 自行决定（可改）：TF 卡播放开关、投屏预览「同时加入轮播」也一并换 AppSwitch（小程序同为原生 switch），去掉两处 0.8 缩放；关闭色取 #E5E5E5；用 CupertinoSwitch 而不是改 Material Switch（M3 关闭时圆钮会变小）；调试页 ble_perf 不改。
+- 验证：无 Flutter，analyze / test / 编译 / 真机未跑；源码断言用 Python 核对通过，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜相册小程序 + 相册APP：WiFi 投屏进度页加步骤、去日志面板；OTA 页加进度条（main）
 
 - 需求（用户）：① 投屏进度页按进度文案加四步（准备投屏 / 图片上传中 / 图片处理中 / 已发送，屏幕即将刷新），样式和交互同配网步骤；② OTA 页加进度条，文案对应步骤文案；`ota/status` 与 WS `ota.result` 新增 `progress`（182/184/186/188 → 20/40/60/80，VERIFYING 100，不上报为 null），前端匀速前进，停在 19/39/59/79 等上报，null 涨到 98 停；③ 两端投屏页下方黑底投屏日志去掉。

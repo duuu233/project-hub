@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜开关关闭样式同小程序、加载转圈统一橙色
+
+新增 AppSwitch（关闭浅灰底白圆钮、无描边），消息中心、轮播设置、TF 卡、投屏预览开关换用；主题转圈默认橙色，WiFi 各页首屏加载用 PageLoading。main/e7ab1da 已 push。无 Flutter，analyze / test / 编译 / 真机未跑。
+
 ## 2026-11-12｜album-miniapp + album-app｜ssh｜main｜WiFi 投屏进度页加步骤、去日志面板；OTA 页加进度条
 
 两端同口径：WiFi 投屏结果页进度条下方加四步（准备投屏 / 图片上传中 / 图片处理中 / 已发送，屏幕即将刷新，同配网步骤样式），去掉黑底投屏日志面板；WiFi 固件升级页步骤上方加进度条，按 progress 分档匀速前进（停 19/39/59/79、不上报 98、VERIFYING 100）。photo-album main/959325b、flutter main/e16fd03 已 push。无 node / Flutter，测试 / 编译 / 真机未跑，OTA 进度未联调。
