@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜共享邀请 H5 立即下载跳官网
+
+没装 App 点「立即下载」统一跳 https://www.boltstar-ai.com/en/download，去掉需登录的版本接口调用。main/905b81a 已 push，待重新上传线上页面。页面未实际打开验证。
+
 ## 2026-11-12｜album-app｜ssh｜main｜分享改发 H5 链接、App 拉起与接受页
 
 WiFi 版分享改发 https://iot.boltfox.cn/h5/share.html 链接（微信网页卡片 / 复制链接）；Android / iOS 收 boltstar://share/accept，App 接受页校验有效期后按非所有者绑定。main/bbe207a 已 push。无 Flutter，analyze / test / 真机未跑；落地页下载地址接口需后端放开登录。

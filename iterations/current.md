@@ -5,7 +5,8 @@
 - 核对：线上页面与 deploy/share/share.html 一致（仅 CRLF）；iot.boltfox.cn 的 /Client/* 与 api.boltfox.cn 返回相同、跨域已放行，但 getLastVersion / getAndroidDownload 未登录返回 406「请重新登录」→ 页面取不到下载地址，需后端改免登录（页面不用改）。
 - album-app main/bbe207a（已 push）：分享改为 H5 链接（微信网页卡片 / 复制链接，去掉小程序原始 ID 依赖，删 wifi_share_card.dart）；Android ShareLinkActivity + iOS boltstar scheme / SceneDelegate（含冷启动）收 boltstar://share/accept，consumeShareLink → WifiShareInbox，根组件闪屏后 / 登录后 / 回前台打开；新增 WifiShareAcceptPage（chkTimeValid、本人 / 已在列表、addUserProduct 非所有者）与 BoltFoxApi.chkTimeValid；四语种文案；docs/history、runbook、BUILD_RELEASE、README、AI_CONTEXT 同步；新增 test/wifi_share_link_test.dart。
 - 自行决定（可改）：分享方式只做「发给微信好友 / 复制链接」两项（系统分享需新增依赖，未加）；未登录时链接留在内存等登录后打开，进程被杀即丢。
-- 待用户：后端放开两个版本接口免登录；含本次改动的 App 发版前，旧版点链接拉不起 App。
+- 追加（同日，用户指定）：没装 App 点「立即下载」统一跳 https://www.boltstar-ai.com/en/download（DOWNLOAD_URL，安卓 / iOS 同一个），去掉需登录的版本接口调用；按钮文案改「立即下载」。album-app main/905b81a 已 push。
+- 待用户：重新上传 deploy/share/share.html 覆盖线上；含本次改动的 App 发版前，旧版点链接拉不起 App。
 - 验证：无 Flutter / Xcode / Android SDK，analyze / test / 构建 / 真机未跑；iOS willConnectTo 覆写未经编译验证；断言、括号、plist / manifest 解析、diff --check、信息隔离自查通过。
 
 ---
