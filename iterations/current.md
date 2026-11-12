@@ -1,3 +1,14 @@
+## 2026-11-12 ssh｜相册后台：IoT 菜单改名与设备管理并入（main）
+
+- 需求（用户）：1. 产品设备改名设备管理，放到 IoT 菜单；2. 原设备管理改名设备监控；3. IoT监控改名 IoT管理。用户另给临时管理员 userToken 供本次写菜单（未记录）。
+- 同步：Hub main、web-ui-v2 main/8e9ddfc 同名 pull 已最新；origin GitHub。
+- 后台菜单（系统1，已写入并复核）：174 IoT监控→IoT管理；176 设备管理→设备监控；169 产品设备→设备管理，父级 108→174（子节点 170–173 跟随）；175 概览 grade 3→4。getLeftMenus 顺序 概览 → 设备管理 → 设备监控 → 日志查询。节点 id / 权限编码不变，角色绑定照旧。本机无 node，按脚本同等载荷用 Python 调 setAdminAppli（token 只在进程环境变量）。
+- album-admin main/99c366a（已 push）：sync-admin-menu 的 iot / product-device 范围同步新结构，新增同编码换父级的移动逻辑（无 --update 时停止、不建重复节点）；路由与页面标题同步（路由 name / path 不变）；两个菜单测试更新并新增移动用例；docs（history、iot-admin、product-device、dynamic-menu-sync、README）与 AI_CONTEXT 同步。
+- 自行决定（可改）：新菜单名用「IoT管理」（沿用现有 IoT 写法，用户写作 IOT）；组内顺序把设备管理排在概览之后、设备监控之前；产品设备页面标题同改为设备管理 / 新增设备 / 编辑设备 / 设备详情，IoT 详情页标题「设备监控详情」。
+- 验证：菜单写入后只读复核通过；test:iot / test:product-device / build 未运行（无 node）；diff --check、token 未落盘自查通过。前端标题需发布后生效。
+
+---
+
 ## 2026-11-12 ssh｜泰乾超级-qianrong：账户列表翻页参数、角色越界提醒（dev）
 
 - 需求（用户）：1. 账户管理列表点第二页参数还是 1，修复并检查其它列表；2. 角色管理列表「越界标记」列看是否开发完成，点有数据的那项或操作栏「查看越界」都弹信息列表（/system/role/notice/list），列表加载成功后调 /system/role/notice/read 更新状态。
