@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-12｜album-app｜ssh｜main｜分享改为直接调系统分享
+
+点「分享设备」直接弹系统分享面板，去掉自定义弹层与微信网页卡片（wifi_wechat_share.dart 删除）。main/050f028 已 push。无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑。
+
 ## 2026-11-12｜album-app｜ssh｜main｜WiFi 分享弹层改图标宫格、加系统分享
 
 分享弹层改图标宫格：微信好友（装了才显示）/ 更多应用（原生系统分享，兼容 WhatsApp、LINE 等海外社交）/ 复制链接；无新增依赖。main/770d64f 已 push。无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑。

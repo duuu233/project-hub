@@ -1,3 +1,13 @@
+## 2026-11-12 ssh｜相册APP：分享改为直接调系统分享（main）
+
+- 需求（用户）：点「分享设备」直接调系统分享（先问能否调系统级分享，答复已在「更多应用」里接好）。
+- 同步：Hub main、flutter main/770d64f 同名 pull 已最新；origin GitHub。
+- album-app main/050f028（已 push）：去掉图标宫格弹层，生成链接后直接 NativeDeviceApi.shareText（原生实现沿用 770d64f）；删除 wifi_wechat_share.dart 与 6 条不再使用的文案；测试、runbook、APP_VS_MINIPROGRAM、AI_CONTEXT、docs 同步。
+- 自行决定（可改）：一并删掉微信网页卡片（直接调系统面板后已无入口），微信里发出的是文字链接；微信登录的 fluwx 不受影响。
+- 验证：无 Flutter / Xcode / Android SDK，analyze / test / 编译 / 真机未跑；断言 Python 对源码核对，diff --check 通过。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：WiFi 分享弹层改图标宫格、加系统分享（main）
 
 - 需求（用户）：共享设备的「分享设备」弹框（发给微信好友 / 复制链接）改成带图标的样式，兼容海外社交分享。
