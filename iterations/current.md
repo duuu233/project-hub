@@ -1,3 +1,17 @@
+## 2026-11-13 ssh｜泰乾超级-qianrong：角色菜单树按 listMenu 回填 menuType（test）
+
+- 需求（用户）：前端先兜底，按 listMenu 回填 menuType（接上一条排查）。
+- 同步：tq-plus test 同名 pull 已最新；origin 为 GitHub。
+- taiqian-front test/13d3023（已 push）：
+  - utils/menuStatus 新增 fillMenuTypes：按菜单目录同 id 回填，节点自带的优先，不改原数据。
+  - 角色新增 / 编辑 / 详情（handleDetail）和权限配置面板（RoleFunctionPanel）都在 filterMenuTreeByActiveIds 之后回填。
+  - permission-tree 的节点带上 menuType，传给共用树，使空目录也按目录行显示。
+  - 补测试 menu-status ⑤，按测试环境的返回形状；同步更新 README。
+- 未处理：停用父菜单 2414 下的三个启用按钮仍挂在运营管理系统顶层，用户这次只要求回填 menuType，仍待后端处理。
+- 验证：无 node，未跑 `node --test`，未在浏览器核对。用实测数据核对过：菜单目录里有树中全部节点的 menuType，回填后页面 / 按钮的判定与目录一致。括号配平与改动前一致，diff --check 通过。
+
+---
+
 ## 2026-11-13 ssh｜泰乾超级-qianrong：角色菜单树错乱排查（test，未改代码）
 
 - 需求（用户）：切到 test 分支；核对角色、用户组、系统管理三处新增 / 编辑 / 详情的菜单展示与交互是否一致；排查角色树错乱。

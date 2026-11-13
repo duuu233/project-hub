@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜taiqian-front｜ssh｜test｜角色菜单树回填 menuType
+
+角色新增 / 编辑 / 详情与权限配置面板按 listMenu 回填 menuType，页面不再被当成按钮横排。13d3023 已 push；未跑测试。停用父菜单的子项挂顶层的问题仍待后端处理。
+
 ## 2026-11-13｜taiqian-front｜ssh｜test｜角色菜单树错乱排查
 
 只排查，未改代码。原因是后端 menuTreeList 缺 menuType，导致页面被显示成按钮；停用父菜单的启用子项被挂到了顶层。
