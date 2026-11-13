@@ -3646,3 +3646,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-14 | album-miniapp | ssh | main | 产品列表存本地，WiFi 设备不再先显示成蓝牙版
 - main/bf1e50a 已 push：设备类型靠产品列表认，之前冷启动最多等 3 秒、超时兜底成蓝牙版；现在产品列表与详情补机型结果存本地，首页 / 我的设备不再等接口。未跑测试，未真机。
+
+## 2026-11-14 | album-miniapp | ssh | main | 按接口 versionType 认 WiFi 版
+- main/9763c86 已 push：设备列表 / 详情接口下发 versionType（1 蓝牙 / 2 wifi），isWifiDevice 先认它，我的设备列表也改走它；更正上一轮「接口不带类型」的误判。未跑测试，未真机。

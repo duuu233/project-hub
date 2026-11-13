@@ -1,8 +1,23 @@
+## 2026-11-14 ssh｜相册小程序：按接口 versionType 认 WiFi 版（main）
+
+- 用户纠正：接口有告诉是 WiFi 还是蓝牙版，查一下。
+- 核实：老服务 swagger（.codex-tmp/boltfox-api-docs.json）`ClientUserProductApiOut` / `ClientUserProductDetailApiOut` 都有 `versionType`（1=蓝牙版，2=wifi版）；相册后台产品配置「版本类型」同一字段。小程序与 APP 都没读它。上一轮误判为接口不带类型。
+- album-miniapp main/9763c86（已 push）：
+  - broadcast-match.isWifiDevice 先认 versionType（2 WiFi / 1 蓝牙），没有再按 isWifi / commType / broadcastId；
+  - 我的设备列表原来直接按 broadcastId，改走 isWifiDevice；首页等原本就走它；
+  - 上一轮产品列表本地缓存保留（解决等产品列表拖慢 loading），其文档、注释里「接口不带类型」已更正；
+  - 测试 device-list-wifi-group 补断言，新增 docs/changes。
+- APP：lib 里同样没读 versionType（state.dart isWifi 只看 broadcastId），本轮未改，待用户确认。
+- 验证：无 node，未跑测试、未真机。
+
+---
+
 ## 2026-11-14 ssh｜相册小程序：WiFi 设备先显示成蓝牙版、首页 loading 久（main）
 
 - 需求（用户）：首页设备默认显示蓝牙样式，其实是 WiFi 版，过一会才恢复；是不是有兜底数据？首页 loading 有点久；我的设备列表也一样，1~2 秒后才变 WiFi。
+- ⚠️ 更正：下面「接口没有类型字段」是错的，用户指出后已查实接口有 `versionType`，见上一条。
 - 原因（是兜底，不是写死的假数据）：
-  - 设备列表接口没有 WiFi / 蓝牙类型字段（评审时建议过补 `commType`，后端没加），只能靠产品列表 `broadcastId` 是否 `IJ_*` 认；
+  - （有误）设备列表接口没有 WiFi / 蓝牙类型字段（评审时建议过补 `commType`，后端没加），只能靠产品列表 `broadcastId` 是否 `IJ_*` 认；
   - 产品列表只存内存，每次冷启动重拉；`getDevices` 最多等它 3 秒，超时按「认不出 = 蓝牙版」兜底，之后拿到才变对；
   - 首页 loading 要等设备列表，跟着白等这 3 秒；首页卡认错时还带 `tab=ble` 进我的设备，列表也停在蓝牙版 Tab。
 - album-miniapp main/bf1e50a（已 push）：
