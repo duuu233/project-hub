@@ -1,3 +1,14 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP：投屏步骤卡只在单张投屏显示（main）
+
+- 需求（用户）：投屏页下方的步骤模块只在单张投屏时显示，批量投屏不显示；批量的仍按原来的内容展示。
+- 同步：Hub、photo-album、flutter 同名 pull 均已最新。
+- album-miniapp main/4654c54（已 push）：wifi-result.wxml 的步骤卡加 `wx:if="{{total <= 1}}"`；测试补断言；AI_CONTEXT 与 2026-11-12 变更文档补注。
+- album-app main/07610af（已 push）：wifi_cast_result_page 改为 `if (total <= 1)` 才渲染步骤卡（连同上间距）；test/wifi_projection_progress_test 补源码断言；history 补注。
+- 步骤状态仍照常计算，只是批量时不显示，失败重试的逻辑不受影响。
+- 验证：无 node / Flutter，未跑测试、未真机；断言用 Python 对源码核对，括号配平与改动前一致，diff --check 通过。
+
+---
+
 ## 2026-11-13 ssh｜相册小程序：修复上传时测试文件重复声明 page5（main）
 
 - 问题（用户）：开发者工具上传报错 `tests/wifi-projection.test.js: Identifier 'page5' has already been declared (410:10)`。

@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-miniapp ＋ album-app｜ssh｜main｜投屏步骤卡只在单张显示
+
+批量投屏不显示步骤卡，仍按原来的内容展示（进度卡 + 逐张列表）。小程序 4654c54、APP 07610af 均已 push；未跑测试。
+
 ## 2026-11-13｜album-miniapp｜ssh｜main｜修复测试重复声明 page5（上传报错）
 
 wifi-projection 测试 ⑫ 的 page5 与原有用例重名，导致开发者工具上传编译失败。已改名为 pageKeys，dd3880b 已 push；未跑测试。
