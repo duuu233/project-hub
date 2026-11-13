@@ -491,3 +491,12 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **需求**：切到 test 分支，检查 /config-audit/dict-data/index/203 为什么没用动态列，缺菜单就补。
 - **结论与改动**：dev→test 切换（工作区干净，test 同名 pull 已最新 ba4b6dc）；test 后端菜单 2506 与列配置都在，根因是固定路由匹配不到；data.vue 指定 menuPerm，policy-columns 测试补一条；菜单未改。test/7f55b3b 提交后再次 pull 并 push。
 - **验证**：无 Node，测试未运行；按源码规则推演匹配结果、git diff --check、信息隔离自查通过。
+
+## 2026-11-13 ssh｜qianrong 切 dev；菜单调整后核对新增模块；资产管理对接接口
+
+- **需求**：切到 dev，检查菜单被调整后以前新增的模块是否有问题、是否需要挪文件；没问题就对接资产模块（新增 / 详情 / 列表）。
+- **同步**：tq-plus 在 test、工作区干净，按用户要求切 dev，同名 pull 到 d9812b9（含同事 349f118 菜单重组）。
+- **结论**：文件不用挪（组件路径未变、侧栏按路由名称归组）；认证管理写死 /supply-chain/certification，后端已挪到 /digital-supervision/certification，改按路由名称跳转。
+- **改动**：资产管理三页对接 /finance/asset/list、detail/{id}、add；新增 api/asset、model.js 替换 static-data；列表开动态列 + menuPerm；新增表单下拉接真实来源、两个时间可填、产品多选、时间戳提交；详情按 id 请求；新增 asset-model 测试，policy-columns 加静态列表名单。dev/bec80d6 提交后再次 pull 并 push。详见 docs/qianrong-asset-integration.md。
+- **验证**：dev 只读查询 getRouters、字典、下拉、资产列表（用户给的登录 Token 只在本轮环境变量里用，未落盘）；未调用新增接口。无 Node，构建 / 测试未运行；静态核对与正则核对通过。
+

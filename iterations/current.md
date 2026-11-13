@@ -1,3 +1,14 @@
+## 2026-11-13 ssh｜泰乾超级-qianrong：菜单调整后核对新增模块，资产管理对接接口（dev）
+
+- 需求（用户）：qianrong 切到 dev，检查菜单被调整后以前新增的模块是否有问题、是否要挪文件，没问题就对接资产模块（新增 / 详情 / 列表，Swagger 业务管理-资产管理）。
+- 同步：Hub main 已最新；tq-plus 原在 test（干净），按用户要求切 dev 并同名 pull 到 d9812b9；origin GitHub。
+- 结论：同事 349f118 重组侧栏（认证管理→数字监管、额度账本→新一级「额度与账本」），组件路径未变，文件不用挪；认证管理跳转写死旧路径（后端已是 /digital-supervision/certification），改按路由名称。
+- taiqian-front dev/bec80d6（已 push）：资产管理对接三接口，下拉接真实来源（asset_type、industry_project、asset_financing_status 字典，org selectList type=0，授信已生效列表归并产品，币种 selectList）；详见 private/taiqian-front/docs/qianrong-asset-integration.md。
+- 自行决定（可改）：进口服务商与核心企业都取核心企业；融资企业只取授信已生效；资产形成时间 / 乾链推送时间放开手填（接口必填）；品类改文本输入（无合适字典）；查询「购销合同号」改通用「资产编号」。
+- 验证：dev 只读核实菜单、字典、下拉、列表（0 条），未调新增；用户提供的登录 Token 仅环境变量临时使用、未落盘。无 Node，构建 / 测试未跑；静态与正则核对通过。
+
+---
+
 ## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：优雅刷新改读最新版本 + 红点、版本说明、OTA管理菜单（main）
 
 - 需求（用户）：后台 FPGA 版本新增 upgradeTips（新增 / 编辑 / 详情 / 列表）；用户端详情新增 upgradeTipsFpga。产品改口：去掉后台推送；小程序 / APP 去掉优雅刷新版本列表，仅读接口最新版本，红点提醒（本地缓存版本号，空或更低则亮：设备详情「设备信息」、设备信息页「优雅刷新升级」，进去看过即消失）；保留改名、4047 捕捉、不显示设备 FPGA 版本，显示版本说明。插入：「固件版本」「FPGA固件版本」移出产品管理建一级菜单（给了 token），随后一级菜单改名「OTA管理」。
