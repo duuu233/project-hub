@@ -1,3 +1,27 @@
+## 2026-11-13 ssh｜相册小程序：修复上传时测试文件重复声明 page5（main）
+
+- 问题（用户）：开发者工具上传报错 `tests/wifi-projection.test.js: Identifier 'page5' has already been declared (410:10)`。
+- 原因：上一轮幂等键测试 ⑫（e7c172d）在同一块作用域新增 `const page5`，与后面「原图压缩」用例已有的 page5 重名。因为本机没有 node，静态核对只比较了括号配平，没有发现重名声明。
+- album-miniapp main/dd3880b（已 push）：⑫ 改名为 pageKeys，测试逻辑不变。用脚本粗查全仓 JS 的同作用域重复 const/let/class，其余命中都是 for 循环变量的误报。
+- 教训：静态核对新增测试时，要加一项「同作用域重复声明」检查（脚本在 .codex-tmp/dupdecl.py）。
+- 验证：无 node，未跑测试，也未在开发者工具重新上传。
+
+---
+
+## 2026-11-13 ssh｜相册APP：系统分享面板预览卡显示 APP 图标（main）
+
+- 需求（用户）：系统分享的图标能否自定义；选择方案 1，先用 APP 自带图标。
+- 同步：Hub、flutter 同名 pull 均已最新；origin 为 GitHub。
+- album-app main/cfcc943（已 push）：
+  - iOS 用 ShareTextItemSource + LPLinkMetadata，标题取 subject（邀请标题），图标取 CFBundleIcons。
+  - Android 新增只读 ShareIconProvider（系统 ContentProvider，不导出；未用 androidx FileProvider，以免依赖编译类路径），首次把 APP 图标画成 192px PNG 缓存。
+  - shareText 加 EXTRA_TITLE 与 ClipData 缩略图（临时读授权）。
+  - Dart 不改；docs 新增 history 并更新 README、WIFI_SHARE_H5。
+- 限制：Android 只有 10+ 的系统分享面板显示预览卡，部分厂商面板不显示；以后改用后台上传图片时只需换图标来源。
+- 验证：无 Flutter / Xcode / Android SDK，未编译、未上真机；括号配平与改动前一致，Manifest XML 解析通过，diff --check 通过。
+
+---
+
 ## 2026-11-13 ssh｜相册后台：优雅刷新管理编辑页去版本ID、提示留间距（main）
 
 - 需求（用户）：编辑去掉「版本ID 1」；「原产品#1不是渲染模式fpga16的产品，请重新选择」提示与下方输入框留出间距。

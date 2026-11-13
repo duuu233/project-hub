@@ -2,6 +2,14 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-miniapp｜ssh｜main｜修复测试重复声明 page5（上传报错）
+
+wifi-projection 测试 ⑫ 的 page5 与原有用例重名，导致开发者工具上传编译失败。已改名为 pageKeys，dd3880b 已 push；未跑测试。
+
+## 2026-11-13｜album-app｜ssh｜main｜系统分享预览卡显示 APP 图标
+
+iOS 用 LPLinkMetadata 显示标题与图标；Android 10+ 用 EXTRA_TITLE 与 ClipData 缩略图，图标由只读 ShareIconProvider 提供。cfcc943 已 push；未编译、未上真机。
+
 ## 2026-11-13｜album-admin｜ssh｜main｜优雅刷新编辑页去版本ID、提示间距
 
 编辑页不显示版本ID（详情保留）；非 fpga16 产品提示与产品下拉留 18px。已 push，未构建。
