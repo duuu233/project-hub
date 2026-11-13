@@ -1,3 +1,37 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP + 相册后台：去掉强制升级，只保留强提醒；小程序加升级调试日志（main）
+
+- 需求（用户）：
+  - 先要求把强制提醒 / 强制升级相关逻辑打日志方便调试，重点是接口返回值和整套升级参数；
+  - 随后产品改口：两端去掉强制升级（首页、列表页、详情页都不要），只保留强提醒 / 弱提示。弱提示只亮红点、用户主动点；强提醒亮红点，并且进入设备详情页按类型弹框，取消后不再弹，关闭、重启或缓存丢失后再弹。后台隐藏强制升级选项。首页 / 列表页的 loading 和现查最新版本都去掉；
+  - 改完再加对应日志，日志只加在小程序端，功能同步到 APP。
+- 同步：Hub、photo-album、flutter、web-ui-v2 同名 pull 均已最新；origin 均为 GitHub。
+- album-miniapp main/0754703（已 push）：
+  - firmware-gate 只剩 decide / prompt / checkOnEnter（强提醒按设备记录本次启动是否已弹过）；
+  - 两个详情页撤掉按钮包装（wrapActions / firmwareGate()），投屏连上后直接弹选图；
+  - 列表页、首页撤掉 guardAction；ota、wifi-ota 撤掉 markUpgraded；
+  - 日志 `[固件升级]`：
+    - api.getDeviceDetail 打印详情接口原样返回的升级字段（按字段名挑，含 FPGA、版本说明）和归一后的值；
+    - 两个详情页打印红点依据（当前版本、最新版本、下载地址、版本对比）；
+    - firmware-gate 打印判定原因、本次启动是否已提醒过、弹框和用户选择；
+  - 测试 firmware-gate 重写，list / home 测试改为断言不再判断，wifi-ota 的「进行中不提示」判据挪到详情页红点处；docs/changes、README、AI_CONTEXT 已更新。
+- album-app main/ba1964b（已 push）：
+  - 同口径：FirmwareGateMode 只剩 none / remind；FirmwareRemindSession 在内存记录本次启动是否已提醒过；
+  - 撤掉 _gated / _firmwareGate、guardFirmwareAction（loading 与 fw_gate_cache）、wifi_cast_entry 的 forceUpgradeCheck、markUpgraded、otaGateForceMessage；devices_page、wifi_cast_entry、home、ota 页恢复到加判断之前的样子；
+  - 测试、history、README、AI_CONTEXT 已更新。按用户要求 APP 不加日志。
+- album-admin main/049aadc（已 push）：固件版本升级类型的新增 / 编辑与列表筛选隐藏「强制升级」；列表列照常显示存量 1；docs/history 与 api-integration-progress 已更新。
+- 自行决定（可改）：
+  - 存量 compulsory=1 的两端按强提醒处理；
+  - 后台编辑存量 1 的记录时清空升级类型，须重新选择才能保存（不自动改成 2）；
+  - 筛选也隐藏 1；
+  - 「缓存丢失再弹」按内存记录实现，与重启同义，不写本地存储。
+- 验证：
+  - 无 node / Flutter：三端测试、analyze、build 都没跑，也没上真机；
+  - 小程序测试里的正则断言已用 Python 逐条模拟通过；
+  - 括号配平用分词脚本核对。wifi_ota_page 被标记，但 HEAD 上同一位置也被标记，属于 Dart 除号误判；
+  - dupdecl 无新增问题；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-13 ssh｜相册小程序 + 相册APP：固件升级判断按升级类型、强提醒一次、列表页 / 首页缓存（main）
 
 - 需求（用户 + 产品复核）：
