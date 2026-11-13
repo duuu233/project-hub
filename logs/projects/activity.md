@@ -3649,3 +3649,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-14 | album-miniapp | ssh | main | 按接口 versionType 认 WiFi 版
 - main/9763c86 已 push：设备列表 / 详情接口下发 versionType（1 蓝牙 / 2 wifi），isWifiDevice 先认它，我的设备列表也改走它；更正上一轮「接口不带类型」的误判。未跑测试，未真机。
+
+## 2026-11-14 | album-miniapp | ssh | main | WiFi版 / 蓝牙版只按 versionType
+- main/3cbc6a2 已 push：isWifiDevice 只认接口 versionType；补上首页 normalizeDevice 漏传 versionType（上一版首页未生效）。未跑测试，未真机。

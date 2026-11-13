@@ -1,3 +1,17 @@
+## 2026-11-14 ssh｜相册小程序：WiFi版 / 蓝牙版只按 versionType 判断（main）
+
+- 用户：贴出 getUserProductList 真实返回与字段说明（versionType 1=蓝牙版，2=wifi版），要求只按 versionType 判断。
+- 真实返回不带 productId / broadcastId，机型要靠详情接口补，这是冷启动 WiFi 被认成蓝牙、loading 偏长的根源。
+- 发现上一条（9763c86）没覆盖首页：home.js normalizeDevice 白名单裁剪，没带 versionType，首页仍按 broadcastId 判。
+- album-miniapp main/3cbc6a2（已 push）：
+  - isWifiDevice 只认 versionType（无该字段只认下游已打的 isWifi: true），去掉 broadcastId / commType 兜底；
+  - 首页 normalizeDevice 透传 versionType；配网绑定返回补 versionType: 2；搜索页仍按扫描 commType；
+  - 7 个测试的设备数据补 versionType，home-wifi-entry / device-list-wifi-group 补断言；docs 与 AI_CONTEXT 改口径。
+- APP 同样没读 versionType，未改，待用户确认。
+- 验证：无 node，未跑测试、未真机。
+
+---
+
 ## 2026-11-14 ssh｜相册小程序：按接口 versionType 认 WiFi 版（main）
 
 - 用户纠正：接口有告诉是 WiFi 还是蓝牙版，查一下。
