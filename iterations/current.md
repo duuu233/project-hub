@@ -1,3 +1,27 @@
+## 2026-11-14 ssh｜相册小程序 + 相册APP：WiFi 版点击入口要在线（main）
+
+- 需求（用户，强调重要）：WiFi 版投屏、轮播、固件升级、优雅刷新升级、TF卡切换点击时都要判断是否在线，不在线不能点进去；一键清空、删除设备、解绑不判断；不动蓝牙版。
+- 同步：photo-album、flutter 同名 pull 已最新。
+- 规则（两端同口径）：
+  - 已知离线 / 休眠 / 关机 / 本地模式直接提示；
+  - 已知在线放行；
+  - 查询中 / 状态未知 / fresh 时现查 /api/device/online 一次，只放行在线，查不到提示「设备不在线」。
+- album-miniapp main/eb93d3e（已 push）：
+  - 新增 wifiStatus.requireOnline；
+  - 接入 WiFi 详情投屏 / 轮播 / 固件升级（fresh）、设备信息优雅刷新（fresh）、我的设备投屏 / 轮播、首页拍照 / 相册（fresh）、结果页继续投屏（fresh）；
+  - 测试三处有意改口径并补「点击入口要在线」组；docs/changes、README、AI_CONTEXT 已更新。
+- album-app main/8c5861e（已 push）：
+  - 新增 requireWifiOnline；
+  - 接入 startWifiCast、openWifiSlideshow、_openOta（fresh）、_openFpga（fresh）、首页（fresh、不看缓存）、结果页继续投屏；
+  - 新增 test/wifi_click_online_test.dart；history、AI_CONTEXT 已更新。
+- 核对：TF卡切换两端原本就是开启前现查、只放行在线，未改。固件升级页下发前也还会再判断。
+- 自行决定（可改）：
+  - 已知在线时投屏 / 轮播不再现查（状态由进页查询与 WS 推送保持最新）；固件升级、优雅刷新一律现查；
+  - AI 生图 / 官方图库选设备投屏未改：仍是明确离线才拦，预览页「开始投屏」严格判断。
+- 验证：无 node / Flutter，未跑测试、未真机；断言与正则已用 Python 模拟，括号与重复声明核对通过。
+
+---
+
 ## 2026-11-14 ssh｜相册APP：App 升级提示排查（只读，未改代码）
 
 - 需求（用户）：测试反馈 App 升级提示还是没有；用户强调只有两种类型——强制（进入即弹、无取消）、普通（红点、用户自己点），老版本正常。
