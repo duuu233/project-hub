@@ -1,3 +1,19 @@
+## 2026-11-14 ssh｜相册小程序 + 相册APP：WiFi 详情首次进页接口都回来再渲染（main）
+
+- 需求（用户）：
+  - 设备详情等所有接口加载完、确定身份（是否显示删除设备）后，再关 loading、渲染页面；不要页面显示后过 1 秒才按身份显示删除设备；
+  - loading 长一点没事；必须按接口和逻辑处理完动态展示，不要写死。
+- 小程序 main（已 push）：
+  - load 首次进页时，详情（含 isOwner）设好但不关 loading；再等 refreshStatus / Unread / Ota / Slideshow 结束（settleWithin，兜底 20 秒），才关 loading；
+  - checkFirmwareOnEnter 在 loading 期间不弹；onShow 重查静默；
+  - 测试与 docs/changes 已补。
+- APP main（已 push）：
+  - _initialLoading：_loadOwner 必等，不设上限；状态 / 轮播 / 固件 / 升级 / 未读最多 20 秒兜底；全部回来再整页渲染，强提醒在渲染后判断；
+  - 测试与 history 已补。
+- 验证：无 node / Flutter，未跑测试、未真机；正则已用 Python 模拟，括号核对通过。
+
+---
+
 ## 2026-11-14 ssh｜相册APP：轮播设置表单取值改橙色（main）
 
 - 需求（用户）：轮播设置「简单模式」右侧文字按小程序改成橙色，APP 现在是黑色。
