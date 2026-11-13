@@ -1,3 +1,25 @@
+## 2026-11-14 ssh｜相册APP + 相册小程序：设备信息页优雅刷新入口样式与即时显示；APP 升级问题排查（main）
+
+- 需求（用户）：
+  1. 设备信息页「优雅刷新升级」文字与上面保持一致，小程序也改灰色；
+  2. APP 入口要等加载完才出现（约 1 秒），fpga16 就固定显示；
+  3. 测试反馈「新版安卓也弹不出来、检测升级没反应、红点也没有」，问是否动过什么，旧版本可以。
+- 同步：photo-album、flutter 同名 pull 已最新。
+- album-miniapp main/2f2ac4c（已 push）：`.info-row__name` 改为灰色 #8b9098、常规字重；docs/changes 补注。
+- album-app main/189ed8d（已 push）：
+  - 原因：设备列表不下发 productId，设备信息页解析渲染模式要按设备号查一次产品；信息行加载中时入口也被隐藏；
+  - resolveRenderMode 按设备记一份（会话内，cachedRenderMode）。详情页进页时已解析过，信息页据此进页即显示、先算红点，不随加载态隐藏，进页仍校正；
+  - 入口文字改为与标签同样式；补测试断言与 history。
+- 第 3 条排查（未改代码）：
+  - App 自身的版本升级（getLastVersion / 检查更新 / 强制升级弹窗）代码 7–8 月后未改，且没有红点，所以「红点」只可能是固件升级；
+  - 固件这边，从 fa7d672 之前到现在，红点判定、版本比较、检测升级流程、接口参数都没有改动，新增的只是读 compulsory / FPGA 字段、进详情页弹强提醒和去掉强制升级；
+  - 按新需求，首页 / 列表页不再弹，强提醒只在进详情页且蓝牙已连接 / WiFi 在线、红点亮时弹一次；
+  - 与小程序的请求差异：terminal 1 / 2 对 3；蓝牙版 APP 传 productVersionNo；
+  - 已请用户提供：设备类型、测试包版本，以及 APP 日志浮窗里 getUserProductDetail 的返回，或给 token 由我对比调用。
+- 验证：无 Flutter / node，未跑测试、未真机；括号核对通过，diff --check 通过。
+
+---
+
 ## 2026-11-13 ssh｜花盆APP：隐藏语言切换、iOS 包名 com.common.yikaltdtext、无日志蒲公英包（main）
 
 - 需求（用户）：

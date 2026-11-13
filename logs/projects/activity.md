@@ -3594,3 +3594,7 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-13 | flowerpot-app | ssh | main | 隐藏语言切换、iOS 包名改 com.common.yikaltdtext
 - main/8123f6a 已 push：隐藏「语种设置」与花盆「设备语言」，App 界面固定中文；iOS Bundle ID 改为 com.common.yikaltdtext（Android 不变）；补了无日志 Ad Hoc 包的打包步骤。
 - 待用户：涂鸦 iOS 安全组件和 AppKey 要按新 Bundle ID 准备，Apple App ID 与 Ad Hoc 描述文件也要配好。未编译、未打包。
+
+## 2026-11-14 | album-app ＋ album-miniapp | ssh | main | 优雅刷新入口即时显示与样式；APP 升级问题排查
+- APP main/189ed8d：设备信息页用详情页已解析的渲染模式，进页即显示「优雅刷新升级」，文字与标签同样式。小程序 main/2f2ac4c：入口文字改灰色。
+- 升级问题只读排查：没有发现改动影响红点或检测升级，等测试提供设备类型、测试包版本和接口返回。未跑测试。
