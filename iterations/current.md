@@ -1,3 +1,14 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP：固件强制升级 / 强提醒升级判断（main）
+
+- 需求（用户）：WiFi 在线时判断、蓝牙已连接时判断；设备详情页进入后与点任意按钮判断（强提醒 / 强制），设备列表页投屏（WiFi 另有轮播设置）、首页拍照 / 相册投屏判断强制升级。强制：立即升级 / 取消，取消后不能继续用该设备，再点或再进再弹；强提醒：可取消、不影响使用（仅详情页）；立即升级跳 OTA 页。两端同步。
+- 同步：Hub main、photo-album main/0685e88、flutter main/fdc925b 同名 pull 均已最新；origin 均为 GitHub。
+- album-miniapp main/dd618ce（已 push）：新增 utils/firmware-gate.js（decide / prompt / wrapActions / guardAction）；蓝牙详情、WiFi 详情功能按钮先判断 + 进入后判断一次；我的设备蓝牙投屏（连上后）、WiFi 投屏 / 轮播设置，首页 ensureCanProject 最后一步判断强制；撤掉 app.js 启动强制升级弹窗（原「稍后 = 关闭小程序」）；api 升级方式先读 compulsory，getDeviceDetail 可传 showError:false；新增 tests/firmware-gate，改 4 个测试（WiFi 列表 / 首页入口改 await + 桩、沙箱补依赖、app.js 判据挪到新模块）；docs/changes、README、AI_CONTEXT 同步。
+- album-app main/fa7d672（已 push）：新增 features/devices/firmware_gate.dart，DeviceItem 加 updateType（compulsory 优先）；蓝牙 / WiFi 详情、我的设备（WiFi 两入口经 wifi_cast_entry 的 forceUpgradeCheck）、首页 _startCast 同口径接入；l10n 新增 3 条；新增 test/firmware_gate_test；docs/history、README、AI_CONTEXT 同步。
+- 自行决定（可改）：① 强制 / 强提醒字段先读详情出参 compulsory（Flutter 注释记录的 swagger 字段，同 App 版本接口 1 强制 2 强提示），再兜底原来猜的 updateType 等；1 = 强制，其它（含 3/4）一律按强提醒——待后端确认；② 「有新版本」与详情页红点同一判定（蓝牙版本比对、读不到退回 isUpdate；WiFi 版本比对、进行中的升级不弹）；③ 详情页「任意按钮」不含连接 / 断开、固件升级行、解除绑定、删除设备、重新加载（强制升级时仍能解绑 / 删除）；④ 未连接的蓝牙设备点投屏会自动连接，连上后照样判断；⑤ 详情页「进入后」每次进页只弹一次，从子页返回不再弹，进页未连接则在本页连上后弹；⑥ 撤掉启动强制升级弹窗；⑦ 查询失败一律放行；⑧ 强制弹框可点空白处关闭，等同取消。
+- 验证：无 node / Flutter，两端测试、analyze、编译、真机均未跑，未联调升级方式字段；新增与改动测试的源码断言用 Python 对实际文件核对通过，括号配平与改动前一致；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-13 ssh｜相册小程序 + 相册APP：OTA 进度条 19 / 39 / 59 / 79 必须等下一档数值（main）
 
 - 需求（用户）：按文档 0~20 前端自己匀速走到 19 / 39 / 59 / 79 等 progress 上报，有值或为 null 后继续（null 停 98）；现在没做好，19 要等 20、39 等 40、59 等 60、79 等 80。

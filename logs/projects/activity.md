@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-miniapp ＋ album-app｜ssh｜main｜固件强制升级 / 强提醒升级判断
+
+WiFi 在线、蓝牙已连接时判断：详情页进入后与功能按钮判断强制 + 强提醒，我的设备投屏 / WiFi 轮播设置、首页拍照 / 相册投屏只判强制；小程序撤掉启动强制升级弹窗；升级方式先读 compulsory。小程序 main/dd618ce、APP main/fa7d672 已 push。无 node / Flutter，测试未跑，未联调。
+
 ## 2026-11-13｜album-miniapp ＋ album-app｜ssh｜main｜OTA 进度条 19/39/59/79 必须等下一档数值
 
 progressCap 去掉按状态放开到 98 的两条分支（FLASHING、DOWNLOADING 无数值），没数值就进入 FLASHING 才按不上报走到 98。小程序 main/0685e88、APP main/fdc925b 已 push。无 node / Flutter，测试未跑，未联调。
