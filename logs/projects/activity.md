@@ -3610,3 +3610,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-14 | album-miniapp ＋ album-app | ssh | main | WiFi 版点击入口要在线
 - 小程序 main/eb93d3e、APP main/8c5861e 已 push：WiFi 版的投屏、轮播设置、固件升级、优雅刷新升级点击前判断在线，不在线不能进；TF卡切换原本就判断；一键清空 / 删除 / 解绑不判断；蓝牙版不动。未跑测试。
+
+## 2026-11-14 | album-miniapp ＋ album-app | ssh | main | 优雅刷新升级页去掉顶部图标
+- 小程序 main/e974cb5、APP main/7055ee3 已 push；普通固件升级页不变。未跑测试。
