@@ -1,3 +1,18 @@
+## 2026-11-14 ssh｜相册APP + 相册小程序：优雅刷新不做红点（main）
+
+- 需求（用户）：优雅刷新的不做红点。
+- 同步：photo-album、flutter 同名 pull 已最新。
+- album-miniapp main/af8efe2（已 push）：
+  - 去掉 WiFi 详情「设备信息」红点、设备信息页入口红点、安装页 markSeen；
+  - utils/fpga-firmware 删 hasNew / markSeen / isNewer / readSeen；
+  - 测试改为断言不再记、不显示；AI_CONTEXT 与 docs/changes 已更新。
+- album-app main（已 push）：
+  - 同口径删 WifiFpgaSeenStore / wifiFpgaHasNew / isWifiFpgaNewer 与两处红点；
+  - 详情页保留进页解析渲染模式（供设备信息页入口即时显示）；测试、history、AI_CONTEXT 已更新。
+- 验证：无 Flutter / node，未跑测试；正则断言已用 Python 模拟，括号核对通过（wifi_ota_page 那处是已知误报）。
+
+---
+
 ## 2026-11-14 ssh｜相册APP：App 新版本红点（main）
 
 - 需求（用户）：App 升级也要有小红点。由此确认上一条「APP 升级」指的是 App 自身的版本升级（getLastVersion），不是固件。
