@@ -1,3 +1,38 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP：固件升级判断按升级类型、强提醒一次、列表页 / 首页缓存（main）
+
+- 需求（用户 + 产品复核）：
+  - 弱提示升级点按钮也弹框（误弹），要按后台升级类型判断。
+  - 强提醒：进入设备页提醒一次，取消后不再提醒，重新打开才提醒。
+  - 强制升级：
+    - 首页、列表页点投屏 / 轮播设置（蓝牙版只有投屏）要加 loading，结果存本地缓存，再点不拉接口，取消后再点照样提醒。
+    - 设备页取消后，点任意按钮都再弹。
+    - 升级完成后更新缓存。
+    - 现有 bug：投屏取消两次后仍弹出拍照 / 相册。
+  - 用户补充：弱提示 = 只亮红点、用户主动点，即改动前逻辑不变；强提醒、强制的红点也照旧保留。
+- 后台口径：web-ui-v2 productVersion 的 compulsory 取值为 1 强制 / 2 强提示 / 3 弱提示 / 4 不提示。
+- 原因：两端都把「不是 1」当强提醒，而强提醒取消后照常继续。所以弱提示设备会弹框，取消后还会弹出拍照 / 相册。这就是用户说的 bug。
+- 同步：Hub、photo-album、flutter、web-ui-v2 同名 pull 均已最新。
+- album-miniapp main/65492b0（已 push）：
+  - modeOf 改为 1 force、2 remind、其它不弹。
+  - 新增 checkOnEnter：进入时写缓存；强提醒用模块级 Set，每次启动只弹一次。
+  - 详情页按钮改为 forceOnly。
+  - guardAction：本次启动没查过时 loading「检查固件版本」现查，并写 fw_gate_cache；查过就用缓存。
+  - 列表里已知不在线的 WiFi 不判；首页传 online:true。
+  - 蓝牙 ota 成功、WiFi 主固件进入 verifying 时调 markUpgraded。蓝牙 ota 页按需 require，避免连带加载 WiFi 层。
+  - 测试 ⑦，以及 wifi-ota 测试补依赖；docs/changes 新文件、README、AI_CONTEXT。
+- album-app main/e82059c（已 push）：
+  - 同口径：FirmwareGateCache（SharedPreferences + 本次启动的 Set）、checkFirmwareGateOnEnter、guardFirmwareAction 首查时显示 AppLoadingDialog。
+  - 两个详情页的按钮改为 forceOnly；OtaUpgradePage / WifiOtaPage 完成时调 markUpgraded；首页传 online。
+  - 测试与 history、README 已更新。
+- 自行决定（可改）：
+  - 缓存每次启动第一次点击仍现查一次，避免后台新发的强制版本一直用不上。同一次启动内再点不请求。
+  - 强提醒「一次」按设备计。
+  - 详情页按钮先弹过强制，就不再补进入那次，避免连弹两次。
+  - APP 的 loading 用通用「加载中」文案，没有新增多语言。
+- 验证：无 node / Flutter，未跑测试、analyze 和真机。两端的括号配平已核对，测试差值来自字符串和正则，已逐行确认；dupdecl 检查无新增问题；diff --check 和信息隔离自查通过。
+
+---
+
 ## 2026-11-13 ssh｜泰乾超级-qianrong：角色菜单树按 listMenu 回填 menuType（test）
 
 - 需求（用户）：前端先兜底，按 listMenu 回填 menuType（接上一条排查）。
