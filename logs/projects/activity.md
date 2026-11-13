@@ -3590,3 +3590,7 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 - 两端撤掉强制升级，包括按钮判断、首页 / 列表页的 loading 现查和本地缓存；强提醒只在进入设备详情页时弹，取消后本次启动不再弹，存量 1 按强提醒。
 - 小程序加 `[固件升级]` 日志，包含接口返回的整套升级参数；后台隐藏强制升级选项。
 - 本机无工具链，测试 / analyze / build 均未跑。
+
+## 2026-11-13 | flowerpot-app | ssh | main | 隐藏语言切换、iOS 包名改 com.common.yikaltdtext
+- main/8123f6a 已 push：隐藏「语种设置」与花盆「设备语言」，App 界面固定中文；iOS Bundle ID 改为 com.common.yikaltdtext（Android 不变）；补了无日志 Ad Hoc 包的打包步骤。
+- 待用户：涂鸦 iOS 安全组件和 AppKey 要按新 Bundle ID 准备，Apple App ID 与 Ad Hoc 描述文件也要配好。未编译、未打包。

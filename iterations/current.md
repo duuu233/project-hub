@@ -1,3 +1,31 @@
+## 2026-11-13 ssh｜花盆APP：隐藏语言切换、iOS 包名 com.common.yikaltdtext、无日志蒲公英包（main）
+
+- 需求（用户）：
+  - 隐藏花盆设置里的语种切换，默认中文。追问后确认两处都隐藏：App「语种设置」和花盆「设备语言」；
+  - 打一个没有日志的 iOS 包，在 Xcode 上构建，包名 com.common.yikaltdtext，发蒲公英，有要改的告诉用户。
+- 同步：Hub、flowerpot main 同名 pull 均已最新；origin GitHub。
+- flowerpot-app main/8123f6a（已 push）：
+  - 「我的 → 设置」去掉「语种设置」，initialize 固定 zh、不读本机偏好；
+  - 「其他设置」去掉「设备语言」（DP153）的行、选择框和下发；
+  - iOS Runner Bundle ID 改为 com.common.yikaltdtext，RunnerTests 随之改；Android 不变；
+  - docs/history 记录打包步骤与前置条件，AI_CONTEXT 与索引已更新。
+- 无日志包：
+  - 用 --dart-define=APP_DEBUG_TOOLS=false，先 `flutter build ios --release --config-only` 再 Xcode Archive，或用 flutter build ipa --export-method ad-hoc；
+  - iOS 涂鸦 debugMode 仅 Debug 开启，OTA 日志文件受总闸控制。
+- 需用户处理：
+  - 涂鸦平台 iOS 应用的 Bundle ID 要与新包名一致，并重新下载 ThingSmartCryption 安全组件（ios/TuyaSDK），Tuya.xcconfig 填对应 iOS AppKey / AppSecret；
+  - Apple 后台注册 App ID，Ad Hoc 描述文件包含测试机 UDID；
+  - 蒲公英覆盖安装时构建号要递增。
+- 自行决定（可改）：
+  - 设备语言只隐藏，不主动给设备下发中文；
+  - 以前切到 English 的用户也固定回中文（偏好值保留）；
+  - 割草机语言页未动。
+- 验证：
+  - 无 Flutter / Xcode：未编译、未跑测试、未打包；
+  - 括号核对与改动前一致；没有测试断言被删掉的两行；diff --check 通过。
+
+---
+
 ## 2026-11-13 ssh｜相册小程序 + 相册APP + 相册后台：去掉强制升级，只保留强提醒；小程序加升级调试日志（main）
 
 - 需求（用户）：
