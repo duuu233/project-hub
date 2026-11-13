@@ -1,3 +1,15 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP：OTA 进度条 19 / 39 / 59 / 79 必须等下一档数值（main）
+
+- 需求（用户）：按文档 0~20 前端自己匀速走到 19 / 39 / 59 / 79 等 progress 上报，有值或为 null 后继续（null 停 98）；现在没做好，19 要等 20、39 等 40、59 等 60、79 等 80。
+- 同步：Hub main、photo-album main/959325b、flutter main/5bcd311 同名 pull 均已最新；origin 均为 GitHub。
+- 原因：11-12 的 progressCap 有两条按状态放开到 98 的分支——进入 FLASHING 一律 98（收到 60 后进写入，79 不等 80）；DOWNLOADING 还没数值就 98（状态先于 20 到，19 不等 20）。
+- album-miniapp main/0685e88（已 push）：utils/wifi-ota progressCap 去掉这两条，上限只看收到过的最大进度；tests/wifi-ota 上限用例与页面时间线按新口径改并补「下载中 20 未到停 19」「写入中仍停 79 等 80」；docs/changes 新增一篇、README / AI_CONTEXT / 11-12 文档标注。
+- album-app main/fdc925b（已 push）：wifi_ota.dart otaProgressCap 同口径；test/wifi_ota_test 上限用例同步；docs/history 新增一篇、README 本次更新、11-12 文档标注。
+- 自行决定（可改）：「为 null → 98」改为一个数值都没收到就已进入 FLASHING 才算固件不上报；下载阶段 null 仍停 19（轮询拿到 null 分不清是没上报还是 20 还没到）。已收到过数值后的 null 仍不放开（服务端应保留最近进度）。
+- 验证：无 node / Flutter，两端测试、analyze、编译、真机均未跑，OTA 未联调；新规则与测试时间线用 Python 照搬逻辑核对通过；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-12 ssh｜相册APP：修复 release 编译错误 parseOtaProgress 变量同名（main）
 
 - 需求（用户）：assembleRelease 报 wifi_ota.dart:122~130「Local variable 'value' can't be referenced before it is declared」。
