@@ -3613,3 +3613,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-14 | album-miniapp ＋ album-app | ssh | main | 优雅刷新升级页去掉顶部图标
 - 小程序 main/e974cb5、APP main/7055ee3 已 push；普通固件升级页不变。未跑测试。
+
+## 2026-11-14 | album-miniapp ＋ album-app | ssh | main | 加载转圈颜色核对
+- 小程序 main/da15372：WiFi「查询中」转圈由青绿改为主题橙。APP 核对后全部已是橙，没有改动。
