@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-miniapp ＋ album-app｜ssh｜main｜WiFi 投屏幂等键
+
+play 带 Idempotency-Key：批量每张图一个新键，「重试未成功的」复用（刷屏方式变了换新），新进入结果页全部新键；4090 提示处理中。小程序 e7c172d、APP 1248a69 已 push。测试未跑，未联调。
+
 ## 2026-11-13｜taiqian-front｜ssh｜dev｜新增资产申请金融产品改取 productOptions
 
 选融资企业后按 orgId 调授信通过的金融产品下拉。dev/7d98187 已 push，测试未跑。

@@ -1,3 +1,14 @@
+## 2026-11-13 ssh｜相册小程序 + 相册APP：WiFi 投屏幂等键 Idempotency-Key（main）
+
+- 需求（用户）：先确认投屏有无弱网自动重试（结论：两端 play 都不重试，只有 GET 静默重试；唯一再次发送是「重试未成功的」）；后端确认后实现：Header `Idempotency-Key`、键为 deviceNo + UUID、失败不缓存、新增 4090（首次请求处理中）。用户中途强调：批量投屏每张图都要一个新 UUID，不能整批一个。
+- 同步：Hub、photo-album、flutter 同名 pull 均已最新；origin GitHub。
+- album-miniapp main/e7c172d（已 push）：newPlayKey（UUID v4 形状 + 时间戳）；iot-api.play 有键带 Header；iot-errors 登记 4090；结果页 `_playKeys` 按「序号:refresh」每张图一个键，「重试未成功的」复用；tests/wifi-projection ⑫；docs/changes、README、AI_CONTEXT。
+- album-app main/1248a69（已 push）：同口径——WifiProjection.newPlayKey（Random.secure）、IotApi.play 带头、IotClient.upload 支持额外头、码表 4090（三语）、结果页 `_playKeys`；test/wifi_projection_progress_test 补一组；docs。
+- 自行决定（可改）：同一张图重试时刷屏方式变了（原只上传、重试成最后一张）换新键，避免拿回「只上传未刷屏」的旧结果；4090 按普通失败显示在该张上，键保留，再点重试复用。
+- 验证：无 node / Flutter，两端测试、analyze、编译、真机均未跑，未联调；源码断言 Python 核对、括号配平与改动前一致；diff --check、信息隔离自查通过。
+
+---
+
 ## 2026-11-13 ssh｜泰乾超级-qianrong：新增资产「申请金融产品」改取授信通过的金融产品下拉（dev）
 
 - 需求（用户）：可申请金融产品的数据来源为 GET /credit/financeOrg/productOptions（授信通过的金融产品下拉）。
