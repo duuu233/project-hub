@@ -1,3 +1,17 @@
+## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：FPGA版本调整与渲染固件管理（main）
+
+- 需求（用户）：后台「FPGA固件版本」改名 FPGA版本、去掉升级类型（默认传不提示升级）、产品只读渲染模式 FPGA16、版本简介重新开放；小程序 / APP 渲染模式 FPGA16 的设备在设备信息页新增「渲染固件管理」，列出启用的 FPGA 版本（版本号、简介、安装），安装进 OTA 同款步骤页（带简介），复用 POST /api/device/ota type=fpga。
+- 同步：Hub main、web-ui-v2 main/a3bce9b、photo-album main/dd618ce、flutter main/fa7d672 同名 pull 均已最新；origin GitHub。
+- 核对：Swagger 与线上 FPGA 记录都没有简介字段；用户端没有查 FPGA 版本列表的接口；线上 fpga16 产品只有 20 IJ_101（10.1寸）。用户答复：简介先跳过；小程序 / APP 先做入口和安装页，列表接口待定。
+- album-admin main/24aa40f（已 push）：改名 FPGA版本（路由、页面、按钮、菜单脚本）；去掉升级类型筛选 / 列 / 表单，提交固定 compulsory=4；产品只列 renderMode=fpga16（编辑时原产品不符提示重选）；test:fpga 补用例；文档与 history 记录。后台菜单节点 163 改名：预览只改 appName，写入被本机权限拦下，**未执行**。
+- album-miniapp main/c28c804、97ebb00（已 push）：新增 utils/fpga-firmware.js（LIST_API 为空 = 列表接口待定、简介字段兜底、两套文字）；设备信息页 fpga16 显示 FPGA版本行与入口；新页 wifi-fpga；wifi-ota 新增 mode=fpga（目标经本地存储带来、下发 type=fpga、记录带 otaType / intro、只换文字并显示简介）；tests/wifi-ota 补一组；docs/changes 等同步。
+- album-app main/0908c81（已 push）：同口径——wifi_fpga.dart（kWifiFpgaListApi 待定）、wifi_fpga_page.dart、设备信息页入口、WifiOtaPage(fpgaTarget:) 安装模式、WifiOtaRecord 加 otaType / intro、l10n 三语；test/wifi_ota_test 补一组；docs 同步。
+- 自行决定（可改）：① 后台列表筛选也只列 fpga16，表格产品名仍按全部产品显示；② 安装目标与当前版本相同时按钮为「重新安装」，仍可装；③ 当前 FPGA 版本取 IoT 影子 fpgaVersion；④ 安装页四步沿用，只有第 4 步与完成 / 失败标题换成「安装…」；⑤ APP 安装目标直接传参（小程序用本地存储）。
+- 待用户：执行 `npm run menu:sync:fpga -- --apply --update` 或在后台把节点 163 改名「FPGA版本」；后端补 FPGA 简介字段与用户端版本列表接口后，填 LIST_API / kWifiFpgaListApi 与简介字段名。
+- 验证：无 Node / Flutter，三端 build / 测试 / analyze 均未跑，FPGA 安装未联调；新增测试断言人工逐条核对、源码断言用 Python 对文件核对，括号配平检查通过；diff --check、信息隔离与密钥自查通过。
+
+---
+
 ## 2026-11-13 ssh｜相册后台：内置图管理（main）
 
 - 需求（用户）：按 docs/V2 开发对应内容，需要新增菜单时用用户给的 token（token 未写入任何文件 / 日志 / 提交）。先报花盆后台，SSH 未映射已停下；改为相册后台。

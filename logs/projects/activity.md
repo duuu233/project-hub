@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-admin ＋ album-miniapp ＋ album-app｜ssh｜main｜FPGA版本调整与渲染固件管理
+
+后台 FPGA固件版本改名 FPGA版本、去升级类型（固定传 4）、只选 fpga16 产品（admin 24aa40f）；菜单节点 163 改名未执行（权限拦下）。小程序（c28c804、97ebb00）/ APP（0908c81）新增渲染固件管理与安装页（复用 OTA，type=fpga），版本列表接口与简介字段待后端。无 Node / Flutter，测试未跑，未联调。
+
 ## 2026-11-13｜album-admin｜ssh｜main｜内置图管理
 
 新增内置图管理六页与 13 项 /admin/intimg 接口，FACTORY 连续前缀下发；后台菜单 179–190 已写入。main/a3bce9b 已 push。无 Node，build / 测试未跑，写接口未联调。
