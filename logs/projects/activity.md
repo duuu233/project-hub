@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-13｜album-admin｜ssh｜main｜内置图管理
+
+新增内置图管理六页与 13 项 /admin/intimg 接口，FACTORY 连续前缀下发；后台菜单 179–190 已写入。main/a3bce9b 已 push。无 Node，build / 测试未跑，写接口未联调。
+
 ## 2026-11-13｜album-miniapp ＋ album-app｜ssh｜main｜固件强制升级 / 强提醒升级判断
 
 WiFi 在线、蓝牙已连接时判断：详情页进入后与功能按钮判断强制 + 强提醒，我的设备投屏 / WiFi 轮播设置、首页拍照 / 相册投屏只判强制；小程序撤掉启动强制升级弹窗；升级方式先读 compulsory。小程序 main/dd618ce、APP main/fa7d672 已 push。无 node / Flutter，测试未跑，未联调。
