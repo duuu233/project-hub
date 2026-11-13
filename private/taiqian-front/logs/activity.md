@@ -500,3 +500,9 @@ enterprise-users/index.vue：删“所属用户组”列及其渲染函数；“
 - **改动**：资产管理三页对接 /finance/asset/list、detail/{id}、add；新增 api/asset、model.js 替换 static-data；列表开动态列 + menuPerm；新增表单下拉接真实来源、两个时间可填、产品多选、时间戳提交；详情按 id 请求；新增 asset-model 测试，policy-columns 加静态列表名单。dev/bec80d6 提交后再次 pull 并 push。详见 docs/qianrong-asset-integration.md。
 - **验证**：dev 只读查询 getRouters、字典、下拉、资产列表（用户给的登录 Token 只在本轮环境变量里用，未落盘）；未调用新增接口。无 Node，构建 / 测试未运行；静态核对与正则核对通过。
 
+## 2026-11-13 ssh｜qianrong 新增资产：申请金融产品改取授信通过的金融产品下拉
+
+- **需求**：可申请金融产品数据来源改为 GET /credit/financeOrg/productOptions（授信通过的金融产品下拉）。
+- **改动**：dev 同名 pull 已最新；新增 financeCreditProductOptions(orgId)，选融资企业后按企业取产品（加载态、旧结果不覆盖、名称旁显示银行与授信期限）；企业列表仍取授信已生效列表；asset-model 测试同步。dev/7d98187 提交后再次 pull 并 push。详见 docs/qianrong-asset-integration.md 末节。
+- **验证**：dev 只读调用一次（测试融资企业返回空数组）；无 Node，测试未运行，正则与括号核对通过。
+

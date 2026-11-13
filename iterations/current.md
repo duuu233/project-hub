@@ -1,3 +1,12 @@
+## 2026-11-13 ssh｜泰乾超级-qianrong：新增资产「申请金融产品」改取授信通过的金融产品下拉（dev）
+
+- 需求（用户）：可申请金融产品的数据来源为 GET /credit/financeOrg/productOptions（授信通过的金融产品下拉）。
+- 同步：Hub main、tq-plus dev 同名 pull 均已最新。
+- taiqian-front dev/7d98187（已 push）：新增 financeCreditProductOptions(orgId)；选融资企业后按 orgId 取产品（换企业清空已选、加载态、迟到结果不覆盖），选项显示产品名 + 银行与授信期限；企业列表仍来自授信已生效列表；测试同步。
+- 验证：dev 只读调用一次（测试融资企业返回空）；无 Node，测试未跑；断言正则与括号核对通过。
+
+---
+
 ## 2026-11-13 ssh｜泰乾超级-qianrong：菜单调整后核对新增模块，资产管理对接接口（dev）
 
 - 需求（用户）：qianrong 切到 dev，检查菜单被调整后以前新增的模块是否有问题、是否要挪文件，没问题就对接资产模块（新增 / 详情 / 列表，Swagger 业务管理-资产管理）。

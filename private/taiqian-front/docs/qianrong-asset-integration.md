@@ -45,3 +45,10 @@
 
 - dev 只读：getRouters、字典、企业 / 币种 / 授信下拉、资产列表（当前 0 条）。未调用新增接口，未写任何数据。
 - 无 Node：构建与测试未运行；模板标签配对、括号配平、测试正则对源码 Python 核对通过；CodeGraph 本机未安装，未同步索引。
+
+## 补充（同日）：可申请金融产品改用「授信通过的金融产品下拉」
+
+- 用户指定：新增资产「申请金融产品」数据来源 `GET /credit/financeOrg/productOptions?orgId=`（该融资企业审批通过、已生效且在有效期内的金融产品，同一产品多条授信保留期限最晚的一条；productId 写入 candidateProductIds）。
+- 改法：`api/credit/financeCredit.js` 新增 `financeCreditProductOptions(orgId)`；选融资企业时清空已选产品、按企业调该接口（带加载态，迟到的旧企业结果不覆盖）；选项名称为产品名，右侧灰字显示银行与授信期限；`financeOrgOptionsOf` 只负责企业列表（仍来自授信已生效列表），不再从授信行归并产品；`productOptionsOf` 整理下拉（ID 按字符串、同产品去重）。
+- dev 只读：测试融资企业调用返回 `data: []`（该企业目前没有在有效期内的授信产品），页面提示「该企业暂无授信通过的金融产品」。
+- 无 Node，测试未运行；`asset-model.test.mjs` 同步改期望并补接口断言。
