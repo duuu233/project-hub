@@ -1,3 +1,17 @@
+## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：优雅刷新改名、4047、推送用户暂停（main）
+
+- 需求（用户补充）：小程序 / APP「渲染固件管理」改名「优雅刷新升级」；/api/device/ota type=fpga 新增 4047，提示「今日升级次数已达上限」（多语种）；baseVersion 为 null 设备不上报，不显示设备 FPGA 版本号。后台「FPGA版本」改名「优雅刷新管理」；列表新增「推送用户」（POST /internal/notification/send，带内部 Token）。
+- 同步：Hub、web-ui-v2 24aa40f、photo-album 97ebb00、flutter 0908c81 同名 pull 均已最新；origin GitHub。
+- 推送用户：接口一次一个 deviceNo、按钮在版本行上，问推送范围，用户答「先暂停 等接口调整」——未做。用户消息里的内部 Token 未写入任何文件 / 提交。
+- album-admin main/2100750（已 push）：改名优雅刷新管理（路由、页面、按钮、确认文案、菜单脚本节点名；列表列「版本号」）；docs 与 history 补充。后台菜单节点 163 改名仍未执行。
+- album-miniapp main/bc10a10（已 push）：改名优雅刷新升级（入口、列表页、安装页文案）；去掉设备信息页 FPGA版本行、列表当前版本 / 当前版本标记 / 重新安装、安装页当前版本行；下发 4047 按语种 toast（utils/fpga-firmware.limitText，简繁英日），停在当前页不存记录；iot-errors 登记 4047；tests/wifi-ota 同步并补 4047。
+- album-app main/0a05271（已 push）：同口径——l10n 改名并新增 wifiFpgaLimit（显式给繁中）、isWifiFpgaLimitError、三处不显示版本号、删掉不用的文案；test 补 4047 与不显示版本号断言。
+- 自行决定（可改）：英文名 Smooth refresh update、日文スムーズリフレッシュ更新；安装页标题用「安装优雅刷新固件 vX」；4047 后停在安装确认页（可改天再装）。
+- 待用户：后台节点 163 改名（`npm run menu:sync:fpga -- --apply --update`，节点名现为「优雅刷新管理」）；推送用户待接口调整；简介字段与用户端列表接口待后端。
+- 验证：无 Node / Flutter，三端测试 / build / analyze 均未跑，未联调；新增断言人工核对、源码断言 Python 核对、括号配平通过；diff --check、信息隔离与密钥自查通过。
+
+---
+
 ## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：FPGA版本调整与渲染固件管理（main）
 
 - 需求（用户）：后台「FPGA固件版本」改名 FPGA版本、去掉升级类型（默认传不提示升级）、产品只读渲染模式 FPGA16、版本简介重新开放；小程序 / APP 渲染模式 FPGA16 的设备在设备信息页新增「渲染固件管理」，列出启用的 FPGA 版本（版本号、简介、安装），安装进 OTA 同款步骤页（带简介），复用 POST /api/device/ota type=fpga。
