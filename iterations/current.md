@@ -1,3 +1,17 @@
+## 2026-11-14 ssh｜相册小程序 + 相册APP：优雅刷新「检测中」也居中（main）
+
+- 需求（用户）：优雅刷新升级页检测版本时「正在检查固件版本，请稍候…」这个 loading 也要居中，检查小程序和 APP。
+- 原因：上一轮居中只覆盖 phase=latest（暂无可用版本），检测中 phase=checking 没包含进去，所以仍贴在顶部。
+- album-miniapp main/1e676bb（已 push）：is-empty 条件扩展为「无图标、checking 或 latest、不显示版本卡」；测试与 docs/changes 已更新。
+- album-app main/ee24330（已 push）：
+  - emptyFpga 加上 checking；
+  - initState 先按入口模式设 _otaType，否则第一帧按普通固件排版，会先在顶部闪一下再跳到中间；
+  - 测试与 history 已更新。
+- 普通固件升级的检测中不变（有顶部图标，未要求）。
+- 验证：无 node / Flutter，未跑测试、未真机；断言正则已用 Python 模拟通过。
+
+---
+
 ## 2026-11-14 ssh｜相册小程序：首页设备卡上下居中（main）
 
 - 需求（用户）：首页设备轮播卡内容没有垂直居中，左侧设备图要和右侧整体上下左右居中，参照 APP；特别是 WiFi 版 13.3 寸设备（D0CF13F02804）。
