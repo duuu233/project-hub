@@ -1,3 +1,15 @@
+## 2026-11-14 ssh｜相册APP：WiFi版 / 蓝牙版只按 versionType 判断（main）
+
+- 需求（用户）：APP 也一起改，只按 versionType 判断。
+- album-app main/ecdbe9a（已 push）：
+  - DeviceItem 新增 versionType，_deviceFromJson 读取，详情带了就覆盖；
+  - isWifi 改为 versionType == 2，不再按 broadcastId（首页卡、我的设备 Tab、选设备弹层、投屏、图库、AI、固件提醒、WiFi 状态订阅都走 isWifi）；
+  - 设备图 / 容量仍按 broadcastId，搜索页按扫描广播名，不变；去掉 state.dart 不再用的 broadcast_match 引用；
+  - 新增 test/device_version_type_test.dart，firmware_gate_test 补 versionType；history 与 AI_CONTEXT 已更新。
+- 验证：无 Flutter，未跑测试 / analyze、未真机。
+
+---
+
 ## 2026-11-14 ssh｜相册小程序：WiFi版 / 蓝牙版只按 versionType 判断（main）
 
 - 用户：贴出 getUserProductList 真实返回与字段说明（versionType 1=蓝牙版，2=wifi版），要求只按 versionType 判断。
