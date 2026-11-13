@@ -1,3 +1,16 @@
+## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：优雅刷新改读最新版本 + 红点、版本说明、OTA管理菜单（main）
+
+- 需求（用户）：后台 FPGA 版本新增 upgradeTips（新增 / 编辑 / 详情 / 列表）；用户端详情新增 upgradeTipsFpga。产品改口：去掉后台推送；小程序 / APP 去掉优雅刷新版本列表，仅读接口最新版本，红点提醒（本地缓存版本号，空或更低则亮：设备详情「设备信息」、设备信息页「优雅刷新升级」，进去看过即消失）；保留改名、4047 捕捉、不显示设备 FPGA 版本，显示版本说明。插入：「固件版本」「FPGA固件版本」移出产品管理建一级菜单（给了 token），随后一级菜单改名「OTA管理」。
+- 同步：四仓同名 pull 均已最新；origin GitHub。Swagger 核对：ClientUserProductDetailApiOut 有 newVersionNoFpga / downloadPathFpga / upgradeTipsFpga / isUpdateFpga / compulsoryFpga；后台入出参有 upgradeTips（1–200）。
+- album-admin main/989ddf1、e523630、6288bc0（已 push）：表单「版本说明」必填 ≤200、列表列、详情；推送用户未实现过无需删；菜单脚本新增 firmware 范围（OTA管理，aliases 认「固件管理」），FPGA 节点 grade 1；文档同步。
+- 外部操作：后台菜单——新建一级 191（grade 4），按原 id 移入 120 固件版本（grade 2）与 163（改名优雅刷新管理，grade 1，顺带完成此前被拦下的改名），子节点随行；随后 191 改名 OTA管理。每步先预览后写入再只读复核；产品管理剩 109 / 114 / 147 / 152。token 未落盘。
+- album-miniapp main/ef1f586（已 push）：fpga-firmware.js 改为 latestOf（设备详情三字段）+ fpga_seen 缓存 + hasNew / markSeen；删 wifi-fpga 列表页；设备信息页入口直进 wifi-ota?mode=fpga 并亮红点；WiFi 详情「设备信息」红点；安装页进页即记下版本、显示版本说明、无版本时「暂无可用的优雅刷新版本」、版本行「最新版本」；4047 保留；tests 重写该组。
+- album-app main/a5c73fc（已 push）：DeviceItem 加 fpgaVersionNo / fpgaDownloadPath / fpgaUpgradeTips；wifi_fpga.dart 改为最新版本 + WifiFpgaSeenStore + wifiFpgaHasNew；删列表页与列表接口；WifiOtaPage(fpga: true)；两处红点；l10n 删列表文案加「暂无可用」；tests 重写该组、firmware_gate_test 断言挪位。
+- 自行决定（可改）：① 一级菜单新建时取名「固件管理」（已按要求改 OTA管理），grade 4 放在产品管理 / 商品管理之后，组内固件版本在前；② 红点要求下载地址有效；版本比较 x.y.z 按数字段，否则不同即新；③ 打开「优雅刷新升级」即算看过（含正在安装时进入）；④ 版本说明后台设为必填。
+- 验证：无 Node / Flutter，三端测试 / build / analyze 均未跑，未联调；断言人工核对、源码断言 Python 核对、括号配平通过；diff --check、信息隔离与密钥自查通过。
+
+---
+
 ## 2026-11-13 ssh｜相册后台 + 相册小程序 + 相册APP：优雅刷新改名、4047、推送用户暂停（main）
 
 - 需求（用户补充）：小程序 / APP「渲染固件管理」改名「优雅刷新升级」；/api/device/ota type=fpga 新增 4047，提示「今日升级次数已达上限」（多语种）；baseVersion 为 null 设备不上报，不显示设备 FPGA 版本号。后台「FPGA版本」改名「优雅刷新管理」；列表新增「推送用户」（POST /internal/notification/send，带内部 Token）。
