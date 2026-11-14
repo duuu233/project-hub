@@ -1,3 +1,14 @@
+## 2026-11-14 ssh｜相册小程序 + 相册APP：设备列表直接用接口 productId / broadcastId（main）
+
+- 需求（用户）：后端已在 getUserProductList 补 productId / broadcastId，去掉多余逻辑，两端一起优化。
+- 去掉的逻辑（两端同）：设备列表等产品列表（最多 3 秒）按 productId 回查 broadcastId；认不出时逐台调 getUserProductDetail（最多再 3 秒）。小程序另撤掉同日加的产品列表 / 详情补机型本地缓存。
+- album-miniapp main/c3974e7（已 push）：api.getDevices 只调列表接口；getDeviceDetail 仍按 productId 回查产品列表（详情不带 broadcastId，记录自带就不动）；device-thumb 测试改新口径，删 product-catalog-cache 测试；docs / AI_CONTEXT 更新，同日缓存文档标「已撤销」。
+- album-app main/d9f91fd（已 push）：refreshDevices 不再等产品列表、不调详情；删 _fillBroadcastIds / _detailBroadcastId / ProductBroadcastId.resolve；产品列表只留投屏取配置与绑定页尺寸；测试与 history / AI_CONTEXT 更新。
+- 未核实：后端补字段后的真实返回未在本机抓到，按用户说法与示例口径实现；没带 broadcastId 的记录现在落默认图（不再回查）。
+- 验证：无 node / Flutter，未跑测试、未真机。
+
+---
+
 ## 2026-11-14 ssh｜相册APP：WiFi版 / 蓝牙版只按 versionType 判断（main）
 
 - 需求（用户）：APP 也一起改，只按 versionType 判断。
