@@ -1,3 +1,14 @@
+## 2026-11-16 ssh｜花盆APP：iOS 补蓝牙扫描与双模配网（main）
+
+- 问题（用户贴 iPhone 报错与另一端核对结论）：iOS 包提示「探测蓝牙失败：原生涂鸦SDK尚未接入」，热点已屏蔽，iOS 无配网入口；包名 com.common.yikaltdtext 一致。用户问 SDK 是否没实现、是否一定要写原生，只看 iOS。
+- 结论：涂鸦 iOS SDK 本身有蓝牙扫描 / 双模配网，缺的是 Flutter ↔ SDK 的 iOS 桥接（AppDelegate.swift 的 FlowerpotTuyaBridge 没有任何蓝牙方法，Dart 收到 MissingPluginException 后统一显示「原生涂鸦 SDK 尚未接入」，文案有误导）。
+- flowerpot main/8cb3c28（已 push）：iOS 补 ensureBlePermissions / openAppSettings / bleProbe / startBleScan / stopBleScan / disconnectBleDevice / queryDeviceProductInfo / pairBleDevice，结构同 Android；扫描 ThingSmartBLEManager.startListening，配网 ThingSmartBLEWifiActivator.startConfigBLEWifiDevice（120 秒 + 130 秒兜底）；蓝牙状态与授权用 CBCentralManager；设备自报 Wi-Fi 列表未接（supportWifiList 恒 false，手动输入 Wi-Fi 名）；整段在 canImport(ThingSmartBLEKit) 内。Dart 未改。AI_CONTEXT 与 docs/history/2026-11/2026-11-16-ios-ble-pairing.md 已更新。
+- 风险：SDK 方法签名按涂鸦 iOS 文档写，服务器无 Xcode、无 ios/TuyaSDK，未编译；待核对清单见项目 history 记录。
+- 验证：未编译、未真机。待用户 Mac 上 pod install + Xcode 编译，iPhone 实测扫描与配网后打包上传蒲公英。
+- 另：相册小程序「长期二维码页面路径」问题用户中途撤回，未作答。
+
+---
+
 ## 2026-11-16 ssh｜花盆APP：只隐藏花盆语种切换、割草机保留（main）
 
 - 需求（用户）：只去掉花盆的语种切换、默认中文，割草机的要保留；要一条无日志的 Android 打包命令。
