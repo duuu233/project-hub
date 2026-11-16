@@ -1,3 +1,12 @@
+## 2026-11-16 ssh｜花盆APP：只隐藏花盆语种切换、割草机保留（main）
+
+- 需求（用户）：只去掉花盆的语种切换、默认中文，割草机的要保留；要一条无日志的 Android 打包命令。
+- 核对 flowerpot main/8123f6a（pull 后已是最新）：「我的 → 设置」语种设置、花盆「其他设置」设备语言（DP153）已隐藏，App 固定中文；割草机设置「语言切换」（DP109 设备面板语言）入口、路由、下发都在，上一轮没动。现状已符合要求，本轮未改代码。
+- 打包命令按项目用户包口径（APP_DEBUG_TOOLS=false），见项目 docs/history/other/USER_RELEASE_BUILD.md；AI_CONTEXT 里指向 docs/USER_RELEASE_BUILD.md 的链接已失效（文档已移到 history/other），本轮未改。
+- 验证：只读核对源码，无 Flutter，未编译、未打包。
+
+---
+
 ## 2026-11-14 ssh｜相册小程序 + 相册APP：设备列表直接用接口 productId / broadcastId（main）
 
 - 需求（用户）：后端已在 getUserProductList 补 productId / broadcastId，去掉多余逻辑，两端一起优化。
