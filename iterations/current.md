@@ -1,3 +1,21 @@
+## 2026-11-16 ssh｜花盆APP：iOS 涂鸦桥接对齐 Android（Wi-Fi 列表等）+ 设备页文案改用涂鸦产品名（main）
+
+- 需求（用户）：iOS 配网搜不到 Wi-Fi 列表；按 iOS 涂鸦文档替换与 Android 不一致的方法，交互表现同 Android；花盆 / 割草机相关页面「东方金穗」换成各自的涂鸦产品名，按 Android 的取法与字段，外部通用页面不变。中途用户：都不要用「东方金穗」这个名字。
+- 原因：上午那版 iOS 蓝牙桥接把 supportWifiList 写死 false、queryDeviceConfigState 直接回不支持，Dart 从不问设备要列表。
+- 开工时 flowerpot 有上一轮中断留下的未提交改动（设备页产品名，28 个文件），内容就是本需求的前半，用户说「继续任务」，在其上接着做。
+- flowerpot main/1bec5c4（已 push）：
+  - iOS queryDeviceConfigState → ThingSmartBLEWifiActivator.connectAndQueryWifiListWithUUID + didScanWifiList（30 秒兜底），supportWifiList 一律 true（ThingBLEAdvModel 无能力位）；查过列表的配网走 pairDeviceWithUUID:token:ssid:pwd:timeout: 复用连接；
+  - 补 deviceProductName（productId + uuid → queryDeviceInfoWithUUID，同 Android getActivatorDeviceInfo）、deviceLinkState、bleConnectDevice、publishDpsWithMode（割草机按通道下发）、deviceMessages（fetchEncryptMessageDetailListWithListRequestModel）、设备告警 warningInfoUpdate → warn56；
+  - 修正 startConfigBLEWifiDevice failure 回调参数（ThingFailureHandler 无参，上午那版编译会报错）；
+  - 设备页：首页、行为 / 显示 / 听觉 / LED / 触摸 / 振动 / 植物检测设置页称呼设备用涂鸦产品名，问不到说「设备」；登录、我的、关于、协议、应用名不变；
+  - 未接（无页面调用或仅调试台）：bleReadRssi、requestWifiSignal、deviceOperateLogs、messagesByTime、startPushListen；
+  - 新增 docs/history/2026-11/2026-11-16-ios-sdk-parity-product-name.md（含对照表与待核对签名），AI_CONTEXT、history 索引已更新。
+- 风险：iOS 方法按涂鸦文档写（Swift 名有一处与文档示例不同：connectAndQueryWifiList(withUUID:)），Wi-Fi 列表元素格式文档未写；服务器无 Xcode / Flutter。
+- 验证：未编译、未运行测试、未真机。待用户 Mac 上 flutter analyze、pod install + Xcode 编译，iPhone 实测 Wi-Fi 列表与配网、设备页产品名。
+- 未改：「请将植物种入花盆」「割草机已关机」等把花盆 / 割草机当普通名词的文案。
+
+---
+
 ## 2026-11-16 ssh｜花盆APP：iOS 补蓝牙扫描与双模配网（main）
 
 - 问题（用户贴 iPhone 报错与另一端核对结论）：iOS 包提示「探测蓝牙失败：原生涂鸦SDK尚未接入」，热点已屏蔽，iOS 无配网入口；包名 com.common.yikaltdtext 一致。用户问 SDK 是否没实现、是否一定要写原生，只看 iOS。

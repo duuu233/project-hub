@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-16｜flowerpot-app｜ssh｜main｜iOS 涂鸦桥接对齐 Android、设备页文案改用涂鸦产品名
+
+iOS 补设备自报 Wi-Fi 列表（connectAndQueryWifiListWithUUID + pairDeviceWithUUID 复用连接）、产品名、割草机按通道下发、消息通知取消息、设备告警，修正双模配网 failure 回调参数；花盆设备页「东方金穗」改为涂鸦产品名（问不到说「设备」），外部通用页面不变。1bec5c4 已 push；未编译、未跑测试、未真机。
+
 ## 2026-11-16｜flowerpot-app｜ssh｜main｜核对语种切换：花盆已隐藏、割草机保留
 
 只核对，未改代码。花盆的 App 语种设置与设备语言（DP153）已隐藏、界面固定中文；割草机「语言切换」（DP109）保留。给出无日志 Android 用户包打包命令。
