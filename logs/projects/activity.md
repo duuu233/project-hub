@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-17｜flowerpot-app｜ssh｜main｜iOS 配网列表与设备列表按产品 ID 取涂鸦名称和图片
+
+iOS 设备列表补涂鸦产品图 iconUrl（此前 iOS deviceMap 缺该字段）；iOS 广播 pid 依次读 productId / productKey / pid，产品信息解析加固（NSNull、外包一层）并写 pairingLog；搜索页图标先按广播 pid、再按云端回的产品 ID 认，都认不出画涂鸦产品图；设备列表名为空时用涂鸦产品名。「连接 Wi-Fi」页顶部动图两端同一份代码，未改。c1a8655 已 push；未编译、未跑测试、未真机。
+
 ## 2026-11-16｜flowerpot-app｜ssh｜main｜iOS 涂鸦桥接对齐 Android、设备页文案改用涂鸦产品名
 
 iOS 补设备自报 Wi-Fi 列表（connectAndQueryWifiListWithUUID + pairDeviceWithUUID 复用连接）、产品名、割草机按通道下发、消息通知取消息、设备告警，修正双模配网 failure 回调参数；花盆设备页「东方金穗」改为涂鸦产品名（问不到说「设备」），外部通用页面不变。1bec5c4 已 push；未编译、未跑测试、未真机。

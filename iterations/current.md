@@ -1,3 +1,16 @@
+## 2026-11-17 ssh｜花盆APP：iOS 配网列表与设备列表按产品 ID 取涂鸦名称和图片（main）
+
+- 需求（用户）：iOS「连接 Wi-Fi」页顶部图标与 Android 对齐；名称不对，要按产品 ID 读涂鸦名称和图片。补充口径：① 配网时连接设备那一行的名字固定按产品 ID 读涂鸦名称；② 设备列表默认按产品 ID 读涂鸦名称，用户自定义过就显示自定义名（Android 正常）。用户答「都检查下」「图片和名称都不对」。
+- 核对：
+  - 「连接 Wi-Fi」页 / 配网进度页顶部是同一张 GIF（48 帧、60ms、透明底），Dart 共用、无 iOS 分支，代码层面两端一致，未改；若 iPhone 上仍不同需截图再看（怀疑渲染差异）。
+  - iOS deviceMap 缺 iconUrl（Android 有 DeviceBean.getIconUrl）→ iOS 设备列表一直无图，这是实锤问题。
+  - 设备列表名两端都取涂鸦设备名（默认即产品名、改名后为自定义名），口径本已一致。
+  - 搜索页行：iOS 广播 pid 只读 productId 一个属性，读不到时 Dart 不查名字、图标退回蓝牙——推测是 iOS「图和名都不对」的原因，未经真机证实。
+- flowerpot main/c1a8655（已 push）：iOS deviceMap 补 iconUrl；广播 pid 读 productId / productKey / pid；queryDeviceProductInfo 缺 pid 时用扫描缓存；productInfoMap 加固并写 pairingLog（ble product:）；Dart BleProductInfo 加 productId，搜索页图标按云端产品 ID 再认、认不出画涂鸦产品图；设备列表名为空时用 productNameLabel；新增一条搜索页用例；新增 docs/history/2026-11/2026-11-17-ios-product-name-icon.md，AI_CONTEXT、history 索引已更新。
+- 验证：未编译、未运行测试、未真机（服务器无 Flutter / Xcode）。待用户 Mac 上 flutter analyze / test、pod install + Xcode 编译；iPhone 看搜索页行名与图、设备列表图与名；若仍不对，看配网调试日志 `ble product:` 行与扫描 raw。
+
+---
+
 ## 2026-11-16 ssh｜花盆APP：iOS 涂鸦桥接对齐 Android（Wi-Fi 列表等）+ 设备页文案改用涂鸦产品名（main）
 
 - 需求（用户）：iOS 配网搜不到 Wi-Fi 列表；按 iOS 涂鸦文档替换与 Android 不一致的方法，交互表现同 Android；花盆 / 割草机相关页面「东方金穗」换成各自的涂鸦产品名，按 Android 的取法与字段，外部通用页面不变。中途用户：都不要用「东方金穗」这个名字。
