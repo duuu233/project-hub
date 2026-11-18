@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-18｜taiqian-h5｜ssh｜master｜资产列表、详情对接 qianrong 资产接口
+
+资产列表（finance/asset/list，分页 + 资产编号搜索 + 下拉刷新）和详情（finance/asset/detail/{id}）改为调用 qianrong 资产接口，带登录 Token；库存、提货、质押 / 解押无接口，接口模式下隐藏入口，演示模式保留。路由参数改为资产 ID。f99cd9d 已 push；未跑 analyze / test、未联调；字典中文名内置待核对。另发现后端单据类型字段已改名 assetBillType，PC 端仍读 assetType，未改。
+
 ## 2026-11-18｜taiqian-h5｜ssh｜master｜对接短信登录、身份树与切换身份
 
 四个接口串成登录流程（发码 → 短信登录 → 身份树 → 切换身份），一个身份直接进、多个身份登录页选择、我的页底部弹层切换；ApiClient 改为按体内 code/msg 判错并带 Bearer Token；会话存 localStorage。f71ffa1 已 push；未跑 analyze / test，Token 字段与真实返回待联调核对。

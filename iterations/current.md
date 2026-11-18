@@ -1,3 +1,20 @@
+## 2026-11-18 ssh｜泰乾超级-qianrong H5：资产列表、详情对接 qianrong 资产接口（master）
+
+- 需求（用户）：H5 资产模块也调用 qianrong 的资产接口，H5 只需要两个：列表、详情。
+- 接口（dev 网关业务管理分组，当天重新拉取 swagger）：GET finance/asset/list（pageNum / pageSize / assetBizNo 等，返回 total + rows）、GET finance/asset/detail/{id}（data，含 items、candidateProducts、financing）。H5 走同源 `/api/`，与登录接口同一前缀。
+- 发现：当天 swagger 单据类型字段是 `assetBillType`（字典 asset_bill_type），11-13 的旧文档和 PC 端 dev 代码用的是 `assetType`（字典 asset_type）——后端可能改了字段名，PC 端资产列表 / 详情的单据类型列可能已经空了，本轮未改 PC（只读）。H5 两个都读。
+- taiqian-h5 master/f99cd9d（已 push）：
+  - 新增 ApiAssetRepository（Bearer Token，未登录直接报登录失效不发请求）；资产 ID 按字符串，超安全整数报错；
+  - 列表每页 20 条，滚到底自动加载 / 点「加载更多」，下拉刷新，搜索按资产编号；卡片按单据类型显示货柜号 / 提单号等，融资状态、人民币价值，外币时加外币价值；
+  - 详情：资产信息（单据类型、外币与汇率、进口服务商、申请金融产品、明细表），融资信息（借据号、融资金融产品、放款日期 / 金额）；
+  - 库存、提货、质押 / 解押没有接口：接口模式下详情不出 Tab、列表不出「发起提货」、不出质押入口；演示模式照旧；
+  - 路由参数 :assetNo 改为 :assetId（详情接口按 id 查）；`DEMO_AUTH` 统一读成 ApiConfig.demoData，同时管登录和资产；
+  - 新增 asset_repository_test（路径、查询参数、Header、字段映射、体内错误码、401、超范围 ID、无 Token），asset_pages_test 改文案并加接口模式详情无 Tab 用例；README、docs/h5-foundation.md 加「资产」一节。
+- 推测 / 待核对：单据类型、融资状态的中文名内置（7 个融资状态的中文名是按编码直译的，`partially_pledged` 暂作「部分质押」，原型上叫「部分解押」，字典未读到，未登录拿不到）；列表不传 menuPerm，数据范围靠后端按当前身份过滤（swagger 写明 previewRoleId 不传时用当前登录身份）；时间字段按字符串原样显示。
+- 验证：服务器无 Flutter / Dart，未跑 analyze / test、未联调；只做了括号配平与 git diff --check，信息隔离 grep 无命中。待用户本地 `bash ./tool/flutterw.sh analyze`、`test`，再 `--dart-define=DEMO_AUTH=false` 登录后看列表 / 详情。
+
+---
+
 ## 2026-11-18 ssh｜泰乾超级-qianrong H5：对接短信登录 + 身份树 + 切换身份（master）
 
 - 需求（用户）：对接 H5 发送登录验证码、短信验证码登录、切换登录身份三个接口，加上 qianrong 的查询身份树接口，四个接口组成登录流程；切换身份应放在我的页，参考 qianrong PC，但要考虑移动端交互。

@@ -1,5 +1,13 @@
 # 泰乾超级-qianrong H5 操作记录
 
+## 2026-11-18｜ssh｜资产列表、详情对接资产接口
+
+- 同步：master 已最新（f71ffa1）；参考仓 tq-plus test 分支已最新，资产对接代码在 origin/dev，只读 git show，未切分支。
+- 实现（master/f99cd9d）：见 Hub iterations 当日条目。要点：ApiAssetRepository + parseAssetPage / parseAssetDetail；AssetSummary 改接口字段（id、billType、statusCode、人民币 / 外币价值）；AssetDict 内置单据类型、融资状态名称；supportsPledgeAndPickup 控制库存 / 提货 / 质押入口；列表分页加载。
+- 取舍：只接列表、详情两个接口（用户口径）；字典不另请求接口，内置名称；无接口的功能在接口模式隐藏而不是显示演示数据。
+- 待核对：字典中文名（尤其 partially_pledged）；assetBillType 与 assetType 哪个是最终字段；列表是否需要 menuPerm。
+- 验证：未运行 analyze / test（本机无 Flutter）。
+
 ## 2026-11-18｜ssh｜对接短信登录、身份树与切换身份
 
 - 同步：master 已最新（45dee66）；参考仓 tq-plus 当前 test 分支同步已最新，只读。
