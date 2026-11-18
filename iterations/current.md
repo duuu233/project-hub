@@ -1,3 +1,23 @@
+## 2026-11-18 ssh｜泰乾超级-qianrong H5：对接短信登录 + 身份树 + 切换身份（master）
+
+- 需求（用户）：对接 H5 发送登录验证码、短信验证码登录、切换登录身份三个接口，加上 qianrong 的查询身份树接口，四个接口组成登录流程；切换身份应放在我的页，参考 qianrong PC，但要考虑移动端交互。
+- 接口（knife4j 系统管理分组）：GET app/send-code?phone、POST app/login {phone, code}（LoginBody 另有 orgId/roleId，未用）、GET loginIdentityTree（H5 只返回融资企业身份）、POST app/changeLogin {orgId, systemId, userGroupId, roleId?, deptId?}。login / changeLogin 文档返回类型是 map，字段未写明。
+- 已实测（dev 网关，未登录、不发短信）：后端一律 HTTP 200，错误在体内 code/msg（未登录 401，参数错 500，如「验证码不能为空」「账号不存在或未绑定有效企业」）。H5 原 ApiClient 只看 HTTP 状态和 message 字段，接真实接口会把所有失败当成功。
+- PC 参考：tq-plus apps/qianrong 的 IdentitySwitcher（Navbar、个人中心、401 页）+ IdentityPicker（el-tree 整树、搜索、可管理员登录标签），可选节点 = role 或 adminLoginAllowed 的 userGroup；changeLogin 返回 data 为新 Token。
+- taiqian-h5 master/f71ffa1（已 push）：
+  - ApiClient：加 getJson、token 参数（Bearer）、体内 code≠200 抛 msg、401 统一「登录状态已失效」；
+  - 身份树解析照 PC normalizeIdentityTree（key 去重、层级 ID 一致、超安全整数报错），手机端不展示整树，按企业分组成列表（角色名 + 用户组，管理员标「无角色」，>6 个出搜索，多系统才标系统名）；
+  - 登录：验证码登录 → 立即拉身份树 → 1 个直接 changeLogin 进首页 / 多个切到「选择登录身份」步骤点一行进入 / 0 个提示联系管理员；
+  - 我的：头部卡片右侧「切换身份」（点卡片也行）开底部弹层（可拖高），当前身份打勾，点别的即切，失败保持原身份；替换掉原来的演示「切换企业」；
+  - 会话（Token、手机号、身份）存 localStorage，刷新恢复，`/` 已登录进 /home；
+  - 验证码放宽到 4-6 位（后端位数未知，原 4 位上限可能挡住登录）；
+  - 新增 auth_repository_test（MockClient 核对四个接口的方法、路径、Header、请求体，体内错误码，Token 读取，会话恢复），改写登录、我的页测试；README、docs/h5-foundation.md 已更新。
+- 推测 / 待核对：login、changeLogin 的 Token 字段按 `token` / `data` / `data.token` 依次读，真实返回未见；app/login 成功后是否已带默认身份不清楚，现按「总是选一次身份」处理。
+- 未做：退出未调后端 logout；无全局 401 跳登录（沿用不加登录守卫的约定）；企业信息、操作员仍是演示数据，真实模式下企业名取身份树的企业名。
+- 验证：服务器无 Flutter / Dart，未跑 analyze / test、未真机；只做了括号配平与 git diff --check。待用户本地 `bash ./tool/flutterw.sh analyze`、`test`，再用 `--dart-define=DEMO_AUTH=false` 联调。
+
+---
+
 ## 2026-11-17 ssh｜花盆APP：iOS 配网列表与设备列表按产品 ID 取涂鸦名称和图片（main）
 
 - 需求（用户）：iOS「连接 Wi-Fi」页顶部图标与 Android 对齐；名称不对，要按产品 ID 读涂鸦名称和图片。补充口径：① 配网时连接设备那一行的名字固定按产品 ID 读涂鸦名称；② 设备列表默认按产品 ID 读涂鸦名称，用户自定义过就显示自定义名（Android 正常）。用户答「都检查下」「图片和名称都不对」。

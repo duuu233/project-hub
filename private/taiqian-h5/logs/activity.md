@@ -1,5 +1,13 @@
 # 泰乾超级-qianrong H5 操作记录
 
+## 2026-11-18｜ssh｜对接短信登录、身份树与切换身份
+
+- 同步：master 已最新（45dee66）；参考仓 tq-plus 当前 test 分支同步已最新，只读。
+- 实现（master/f71ffa1）：见 Hub iterations 当日条目。要点：ApiClient 体内 code 判错 + Bearer；login_identity 解析身份树并按企业分组；登录多身份时页内第二步选择；我的页「切换身份」底部弹层；AppSession 持久化（session_storage 条件导入，Web 用 localStorage）。
+- 取舍：手机端不画树，按企业分组列表；切换不再弹确认框（点一行即切，失败保持原身份）；验证码 4-6 位。
+- 待核对：login / changeLogin 返回的 Token 字段；app/login 后是否已带默认身份。
+- 验证：未运行 analyze / test（本机无 Flutter）。
+
 ## 2026-11-11｜ssh｜接入 ssh 并实现登录、资产、我的（演示数据）
 
 - 接入：`/home/cc/dh/tq-plus-h5`，从 GitHub 同步 master 已最新（2fcdb27）。手动建立五项挂载与 `.git/info/exclude`，五项 check-ignore 命中。

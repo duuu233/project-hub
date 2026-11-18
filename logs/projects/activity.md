@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-18｜taiqian-h5｜ssh｜master｜对接短信登录、身份树与切换身份
+
+四个接口串成登录流程（发码 → 短信登录 → 身份树 → 切换身份），一个身份直接进、多个身份登录页选择、我的页底部弹层切换；ApiClient 改为按体内 code/msg 判错并带 Bearer Token；会话存 localStorage。f71ffa1 已 push；未跑 analyze / test，Token 字段与真实返回待联调核对。
+
 ## 2026-11-17｜flowerpot-app｜ssh｜main｜iOS 配网列表与设备列表按产品 ID 取涂鸦名称和图片
 
 iOS 设备列表补涂鸦产品图 iconUrl（此前 iOS deviceMap 缺该字段）；iOS 广播 pid 依次读 productId / productKey / pid，产品信息解析加固（NSNull、外包一层）并写 pairingLog；搜索页图标先按广播 pid、再按云端回的产品 ID 认，都认不出画涂鸦产品图；设备列表名为空时用涂鸦产品名。「连接 Wi-Fi」页顶部动图两端同一份代码，未改。c1a8655 已 push；未编译、未跑测试、未真机。
