@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-18 ssh｜资产管理单据类型改读 assetBillType（test → dev）
+
+用户要求切到 dev 改：test 干净，切 dev 同名 pull 已最新（7d98187）。资产列表、详情、新增的单据类型字段改 assetBillType、字典改 asset_bill_type（后端 swagger 已改名，新增必填）；model.js 负载与 asset-model 测试同步。银行政策 assetType 未动。无 node 未跑测试 / 构建 / 浏览器，未联调；asset_bill_type 编码是否同旧字典待核对。停在 dev。
+
 ## 2026-11-12 ssh｜组织与权限空值统一显示「-」（test → dev）
 
 test 干净，同名 pull 快进到 685fcd7（含合并提交）。新增 utils/emptyCell.js；listGrid 加 emptyCell 选项（只包无插槽数据列，动态列同样生效）；四个列表开启并改插槽列；DetailHeaderCard 加 emptyText、AreaCascader 加 placeholder、企业三个子组件加 emptyText；四个详情页只读 placeholder 用 ph()；越界弹窗与权限预览改「-」；新增 org-empty-cell 测试。test/d1a49dc push；dev 同名 pull 后 cherry-pick 为 d5960b3 push，回到 test。无 node 未跑测试 / 构建 / 浏览器；信息隔离自查通过。

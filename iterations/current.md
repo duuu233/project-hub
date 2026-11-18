@@ -1,3 +1,12 @@
+## 2026-11-18 ssh｜泰乾超级：资产管理单据类型改读 assetBillType（dev）
+
+- 需求（用户）：PC 端单据类型也改成读 assetBillType；切到 dev 改（本地原在 test，第一次切换被权限拦下，用户确认后切换）。
+- tq-plus dev/03b724a（已 push）：资产列表列、详情（单据类型、资产编号标签）、新增（表单字段、校验、提交负载）全部改 assetBillType，字典改 asset_bill_type；asset-model 测试同步并加断言。银行政策的 assetType 是另一个字段，未动。
+- 待核对：asset_bill_type 的编码是否与旧 asset_type 一致（不一致则资产编号标签退回「资产编号」，H5 内置映射也要跟着改）。
+- 验证：无 Node，未跑测试 / 构建、未联调；新增源码正则用 Python 核对通过。本地停在 dev。
+
+---
+
 ## 2026-11-18 ssh｜泰乾超级-qianrong H5：资产列表、详情对接 qianrong 资产接口（master）
 
 - 需求（用户）：H5 资产模块也调用 qianrong 的资产接口，H5 只需要两个：列表、详情。

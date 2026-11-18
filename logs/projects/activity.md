@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-18｜taiqian-front｜ssh｜dev｜资产管理单据类型改读 assetBillType
+
+后端已把单据类型改名为 assetBillType / 字典 asset_bill_type（新增必填），PC 资产列表、详情、新增同步改名。03b724a 已 push；未跑测试 / 构建；新字典编码是否沿用旧值待核对。
+
 ## 2026-11-18｜taiqian-h5｜ssh｜master｜资产列表、详情对接 qianrong 资产接口
 
 资产列表（finance/asset/list，分页 + 资产编号搜索 + 下拉刷新）和详情（finance/asset/detail/{id}）改为调用 qianrong 资产接口，带登录 Token；库存、提货、质押 / 解押无接口，接口模式下隐藏入口，演示模式保留。路由参数改为资产 ID。f99cd9d 已 push；未跑 analyze / test、未联调；字典中文名内置待核对。另发现后端单据类型字段已改名 assetBillType，PC 端仍读 assetType，未改。

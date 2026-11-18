@@ -19,7 +19,7 @@
 
 字典与下拉（dev 只读核实）：
 
-- 单据类型 = 字典 `asset_type`（货柜(质押)/货柜(监管)/提单/仓单/购销合同/应收账款确认书）；资产编号标签：货柜→货柜号、提单→提单号、仓单→仓单号、购销合同→业务合同号，其余「资产编号」。
+- 单据类型 = 字典 `asset_type`（货柜(质押)/货柜(监管)/提单/仓单/购销合同/应收账款确认书）〔2026-11-18 起后端改为字段 `assetBillType`、字典 `asset_bill_type`，见文末〕；资产编号标签：货柜→货柜号、提单→提单号、仓单→仓单号、购销合同→业务合同号，其余「资产编号」。
 - 产业项目 `industry_project`（ldqx/lsrq/gtzq）；融资状态 `asset_financing_status`（7 值，列表 dict-tag，详情头卡配色）。
 - 进口服务商、核心企业：`/system/org/selectList?type=0`（org_type 0 = 核心企业）；ID 是长整型，按字符串处理。
 - 融资企业 + 可申请金融产品：`/credit/financeOrg/list?creditStatus=2`（已生效）逐页拉全，按 orgId 归并、产品去重。
@@ -52,3 +52,12 @@
 - 改法：`api/credit/financeCredit.js` 新增 `financeCreditProductOptions(orgId)`；选融资企业时清空已选产品、按企业调该接口（带加载态，迟到的旧企业结果不覆盖）；选项名称为产品名，右侧灰字显示银行与授信期限；`financeOrgOptionsOf` 只负责企业列表（仍来自授信已生效列表），不再从授信行归并产品；`productOptionsOf` 整理下拉（ID 按字符串、同产品去重）。
 - dev 只读：测试融资企业调用返回 `data: []`（该企业目前没有在有效期内的授信产品），页面提示「该企业暂无授信通过的金融产品」。
 - 无 Node，测试未运行；`asset-model.test.mjs` 同步改期望并补接口断言。
+
+## 补充（2026-11-18）：单据类型改读 assetBillType
+
+- 起因：对接 H5 资产时重新拉 dev swagger（业务管理分组），资产列表行、详情、新增参数里的单据类型都已是 `assetBillType`（字典 `asset_bill_type`），旧的 `assetType` 不见了；新增参数把 `assetBillType` 列为必填。PC 仍读写 `assetType` 时，列表 / 详情单据类型为空、资产编号标签退回「资产编号」，新增大概率被后端校验拦下（未实测）。
+- 用户：PC 也改成读 assetBillType（切到 dev 改）。
+- 改法：资产列表列字段、详情单据类型与资产编号标签、新增表单字段 / 校验 / 提交负载全部改 `assetBillType`，三个页面字典改 `asset_bill_type`；`identifierLabel` 的编码表（container_pledge 等）不变。银行政策「底层资产」的 `assetType` / `asset_type` 是另一个字段，未动。
+- 测试：asset-model.test.mjs 负载断言 assetBillType、不再带 assetType；接入位置测试加三个页面用 asset_bill_type、不出现 assetType。
+- 待核对：`asset_bill_type` 字典的编码是否与旧 `asset_type` 一致（未登录读不到字典）；不一致时资产编号标签会退回「资产编号」，H5 的内置映射同样要改。
+- 验证：无 Node，测试与构建未运行；新加的两条源码正则用 Python 对源码核对通过。
