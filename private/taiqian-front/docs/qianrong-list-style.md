@@ -264,3 +264,11 @@
 - 测试：新增 tests/app-main-height，从 Navbar / TagsView 源码读高度，断言 AppMain 扣的是两者之和，以后改顶栏高度测试会提醒。无 node，未跑测试 / 构建 / 浏览器（测试逻辑已用 Python 模拟）。
 - c3cde54 的外框扣除保留：修好高度后，日志页卡片下方仍需要扣掉卡片自己的底部。
 
+### 补充：部分列表高度很小（2026-11-19 ssh test/25fc12b，用户反馈；用户口径：主流屏幕适配即可）
+
+- 现象：有些列表页表格很矮，内容明明能撑满首屏剩余空间；用户问是否写死。
+- 原因一（c3cde54 引入）：外框按「本层底边 − 里层底边」计算。左右分栏页（账户、部门等，`.container-box` flex 行）里，右栏 `.container-right` 被拉伸到和左侧树一样高，表格一变矮，差值就变大，表格又被算得更矮，形成正反馈，最后缩到下限 360。所有被拉伸、或设了 min-height 的祖先都会这样。
+- 原因二（写死）：菜单管理自带 `maxHeight = max(420, innerHeight − 280)` 和窗口缩放监听。
+- 改法：bottomFrame 改为只算与表格高度无关的量：每层底内边距和底边框；上下排列的层再加上里层元素的底外边距，以及它后面在文档流里的兄弟元素高度（display:none、absolute、fixed 不算，内嵌的 el-dialog 遮罩是 fixed，所以不算）；flex 行 / grid 层只算自身底内边距与边框。菜单管理删掉 gridHeight、maxHeight 和 resize 监听，改由统一自适应接管（下限从 420 变为 360，虚拟滚动保留）。
+- 测试：list-fit-height 改写外框用例，加「菜单页不再写死 innerHeight / maxHeight」。无 node，未跑测试 / 构建 / 浏览器。
+

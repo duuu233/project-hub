@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-19 ssh｜部分列表高度很小（test）
+
+用户反馈部分列表很矮、问是否写死，口径为主流屏幕适配即可。test 干净，同名 pull 已最新（79954e4）。原因：c3cde54 的外框按祖先底边差计算，左右分栏页右栏被树拉伸，形成正反馈缩到 360；菜单管理写死 innerHeight − 280。改为只算底内边距、边框和表格后面的元素；菜单去掉写死高度；测试同步。test/25fc12b 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器。停在 test。
+
 ## 2026-11-19 ssh｜主内容区高度与实际顶栏不符，底部留白被裁（test）
 
 用户反馈 c3cde54 后日志页底部仍贴屏幕。test 干净，同名 pull 已最新（c3cde54）。根因：AppMain 沿用若依 calc(100vh - 50/84px)，qianrong 顶栏 60 + 标签栏 48 = 108，.app-main 超出可视区 24px，被 .main-container overflow:hidden 裁掉。改为 60 / 108（fixed-header padding 同步）；新增 app-main-height 测试。test/79954e4 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器。停在 test。
