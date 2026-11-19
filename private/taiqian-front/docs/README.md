@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/79954e4 页面底部留白被裁掉的根因：AppMain 高度沿用若依 50 / 84，实际顶栏 60 + 标签栏 48，已改为 60 / 108（所有页面受益）。
 - [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/c3cde54 首屏固定表头扣除表格外层容器底部（bottomFrame），日志页 log-workspace 卡片底部不再贴边。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/ec7119f 列表超出首屏固定表头：v-list-grid 按 .app-main 剩余高度给 vxe-grid 设置 maxHeight（最小 360，页面自带高度的不接管），25 个列表绑定传 options。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/fc6570b 字典数据页已选条件里的字典名称被清空（标签 × 或下拉清空后搜索）时，关闭当前页并返回字典管理 /config-audit/dict。

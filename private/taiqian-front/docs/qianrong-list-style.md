@@ -256,3 +256,11 @@
 - 循环风险：本层底边若随表格高度变化（祖先设了 min-height），会反复重算。核对过列表页祖先只有滚动区 `.app-main` 设了 min-height，计算到它为止，不参与。
 - 测试：list-fit-height 增加外框用例。无 node，未跑测试 / 构建 / 浏览器。
 
+### 补充：页面底部留白被裁掉的真正原因（2026-11-19 ssh test/79954e4，用户反馈 c3cde54 后仍贴底）
+
+- 现象：c3cde54 之后，日志页卡片底部仍和屏幕底部贴在一起，看不到底部背景色。
+- 根因（布局，和表格无关，所有页面都受影响）：AppMain.vue 沿用若依默认高度 `calc(100vh - 50px)` / `hasTagsView: calc(100vh - 84px)`（顶栏 50 + 标签栏 34），但 qianrong 的 Navbar 是 60px、TagsView 是 48px，合计 108px。`.app-main` 因此比可视区高 24px；`.main-container` 设了 `overflow: hidden`（sidebar.scss），全局 border-box，多出的 24px 直接被裁掉，`.app-main` 底部 20px 留白和最后几像素内容永远在屏幕外。表格限高用 `scroller.clientHeight` 计算，也多算了 24px。
+- 改法：AppMain.vue 改为 `calc(100vh - 60px)` / `hasTagsView: calc(100vh - 108px)`，fixed-header 的 padding-top 同步改为 60 / 108（fixedHeader 默认关闭，只为保持一致）。embedded / SSO 头部规则未动。
+- 测试：新增 tests/app-main-height，从 Navbar / TagsView 源码读高度，断言 AppMain 扣的是两者之和，以后改顶栏高度测试会提醒。无 node，未跑测试 / 构建 / 浏览器（测试逻辑已用 Python 模拟）。
+- c3cde54 的外框扣除保留：修好高度后，日志页卡片下方仍需要扣掉卡片自己的底部。
+

@@ -1,3 +1,12 @@
+## 2026-11-19 ssh｜泰乾超级-qianrong：页面底部留白被裁（主内容区高度）（test）
+
+- 反馈（用户）：c3cde54 后底部仍看不到背景色，卡片和屏幕底部贴在一起，问是否要改别处。
+- 根因：AppMain.vue 高度沿用若依 calc(100vh - 50px / 84px)，qianrong 顶栏 60 + 标签栏 48 = 108；.app-main 超出可视区 24px，被 .main-container 的 overflow:hidden 裁掉，所有页面底部 20px 留白都在屏幕外；表格限高也多算了 24px。
+- tq-plus test/79954e4（已 push）：AppMain 改为 calc(100vh - 60px) / hasTagsView calc(100vh - 108px)，fixed-header padding 同步；新增 tests/app-main-height（读 Navbar / TagsView 高度断言）。私人文档、README、logs 已更新。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；测试逻辑 Python 模拟通过。未同步 dev。
+
+---
+
 ## 2026-11-19 ssh｜泰乾超级-qianrong：日志页标签卡片底部留间距（test）
 
 - 需求（用户）：上一轮固定表头后，el-tabs.log-workspace 在内容足够多时底部贴边，应留一点间距。
