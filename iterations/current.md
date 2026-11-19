@@ -1,3 +1,14 @@
+## 2026-11-19 ssh｜泰乾超级-qianrong：列表超出首屏固定表头（test）
+
+- 需求（用户）：所有 vxe-table 高度超出首屏时固定列头。
+- 同步：test 干净，pull --ff-only origin test 已最新（fc6570b）。
+- 现状：25 个列表全是 vxe-grid + withListGridStyle + v-list-grid；表格无高度，滚动的是 .app-main，行多时表头滚走；只有菜单管理自设 maxHeight。
+- tq-plus test/ec7119f（已 push）：withListGridStyle 加 fitHeight（默认开、不透传，页面自带 height / maxHeight 不接管）；v-list-grid 接收 options，按 .app-main 可视高度 − 表格顶部位置 − 底部内边距写 maxHeight（最小 360），父容器尺寸变化与窗口缩放时重算；25 页绑定改为 { grid: gridRef, options: gridOptions }；新增 tests/list-fit-height。私人文档、README、logs 已更新。
+- 待确认：vxe-grid maxHeight 是否包含工具栏 / 分页（不含则分页落到首屏外）；全屏按钮下的表现；el-table 的 7 个页面不在范围内；未同步 dev。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；25 个 vxe-grid 标签绑定用 Python 核对；信息隔离 grep 无命中。
+
+---
+
 ## 2026-11-19 ssh｜泰乾超级-qianrong：字典数据页已选条件清空即返回字典管理（test）
 
 - 需求（用户）：切到 test 并拉取；路由 /config-audit/dict-data/index/:id 特殊处理，已选条件被清空时直接关闭当前页，返回字典管理 /config-audit/dict。

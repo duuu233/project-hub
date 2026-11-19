@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-19｜taiqian-front｜ssh｜test｜列表超出首屏固定表头
+
+qianrong 25 个 vxe-grid 列表统一按首屏剩余高度设置 maxHeight（最小 360，自带高度的页面不接管），超出时表格内滚动、表头固定。ec7119f 已 push；未同步 dev；未跑测试 / 构建 / 浏览器。
+
 ## 2026-11-19｜taiqian-front｜ssh｜test｜字典数据页已选条件清空即返回字典管理
 
 qianrong 字典数据页（/config-audit/dict-data/index/:id）字典名称条件被清空时，关闭当前页并返回 /config-audit/dict。fc6570b 已 push；未同步 dev；未跑测试 / 构建 / 浏览器。

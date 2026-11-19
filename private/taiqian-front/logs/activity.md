@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-19 ssh｜列表超出首屏固定表头（test）
+
+test 干净，同名 pull 已最新（fc6570b）。listGrid.js：withListGridStyle 加 fitHeight（默认开，页面自带 height / maxHeight 不接管），v-list-grid 按 .app-main 剩余高度写 gridOptions.maxHeight（最小 360），父容器尺寸变化与窗口缩放时重算；25 个列表绑定改为 { grid: gridRef, options: gridOptions }；新增 list-fit-height 测试。test/ec7119f 已 push；未同步 dev。无 node 未跑测试 / 构建 / 浏览器；vxe maxHeight 是否包含分页待浏览器确认。停在 test。
+
 ## 2026-11-19 ssh｜字典数据页已选条件清空即返回字典管理（dev → test）
 
 用户要求切到 test：dev 干净，checkout test，同名 pull 已最新（13d3023）。data.vue handleSearch 在上下文就绪且字典名称（dictType）为空时，调用已有 handleClose（closeOpenPage → /config-audit/dict）；重置先恢复默认字典类型，不受影响；共享 TableSearch 未改。test/fc6570b 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器；信息隔离自查通过。停在 test。

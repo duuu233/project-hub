@@ -237,3 +237,14 @@
 - 未覆盖：只在下拉框点清空、不点搜索，页面不会关闭（已选条件标签会消失）。如果需要清空即关闭，要在 SearchField 的 clear 事件上处理。
 - 验证：无 node，未跑测试 / 构建 / 浏览器。
 
+## 列表超出首屏固定表头（2026-11-19 ssh test/ec7119f，用户明确）
+
+- 需求：所有 vxe 表格，高度超出首屏时固定列头。
+- 现状：qianrong 的 25 个列表都是 `vxe-grid` + `withListGridStyle` + `v-list-grid`，没有 `vxe-table`。表格不设高度，滚动的是 `.app-main`（hasTagsView 下高度为 calc(100vh - 84px)，overflow auto），行多时表头跟着页面滚走。只有菜单管理自己设了 `maxHeight`（innerHeight − 280，虚拟滚动）。
+- 改法（统一在 listGrid.js，不逐页写死高度）：
+  - `withListGridStyle` 新增选项 `fitHeight`（默认 true，不透传给 vxe-grid）。页面自己给了 `height` / `maxHeight`，或传 `fitHeight: false` 时不接管，菜单管理因此保持原样。
+  - `v-list-grid` 指令改为接收 `{ grid: gridRef, options: gridOptions }`，25 个页面的绑定已一并改好。指令在 rAF 里计算 `maxHeight = .app-main 可视高度 − 表格顶部在滚动内容中的位置 − .app-main 底部内边距`，最小 360，不在 .app-main 里时按 window 计算，然后写回 `gridOptions.maxHeight`。vxe-grid 的 maxHeight 包含工具栏和分页，所以超出时表格内部滚动，表头和分页一直可见；行少时按内容高度显示。
+  - 重算时机：表格自身尺寸变化、父容器尺寸变化（搜索区「更多筛选」展开或收起、提示条出现）、窗口缩放，以及原有的 DOM 变动调度。表格宽度为 0（如未激活的标签页）时跳过。
+- 测试：新增 tests/list-fit-height（高度公式、开关、所有 vxe-grid 都传 options 的静态检查）。
+- 风险 / 未验证：无 node，未跑测试 / 构建 / 浏览器。未实际确认：vxe-grid 4.21 的 maxHeight 是否按包含工具栏和分页计算（若不包含，分页会落到首屏下方，需要再减去分页高度）；toolbar「全屏」时 maxHeight 的表现；表格下方还有其他内容的页面，那部分内容仍在首屏之外。el-table（ListTablePanel 的 7 个页面）不在本次范围内。
+
