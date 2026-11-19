@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/c3cde54 首屏固定表头扣除表格外层容器底部（bottomFrame），日志页 log-workspace 卡片底部不再贴边。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/ec7119f 列表超出首屏固定表头：v-list-grid 按 .app-main 剩余高度给 vxe-grid 设置 maxHeight（最小 360，页面自带高度的不接管），25 个列表绑定传 options。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/fc6570b 字典数据页已选条件里的字典名称被清空（标签 × 或下拉清空后搜索）时，关闭当前页并返回字典管理 /config-audit/dict。
 - [qianrong-asset-integration.md](qianrong-asset-integration.md)：2026-11-13 ssh dev 菜单调整后核对新增模块（文件不用挪；认证管理写死旧路径已改为按路由名称跳转）；资产管理对接列表 / 详情 / 新增接口（下拉来源、时间戳、多选产品）；2026-11-18 单据类型改为 assetBillType / 字典 asset_bill_type。

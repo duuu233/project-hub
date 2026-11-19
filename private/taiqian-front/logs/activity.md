@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-19 ssh｜日志页标签卡片底部贴边（test）
+
+test 干净，同名 pull 已最新（ec7119f）。原因：首屏限高只扣了 .app-main 底部内边距，没扣 el-tabs.log-workspace 卡片在表格下方的空间。listGrid.js 加 bottomFrame / frameLevels，逐层扣掉外层容器在表格下方的部分（左右并排的容器只扣自身内边距和边框），并入 bottomGap；测试补用例。test/c3cde54 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器。停在 test。
+
 ## 2026-11-19 ssh｜列表超出首屏固定表头（test）
 
 test 干净，同名 pull 已最新（fc6570b）。listGrid.js：withListGridStyle 加 fitHeight（默认开，页面自带 height / maxHeight 不接管），v-list-grid 按 .app-main 剩余高度写 gridOptions.maxHeight（最小 360），父容器尺寸变化与窗口缩放时重算；25 个列表绑定改为 { grid: gridRef, options: gridOptions }；新增 list-fit-height 测试。test/ec7119f 已 push；未同步 dev。无 node 未跑测试 / 构建 / 浏览器；vxe maxHeight 是否包含分页待浏览器确认。停在 test。

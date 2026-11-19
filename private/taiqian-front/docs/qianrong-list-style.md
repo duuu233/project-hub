@@ -248,3 +248,11 @@
 - 测试：新增 tests/list-fit-height（高度公式、开关、所有 vxe-grid 都传 options 的静态检查）。
 - 风险 / 未验证：无 node，未跑测试 / 构建 / 浏览器。未实际确认：vxe-grid 4.21 的 maxHeight 是否按包含工具栏和分页计算（若不包含，分页会落到首屏下方，需要再减去分页高度）；toolbar「全屏」时 maxHeight 的表现；表格下方还有其他内容的页面，那部分内容仍在首屏之外。el-table（ListTablePanel 的 7 个页面）不在本次范围内。
 
+### 补充：表格外层卡片底部贴边（2026-11-19 ssh test/c3cde54，用户明确）
+
+- 现象：日志页（操作 / 登录 / 接口日志）表格包在 `el-tabs.log-workspace` 卡片里（`.qr-list-page > .el-tabs` 白底加边框）。内容够多时，卡片底边贴着可视区底部，没有间距。
+- 原因：ec7119f 只扣了 `.app-main` 的底部内边距，没扣表格外面各层容器在表格下方占的空间（标签内容区、卡片内边距和边框等），表格按「表格底部离可视区底 20px」放大，卡片底部就把这 20px 吃掉了。
+- 改法：listGrid.js 新增 `bottomFrame(levels)` 与 `frameLevels(el, scroller)`。从表格向外逐层取到滚动区为止：上下排列的容器取「本层底边 − 里层底边」（含内边距、边框和表格后面的内容）；flex 行 / grid（左右并排，如左侧部门树）只取自身底内边距与边框。总和并入 bottomGap。卡片下方留出 `.app-main` 原有的 20px 底部留白，普通列表页没有外框，不受影响。
+- 循环风险：本层底边若随表格高度变化（祖先设了 min-height），会反复重算。核对过列表页祖先只有滚动区 `.app-main` 设了 min-height，计算到它为止，不参与。
+- 测试：list-fit-height 增加外框用例。无 node，未跑测试 / 构建 / 浏览器。
+

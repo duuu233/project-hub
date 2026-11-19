@@ -1,3 +1,12 @@
+## 2026-11-19 ssh｜泰乾超级-qianrong：日志页标签卡片底部留间距（test）
+
+- 需求（用户）：上一轮固定表头后，el-tabs.log-workspace 在内容足够多时底部贴边，应留一点间距。
+- 原因：首屏限高只扣了 .app-main 底部内边距，没扣表格外层卡片（标签内容区、卡片内边距和边框）在表格下方的空间。
+- tq-plus test/c3cde54（已 push）：listGrid.js 新增 bottomFrame / frameLevels，逐层扣掉外层容器在表格下方的部分（左右并排的只扣自身内边距和边框），卡片下方留出 .app-main 的 20px 留白；list-fit-height 补用例。私人文档、README、logs 已更新。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；未同步 dev。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：登录页隐藏微信快捷登录（main）
 
 - 需求（用户）：iOS 隐藏微信快捷登录、先不删代码；补充「安卓端也不需要」。
