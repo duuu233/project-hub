@@ -6,6 +6,7 @@
 - 验证：未编译、未真机；plistlib 解析通过。待用户 main 最新代码重新打包看快照，产品名应为 YUSEN-智能花盆；仍是英文则对比安卓快照并核对平台产品多语言名；已英文激活的设备可能需改名或重配网。
 - 口径变更（用户，同日）：改为「按系统语言自适应」，由 Mac 端 AI 修改（声明 zh-Hans + en，开发区域保留 zh-Hans 作兜底）；本机不再改代码，已给出执行指令。b8fe84d 的「只中文」待 Mac 端提交覆盖。
 - 后续（用户：直接让 Mac 拉最新代码打包、不测试）：本机改回跟随系统，flowerpot main/6fe3f27（已 push）CFBundleLocalizations 恢复 zh-Hans + en、开发区域 zh-Hans 兜底，新增 docs/history/2026-11/2026-11-19-ios-localization-follow-system.md。Mac 工作区有 12 个修改 + 5 个未跟踪（含 AppDelegate.swift、Podfile、pbxproj，HEAD fc77750），已给出「暂存已跟踪改动 → pull → 恢复 → 打包上传蒲公英、不测试不提交」指令；Mac 本地改动待之后分类提交。
+- 新包真机结果（16:38，系统 zh-Hans-US）：按产品 ID 查到的产品名由「Flower Pot Test」变为「花盆test」→ 本地化修复生效，涂鸦已按中文返回；但平台该产品中文名是「花盆test」不是「YUSEN-智能花盆」（推测改了产品名但多语言里的产品名未更新）。设备名仍「Flower Pot Test」（英文请求时激活定下的）。待用户：涂鸦平台改中英文产品名后，这台设备改名或重配网。App 未改。
 
 ---
 
