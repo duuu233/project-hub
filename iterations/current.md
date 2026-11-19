@@ -1,3 +1,11 @@
+## 2026-11-19 ssh｜花盆APP：登录页隐藏微信快捷登录（main）
+
+- 需求（用户）：iOS 隐藏微信快捷登录、先不删代码；补充「安卓端也不需要」。
+- flowerpot main/9f4399c（已 push）：LoginEntryConfig.wechatLogin → false（两端，代码与图标保留）；新增 anySocialLogin，快捷登录全关时「其他登录方式」分隔线与空行不画；auth_page_test 断言同步；history 记录、AI_CONTEXT、索引已更新。
+- 验证：无 Flutter，未编译、未跑测试。待用户本地 flutter test test/features/auth/auth_page_test.dart。
+
+---
+
 ## 2026-11-19 ssh｜泰乾超级-qianrong：列表超出首屏固定表头（test）
 
 - 需求（用户）：所有 vxe-table 高度超出首屏时固定列头。
