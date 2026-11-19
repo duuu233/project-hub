@@ -1,3 +1,14 @@
+## 2026-11-19 ssh｜相册后台：IoT管理新增消息通知查询（main）
+
+- 需求（用户）：按 docs/V2/消息通知后台原型.html 开发对应功能，看是否需要新增菜单，需要就用用户给的 token 加。
+- 判断：接口是 IoT 服务 `GET /admin/notification/list`（与现有 IoT管理同源、同一只读客户端），放进 IoT管理 分组做第五页；左侧菜单由后台下发，必须新增菜单节点。
+- 线上只读核验：结构与原型一致；带冒号设备号查空（前端去冒号转大写）；缺 deviceNo、size>100 返回 4000；未知设备 total 0；非法 lang 后端回落简中。
+- web-ui-v2 main/41b1166（已 push）：白名单加路径；model 加类别 / 语言 / payload 格式化与 notifications 查询；useIotList 支持「没设备号不请求、点查询才提示必填、换设备清旧数据」；新页 notifications.vue（表格 + 抽屉看完整 payload + 跳设备详情）；IotFilters 变体、子导航、设备详情页「消息通知」按钮；演示数据；菜单脚本加节点、测试节点数 10→11 并加用例；iot-admin 等 Active 文档与 history 记录已更新。
+- 后台菜单：Python 等价脚本先预览，后在 IoT管理 174 下新增 192「消息通知查询」（Get_IotAdmin_NotificationList / iotNotifications，grade 0）；getLeftMenus 复核顺序正确。未改已有节点、未绑角色；token 未落盘（helper 在 .codex-tmp/menu_notification.py，只读环境变量）。
+- 验证：服务器无 Node，未跑 test:iot / build、未浏览器联调；做了括号配平、模板标签配对、git diff --check，信息隔离 grep 无命中。待用户本地 `npm run test:iot`、`npm run build`；非管理员角色需勾选 192 并重新登录；前端发布后生效。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：OTA「正在确认升级结果」最多 3 分钟出结论（main）
 
 - 需求（用户）：先问「正在确认升级结果」超时多久（答：2 分钟，到点只显示「暂未确认升级结果」、仍算进行中，不下结论），甲方要求最多 3 分钟出结果；先要交互方案不改代码，用户定「读不到用『升级超时』、只管确认这一段、按方案改」。
