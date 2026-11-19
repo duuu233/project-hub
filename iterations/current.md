@@ -1,3 +1,12 @@
+## 2026-11-19 ssh｜花盆APP：iOS 默认简体中文（main）
+
+- 现场（用户贴日志）：iOS 系统语言 zh-Hans-US，按产品 ID ehbx83xdh9jkmxvz 现查的涂鸦产品名与设备名都是「Flower Pot Test」（原样返回 name 即此值），设备没改过名。
+- 用户问是不是传了英文语种给涂鸦；要默认中文、像以前安卓一样。说明：App 不传语种，涂鸦 iOS SDK 按 App 本地化请求；原工程只声明 en。
+- flowerpot main/b8fe84d（已 push）：Info.plist CFBundleDevelopmentRegion=zh-Hans、CFBundleLocalizations 只留 zh-Hans（去 en），pbxproj developmentRegion="zh-Hans"；任何系统语言都按中文请求。Android 未改。新增 docs/history/2026-11/2026-11-19-ios-default-chinese.md，AI_CONTEXT、history 索引已更新。
+- 验证：未编译、未真机；plistlib 解析通过。待用户 main 最新代码重新打包看快照，产品名应为 YUSEN-智能花盆；仍是英文则对比安卓快照并核对平台产品多语言名；已英文激活的设备可能需改名或重配网。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：iOS 声明简体中文本地化，涂鸦名称按中文返回（main）
 
 - 需求（用户）：设备名不能只依赖涂鸦，先查我们接口是否改过名，没改过再读涂鸦名称；问及接口缺失后改口「看看安卓端是怎么处理的，以前安卓没有问题」。
