@@ -1,3 +1,13 @@
+## 2026-11-19 ssh｜花盆APP：设备名称按手机系统语言动态显示（main）
+
+- 需求（用户）：显示「花盆test」才是对的，原理是按系统语言取对应语种名称；要改成按手机系统语种动态展示。平台配置（用户贴）：产品名称 YUSEN-智能花盆，多语言 简体中文「花盆test」、英语「Flower Pot Test」——App 拿的是多语言名。
+- 原因：列表用的是涂鸦设备名，激活时按当时请求语言存下（这台按英文激活 → Flower Pot Test），不随语言变；涂鸦不区分自动取名和改名，后端无名称接口。
+- flowerpot main/b24d638（已 push）：FlowerpotState.deviceDisplayName——本机改过名（renameDevice 后存 SharedPreferences customDeviceNames:<uid>）且设备名仍等于它 → 自定义名；否则按产品 ID 现查的涂鸦产品名（随系统语言）；查不到用设备名。用于设备列表、花盆首页顶栏、设备信息页（卡片 + 改名初值）、割草机标题与删除确认；快照日志加「激活时存下的设备名」「本机改名记录」。新增 state_device_display_name_test，改设备列表 / 信息页 / 快照用例；history 记录、AI_CONTEXT、索引已更新。
+- 已知：首帧可能先闪设备名再换产品名（产品名不缓存）；改名记录只在本机，换手机 / 重装 / 别的 App 改的名认不出。
+- 验证：无 Flutter，未编译、未跑测试、未真机；括号配平、diff --check、信息隔离 grep 通过。待用户本地 analyze / test 后打包，中文系统应显示「花盆test」。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：iOS 默认简体中文（main）
 
 - 现场（用户贴日志）：iOS 系统语言 zh-Hans-US，按产品 ID ehbx83xdh9jkmxvz 现查的涂鸦产品名与设备名都是「Flower Pot Test」（原样返回 name 即此值），设备没改过名。
