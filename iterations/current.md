@@ -5,6 +5,7 @@
 - flowerpot main/b8fe84d（已 push）：Info.plist CFBundleDevelopmentRegion=zh-Hans、CFBundleLocalizations 只留 zh-Hans（去 en），pbxproj developmentRegion="zh-Hans"；任何系统语言都按中文请求。Android 未改。新增 docs/history/2026-11/2026-11-19-ios-default-chinese.md，AI_CONTEXT、history 索引已更新。
 - 验证：未编译、未真机；plistlib 解析通过。待用户 main 最新代码重新打包看快照，产品名应为 YUSEN-智能花盆；仍是英文则对比安卓快照并核对平台产品多语言名；已英文激活的设备可能需改名或重配网。
 - 口径变更（用户，同日）：改为「按系统语言自适应」，由 Mac 端 AI 修改（声明 zh-Hans + en，开发区域保留 zh-Hans 作兜底）；本机不再改代码，已给出执行指令。b8fe84d 的「只中文」待 Mac 端提交覆盖。
+- 后续（用户：直接让 Mac 拉最新代码打包、不测试）：本机改回跟随系统，flowerpot main/6fe3f27（已 push）CFBundleLocalizations 恢复 zh-Hans + en、开发区域 zh-Hans 兜底，新增 docs/history/2026-11/2026-11-19-ios-localization-follow-system.md。Mac 工作区有 12 个修改 + 5 个未跟踪（含 AppDelegate.swift、Podfile、pbxproj，HEAD fc77750），已给出「暂存已跟踪改动 → pull → 恢复 → 打包上传蒲公英、不测试不提交」指令；Mac 本地改动待之后分类提交。
 
 ---
 
