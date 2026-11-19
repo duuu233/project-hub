@@ -1,3 +1,13 @@
+## 2026-11-19 ssh｜花盆APP：设备列表名「Flower Pot Test」排查 + 联调日志排版与设备快照（main）
+
+- 需求（用户）：设备列表名称仍是「Flower Pot Test」，涂鸦配置的应是「YUSEN-智能花盆」（产品 ID ehbx83xdh9jkmxvz），查是哪里的问题；像安卓一样在左下角放调试日志，页面展示的数据与关键信息都打进日志，排版清楚、便于复制。
+- 排查：仓库里没有「Flower Pot Test」。列表名两端同一份 Dart：`device.name`（涂鸦 SDK 设备名）不为空就显示它，只有为空才用按产品 ID 查到的产品名——11-17 的「按产品 ID 读涂鸦名称」只是兜底。所以这是涂鸦云端给这台设备记的设备名（激活时生成，平台改产品名不回写）。推测是按英文系统语言激活（取了产品英文名）或曾改过名；SDK 没有「是否改过名」标记，显示规则未改。
+- 日志浮层本来两端共用（InteractionLogOverlay）；iOS 看不到，多半是 11-13 无日志包留下的 Generated.xcconfig `APP_DEBUG_TOOLS=false`，Xcode 后续 Archive 一直沿用。
+- flowerpot main/3cf96eb（已 push）：状态层 logDeviceListSnapshot——设备列表读完且产品名问完（读取失败也打）写「设备列表快照」：平台、手机系统语言、App 语言、uid、家庭；每台显示名与来源、涂鸦设备名、按产品 ID 查到的产品名（查询 pid + 原样返回）、产品 ID、设备 ID、在线、图片、固件、DP169，设备名≠产品名标 ⚠。日志框改一条一块（时间标签 + 标题 + 缩进明细，单行「；」/「 · 」拆行），按钮单独一排：复制全部 / 设备快照 / OTA日志 / 清空 / 收起，每条可单独复制，复制反馈在框内（框在 Navigator 外，toast 不出）；高度 45%→55%。新增 test/app/interaction_log_test.dart；docs/history/2026-11/2026-11-19-device-name-debug-log.md、AI_CONTEXT、history 索引已更新。
+- 验证：服务器无 Flutter，未编译、未跑 analyze / test、未真机；括号配平、git diff --check、信息隔离 grep 均通过。待用户：Archive 前不带 APP_DEBUG_TOOLS=false 重跑 `flutter build ios --release --config-only`；真机看快照里「按产品 ID 查涂鸦产品名」——是 YUSEN-智能花盆 就是设备名问题（改名或中文系统重配网），本身就是 Flower Pot Test 则是涂鸦按英文返回、要改平台产品多语言英文名。
+
+---
+
 ## 2026-11-19 ssh｜相册后台：IoT管理新增消息通知查询（main）
 
 - 需求（用户）：按 docs/V2/消息通知后台原型.html 开发对应功能，看是否需要新增菜单，需要就用用户给的 token 加。
