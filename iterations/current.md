@@ -1,3 +1,13 @@
+## 2026-11-19 ssh｜泰乾超级-qianrong：字典数据页已选条件清空即返回字典管理（test）
+
+- 需求（用户）：切到 test 并拉取；路由 /config-audit/dict-data/index/:id 特殊处理，已选条件被清空时直接关闭当前页，返回字典管理 /config-audit/dict。
+- 同步：tq-plus 原在 dev 且干净，checkout test，pull --ff-only origin test 已最新（13d3023）。
+- tq-plus test/fc6570b（已 push）：data.vue handleSearch 在上下文就绪且字典名称为空（已选条件标签点 ×，或下拉清空后搜索）时调用已有 handleClose，即关闭当前标签并跳到 /config-audit/dict；重置先恢复默认字典类型，不触发；共享 TableSearch 未改。私人文档 qianrong-list-style.md 末节、docs/README、logs 已更新。
+- 未做：下拉只清空、不点搜索时不关闭；未同步 dev（用户只说 test）。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；信息隔离 grep 无命中。本地停在 test。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：设备名称按手机系统语言动态显示（main）
 
 - 需求（用户）：显示「花盆test」才是对的，原理是按系统语言取对应语种名称；要改成按手机系统语种动态展示。平台配置（用户贴）：产品名称 YUSEN-智能花盆，多语言 简体中文「花盆test」、英语「Flower Pot Test」——App 拿的是多语言名。

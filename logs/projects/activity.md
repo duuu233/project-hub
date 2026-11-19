@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-19｜taiqian-front｜ssh｜test｜字典数据页已选条件清空即返回字典管理
+
+qianrong 字典数据页（/config-audit/dict-data/index/:id）字典名称条件被清空时，关闭当前页并返回 /config-audit/dict。fc6570b 已 push；未同步 dev；未跑测试 / 构建 / 浏览器。
+
 ## 2026-11-19｜flowerpot-app｜ssh｜main｜设备名称按系统语言动态显示
 
 页面设备名改走 deviceDisplayName：本机改过名显示自定义名，否则按产品 ID 现查的涂鸦产品名（随系统语言，中文「花盆test」/英文「Flower Pot Test」），查不到才用激活时存下的设备名。b24d638 已 push；未编译、未跑测试、未真机。

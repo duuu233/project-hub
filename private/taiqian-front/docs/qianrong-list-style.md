@@ -227,3 +227,13 @@
 - 影响范围：ListTablePanel 的 7 个调用页同时修复——分配用户、选择用户弹窗、分配角色（authRole）、接口日志、操作 / 登录日志（LogWorkspace）、菜单列字段设置、角色列模板。
 - 顺手：authUser.vue 删掉被 `.qr-list-page.app-container { padding: 0 !important }` 压住、不生效的 scoped `.app-container { padding: 20px }`。
 - 测试：新增 native-pagination-style（静态核对两条规则）。无 Node / 浏览器，测试与构建未运行，断言用 Python 核对；未实际渲染核对（800px 弹窗按布局估算全量分页约 660px，可一行放下）。
+
+## 字典数据页已选条件清空即关闭（2026-11-19 ssh test/fc6570b，用户明确）
+
+- 需求：`/config-audit/dict-data/index/:dictId`（字典数据）特殊处理——已选条件被清空时，直接关闭当前页面，返回字典管理 `/config-audit/dict`。
+- 现状：进页时 loadContext 把「字典名称」（dictType）设为该字典类型，已选条件里始终有这一项。TableSearch 标签点 × 走 clearField（置 '' 后立刻 search）；下拉 clearable 清空后，要点「搜索」才查。清空后 getList 用 `query.dictType ?? defaultDictType`，'' 不是空值，会按空字典类型查，结果没有意义。
+- 改法：只改 data.vue 的 handleSearch，不改共享 TableSearch。`contextReady && !query.dictType` 时调用已有的 handleClose（`$tab.closeOpenPage({ path: '/config-audit/dict' })`，与工具栏「关闭」按钮相同）。字典名称清空即视为条件清空；其余条件全部清空、但字典名称还在时，照常查询。
+- 不受影响：「重置」走 resetDataSearch，先恢复默认字典类型再查询；上下文未加载完成时不触发。
+- 未覆盖：只在下拉框点清空、不点搜索，页面不会关闭（已选条件标签会消失）。如果需要清空即关闭，要在 SearchField 的 clear 事件上处理。
+- 验证：无 node，未跑测试 / 构建 / 浏览器。
+

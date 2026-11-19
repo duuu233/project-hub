@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-19 ssh｜字典数据页已选条件清空即返回字典管理（dev → test）
+
+用户要求切到 test：dev 干净，checkout test，同名 pull 已最新（13d3023）。data.vue handleSearch 在上下文就绪且字典名称（dictType）为空时，调用已有 handleClose（closeOpenPage → /config-audit/dict）；重置先恢复默认字典类型，不受影响；共享 TableSearch 未改。test/fc6570b 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器；信息隔离自查通过。停在 test。
+
 ## 2026-11-18 ssh｜资产管理单据类型改读 assetBillType（test → dev）
 
 用户要求切到 dev 改：test 干净，切 dev 同名 pull 已最新（7d98187）。资产列表、详情、新增的单据类型字段改 assetBillType、字典改 asset_bill_type（后端 swagger 已改名，新增必填）；model.js 负载与 asset-model 测试同步。银行政策 assetType 未动。无 node 未跑测试 / 构建 / 浏览器，未联调；asset_bill_type 编码是否同旧字典待核对。停在 dev。
