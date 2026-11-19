@@ -1,3 +1,13 @@
+## 2026-11-19 ssh｜花盆APP：iOS 声明简体中文本地化，涂鸦名称按中文返回（main）
+
+- 需求（用户）：设备名不能只依赖涂鸦，先查我们接口是否改过名，没改过再读涂鸦名称；问及接口缺失后改口「看看安卓端是怎么处理的，以前安卓没有问题」。
+- 核对后端（线上 /v2/api-docs，只读）：/Client 下没有任何设备名称字段；getUserProductList / getUserProductDetail 实测 500（同不存在路径，存在的接口未登录回 406），editUserProduct 不在文档；只有管理后台 /ZoneAdmin/Product/getUserProductList 带 productName。App 的 `_backendDevices` 从未填充，改名「同步后端」是死代码。→ 目前做不了「先查后端改名」。
+- Android：同一份 Dart，名称同样取涂鸦 SDK 设备名，不查后端。差别在语言：iOS 工程只声明 en（developmentRegion en、knownRegions en/Base、无 CFBundleLocalizations），中文 iPhone 上 App 本地化落英文，涂鸦按英文返回产品英文名「Flower Pot Test」；Android 跟随系统中文。
+- flowerpot main/fc77750（已 push）：Info.plist 加 CFBundleLocalizations（zh-Hans、en），pbxproj knownRegions 加 zh-Hans；新增 docs/history/2026-11/2026-11-19-ios-localization-zh.md，AI_CONTEXT、history 索引已更新。显示规则未改。
+- 验证：无 Xcode / Flutter，未编译、未真机；plistlib 解析通过。待用户：中文系统 iPhone 装新包看「设备列表快照」，按产品 ID 查到的产品名应为 YUSEN-智能花盆；已用英文激活的设备若设备名仍是 Flower Pot Test，需改名或重配网。若仍要「后端改名优先」，需后端补客户端查询 / 写入设备名称接口。
+
+---
+
 ## 2026-11-19 ssh｜花盆APP：设备列表名「Flower Pot Test」排查 + 联调日志排版与设备快照（main）
 
 - 需求（用户）：设备列表名称仍是「Flower Pot Test」，涂鸦配置的应是「YUSEN-智能花盆」（产品 ID ehbx83xdh9jkmxvz），查是哪里的问题；像安卓一样在左下角放调试日志，页面展示的数据与关键信息都打进日志，排版清楚、便于复制。

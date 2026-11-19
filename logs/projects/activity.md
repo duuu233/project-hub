@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-19｜flowerpot-app｜ssh｜main｜iOS 声明简体中文本地化
+
+iOS 只声明英文，中文 iPhone 上涂鸦按英文返回产品名（Flower Pot Test），Android 跟随系统语言正常；加 CFBundleLocalizations zh-Hans / en。后端无设备名称客户端接口，「后端改名优先」未做。fc77750 已 push；未编译、未真机。
+
 ## 2026-11-19｜flowerpot-app｜ssh｜main｜设备列表名排查 + 联调日志排版与设备快照
 
 「Flower Pot Test」是涂鸦 SDK 返回的设备名（列表只在设备名为空时才用按产品 ID 查到的产品名），非代码问题，显示规则未改。联调日志加设备列表快照（显示名与来源、涂鸦设备名、按产品 ID 查到的产品名、手机系统语言等），日志框一条一块、可逐条 / 全部复制。3cf96eb 已 push；未编译、未跑测试、未真机。
