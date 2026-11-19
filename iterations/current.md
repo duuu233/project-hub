@@ -4,6 +4,7 @@
 - 用户问是不是传了英文语种给涂鸦；要默认中文、像以前安卓一样。说明：App 不传语种，涂鸦 iOS SDK 按 App 本地化请求；原工程只声明 en。
 - flowerpot main/b8fe84d（已 push）：Info.plist CFBundleDevelopmentRegion=zh-Hans、CFBundleLocalizations 只留 zh-Hans（去 en），pbxproj developmentRegion="zh-Hans"；任何系统语言都按中文请求。Android 未改。新增 docs/history/2026-11/2026-11-19-ios-default-chinese.md，AI_CONTEXT、history 索引已更新。
 - 验证：未编译、未真机；plistlib 解析通过。待用户 main 最新代码重新打包看快照，产品名应为 YUSEN-智能花盆；仍是英文则对比安卓快照并核对平台产品多语言名；已英文激活的设备可能需改名或重配网。
+- 口径变更（用户，同日）：改为「按系统语言自适应」，由 Mac 端 AI 修改（声明 zh-Hans + en，开发区域保留 zh-Hans 作兜底）；本机不再改代码，已给出执行指令。b8fe84d 的「只中文」待 Mac 端提交覆盖。
 
 ---
 
