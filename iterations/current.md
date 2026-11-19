@@ -1,3 +1,13 @@
+## 2026-11-19 ssh｜花盆APP：OTA「正在确认升级结果」最多 3 分钟出结论（main）
+
+- 需求（用户）：先问「正在确认升级结果」超时多久（答：2 分钟，到点只显示「暂未确认升级结果」、仍算进行中，不下结论），甲方要求最多 3 分钟出结果；先要交互方案不改代码，用户定「读不到用『升级超时』、只管确认这一段、按方案改」。
+- 方案：3 分钟到点最后现读一次 SDK 版本——目标版本→升级完成；在线且版本全是升级前的→升级失败（重新升级 / 知道了）；离线、读不到或无基线→升级超时（重新检查 / 知道了）。收尾后 120 分钟内晚到的真实版本静默转成功；弹层已关且停在设备页时轻提示；结论状态不自动弹升级提醒。正常升级停滞阈值（准备 2 分钟 / 其它 10 分钟）不动。
+- flowerpot main/d94c57c（已 push）：OtaStatus 加 timedOut；otaVerificationTimeout 2→3 分钟；checkOtaVerificationDeadline 挂在前台 3 秒轮询、重开入口、进度弹层每秒刷新（未加新计时器，最多晚约 3 秒）；进度弹层两按钮，showOtaProgressDialog 返回动作、runFirmwareUpgrade 循环重走；入口去掉「暂未确认升级结果」确认框；其他设置行显示升级失败 / 升级超时；提醒宿主加轻提示；改写 / 新增 state_ota_confirmation_test 用例，firmware_reminder_test 断言放宽；新增 docs/history/2026-11/2026-11-19-ota-verification-3min.md，AI_CONTEXT、history 索引已更新。
+- 风险（已写进项目记录）：MCU 固件升级时 Wi-Fi 模组一直在线、3 分钟内 MCU 未装完，会先显示「升级失败」，装好后晚到版本再转成功；真机若出现可把「在线版本未变」也并入升级超时。
+- 验证：服务器无 Flutter，未编译、未跑 analyze / test、未真机；只人工复核 diff，信息隔离 grep 无命中。待用户本地 flutter analyze 与 OTA 相关测试；真机在 96% 左右断设备网络，看 3 分钟出「升级超时」、恢复后转「升级完成」。
+
+---
+
 ## 2026-11-18 ssh｜泰乾超级：资产管理单据类型改读 assetBillType（dev）
 
 - 需求（用户）：PC 端单据类型也改成读 assetBillType；切到 dev 改（本地原在 test，第一次切换被权限拦下，用户确认后切换）。
