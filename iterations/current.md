@@ -1,3 +1,12 @@
+## 2026-11-20 ssh｜花盆APP：「请打开系统定位服务」按钮改去定位开关页（main）
+
+- 反馈（用户）：小米安卓手机提示「请打开系统定位服务」，定位权限已打开；小米定位总开关要单独开，应用权限那开了没用。
+- 原因：检测（LocationManager.isLocationEnabled）无误，是系统定位总开关关着；但「去系统设置」固定打开应用详情页，只有权限、没有总开关。另两条提示里的 `**` 原样显示成星号。
+- flowerpot main/fe646d3（已 push）：新桥接 openLocationSettings（Android ACTION_LOCATION_SOURCE_SETTINGS，失败退回应用设置；iOS 落到应用设置页）；只差定位总开关时按钮去定位开关页，缺权限仍去应用设置；文案去 `**`；mock 与搜索页用例补齐；history 记录已加。
+- 验证：无 Flutter / Android SDK，未编译、未跑测试、未真机。待用户本地 flutter test test/features/devices/device_search_page_test.dart 与小米真机点按钮。
+
+---
+
 ## 2026-11-20 ssh｜泰乾超级-qianrong：test 同步到 dev；额度账本对接接口（dev）
 
 - 需求（用户）：同步到 dev 分支，然后对接额度账本模块接口（额度总览统计 /quota/count、企业维度视图、企业维度视图分页、资金维度视图）。
