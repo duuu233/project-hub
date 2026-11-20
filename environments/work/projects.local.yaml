@@ -27,3 +27,6 @@ paths:
   minerals-admin:
     transport: local
     path: 'D:/Work/zk/minerals-frontend'
+  path-of-solitude:
+    transport: local
+    path: 'D:/Work/learn/Path-of-Solitude'

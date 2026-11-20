@@ -75,6 +75,11 @@ projects:
     context: context/album-app.md
     default_branch: main
     enabled: true
+  path-of-solitude:
+    name: 孤独之路
+    description: 微信小游戏
+    context: context/path-of-solitude.md
+    enabled: true
   minerals-admin:
     name: 正矿
     description: 正矿管理系统前端

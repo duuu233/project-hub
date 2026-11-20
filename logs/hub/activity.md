@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-20｜work｜同步现有项目并接入孤独之路
+
+Hub `main` 快进至 `e4f398d` 后，将微信小游戏「孤独之路」登记为 `path-of-solitude`，添加 work 映射、项目上下文与 README 条目。已核对 Git 根目录并通过注册表、work 映射和差异检查。分支同步结果见 [当前迭代](../../iterations/current.md)。
+
 ## 2026-11-11｜ssh｜泰乾超级-qianrong H5 接入 ssh
 
 main 同名 pull 快进至 39a653f。ssh 映射新增 taiqian-h5（/home/cc/dh/tq-plus-h5，按项目规则只通过 GitHub 同步），手动建立五项挂载；同步 ssh README、项目上下文、Hub README 与 configuration 中的环境说明。
