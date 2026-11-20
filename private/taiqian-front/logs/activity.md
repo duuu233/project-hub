@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-20 ssh｜test 合并到 dev；额度账本对接接口（dev）
+
+用户要求同步到 dev 后对接额度账本四个接口。test 干净，checkout dev 后 pull --ff-only 已到 53ef6d4；merge test 冲突 3 处（index.html / dynamicTitle.js 取「乾融系统」固定页签，listGrid.js 合并 columnRules + fitHeight），dev/a98015a 已 push。额度账本：新增 api/quota，static-data.js 改 model.js，统计 / 资金维度 / 企业维度 / 明细分页全部走接口，额度按万、明细按元，状态与动作类型按字典 mater_status / quota_change_type；新增 credit-ledger-model 测试。dev/6de9a29 已 push。无 Token 未调接口；无 node，未跑测试 / 构建 / 浏览器。停在 dev。
+
 ## 2026-11-20 ssh｜页签标题改为乾融系统、刷新不闪（test）
 
 用户反馈刷新时页签有时显示「泰乾德邦数字金融管理系统」，要改成「乾融系统」且不闪。test 干净，同名 pull 已最新（25fc12b）。原因：静态 <title> 为旧名，路由守卫随后改为「链数融亁 - 页面名」，硬刷新时动态路由注册后才改，先旧名后跳变。index.html、三个 env 统一为「乾融系统」，dynamicTitle 不再拼页面名；新增 tab-title 测试。test/60c062f 已 push；未同步 dev。无 node，未跑测试 / 构建 / 浏览器。停在 test。

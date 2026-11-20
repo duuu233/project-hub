@@ -1,3 +1,14 @@
+## 2026-11-20 ssh｜泰乾超级-qianrong：test 同步到 dev；额度账本对接接口（dev）
+
+- 需求（用户）：同步到 dev 分支，然后对接额度账本模块接口（额度总览统计 /quota/count、企业维度视图、企业维度视图分页、资金维度视图）。
+- 同步：tq-plus test 干净 → checkout dev，pull --ff-only origin dev（53ef6d4）；merge test 冲突 3 处：页签取「乾融系统」（dev 上同事改成了「泰乾数字金融管理系统 / 乾融 - 页面名」）、listGrid.js 合并两边。dev/a98015a 已 push。
+- tq-plus dev/6de9a29（已 push）：新增 api/quota；static-data.js → model.js；页面全部走接口：胶囊 + 统计卡（count）、银行卡片（queryFundDimView）、企业卡片 + 第一页明细（queryEnterpriseDimView）、卡片翻页（queryEnterpriseQuotaRecordPage）；新增 credit-ledger-model 测试。私人文档 qianrong-quota-ledger-integration.md、docs/README、logs 已更新。
+- 自行决定：额度类按万（元 ÷ 10000）展示、明细按元；用信率按卡片数值计算；去掉银行「批复版本」标签（接口无字段）；导出无接口，点击提示。
+- 待确认：字典 mater_status 名称与原型状态是否一致、quota_change_type 值；usageRate 单位；企业维度分页参数作用对象。
+- 验证：swagger 只读核对；无 Token 未调接口；无 node，未跑测试 / 构建 / 浏览器；静态核对与信息隔离 grep 通过。本地停在 dev。
+
+---
+
 ## 2026-11-20 ssh｜泰乾超级-qianrong：页签标题改为乾融系统、刷新不闪（test）
 
 - 需求（用户）：刷新页面时页签有时显示「泰乾德邦数字金融管理系统」，改成「乾融系统」，不要有闪的感觉。

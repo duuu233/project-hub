@@ -1,5 +1,6 @@
 # 泰乾超级维护文档
 
+- [qianrong-quota-ledger-integration.md](qianrong-quota-ledger-integration.md)：2026-11-20 ssh dev/6de9a29 额度账本对接额度总览统计、资金维度、企业维度及明细分页（额度按万展示、明细按元；字典 mater_status / quota_change_type）；同日 test 合并到 dev（a98015a，页签 / listGrid 冲突处理）。
 - [qianrong-tab-title.md](qianrong-tab-title.md)：2026-11-20 ssh test/60c062f 浏览器页签固定显示「乾融系统」（index.html、三个 env、dynamicTitle 不再拼页面名），刷新不再先显示「泰乾德邦…」再跳变。
 - [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/25fc12b 部分列表高度很小：外框计算在左右分栏页形成正反馈缩到 360，改为只算底内边距、边框和表格后面的元素；菜单管理去掉写死的 innerHeight − 280。
 - [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/79954e4 页面底部留白被裁掉的根因：AppMain 高度沿用若依 50 / 84，实际顶栏 60 + 标签栏 48，已改为 60 / 108（所有页面受益）。
