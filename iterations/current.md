@@ -1,3 +1,14 @@
+## 2026-11-20 ssh｜泰乾超级-qianrong：页签标题改为乾融系统、刷新不闪（test）
+
+- 需求（用户）：刷新页面时页签有时显示「泰乾德邦数字金融管理系统」，改成「乾融系统」，不要有闪的感觉。
+- 同步：Hub main、tq-plus test 均干净，pull --ff-only 已最新（25fc12b）。按当前检出分支 test 工作，未切 dev。
+- 原因：index.html 静态 <title> 为旧名；路由守卫 setTitle 改为「链数融亁 - 页面名」，硬刷新时要等动态路由注册后才改，先旧名后跳变。
+- tq-plus test/60c062f（已 push）：index.html、.env.development / staging / production 的标题统一为「乾融系统」；dynamicTitle 不再拼页面名，始终写系统名；新增 tests/tab-title。私人文档 qianrong-tab-title.md、docs/README、logs 已更新。
+- 取舍：页签不再显示页面名称（显示页面名必然在刷新时变一次）；文件预览页标题未改。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；信息隔离 grep 无命中。未同步 dev。
+
+---
+
 ## 2026-11-19 ssh｜泰乾超级-qianrong：部分列表高度很小（test）
 
 - 反馈（用户）：有些列表高度很小，内容能撑满首屏剩余区域，是否写死？要动态适配，主流屏幕即可。
