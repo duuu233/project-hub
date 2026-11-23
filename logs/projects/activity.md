@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-23｜flowerpot-app｜ssh｜main｜iOS 配网页自动带出当前 Wi-Fi 名称
+
+iOS 读当前 SSID 缺 Access WiFi Information 能力和定位权限，补 entitlements、读取前申请定位（含临时精确位置）；涂鸦 SDK 同受限制。需开发者账号给 App ID 勾选该能力。4508e27 已 push；未编译、未真机。
+
 ## 2026-11-23｜taiqian-h5｜ssh｜master｜资产质押 / 解押信息、企业实名认证对接接口
 
 资产详情质押 / 解押页接 pledge、release 两个接口；我的页认证状态接 orgAuth/list，认证页调 eqb/launchOrgAuth 跳 e签宝。4904ab0 已 push；未跑 analyze / test、未联调。
