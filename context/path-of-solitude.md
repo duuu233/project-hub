@@ -2,7 +2,8 @@
 
 - project_id：`path-of-solitude`
 - 用途：微信小游戏。
-- 项目内规则与维护文档入口：2026-11-23 核实，仓库尚无 `AGENTS.md`、`AI_CONTEXT.md`、源码与 `.codegraph/`，只有三份需求文档——`2.md`（开发需求规格书，第一章 MVP）、`gemini-code-1795414002146.md`（剧情架构与叙事大纲）、`gemini-code-1795414008509.md`（数值管控模型与法师 BD 构筑规格书）。工程初始化后再补入口。
+- 技术栈：原生微信小游戏，Canvas 2D + JavaScript（CommonJS）；规格书原写 Cocos Creator + TypeScript，2026-11-23 用户确认改为原生 JS。
+- 项目内规则与维护文档入口（2026-11-23 建立）：`AGENTS.md`（开发约定、验证方式）、`README.md`（玩法、运行、目录）、`docs/architecture.md`、`docs/engineering/构建与安全.md`、`docs/design/命名与合规规范.md`（新增内容前必读）、`docs/design/美术资源设计规范.md`、规格书三份（`docs/design/需求规格书.md` 等）、变更记录 `docs/history/YYYY-MM/`。无 `.codegraph/`。
 
 ## 执行方式
 
