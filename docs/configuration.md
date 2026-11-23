@@ -18,7 +18,7 @@
 
 ## SSH 当前接入状态
 
-**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`、`taiqian-front`、`minerals-admin`（中间两项 2026-10-22、`album-admin` 2026-10-23、`taiqian-front` 与 `minerals-admin` 2026-10-26 接入，均为 `transport: local`；后两项已建五项私有挂载），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
+**新服务器已接入（2026-10-21）。** 旧服务器全部映射已删除，历史路径、写入范围、挂载和工具位置全部作废。新服务器内运行 Hub，`environments/ssh/projects.local.yaml` 当前映射 `flowerpot-app`、`album-miniapp`、`album-app`、`album-admin`、`taiqian-front`、`minerals-admin`、`taiqian-h5`、`path-of-solitude`（中间两项 2026-10-22、`album-admin` 2026-10-23、`taiqian-front` 与 `minerals-admin` 2026-10-26、`taiqian-h5` 2026-11-11、`path-of-solitude` 2026-11-23 接入，均为 `transport: local`；泰乾两端与正矿已建五项私有挂载，孤独之路不走私有挂载），可写范围限 `/home/cc/dh/`；其他项目待用户后续指定。当前映射、可写边界与本机工具状态见 [SSH环境说明](../environments/ssh/README.md)。work、home 的现有映射和项目身份不受影响。
 
 ## 环境映射
 

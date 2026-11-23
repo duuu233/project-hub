@@ -79,6 +79,7 @@ projects:
     name: 孤独之路
     description: 微信小游戏
     context: context/path-of-solitude.md
+    default_branch: main
     enabled: true
   minerals-admin:
     name: 正矿

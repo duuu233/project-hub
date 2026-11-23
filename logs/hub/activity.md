@@ -2,6 +2,10 @@
 
 记录 Project Hub 自身架构、脚本工具、工作规则与配置维护的每一次操作。
 
+## 2026-11-23｜ssh｜孤独之路接入 ssh
+
+Hub `main` 同名 pull 已最新（1c89116）。复用已有 `path-of-solitude`，ssh 映射新增 `/home/cc/dh/Path-of-Solitude`（main/33800fa，origin 为 GitHub，与远端一致）；远端 main 已存在，共享注册表补 `default_branch: main`；项目上下文补文档入口；同步 ssh README、environments README、configuration 与 AGENTS.md 中的 SSH 映射列表（顺带补上漏记的 taiqian-h5）。未写入目标仓库。
+
 ## 2026-11-20｜work｜同步现有项目并接入孤独之路
 
 Hub `main` 快进至 `e4f398d` 后，将微信小游戏「孤独之路」登记为 `path-of-solitude`，添加 work 映射、项目上下文与 README 条目。已核对 Git 根目录并通过注册表、work 映射和差异检查。分支同步结果见 [当前迭代](../../iterations/current.md)。

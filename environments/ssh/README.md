@@ -1,6 +1,6 @@
 # SSH 环境
 
-**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP、相册后台、泰乾超级、正矿、泰乾超级-qianrong H5。**
+**状态：新服务器已接入（2026-10-21），当前映射花盆APP、相册小程序、相册APP、相册后台、泰乾超级、正矿、泰乾超级-qianrong H5、孤独之路。**
 
 2026-10-21 用户确认已更换服务器，旧服务器的全部项目映射、目录和写入范围、挂载状态及工具依赖位置均已作废。同日用户在新服务器内运行 Hub，声明当前为 ssh 环境，接入了第一个项目花盆APP；2026-10-22 用户在 `/home/cc/dh/` 下引入 photo-album，核实后作为相册小程序接入；同日又在该目录下新增 flutter，用户指明即相册APP，核实后接入；2026-10-23 用户引入 web-ui-v2，指明即相册后台，核实后接入；2026-10-26 用户引入 tq-plus，称「超级泰乾-qianrong」，核实即已有项目泰乾超级（taiqian-front，qianrong 为其子应用）后接入，并按正矿方式恢复私有挂载；同日又引入 zk，即正矿（minerals-admin），核实后接入并恢复私有挂载。其他项目后续再定。
 
@@ -15,6 +15,7 @@
 | 泰乾超级（含子应用 qianrong） | taiqian-front | `/home/cc/dh/tq-plus` | master（远端默认；开发分支为 dev，2026-10-28 用户明确） |
 | 正矿 | minerals-admin | `/home/cc/dh/zk` | feature-v1.8.5（本机远端只有此分支，共享配置记 master） |
 | 泰乾超级-qianrong H5 | taiqian-h5 | `/home/cc/dh/tq-plus-h5` | master |
+| 孤独之路 | path-of-solitude | `/home/cc/dh/Path-of-Solitude` | main |
 
 Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（Hub 与项目同在服务器内）。
 
@@ -42,6 +43,13 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 - 同样无 node，按 setup-links 规则手动建立五项绝对路径软链接，`.git/info/exclude` 追加 `/.codegraph`、`/docs`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/logs`（业务 `.gitignore` 本身也忽略 `.codegraph/`、`/AGENTS.md`、`/AI_CONTEXT.md`、`/docs/`）。`git check-ignore -v` 五项命中，业务 `git status` 干净。
 - 无 codegraph，索引未初始化；无 node，构建与类型检查不能运行。
 
+## 孤独之路（2026-11-23 接入）
+
+用户在 `/home/cc/dh/` 下新增 Path-of-Solitude，要求引入 ssh。共享注册表已有同名项目「孤独之路」（`path-of-solitude`，2026-11-20 在 work 登记），复用该 ID。核实：`/home/cc/dh/Path-of-Solitude` 是 Git 根目录，origin 为用户 GitHub 上的 Path-of-Solitude 仓库，远端只有 main（origin/HEAD 指向它），本地 main 与远端一致（33800fa，首个提交），所含 `2.md` 即 work 接入时记录的未跟踪文件，另有两份同名游戏《孤独之路》的设计文档，确认是同一项目。
+
+- 个人自有仓库，不走私有挂载；仓库暂无规则文档、源码与 `.codegraph/`，入口见项目上下文。
+- 远端已有 main，共享注册表补记 `default_branch: main`。
+
 ## 可写边界（2026-10-21 用户明确）
 
 **可写范围只有 `/home/cc/dh/` 这一个目录。** 目录之外只读：可以查看或只读借用已有工具，但不得新增、修改、删除、移动或清理文件，也不执行 `install` / `build` / `git gc` / `checkout` / `clean` 等有副作用的命令。磁盘告急也不构成清理目录外内容的理由，如实报告即可，处理与否由用户决定。
@@ -52,7 +60,7 @@ Hub 自身位于 `/home/cc/dh/project-hub`。全部使用 `transport: local`（H
 
 所有提交只推送到 GitHub，提交前核对 `git remote get-url origin`，不是 GitHub 就暂停询问用户，不提交、不推送。规则见 AGENTS.md「任务完成后的默认动作」第 0 条；该条只有 work 环境例外（work 保持各仓库原有 remote 不变），ssh 不适用该例外。
 
-2026-10-26 核实：flowerpot、photo-album、flutter、web-ui-v2、tq-plus 与 Hub 的 origin 均为用户 GitHub 仓库。
+2026-10-26 核实：flowerpot、photo-album、flutter、web-ui-v2、tq-plus 与 Hub 的 origin 均为用户 GitHub 仓库；2026-11-23 核实 Path-of-Solitude 同为 GitHub。
 
 ## 本机工具状态（2026-10-21 接入时核实，2026-10-22 复核）
 

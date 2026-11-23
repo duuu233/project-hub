@@ -1,3 +1,12 @@
+## 2026-11-23 ssh｜孤独之路接入 ssh
+
+- 需求（用户）：`/home/cc/dh/` 下新增 Path-of-Solitude，当前 SSH 引入。
+- 身份：注册表已有「孤独之路」（`path-of-solitude`，2026-11-20 work 登记），复用 ID；仓库内 `2.md` 与 work 记录一致，另两份文档为《孤独之路》剧情与数值规格书。
+- 核实：Git 根目录；origin GitHub；远端只有 main；`git pull --ff-only origin main` 已最新（33800fa）；工作区干净。仓库暂无 AGENTS.md / 源码 / .codegraph，只有需求文档。
+- Hub：ssh 映射新增；`projects.yaml` 补 `default_branch: main`；context 补文档入口；SSH 各说明文档同步。目标仓库未写入。
+
+---
+
 ## 2026-11-23 ssh｜相册后台：左侧菜单内容过多时可纵向滚动（main）
 
 - 问题（用户）：左侧菜单内容多、高度撑开时是否禁用了滚动条，过高要能滚动。
