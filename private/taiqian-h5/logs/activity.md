@@ -1,5 +1,14 @@
 # 泰乾超级-qianrong H5 操作记录
 
+## 2026-11-23｜ssh｜资产质押 / 解押信息、企业实名认证对接接口
+
+- 同步：master 已最新（f99cd9d）。用户说「dev 分支」，仓库只有 master，询问后用户确认就在 master 上做；接口按 dev 后端 swagger。
+- 实现（master/4904ab0）：见 Hub iterations 当日条目。要点：质押页两个接口并发（pledge/{id}、release/{id}），PledgeRecord 可空，解押按 releaseType auto / manual 映射还款 / 预提货；supportsPledgeAndPickup 改为 supportsStockAndPickup，质押入口两种模式都显示；ApiProfileRepository（orgAuth/list 判认证状态、eqb/launchOrgAuth 跳 e签宝，redirectUrl 为本站 /me）；platform/browser 条件导入。
+- 取舍：authStatus 取值未注明，按 authStatusName 关键字判断；新增「认证中」状态；接口模式企业信息、操作员暂不可用（提示）；当前窗口跳转 e签宝。
+- 待核对：authStatus / authStatusName 实际取值；orgAuth/list 对企业用户是否只返回本企业；launchOrgAuth 的 orgId 是否就是身份树的企业 ID；e签宝回跳是否带参数。
+- 另发现（未改）：nginx `location ^~ /h5/assets/` 只找静态文件，H5 资产路由 `/h5/assets/...` 刷新会 404。
+- 验证：未运行 analyze / test（本机无 Flutter）；括号配平、git diff --check、信息隔离 grep 通过。
+
 ## 2026-11-18｜ssh｜资产列表、详情对接资产接口
 
 - 同步：master 已最新（f71ffa1）；参考仓 tq-plus test 分支已最新，资产对接代码在 origin/dev，只读 git show，未切分支。

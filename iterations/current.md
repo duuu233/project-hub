@@ -1,3 +1,17 @@
+## 2026-11-23 ssh｜泰乾超级-qianrong H5：资产质押 / 解押信息、企业实名认证对接接口（master）
+
+- 需求（用户）：H5 资产详情入口接 资产质押信息（GET finance/asset/pledge/{assetId}）、资产解押信息列表（GET finance/asset/release/{assetId}）；我的页接 发起企业实名认证和授权（POST eqb/launchOrgAuth）与 PC 认证列表查询（GET system/orgAuth/list）。用户中途说「dev 分支」，仓库只有 master，询问后确认就在 master 上做，接口按 dev 后端。
+- 契约（dev swagger 业务管理 / 系统管理分组，只读）：质押 data {loanNo, pledgorName, pledgeeName, pledgeDate, registrationNo, pledgeNo, goods[pledgeQuantity, releasedQuantity, remainingQuantity, specification]}；解押 data[] {releaseType auto/manual, repayNo/Time/Amount, prePickupNo/Date, releaseNo/Time, totalQuantity, goods[quantity]}；launchOrgAuth {orgId, psnAccount, redirectUrl} → {authFlowId, authUrl, authShortUrl}；orgAuth/list rows {authObject, authType(Name), authStatus(整数无取值说明), authStatusName, createTime}。PC 端 dev 未接这两个认证接口。
+- taiqian-h5 master/4904ab0（已 push）：
+  - 资产：质押 / 解押页两个接口并发，未质押显示「暂无质押信息」；auto 按还款、manual 按预提货显示，缺流水号退回解押流水号、无金额显示 —、合计优先 totalQuantity、日期只到日；supportsPledgeAndPickup 改为 supportsStockAndPickup，接口模式融资信息里也出「质押/解押信息」入口（库存、提货仍隐藏）。
+  - 认证：ApiProfileRepository——orgAuth/list（pageSize 50）按企业名称 / 企业类认证取最新一条，按 authStatusName 判已认证 / 失败 / 未认证 / 认证中（新增 pending 状态）；认证页「前往 e签宝 认证」调 launchOrgAuth（orgId 当前身份企业、psnAccount 登录手机号、redirectUrl 本站 /me，按 base href 拼），拿 authUrl 当前窗口跳转；接口模式已认证点企业信息只提示，操作员提示暂未开放。新增 lib/platform/browser（条件导入）。
+  - 测试：asset_repository_test 补两接口用例，asset_pages_test 补接口模式入口与质押页空态，新增 profile_repository_test；README、docs/h5-foundation.md 加「企业实名认证」一节。
+- 推测 / 待核对：authStatus 取值（现按名称关键字）；orgAuth/list 对企业用户的数据范围；launchOrgAuth 的 orgId 是否即身份树企业 ID；e签宝回跳参数。
+- 另发现（未改）：conf/nginx.conf `location ^~ /h5/assets/` 只找静态文件，H5 资产路由 /h5/assets/… 刷新会 404。
+- 验证：无 Flutter / Dart，未跑 analyze / test、未联调；括号配平、git diff --check、信息隔离 grep 通过。待用户本地 `bash ./tool/flutterw.sh analyze`、`test`，再 `--dart-define=DEMO_AUTH=false` 联调。
+
+---
+
 ## 2026-11-23 ssh｜泰乾超级-qianrong：资产新增校验提示写明具体字段；人民币被要求外币价值（dev）
 
 - 问答（用户）：切 dev，新增资产选人民币，「资产价值(外币)」提示人民币无需填写，接口却报 {"msg":"请输入资产价值(外币)","code":400}。

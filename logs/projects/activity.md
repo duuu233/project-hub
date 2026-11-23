@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-23｜taiqian-h5｜ssh｜master｜资产质押 / 解押信息、企业实名认证对接接口
+
+资产详情质押 / 解押页接 pledge、release 两个接口；我的页认证状态接 orgAuth/list，认证页调 eqb/launchOrgAuth 跳 e签宝。4904ab0 已 push；未跑 analyze / test、未联调。
+
 ## 2026-11-23｜taiqian-front｜ssh｜dev｜资产新增校验提示写明具体字段
 
 新增资产校验没过时提示具体未完善的字段（商品明细带行号）；另答人民币被后端要求外币价值的原因（推断后端只认 CNY、dev 编码为 c001），未改。816dccb 已 push；未跑测试 / 构建 / 浏览器。
