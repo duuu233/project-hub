@@ -1,3 +1,14 @@
+## 2026-11-23 ssh｜花盆APP：DP106 土壤湿度改枚举，去掉土壤湿度曲线（main）
+
+- 需求（用户）：DP106 soil_moist 只上报枚举 dry / moderate；土壤湿度数据、历史都不再上报，取消土壤湿度历史曲线；需水状态按枚举显示、不做具体数值，下面的报表不要；另要无日志 / 有日志两条打包指令（含 git pull）。
+- 页面核对：用户最初说「DP106 是相对湿度页面」，代码里 106 在需水状态页（当前土壤湿度 + 土壤湿度变化曲线 134–136），相对湿度页是空气湿度 114/115/165。已询问，用户选改需水状态页、文字 dry=干燥 / moderate=适中。
+- 同步：Hub main pull 到 7a8bc9c；flowerpot main 已最新（fe646d3）。
+- flowerpot main/c0d26f3（已 push）：新增 SoilMoisture 枚举进 DeviceStatusReport，删 SensorSnapshot 土壤湿度数值与 SensorMetric.soilMoisture；需水状态页显示干燥 / 适中（未报 --，无单位）；TuyaConfig.history 去 134–136，曲线只剩水位、去指标切换；首页进需水页不再指定土壤湿度；报表页去土壤湿度；测试与 Mock 同步；AI_CONTEXT、docs/history、PRODUCT_RULES 表格已更新。
+- 自行决定（可改）：旧固件报的数值按未上报显示 --；DP 表保留 134–136 行供对照；帮助中心「为什么土壤湿度没有变化？」未动。
+- 验证：无 Flutter / Dart，未编译、未跑 analyze / test、未真机；git diff --check、信息隔离 grep 通过。待用户本地 dart analyze lib test 与 flutter test。
+
+---
+
 ## 2026-11-20 work｜同步现有项目并接入孤独之路
 
 - Hub `main` 快进至 `e4f398d`，新增「孤独之路」（微信小游戏，`path-of-solitude`）注册记录、work 映射及上下文。目标仓库尚无首个提交，远端无分支，保留未跟踪的 `2.md`，暂不填写远端默认分支。
