@@ -1,3 +1,21 @@
+## 2026-11-23 ssh｜孤独之路：程序化动作、微信性能、文字缺失（main）
+
+- 需求（用户，连续多条）：① 大地图 / 迷雾 / 等级梯度需求（贴文截断、引用的三份英文文件仓库里不存在，已问用户，未开工）；② 角色动作僵硬 + 微信帧率卡顿专项（CharacterAnimator / PoolManager / Graphics 不每帧重绘 / 碰撞 / 高帧率），并说「或有更好的方案，要流畅」；③ 顺便开高性能模式（贴的 game.json 片段含 deviceOrientation portrait，游戏是横屏，未照搬）；④ 很多文案缺失，天赋里也是；⑤ 先打磨第一章第一张图和主城；⑥ 动画音效怎么处理。
+- 同步：开工 pull 已最新（b26b8e7）。
+- 核对现状后的取舍：投射物 / 粒子 / 飘字本来是数据池 + 两个特效批（无节点），碰撞本来是空间哈希 + 距离平方，不重复造；真正热点是 Painter 每帧 clear 重建 Graphics、每帧临时数组 / Color 分配、怪物视图 new / destroy、未设帧率。动作做成纯姿态类而不是 Component + tween（无每次触发分配、池化节点免重挂、2D / 2.5D 共用）。
+- Path-of-Solitude main/1510015（已 push）：
+  - `view/character-animator.ts`：待机呼吸 + 晶石悬浮、步态颠簸 + 10° 侧倾 + 翻转过渡 + 落脚烟尘、出手 0.08 前摇 → 0.12 爆发 → 后坐弹簧、受击闪白抖动、倒下下沉灰烬；2.5D 主角公告板与怪物、2D 主角与怪物都接入；晶石 / 聚能器光点按路线变色；表现层数据粒子（烟尘 / 灰烬 / 迸发，上限 260）。
+  - `engine/pool-manager.ts`：怪物模型节点按外观池化。
+  - Painter 绘制指令记录 + 帧间比对，无变化不重建 Graphics；字号取整到 18/24/32/48/84 五档再缩放（CHAR 全局字符图集不切场景不清空，字号太多会写满导致文字不显示——判断为「文案缺失」主因）。
+  - 每帧分配清理：FxBatch quadN / segment 直接传参、rgb 缓存、project 复用、lookAt 向量复用、材质颜色按状态变化才设。
+  - 帧率：启动 60，低端机（getDeviceBenchmarkInfo / benchmarkLevel）30 + 关点光源；`tools/patch-game-json.mjs` 构建后开 enableHighPerformanceMode 并检查横屏，`npm run wechat` = 高性能模式 + 混淆。
+  - 文字：天赋详情卡换行不截断；技能石面板补主动技能说明；mod-text 补附加伤害 / 穿透中文名。文案表核对：旁白、NPC、物件、首领台词键全部存在。
+  - 文档：架构、构建与安全、README、history。
+- 未做 / 答复：音效——项目目前没有任何音频系统与素材，给用户方案（事件驱动、少量播放器池、同音节流、素材清单），待用户决定素材来源。碰撞「降频」现状已满足未改。大地图需求待用户补全原文与确认范围，用户已改口先打磨第一章。
+- 验证：静态检查 80 个 TS 通过；未运行。待用户：手感（倾斜 / 颠簸幅度、晶石位置是否对准法杖）、天赋面板文字完整、控制台「设备档位」、`node tools/patch-game-json.mjs`。
+
+---
+
 ## 2026-11-23 ssh｜孤独之路：微信包进图渲染报错 descriptorIndices（main）
 
 - 需求（用户）：回传报错 `Cannot read properties of null (reading 'descriptorIndices')`，栈在引擎 getBuffer / tryUpdateRenderSceneLocalDescriptorSet / frameMove，每帧重复，进图卡住。
