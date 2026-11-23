@@ -1,3 +1,13 @@
+## 2026-11-23 ssh｜孤独之路：修复微信小游戏启动灰屏与贴图加载（main）
+
+- 需求（用户）：构建到 client/build/wechatgame 后进游戏一直灰屏无反应，控制台无报错，只有每张贴图「贴图加载失败，使用代码绘制兜底」警告。
+- 同步：Hub 与游戏仓均已最新（游戏仓 6d4c922，用户合并提交了资源 .meta 与 main.scene）。
+- 分析：main.scene 里有新建场景自带的 Main Camera（3D，优先级 0，清屏灰 51,51,51）和 Canvas/UICamera（优先级 0）。Canvas.__preload 先于 Camera.onLoad 创建界面摄像机，同优先级按注册顺序（稳定排序）绘制，界面先画、Main Camera 后画把整屏清成灰色。57 个 PNG 的 meta 都是 texture 类型（3D 项目默认），没有 spriteFrame 子资源。
+- Path-of-Solitude main/ad888ae（已 push）：App 启动时界面摄像机优先级固定 100 并停用场景其他摄像机（构造时 + 首帧各查一次）；3D 表现层不再压低界面摄像机优先级；贴图加载 spriteFrame 失败时改取 `路径/texture` 自建 SpriteFrame；README 运行步骤、history 记录。未改 .meta 与场景文件。
+- 验证：本机无 Cocos / 开发者工具，未运行。待用户：重新构建后看加载页、标题页是否出现，贴图警告是否消失，进迷雾荒滩 3D 与界面叠加是否正常。
+
+---
+
 ## 2026-11-23 ssh｜孤独之路：删除误提交的 dist/（main）
 
 - 需求（用户）：同意删除 d3acd48 误提交的旧原生版构建产物 `dist/` 并加回忽略规则。

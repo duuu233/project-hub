@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-23｜path-of-solitude｜ssh｜main｜修复启动灰屏与贴图加载
+
+微信小游戏构建后灰屏：场景自带 Main Camera 与界面摄像机同优先级且后绘制，清成灰色；改为启动时停用场景其他摄像机、界面摄像机优先级固定 100。PNG 导入为 texture 类型时改取贴图自建 SpriteFrame。ad888ae 已 push；未运行。
+
 ## 2026-11-23｜path-of-solitude｜ssh｜main｜删除误提交的 dist/
 
 按用户同意删除旧原生版构建产物 dist/（47 个文件）并在 .gitignore 加回 dist/。6c41aa4 已 push。
