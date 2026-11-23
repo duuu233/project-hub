@@ -3,7 +3,8 @@
 - 反馈（用户）：iOS 设备搜索后 Wi-Fi 名称不会自动出来，有时要自己选、有时只能手填；期望自动带出手机已连接 Wi-Fi。先看涂鸦 SDK 能否获取，不行再去开发者账号开 Wi-Fi 获取权限。
 - 原因：Dart 两端同一套（配网页填 scanWifi 的 current）；iOS scanWifi 用 NEHotspotNetwork.fetchCurrent，需 Access WiFi Information 能力 + 精确定位，工程里两项都没有（无 .entitlements / CODE_SIGN_ENTITLEMENTS，从未申请定位），系统只返回空。「有时能选」是设备回报 Wi-Fi 列表成功时的「切换」列表。涂鸦 ThingSmartActivator.currentWifiSSID 走同一系统接口、同受限制（文档口径，未实测），不能绕过。
 - flowerpot main/4508e27（已 push）：新增 Runner.entitlements（wifi-info）、Runner 三配置 CODE_SIGN_ENTITLEMENTS；Info.plist 加 NSLocationTemporaryUsageDescriptionDictionary（WiFiSSID）、改定位用途文案；AppDelegate 新增 WifiSsidReader（先申请定位、精确位置关着临时申请、iOS14+ fetchCurrent / iOS13 CNCopyCurrentNetworkInfo），scanWifi 改走它；Dart 未改。history 记录、AI_CONTEXT 已更新。
-- 需用户：开发者账号 App ID com.common.yikaltdtext 勾选 Access WiFi Information 并刷新描述文件，否则带 entitlement 的包签名失败。另：AP 热点配网用的 Hotspot Configuration 能力仍未配置（未改）。
+- 同日补（用户要求）：flowerpot main/bcdb7ad（已 push）Runner.entitlements 加 com.apple.developer.networking.HotspotConfiguration（AP 热点配网 NEHotspotConfigurationManager 所需），history / AI_CONTEXT 同步；已给用户完整配置步骤。
+- 需用户：开发者账号 App ID com.common.yikaltdtext 勾选 Hotspot 与 Access WiFi Information 并刷新描述文件，否则带 entitlement 的包签名失败。
 - 验证：无 Xcode / Flutter，未编译、未签名、未真机；plist 解析、git diff --check 通过。
 
 ---
