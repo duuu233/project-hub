@@ -1,3 +1,11 @@
+## 2026-11-23 ssh｜孤独之路：真机预览没有声音（main）
+
+- 需求（用户）：真机预览没有声音。
+- 判断：微信 InnerAudio 默认遵守 iPhone 静音开关（开发者工具无此开关，所以工具里有声）；其次可能是音效未导入 / 加载失败。仓库里 resources/audio 尚无 .meta（用户本机 Cocos 导入时生成）。
+- Path-of-Solitude main（已 push）：Audio.init 调用 wx.setInnerAudioOption({ obeyMuteSwitch: false, mixWithOther: true })；加载完成打印「音效已加载 N 个」，失败时打印错误；音效清单补排查步骤。未运行。
+
+---
+
 ## 2026-11-23 ssh｜孤独之路：骨骼动作、标题页、音效、文字缺失（main）
 
 - 需求（用户）：「你确定已经改好了」——文案仍缺失；首页登录页要精美；人物没有走路、打怪动作（帧动画或其他，参考市面流行方式）；找开源免费音效放进游戏。
