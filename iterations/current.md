@@ -1,3 +1,12 @@
+## 2026-11-23 ssh｜相册后台：左侧菜单内容过多时可纵向滚动（main）
+
+- 问题（用户）：左侧菜单内容多、高度撑开时是否禁用了滚动条，过高要能滚动。
+- 原因：layout 里 `<sidebar class="sidebar-container" />`，两个类落在 Sidebar 根节点同一元素；Sidebar.vue 作用域 `.sidebar-inner { height:100%; overflow-y:auto }` 被全局 `#app .sidebar-container { overflow:hidden }`（优先级更高）盖掉——确实禁止了滚动，超出部分被裁。另 `height:100%` 叠在 fixed + top/bottom 上，元素比可视区高 72px。
+- web-ui-v2 main/4587457（已 push）：sidebar.scss 改 `overflow-x:hidden; overflow-y:auto; height:auto; overscroll-behavior:contain`；docs/history 记录与 docs/README 最新记录已更新。
+- 验证：无 Node，未 build、未浏览器核对；git diff --check 通过。待用户本地 npm run build、矮窗口下确认可滚到最后一项。
+
+---
+
 ## 2026-11-23 ssh｜花盆APP：iOS 配网页自动带出当前 Wi-Fi 名称（main）
 
 - 反馈（用户）：iOS 设备搜索后 Wi-Fi 名称不会自动出来，有时要自己选、有时只能手填；期望自动带出手机已连接 Wi-Fi。先看涂鸦 SDK 能否获取，不行再去开发者账号开 Wi-Fi 获取权限。

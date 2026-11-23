@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-23｜album-admin｜ssh｜main｜左侧菜单可纵向滚动
+
+全局 `.sidebar-container` 的 overflow:hidden 盖掉了侧栏自身的滚动，改为纵向可滚、高度由 top/bottom 决定。4587457 已 push；未 build、未浏览器核对。
+
 ## 2026-11-23｜flowerpot-app｜ssh｜main｜iOS 配网页自动带出当前 Wi-Fi 名称
 
 iOS 读当前 SSID 缺 Access WiFi Information 能力和定位权限，补 entitlements、读取前申请定位（含临时精确位置）；涂鸦 SDK 同受限制。需开发者账号给 App ID 勾选该能力。4508e27 已 push；同日补 Hotspot Configuration（bcdb7ad 已 push）；记录偶现 Wi-Fi 搜不到与能力配置无关的分析（7102743）。未编译、未真机；待用户在开发者账号手动配置后验证。
