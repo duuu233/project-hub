@@ -2,9 +2,9 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
-## 2026-11-23｜path-of-solitude｜ssh｜main｜修复微信包进图渲染报错（未推送）
+## 2026-11-23｜path-of-solitude｜ssh｜main｜修复微信包进图渲染报错
 
-内置着色器未进包导致 descriptorIndices 报错：新增两个材质资源引用 builtin-standard / builtin-unlit 并预加载，渲染出错自动退回 2D。本地 d1329cf；远端有用户新提交 2e871ff 导致分叉，未推送，待用户决定。
+内置着色器未进包导致 descriptorIndices 报错：新增两个材质资源引用 builtin-standard / builtin-unlit 并预加载，渲染出错自动退回 2D。d1329cf，按用户指示合并远端 2e871ff 为 b26b8e7 后已 push。
 
 ## 2026-11-23｜path-of-solitude｜ssh｜main｜运行错误上报与进图日志
 

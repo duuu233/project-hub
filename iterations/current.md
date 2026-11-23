@@ -1,11 +1,12 @@
-## 2026-11-23 ssh｜孤独之路：微信包进图渲染报错 descriptorIndices（main，未推送）
+## 2026-11-23 ssh｜孤独之路：微信包进图渲染报错 descriptorIndices（main）
 
 - 需求（用户）：回传报错 `Cannot read properties of null (reading 'descriptorIndices')`，栈在引擎 getBuffer / tryUpdateRenderSceneLocalDescriptorSet / frameMove，每帧重复，进图卡住。
 - 同步：开工 pull 已最新（60953f2）。
 - 分析：2.5D 材质全部代码创建（builtin-standard / builtin-unlit），项目无资源引用这两个着色器，发布包不收录，渲染管线缺描述信息；灰屏阶段只有空 3D 摄像机无模型，未触发。
 - Path-of-Solitude 本地 d1329cf（**未推送**）：新增 `resources/materials/mat_standard.mtl`、`mat_unlit.mtl`（手写，只填内置着色器 uuid c8f66d17… / a3cd009f…，带 meta）；Art.preload 预加载并登记，materials.ts 优先用其 effectAsset；wx.onError 收到渲染相关错误时 WorldView.fallbackTo2D（销毁 3D、换 2D、本次运行后续用 2D、提示）；架构说明与 history。
 - 推送受阻：push 前 `pull --ff-only` 失败，远端有用户新提交 2e871ff「wifi」（paths.ts.meta、crash.ts.meta、`client/tools/package-private-keys/…/*.key` 两个），与本地分叉；按规则未合并 / 变基，待用户决定。提醒用户：该提交把代码包私钥类文件提交进了仓库，建议确认是否应提交。
-- 验证：静态检查 78 个 TS 通过；未运行。待用户：处理分叉后重新构建，确认进图不报错；若仍报错应自动切 2D。
+- 推送：用户指示「直接拉取代码然后提交远程分支」，`git pull --no-rebase` 合并 2e871ff（无冲突）为 b26b8e7，已 push。
+- 验证：静态检查 78 个 TS 通过；未运行。待用户：重新构建，确认进图不报错；若仍报错应自动切 2D。
 
 ---
 
