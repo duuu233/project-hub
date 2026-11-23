@@ -5,6 +5,8 @@
 - flowerpot main/4508e27（已 push）：新增 Runner.entitlements（wifi-info）、Runner 三配置 CODE_SIGN_ENTITLEMENTS；Info.plist 加 NSLocationTemporaryUsageDescriptionDictionary（WiFiSSID）、改定位用途文案；AppDelegate 新增 WifiSsidReader（先申请定位、精确位置关着临时申请、iOS14+ fetchCurrent / iOS13 CNCopyCurrentNetworkInfo），scanWifi 改走它；Dart 未改。history 记录、AI_CONTEXT 已更新。
 - 同日补（用户要求）：flowerpot main/bcdb7ad（已 push）Runner.entitlements 加 com.apple.developer.networking.HotspotConfiguration（AP 热点配网 NEHotspotConfigurationManager 所需），history / AI_CONTEXT 同步；已给用户完整配置步骤。
 - 需用户：开发者账号 App ID com.common.yikaltdtext 勾选 Hotspot 与 Access WiFi Information 并刷新描述文件，否则带 entitlement 的包签名失败。
+- 问答（用户）：iOS 偶现 Wi-Fi 搜不到是否就是没配置的原因。结论：两项能力缺失都是必现（名称每次读不到 / 热点每次被拒），不解释偶现；偶现多半是「切换」列表拿不到——iOS 只能经蓝牙让设备回报列表，固件不支持、设备不在配网状态、蓝牙失败、30 秒超时、重扫清掉缓存都会空，与能力无关；搜不到设备则是蓝牙广播问题。定位看联调日志 `ble wifi:` 行。分析写入 flowerpot history（main/7102743 已 push），未改代码。
+- 进展：用户去开发者账号手动配置能力，配置步骤已给（App ID 勾选两项 → 刷新描述文件 → pull + config-only → Xcode 核对 Signing & Capabilities → Archive 上传 → 真机验证），待用户配置后真机反馈。
 - 验证：无 Xcode / Flutter，未编译、未签名、未真机；plist 解析、git diff --check 通过。
 
 ---

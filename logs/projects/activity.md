@@ -4,7 +4,7 @@
 
 ## 2026-11-23｜flowerpot-app｜ssh｜main｜iOS 配网页自动带出当前 Wi-Fi 名称
 
-iOS 读当前 SSID 缺 Access WiFi Information 能力和定位权限，补 entitlements、读取前申请定位（含临时精确位置）；涂鸦 SDK 同受限制。需开发者账号给 App ID 勾选该能力。4508e27 已 push；同日补 Hotspot Configuration（bcdb7ad 已 push）。未编译、未真机。
+iOS 读当前 SSID 缺 Access WiFi Information 能力和定位权限，补 entitlements、读取前申请定位（含临时精确位置）；涂鸦 SDK 同受限制。需开发者账号给 App ID 勾选该能力。4508e27 已 push；同日补 Hotspot Configuration（bcdb7ad 已 push）；记录偶现 Wi-Fi 搜不到与能力配置无关的分析（7102743）。未编译、未真机；待用户在开发者账号手动配置后验证。
 
 ## 2026-11-23｜taiqian-h5｜ssh｜master｜资产质押 / 解押信息、企业实名认证对接接口
 
