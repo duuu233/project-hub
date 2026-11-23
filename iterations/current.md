@@ -1,3 +1,11 @@
+## 2026-11-23 ssh｜孤独之路：确认横屏（main）
+
+- 需求（用户）：需要横屏。
+- 现状：config.ts ORIENTATION 已是 landscape，界面横屏布局；上一轮未照用户片段改 portrait。
+- Path-of-Solitude main/e7e7583（已 push）：`tools/patch-game-json.mjs` 构建后把 game.json 的 deviceOrientation 固定写成 landscape（构建面板选错时给提示），构建与安全文档、README 同步。未运行（本机无 Node）。
+
+---
+
 ## 2026-11-23 ssh｜孤独之路：程序化动作、微信性能、文字缺失（main）
 
 - 需求（用户，连续多条）：① 大地图 / 迷雾 / 等级梯度需求（贴文截断、引用的三份英文文件仓库里不存在，已问用户，未开工）；② 角色动作僵硬 + 微信帧率卡顿专项（CharacterAnimator / PoolManager / Graphics 不每帧重绘 / 碰撞 / 高帧率），并说「或有更好的方案，要流畅」；③ 顺便开高性能模式（贴的 game.json 片段含 deviceOrientation portrait，游戏是横屏，未照搬）；④ 很多文案缺失，天赋里也是；⑤ 先打磨第一章第一张图和主城；⑥ 动画音效怎么处理。
