@@ -7,7 +7,7 @@
 - [qianrong-list-style.md](qianrong-list-style.md)末节补充：2026-11-19 ssh test/c3cde54 首屏固定表头扣除表格外层容器底部（bottomFrame），日志页 log-workspace 卡片底部不再贴边。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/ec7119f 列表超出首屏固定表头：v-list-grid 按 .app-main 剩余高度给 vxe-grid 设置 maxHeight（最小 360，页面自带高度的不接管），25 个列表绑定传 options。
 - [qianrong-list-style.md](qianrong-list-style.md)末节：2026-11-19 ssh test/fc6570b 字典数据页已选条件里的字典名称被清空（标签 × 或下拉清空后搜索）时，关闭当前页并返回字典管理 /config-audit/dict。
-- [qianrong-asset-integration.md](qianrong-asset-integration.md)：2026-11-13 ssh dev 菜单调整后核对新增模块（文件不用挪；认证管理写死旧路径已改为按路由名称跳转）；资产管理对接列表 / 详情 / 新增接口（下拉来源、时间戳、多选产品）；2026-11-18 单据类型改为 assetBillType / 字典 asset_bill_type。
+- [qianrong-asset-integration.md](qianrong-asset-integration.md)：2026-11-13 ssh dev 菜单调整后核对新增模块（文件不用挪；认证管理写死旧路径已改为按路由名称跳转）；资产管理对接列表 / 详情 / 新增接口（下拉来源、时间戳、多选产品）；2026-11-18 单据类型改为 assetBillType / 字典 asset_bill_type。2026-11-23 新增校验提示写明未完善的具体字段（含商品明细行号）；人民币新增被后端要求外币价值的原因与待定方案。
 - [qianrong-org-empty-cell.md](qianrong-org-empty-cell.md)：2026-11-12 ssh test/d1a49dc（dev/d5960b3）组织与权限（企业用户、账户、部门、角色）列表与详情空值统一显示「-」（列表 emptyCell 选项 + 插槽列、详情头卡 emptyText 与只读 placeholder）。
 - [qianrong-role-logs.md](qianrong-role-logs.md)末节：2026-11-12 ssh test/2987018（dev/af9f98f）操作日志详细改调 GET /monitor/logOper/{operId}，不再用受列字段控制的列表行。
 - [qianrong-menu-route-lifecycle.md](qianrong-menu-route-lifecycle.md)末节：2026-11-12 ssh test/4847276（dev/8268c1d）菜单列表新增菜单类型、是否显示两列。

@@ -1,3 +1,15 @@
+## 2026-11-23 ssh｜泰乾超级-qianrong：资产新增校验提示写明具体字段；人民币被要求外币价值（dev）
+
+- 问答（用户）：切 dev，新增资产选人民币，「资产价值(外币)」提示人民币无需填写，接口却报 {"msg":"请输入资产价值(外币)","code":400}。
+  - tq-plus 本就在 dev、干净，pull 已最新（6de9a29）。
+  - 原因（推断）：前端按名称「人民币」/ 编码 CNY 认人民币，人民币时不传 assetValueFx、exchangeRate；dev 人民币编码是自定义 c001；Swagger 业务管理组 assetValueFx 非必填、汇率注明「外币币种必填」，后端多半只认 CNY、把 c001 当外币。
+  - 建议后端按 c001 / 名称认人民币或把编码改成 CNY；前端兜底（外币价值 = 人民币价值、汇率 1）会写伪数据，未采用、待用户决定。币种接口需登录未核到当前编码，未调新增接口。
+- 需求（用户）：「请先完善标红的必填项」都填了还提示，要明确提示。
+  - tq-plus dev/816dccb（已 push）：model.js 新增 invalidFieldsText，按 validate() 的 invalidFields 列出具体项（明细带行号、「需大于 0」补字段名、资产编号按单据类型称呼、最多 3 项 +「等 N 项未完善」），add.vue 提示 5 秒；asset-model 测试补用例。私人文档 qianrong-asset-integration.md、docs/README、logs 已更新。
+- 验证：无 node，未跑测试 / 构建 / 浏览器；逻辑用 Python 等价实现核对用例输出一致；信息隔离 grep 无命中。
+
+---
+
 ## 2026-11-23 ssh｜花盆APP：DP106 土壤湿度改枚举，去掉土壤湿度曲线（main）
 
 - 需求（用户）：DP106 soil_moist 只上报枚举 dry / moderate；土壤湿度数据、历史都不再上报，取消土壤湿度历史曲线；需水状态按枚举显示、不做具体数值，下面的报表不要；另要无日志 / 有日志两条打包指令（含 git pull）。

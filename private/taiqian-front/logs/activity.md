@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-23 ssh｜资产新增：校验提示写明具体字段；人民币被要求外币价值（dev）
+
+用户要求切 dev（本就在 dev，干净，pull 已最新 6de9a29）。问答：人民币新增报「请输入资产价值(外币)」——前端人民币不传外币价值，dev 人民币编码为 c001，推断后端只认 CNY，建议后端改，未改代码。随后用户反馈「请先完善标红的必填项」不明确：新增 invalidFieldsText，提示列出具体未完善项（明细带行号、需大于 0 补字段名、最多 3 项），add.vue 显示 5 秒；测试补用例。无 node，未跑测试 / 构建 / 浏览器，逻辑 Python 等价核对。停在 dev。
+
 ## 2026-11-20 ssh｜test 合并到 dev；额度账本对接接口（dev）
 
 用户要求同步到 dev 后对接额度账本四个接口。test 干净，checkout dev 后 pull --ff-only 已到 53ef6d4；merge test 冲突 3 处（index.html / dynamicTitle.js 取「乾融系统」固定页签，listGrid.js 合并 columnRules + fitHeight），dev/a98015a 已 push。额度账本：新增 api/quota，static-data.js 改 model.js，统计 / 资金维度 / 企业维度 / 明细分页全部走接口，额度按万、明细按元，状态与动作类型按字典 mater_status / quota_change_type；新增 credit-ledger-model 测试。dev/6de9a29 已 push。无 Token 未调接口；无 node，未跑测试 / 构建 / 浏览器。停在 dev。

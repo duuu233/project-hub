@@ -61,3 +61,10 @@
 - 测试：asset-model.test.mjs 负载断言 assetBillType、不再带 assetType；接入位置测试加三个页面用 asset_bill_type、不出现 assetType。
 - 待核对：`asset_bill_type` 字典的编码是否与旧 `asset_type` 一致（未登录读不到字典）；不一致时资产编号标签会退回「资产编号」，H5 的内置映射同样要改。
 - 验证：无 Node，测试与构建未运行；新加的两条源码正则用 Python 对源码核对通过。
+
+## 补充（2026-11-23）：新增校验提示写明是哪几项；人民币新增被后端要求外币价值
+
+- 反馈：新增资产时提示「请先完善标红的必填项」，用户认为都填了，要求给明确提示。
+- 改法：`model.js` 新增 `invalidFieldsText(invalidFields, { assetBillType })`，把 `validate()` 拒绝时的 invalidFields 转成具体文字——必填提示原样（请输入… / 请选择…），「需大于 0」补字段名，商品明细带行号（「商品明细第 2 行：单价需大于 0」），资产编号按单据类型称呼（提单号等）；最多列 3 项，多出写「等 N 项未完善」；拿不到字段时退回原句。`add.vue` 提示显示 5 秒。测试 `asset-model.test.mjs` 补用例。
+- 同轮问答（未改代码）：选人民币后接口报 `请输入资产价值(外币)`（400）。前端按名称「人民币」/ 编码 CNY 认人民币，人民币时不传 assetValueFx、exchangeRate；dev 人民币编码是自定义 c001，Swagger 里 assetValueFx 非必填、汇率注明「外币币种必填」，推断后端只认 CNY、把 c001 当外币。建议后端按 c001 / 名称认人民币或把编码改为 CNY；前端兜底（传外币价值 = 人民币价值、汇率 1）会写入伪数据，未采用，待用户决定。币种接口需登录，未核到当前编码；后端源码不可见。
+- 验证：无 Node，测试与构建未运行；`invalidFieldsText` 逻辑用 Python 等价实现核对 4 个用例输出一致。
