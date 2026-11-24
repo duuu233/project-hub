@@ -1,3 +1,18 @@
+## 2026-11-24 ssh｜花盆APP：iOS 解绑后不消失、温标未换算（main）
+
+- 需求（用户）：① 解除设备后正常列表就没了，iOS 只提示离线、要刷新才消失；② iOS 温度摄氏 / 华氏没换算，安卓正常。
+- 同步：Hub 与 flowerpot 开工 pull 均已最新（flowerpot 7102743）；本机无 codegraph 命令、无 `.codegraph/`，按源码检索。
+- 分析：
+  - ① iOS `deviceRemoved:` 用 `device.deviceModel?.devId` 取 id；移除时 SDK 已清缓存，model 多半 nil → guard 返回，`removed` 没发，只剩先到的 online=false。Android `onRemoved` 回调直接带 devId，所以正常。
+  - ② 两端 Dart 同一套代码，App 设计是「112 按 146 的温标上报、只换标签」。切温标后设备先回 146、112 要等下次上报才换单位，这段时间「°F 标签 + 摄氏数值」；iOS 本机乐观更新也只改设置不改读数。真机上 iOS 为何比 Android 明显（112 重报时机）未拿到日志证实，属推断。
+- flowerpot main/dfb896b（已 push）：
+  - iOS：按实例反查 `watched` 取 id；`currentHome` 挂 `ThingSmartHomeDelegate` 的 `home:didRemoveDeivce:`；两路经 `deviceWasRemoved` 去重。
+  - Dart：`_device` 在快照记读数上报时温标（112 值变了才按当时 146 认），否则换算到当前温标（`DeviceControlSettings.convertTemperature`）；设置覆盖下发温标时同步换算 `sensors.airTemperature`；DP164 历史曲线未动。
+  - 测试 `device_updates_test`、`device_control_settings_test`；项目 history 记录与 AI_CONTEXT。
+- 验证：服务器无 Flutter / Dart / Xcode，未编译、未运行测试。待用户：本地 `dart analyze lib test`、`flutter test test/tuya`，iOS 编译看 home delegate 签名有无告警；真机另一台手机 / 设备端解绑看 iOS 列表即时去掉；切温标看首页温度卡与温度状态页数值。若 ② 仍复现，请抓联调日志里切温标后的「上报 ←」行（看 112 是否重报、值是多少）。
+
+---
+
 ## 2026-11-23 ssh｜孤独之路：质感、掉落与界面锻铁化（main）
 
 - 需求（用户）：贴《视觉重铸、性能优化与地面掉落交互设计规范》四步（性能 / 动作 / PoE2 式地面掉落 / 哥特 UI），引用的三份文件仓库里不存在；中途改口「文件不管了，主要是建模和交互体验的细节优化、UI 打磨，现在太粗糙，找免费素材能用就用」。
