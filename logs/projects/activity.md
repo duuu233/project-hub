@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-24｜flowerpot-app｜ssh｜main｜iOS 涂鸦 SDK 7.8 → 7.11
+
+`ios/Podfile` 的 `ThingSmartHomeKit` 改为 `~> 7.11.0`，与新包名 com.common.yikaltdtext 导出的安全组件配套（7.8 是 08-20 旧包名时期组件的版本，11-13 改包名后未跟改）；对比 tuya-pod-specs 两版 podspec 与所用模块头文件，用到的接口无删改；补项目 history 与 AI_CONTEXT。cb46854 已 push；未 pod install、未编译。
+
 ## 2026-11-24｜flowerpot-app｜ssh｜main｜iOS 设备移除即时消失、温标切换读数换算
 
 iOS `deviceRemoved:` 改按实例反查登记的 id（移除时 deviceModel 已为 nil，事件被丢）并补 home 移除回调；温度读数记录上报时温标，146 先到时换算到当前温标，本机下发温标同步换算；补测试与项目文档。dfb896b 已 push；未编译、未运行测试。

@@ -1,3 +1,15 @@
+## 2026-11-24 ssh｜花盆APP：iOS 涂鸦 SDK 7.8 → 7.11（main）
+
+- 需求（用户）：打包卡在涂鸦 SDK 版本——Podfile 要 7.8，本机能打包的 com.common.yikaltdtext 安全组件配 7.11；问 7.8 从哪来；核对改 7.11 的影响，没影响就去掉 7.8 要求并推送。用户确认导出的 SDK 为 7.11。
+- 同步：Hub 与 flowerpot 开工 pull 已最新（dfb896b）；无 `.codegraph/`。
+- 来历：7.8 写在 `ios/Podfile:40`，08-20 接 iOS 时跟随当时组件包官方 Podfile（9b057dc）；当时 Bundle ID 为 com.common.yikaltd，11-13 改为 yikaltdtext（8123f6a）后版本未跟改。旧 7.8 组件按时间判断属旧包名，未逐一核对文件。
+- 影响核对：tuya-pod-specs 中 ThingSmartHomeKit 7.8.0.6 / 7.11.0.3 依赖种类相同、仅小版本升级，最低 iOS 均 11.0；下载所用 6 个模块两版压缩包、只解出 ios-arm64 头文件 diff（`.codex-tmp/tuya-specs/`）：仅新增接口，唯一删除 DeviceCoreKit `ThingSmartDeviceAdvancedAbility`，项目未用。
+- 过程问题：最初把 podspec 临时文件写到了 /tmp 会话目录（越出 /home/cc/dh/ 可写边界），已移回 `.codex-tmp/`，用户重申都在 /dh 下操作。
+- flowerpot main/cb46854（已 push）：Podfile `~> 7.11.0`；history `2026-11-24-ios-tuya-sdk-7-11.md`、索引、AI_CONTEXT。
+- 验证：服务器无 Xcode / CocoaPods，未 pod install、未编译。待用户：Mac 上 `cd ios && pod install --repo-update`，Archive，真机登录 / 配网 / 控制 / OTA。
+
+---
+
 ## 2026-11-24 ssh｜花盆APP：iOS 解绑后不消失、温标未换算（main）
 
 - 需求（用户）：① 解除设备后正常列表就没了，iOS 只提示离线、要刷新才消失；② iOS 温度摄氏 / 华氏没换算，安卓正常。
