@@ -3837,3 +3837,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-16 | flowerpot-app | ssh | main | iOS 补蓝牙扫描与双模配网桥接
 - main/8cb3c28 已 push：iOS 原生补 bleProbe / startBleScan / pairBleDevice 等 8 个蓝牙方法（涂鸦 ThingSmartBLEManager / ThingSmartBLEWifiActivator），修复「探测蓝牙失败：原生涂鸦SDK尚未接入」。未编译，未真机。
+
+## 2026-11-24 | path-of-solitude | ssh | main | 怪物序列帧离线渲染脚本与公告板接入
+- main/e18454d 已 push：`tools/render_25d.py`（Blender 报告 / 渲染，缺 A2 贴图拒绝正式出图，A1 预览进 `_preview/`）、`tools/pack_sprites.py`（图集 + 帧表）、`view/monster-sprites.ts` 公告板（灰犬 4 动作、灰鬃静态方向图），缺图退回骨骼模型；帧表当前为空。未跑 Blender，未运行 Cocos；图标包不在仓库，未接入。

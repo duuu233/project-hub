@@ -1,3 +1,19 @@
+## 2026-11-24 ssh｜孤独之路：迷雾荒滩怪物序列帧渲染与接入（main）
+
+- 需求（用户）：Hyenas_A2.blend 接腐化灰犬（Idle 1–151 / Run 1–31 / Atk 1–36 / Die 1–101，60 FPS，按源帧率抽帧保留时长，受击沿用闪白；A2 两张贴图缺失，先报告，A1 打包贴图只作标注的临时预览）；amethyst_geode_beast.blend 接灰鬃（静态 Mesh_0，方向图，表现与数值沿用）；Cursed_Essentials 图标包按 LICENSE 挑用得上的；render_25d.py 在 Windows 出报告和少量试渲染，固定镜头 / 尺寸 / 脚底锚点，输出 assets/textures/monsters/<怪物>/<动作>/，按 Cocos 流程接入；缺 PNG 保留现有表现并给文件名；收到 PNG 后再验证播放、更新清单。
+- 同步：Hub 开工 pull 拉到最新；Path-of-Solitude 拉到 33f5749（用户新建 raw_models/ 与序列帧目录）。无 `.codegraph/`。
+- Path-of-Solitude main/e18454d（已 push）：
+  - `tools/render_25d.py`：report（物体、面数、骨架、动作帧范围、贴图 已打包 / 找到 / 缺失、出图计划）/ render（正交，俯角 52° 对齐 CAMERA_PITCH，左上主光，镜头缩放与锚点按全动作全方向一次算定；缺必需贴图拒绝出图并列文件名；`--preview-a1` 输出 `_preview/`，已 gitignore）。方向按规范 s / sw / w / n，右侧镜像。
+  - `tools/pack_sprites.py`：标准库 PNG 解码 / 编码，共同裁边、网格图集 → 资源包 `client/assets/bundles/monsters_shore/`（首次写 isBundle 的文件夹 meta），生成帧表 `view/monster-sprites-data.ts`（当前为空）；`--check` 列缺失文件名。
+  - 游戏：`view/monster-sprites.ts` 公告板（tilingOffset 切帧、方向迟滞与镜像、攻击命中帧对齐前摇结束、死亡移除后续播、colorScale 闪白、冰冻偏蓝暂停、静态首领程序化起伏 / 前扑 / 倒下），加载页预加载，`CONFIG.MONSTER_SPRITES` 开关，缺图退回骨骼模型。
+  - 文档：README、架构、构建与安全、美术素材清单（新增怪物序列帧一节，含 208 个待出图文件名）、history。
+- 过程：模型帧数按配置换算——灰犬 idle 15 @ 6、run 6 @ 12、attack 9 @ 15（命中帧暂定源帧 18 → 第 4 帧，用户未给，需看片确认）、die 21 @ 12；四方向共 204 张，灰鬃 4 张。死亡在模拟层 0.6 秒即移除，故由表现层续播。
+- 未做：候选图标库 `assets/Cursed_Essentials_Free_Icon_Pack_v1.0` 在服务器仓库与 /home/cc/dh 下均不存在（应只在 Windows 本地），未挑选、未接入；2D 低配表现层未接序列帧。
+- 验证：服务器无 Blender，渲染脚本只过语法；打包脚本用合成 PNG 测过（5 种滤波解码、裁边锚点、缺帧列表、--only）；TS 用 node strip-types 过语法，无类型检查、未运行 Cocos。
+- 待用户：Windows 跑 report → 试渲染（看 s 是否正对镜头，不对改 PROFILES forward；灰鬃锚点）；补 Hyenas_A2.png / Hyenas_A2_Normal.png 后正式出图；提交 PNG、sprite.json、render_report.json；推图标包（至少 LICENSE.txt 与 PNG）。收到后由 SSH 打包、核对播放、更新清单。
+
+---
+
 ## 2026-11-24 work｜孤独之路：本地模型与序列帧目录
 
 - 需求：建立 Windows 本地模型目录和 PNG 输出目录，写清路径并忽略源模型。用户将自行移动模型，并在 SSH 上编写渲染脚本。
