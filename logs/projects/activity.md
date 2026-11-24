@@ -2,6 +2,10 @@
 
 本文件作为 Project Hub 统筹全局项目的变更看板，记录每次通过 Hub 对各子项目执行的修改流水，以及涉及的分支、环境与交付状态。
 
+## 2026-11-24｜path-of-solitude｜work｜main｜本地源模型和序列帧目录
+
+建立本地 `raw_models/` 与序列帧输出目录，README 记录后续渲染脚本路径。Git 忽略规则、PNG 可追踪性和源模型零跟踪已校验。业务提交 `33f5749` 已推送，渲染脚本由后续 SSH 任务完成。
+
 ## 2026-11-24｜flowerpot-app｜ssh｜main｜iOS 涂鸦 SDK 7.8 → 7.11
 
 `ios/Podfile` 的 `ThingSmartHomeKit` 改为 `~> 7.11.0`，与新包名 com.common.yikaltdtext 导出的安全组件配套（7.8 是 08-20 旧包名时期组件的版本，11-13 改包名后未跟改）；对比 tuya-pod-specs 两版 podspec 与所用模块头文件，用到的接口无删改；补项目 history 与 AI_CONTEXT。cb46854 已 push；未 pod install、未编译。
