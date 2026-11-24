@@ -3840,3 +3840,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-24 | path-of-solitude | ssh | main | 怪物序列帧离线渲染脚本与公告板接入
 - main/e18454d 已 push：`tools/render_25d.py`（Blender 报告 / 渲染，缺 A2 贴图拒绝正式出图，A1 预览进 `_preview/`）、`tools/pack_sprites.py`（图集 + 帧表）、`view/monster-sprites.ts` 公告板（灰犬 4 动作、灰鬃静态方向图），缺图退回骨骼模型；帧表当前为空。未跑 Blender，未运行 Cocos；图标包不在仓库，未接入。
+
+## 2026-11-24 | path-of-solitude | ssh | main | 调试台联调无敌与难度、灰犬放大 1.5 倍
+- main/2715a64 本地已提交、**未推送**：远端新增 711e876（编辑器设置与 bundle meta）导致分叉，待用户处理。无敌拦在 damagePlayer，难度乘怪物生命与对玩家伤害并即时换算场上怪物；灰犬 MODEL_SCALE 1.5（只放大显示）。未运行。

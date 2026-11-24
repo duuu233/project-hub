@@ -1,3 +1,19 @@
+## 2026-11-24 ssh｜孤独之路：调试台联调无敌与难度、灰犬放大（main）
+
+- 需求（用户）：设置下面的调试加上难度，顺便加无敌，主要用于联调；追加「狗的模型太小了放大一点，像老鼠了」。
+- 同步：Hub 开工 pull 已最新；Path-of-Solitude 开工 pull 拉到 275a0f1（用户侧已渲染并打包灰犬 A1 预览 4 方向 4 动作、灰鬃 4 方向静态图，帧表 hound `preview: true`）。
+- Path-of-Solitude main/2715a64（**本地已提交，未推送**）：
+  - `core/sim/dev-flags.ts`（invincible / difficulty，纯数据）；`Combat.damagePlayer` 入口拦无敌、`rollFlat` 乘难度；`Monster` 生命乘难度；换档时 `rescaleMonsters` 按比例换算场上怪物生命。
+  - 调试台顶部「联调」：无敌开关 + 五档难度（0.25 / 0.5 / 1 / 1.5 / 2.5×），存本机 `pos_dev_flags`，DEV_TOOLS 下单机联网都读；HUD 左上角常驻「联调：…」提示；设置里入口改名「开发调试台（无敌 / 难度 / 爆率）」。
+  - 灰犬：原因是公告板身长 = 半径 20 × 3 ≈ 0.6 格（主角高 1.04），且 128 图里狗身只占约 53 像素。加 `MODEL_SCALE`（beast_hound 1.5，只放大显示，判定不变），公告板、骨骼兜底、影子 / 光环、头顶血条同步；渲染预设改 256 × 256 供正式出图。
+  - 文档：README、美术素材清单（灰犬 / 灰鬃状态与放大倍率）、history。
+- 推送受阻：push 前 `pull --ff-only` 失败——远端多了用户 711e876「1」（18:03，只改 `client/assets/bundles/monsters_shore.meta`、`client/settings/v2/packages/builder.json`、`engine.json`），与本地 2715a64 分叉；两边改动文件不重叠。按约定未 merge / rebase，交用户决定。
+- 过程问题：核对分叉时一条命令把临时输出写到了 /tmp/x（越出 /home/cc/dh/ 可写边界），发现后已删除。
+- 验证：TS 语法检查通过（node strip-types），无类型检查、未运行 Cocos；未涉及掉落 / 经济，本机无 esbuild 未跑 selftest。
+- 待用户：选择 rebase 或 merge 后推送（或授权我做）；预览里看调试台布局、无敌、换档血量、HUD 提示、灰犬 1.5 倍比例是否合适。
+
+---
+
 ## 2026-11-24 ssh｜孤独之路：迷雾荒滩怪物序列帧渲染与接入（main）
 
 - 需求（用户）：Hyenas_A2.blend 接腐化灰犬（Idle 1–151 / Run 1–31 / Atk 1–36 / Die 1–101，60 FPS，按源帧率抽帧保留时长，受击沿用闪白；A2 两张贴图缺失，先报告，A1 打包贴图只作标注的临时预览）；amethyst_geode_beast.blend 接灰鬃（静态 Mesh_0，方向图，表现与数值沿用）；Cursed_Essentials 图标包按 LICENSE 挑用得上的；render_25d.py 在 Windows 出报告和少量试渲染，固定镜头 / 尺寸 / 脚底锚点，输出 assets/textures/monsters/<怪物>/<动作>/，按 Cocos 流程接入；缺 PNG 保留现有表现并给文件名；收到 PNG 后再验证播放、更新清单。
