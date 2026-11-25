@@ -3867,3 +3867,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-25 | path-of-solitude | ssh | main | 灰鬃改用 3D 骨骼模型
 - 2110ecd 恢复误删的灰犬图集；4ca1e03 加载 GLB 模型、原地播放、转向玩家、Blender 导出脚本。待用户导出 GLB 并在 Cocos 预览。
 
+## 2026-11-25 | path-of-solitude | ssh | main | 灰犬改 3D、删灰鬃序列帧
+- b36ac4d 导出按 NLA 轨道；7a46b2f 灰犬 3D 配置与减面导出、删灰鬃图集 2.2MB。待用户导出灰犬 GLB。
+
