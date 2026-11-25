@@ -3856,3 +3856,7 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-25 | taiqian-h5 | ssh | master | 我的页认证状态改取企业详情
 - master/215c471 已推送：认证状态由 system/orgAuth/list 推断改为 common/orgDetail 的 esignAuthStatus。未 analyze / test，用户本地打包。
+
+
+## 2026-11-25 | path-of-solitude | ssh | main | 合入联调无敌、首领放到起点、灰鬃按技能播放动作
+- rebase 后推送 d2eccf1 + e1108aa：联调无敌 / 难度、「首领放到起点」开关、序列帧按技能播放、Giang_99 渲染预设。新模型未出图，游戏内未运行。

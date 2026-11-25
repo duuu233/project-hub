@@ -1,3 +1,18 @@
+## 2026-11-25 ssh｜孤独之路：合入联调无敌、首领放到起点、灰鬃按技能播放动作（main）
+
+- 需求（用户）：已替换 BOSS 模型，拉代码后完成；BOSS 放到第一张图起点方便测试；上次的无敌开关没看到，要能开启无敌；几个版本整合后推送，含这次 BOSS 改造。
+- 同步：本地 2715a64（11-24 无敌 / 难度 / 灰犬放大）与远端 711e876、8d80e0f、7dd2f47 分叉；用户选 rebase。冲突仅美术素材清单一行，灰犬取本地、灰鬃取远端新版 → d2eccf1。无敌没看到的原因就是该提交一直未推送。
+- Path-of-Solitude main/e1108aa（已 push，d2eccf1 一并推送）：
+  - DevFlags.bossAtStart + 调试台开关（下次进图生效，起点沿路前 4–6 格找空地，玩家死亡重置回该点），HUD 提示。
+  - SpriteBoard 按技能 id 播同名动作（缺图用 attack），命中帧对齐各技能前摇；二阶段 roar、晕眩 stun。
+  - render_25d.py boss_greymane → Giang_99（Body / Armature，9 个动作，命中帧与 slam 截取均暂定）。
+  - 文档：README、美术素材清单、history。
+- 新模型 Giang_99.blend 只在用户 Windows（397MB，被忽略），仓库无新图：游戏里灰鬃仍是旧静态图，按技能动作需用户出图打包后可见。
+- 验证：Node strip-types 语法检查通过；无 Cocos / Blender / server 依赖，未运行、未 selftest。
+- 待用户：出 s 方向试渲染（看 forward、锚点、命中帧、slam 截取）；全 4 方向约 760 张，包体预算待定（降帧 / 截短 / BOSS 改 3D GLB）。
+
+---
+
 ## 2026-11-25 work｜孤独之路：腐化灰犬与新版灰鬃源模型交接（main）
 
 - 需求：用 Blender 跑两份模型报告。用户用有骨骼和动画的 `Giang_99.blend` 替换旧灰鬃源模型，要求恢复 `raw_models/` 忽略，并自行转发 Markdown 给 SSH 端。
