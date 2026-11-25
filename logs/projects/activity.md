@@ -3873,3 +3873,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-25 | taiqian-h5 | ssh | master | 新增h5登录用户对接新增用户接口
 - 已推送：逐行 POST system/user（企业用户、当前企业），失败行留原因。未 analyze / test。
 
+## 2026-11-25 | path-of-solitude | ssh | main | 装备手动拾取、物品卡、铭牌修正、登录页重做
+- b4ce468 物品卡 / 手动拾取 / 投影修正；随后登录页重做（代码绘制）。未运行。
+
