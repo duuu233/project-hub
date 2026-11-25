@@ -16,6 +16,7 @@
 - 用户反馈不转向、模糊；测算 4 方向 7.7MB 仍糊、清晰版 35MB+ 超微信上限 → 用户选 3D 骨骼模型。4ca1e03（已 push）：view/monster-models.ts（GLB 预制体、动作同序列帧优先级、时间逐帧驱动、骨盆抵消水平位移、实时骨骼）、渲染器优先模型 + 首领转向玩家、tools/export_glb.py（只留 9 个动作、贴图 1024 JPEG、30fps）、.gitignore 放行 bundles 下 GLB。未运行、未在 Blender 跑导出。
 - 追加 b36ac4d（已 push）：用户 85f6a9a 上传 GLB（1.05MB）只含 Armature|Idle3 → 导出改 NLA 轨道并读回核对；一次性动作改为每次从头播放（起始时间 / 速度对齐命中）；删误提交的 __pycache__。待用户重新导出。
 - 追加 7a46b2f（已 push）：用户确认灰鬃 3D 效果（92b31dc，GLB 2.03MB 9 动作）。用户选灰犬也改 3D、删灰鬃序列帧：灰犬模型配置（预烘焙、bodyLen 2.78）、export_glb 支持 --preview-a1 / 减面 0.4 / 贴图 512；删灰鬃图集 2.2MB；pack_sprites 对有 GLB 的怪物不打序列帧。待用户导出灰犬 GLB、真机看帧率。
+- 追加（已 push）：用户 0c6fb6e 上传灰犬 GLB（1.27MB、8333 顶点、4 动作）；服务器运行 pack_sprites 清掉灰犬序列帧 570K，资源包仅剩两个 GLB 共 3.4M。用户反馈进图首帧卡顿 → 进图预热 3D 模型（每种小怪 8 个、首领 1 个，地面下画 3 帧后入池）。
 - 待用户：出 s 方向试渲染（看 forward、锚点、命中帧、slam 截取）；全 4 方向约 760 张，包体预算待定（降帧 / 截短 / BOSS 改 3D GLB）。
 
 ---
