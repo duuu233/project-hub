@@ -1,3 +1,14 @@
+## 2026-11-25 ssh｜泰乾超级-qianrong：菜单管理新增企业端H5菜单树（dev）
+
+- 需求（用户）：在 /config-audit/menu 按 qianrong-h5 页面级新增单独的 H5 菜单树，含 4 个 Tab 和里面的详情页；给了临时 token；追加：都在 dev 分支、后端 dev-qianrong；参考测试用例里菜单的写法（test 分支）。
+- 同步：Hub、tq-plus（dev）、tq-plus-h5（master，只读）pull 均已最新。origin/test 无 dev 以外提交，按 dev 上 route-script 写法。
+- tq-plus dev/9b64539（已 push）：scripts/add-qianrong-h5-menus.mjs、tests/h5-menu-script.test.mjs、应用 README 一段说明。
+- dev 后端：新建 27 个菜单 2552–2578（企业端H5 隐藏根目录 + 首页 / 融资 / 资产 / 我的 + 22 个二级页），校验通过；PC 脚本 dry-run 0 变更。后端不保存 remark。
+- 验证：借用 /home/cc/sdk 下 Node 跑测试（fuse.js 桩），新测试 5/5、route-script 12/12；未在浏览器看菜单管理页面。token 未落盘。
+- 待用户：菜单管理里看树形与命名；H5 融资 Tab 及多数融资页尚未实现，路径按原型页面暂定；需要权限标识或其它角色可见时再定。
+
+---
+
 ## 2026-11-25 ssh｜泰乾超级-qianrong：额度账本总授信移到标题右侧（dev）
 
 - 需求（用户）：额度账本原型的总授信是所有项目下所有银行额度之和、放在最顶部；现在与项目胶囊（「额度总览」BR-01 下）同行，应放到最外层「额度总览」大标题右边。

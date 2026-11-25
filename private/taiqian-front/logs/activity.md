@@ -1,5 +1,9 @@
 # 泰乾超级实施记录
 
+## 2026-11-25 ssh｜菜单管理新增企业端H5菜单树（dev）
+
+用户给临时 token，要求按 H5 页面级在菜单管理单独维护 H5 树（4 个 Tab + 详情页），都在 dev，后端 dev-qianrong。tq-plus dev 已最新，H5 仓库 master 只读。学 add-qianrong-routes.mjs / route-script.test.mjs 写了 add-qianrong-h5-menus.mjs 与 h5-menu-script.test.mjs；dry-run 后 execute 新建 27 个（2552–2578），校验通过；后端不存 remark。dev/9b64539 已推送。详见 docs/qianrong-h5-menus.md。
+
 ## 2026-11-25 ssh｜额度账本总授信移到「额度总览」标题右侧（dev）
 
 用户要求切 dev（本就在 dev，干净，pull 已最新 816dccb）。按 F04 原型头部（BR-01「额度总览」+ T05 总授信同行），总授信从胶囊行右端移到页标题右侧；ListPageHeader 加可选 title-extra 插槽（不传不变）。dev/d061a1e 提交，再 pull 已最新后 push。无 Node，未构建、未看浏览器效果。
