@@ -14,6 +14,7 @@
 - 追加（已 push）：朝向确认正面；Jump_Atk 最高 3.19 撑大竖直方向 → slam 加 in_place_z（去掉向上位移），游戏里砸地前摇按弧线跳起、命中落地（SLAM_HOP 1.6×H）。
 - 追加：用户 93132a5 上传正面序列帧（身长 69px、1.9MB），pack_sprites --only 误删灰犬 A1 图集与帧表 → 2110ecd 恢复并修脚本（未重打的怪物一律保留）。
 - 用户反馈不转向、模糊；测算 4 方向 7.7MB 仍糊、清晰版 35MB+ 超微信上限 → 用户选 3D 骨骼模型。4ca1e03（已 push）：view/monster-models.ts（GLB 预制体、动作同序列帧优先级、时间逐帧驱动、骨盆抵消水平位移、实时骨骼）、渲染器优先模型 + 首领转向玩家、tools/export_glb.py（只留 9 个动作、贴图 1024 JPEG、30fps）、.gitignore 放行 bundles 下 GLB。未运行、未在 Blender 跑导出。
+- 追加 b36ac4d（已 push）：用户 85f6a9a 上传 GLB（1.05MB）只含 Armature|Idle3 → 导出改 NLA 轨道并读回核对；一次性动作改为每次从头播放（起始时间 / 速度对齐命中）；删误提交的 __pycache__。待用户重新导出。
 - 待用户：出 s 方向试渲染（看 forward、锚点、命中帧、slam 截取）；全 4 方向约 760 张，包体预算待定（降帧 / 截短 / BOSS 改 3D GLB）。
 
 ---
