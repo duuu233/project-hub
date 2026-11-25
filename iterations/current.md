@@ -1,3 +1,13 @@
+## 2026-11-25 ssh｜泰乾超级-qianrong H5：新增h5登录用户对接新增用户接口（master）
+
+- 需求（用户）：H5 企业管理员在 H5 直接给下属开账号，调 PC 新增用户接口，类型固定企业用户、归属当前企业。
+- 同步：tq-plus-h5 master、tq-plus dev pull 均已最新（tq-plus 只读参考）。
+- tq-plus-h5 master/bc47784（已 push）：createOperator → POST system/user（userType 03、orgId 当前企业、初始密码手机号后 6 位 Base64）；页面逐行提交、失败行留原因；测试 4 条；README、h5-foundation 同步。
+- 验证：无 Flutter，未 analyze / test。
+- 待用户：本地 analyze / test、打包；确认 H5 登录 token 有新增用户权限；是否需要前端按企业管理员身份拦截入口。
+
+---
+
 ## 2026-11-25 ssh｜孤独之路：合入联调无敌、首领放到起点、灰鬃按技能播放动作（main）
 
 - 需求（用户）：已替换 BOSS 模型，拉代码后完成；BOSS 放到第一张图起点方便测试；上次的无敌开关没看到，要能开启无敌；几个版本整合后推送，含这次 BOSS 改造。

@@ -3870,3 +3870,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-25 | path-of-solitude | ssh | main | 灰犬改 3D、删灰鬃序列帧
 - b36ac4d 导出按 NLA 轨道；7a46b2f 灰犬 3D 配置与减面导出、删灰鬃图集 2.2MB。待用户导出灰犬 GLB。
 
+## 2026-11-25 | taiqian-h5 | ssh | master | 新增h5登录用户对接新增用户接口
+- 已推送：逐行 POST system/user（企业用户、当前企业），失败行留原因。未 analyze / test。
+
