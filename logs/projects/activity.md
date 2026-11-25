@@ -3843,3 +3843,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-24 | path-of-solitude | ssh | main | 调试台联调无敌与难度、灰犬放大 1.5 倍
 - main/2715a64 本地已提交、**未推送**：远端新增 711e876（编辑器设置与 bundle meta）导致分叉，待用户处理。无敌拦在 damagePlayer，难度乘怪物生命与对玩家伤害并即时换算场上怪物；灰犬 MODEL_SCALE 1.5（只放大显示）。未运行。
+
+## 2026-11-25 | taiqian-front | ssh | dev | 额度账本总授信移到「额度总览」标题右侧
+- dev/d061a1e 已推送：总授信从项目胶囊行移到页标题右侧（按原型头部），ListPageHeader 新增可选 title-extra 插槽。未构建、未看浏览器效果。

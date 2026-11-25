@@ -1,5 +1,6 @@
 # 泰乾超级当前背景
 
+2026-11-25 ssh dev/d061a1e：额度账本「总授信(万)」从项目胶囊行移到「额度总览」页标题右侧（原型 BR-01 头部：标题 + 总授信；值为各产业项目银行额度合计 quotaTotal，不随胶囊变）；ListPageHeader 新增可选 title-extra 插槽，不传时结构不变。详见 docs/qianrong-quota-ledger-integration.md。
 2026-11-12 ssh test/d1a49dc、dev/d5960b3：组织与权限（企业用户、账户、部门、角色）空值统一显示「-」：withListGridStyle 新增 emptyCell（只这四个列表开），插槽列各自 orEmpty；详情 DetailHeaderCard emptyText（默认仍 --）、只读表单 placeholder 用 ph()。详见 docs/qianrong-org-empty-cell.md。
 2026-11-12 ssh test/2987018、dev/af9f98f：操作日志「详细」改调详情接口 getOperlog（GET /monitor/logOper/{operId}），行数据只作占位，失败可重试。
 2026-11-12 ssh test/4847276、dev/8268c1d：菜单列表在菜单名称后加「菜单类型」（M 目录 / C 菜单 / F、B 按钮）与「是否显示」（visible，字典 sys_show_hide）两列。
