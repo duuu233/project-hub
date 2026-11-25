@@ -9,6 +9,7 @@
   - 文档：README、美术素材清单、history。
 - 新模型 Giang_99.blend 只在用户 Windows（397MB，被忽略），仓库无新图：游戏里灰鬃仍是旧静态图，按技能动作需用户出图打包后可见。
 - 验证：Node strip-types 语法检查通过；无 Cocos / Blender / server 依赖，未运行、未 selftest。
+- 追加 fb6bcff（已 push）：用户首次试渲染身长仅 9.2 像素（正交缩放 49）。render_25d.py 加 in_place 原地渲染（镜头每帧跟随骨盆，去掉动作位移）与逐动作位移 / 身体最远诊断；slam 10fps、stun 6fps。用户试渲染用 --out 输出到临时目录，未进仓库、未打包，所以游戏内无变化。
 - 待用户：出 s 方向试渲染（看 forward、锚点、命中帧、slam 截取）；全 4 方向约 760 张，包体预算待定（降帧 / 截短 / BOSS 改 3D GLB）。
 
 ---
