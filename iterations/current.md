@@ -1,3 +1,13 @@
+## 2026-11-25 ssh｜泰乾超级-qianrong H5：我的页认证状态改取企业详情（master）
+
+- 需求（用户）：查「我的」页认证状态来源；应调企业详情获取；之后用户本地打包推送。
+- 同步：tq-plus-h5 master pull 已最新。
+- tq-plus-h5 master/215c471（已 push）：fetchEnterprises 改调 GET common/orgDetail/{orgId}，esignAuthStatus 1 已认证 / 其余未认证；测试、README、h5-foundation 同步。
+- 验证：无 Flutter，未 analyze / test；接口用 PC token 只读核对过字段。
+- 待用户：本地 analyze / test、打包 build/web 并推送；确认 H5 登录 token 能访问 common/orgDetail。
+
+---
+
 ## 2026-11-25 ssh｜泰乾超级-qianrong：菜单管理新增企业端H5菜单树（dev）
 
 - 需求（用户）：在 /config-audit/menu 按 qianrong-h5 页面级新增单独的 H5 菜单树，含 4 个 Tab 和里面的详情页；给了临时 token；追加：都在 dev 分支、后端 dev-qianrong；参考测试用例里菜单的写法（test 分支）。

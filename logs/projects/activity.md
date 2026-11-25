@@ -3849,3 +3849,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-25 | taiqian-front | ssh | dev | 菜单管理新增企业端H5菜单树
 - dev/9b64539 已推送：H5 菜单补齐脚本 + 回归测试；dev 后端新建 2552–2578（隐藏根目录、4 Tab、22 个二级页），校验通过。未在浏览器看页面。
+
+## 2026-11-25 | taiqian-h5 | ssh | master | 我的页认证状态改取企业详情
+- master/215c471 已推送：认证状态由 system/orgAuth/list 推断改为 common/orgDetail 的 esignAuthStatus。未 analyze / test，用户本地打包。

@@ -1,5 +1,13 @@
 # 泰乾超级-qianrong H5 操作记录
 
+## 2026-11-25 ssh｜我的页认证状态改取企业详情（master/215c471）
+
+- 用户问「我的」页认证状态怎么来的：原为 GET system/orgAuth/list 认证记录列表，按认证对象 = 企业名称（找不到取企业类认证）、最新一条的 authStatusName 关键词推断。用户要求改为调企业详情。
+- 改为 GET common/orgDetail/{orgId}（orgId 取当前身份，路径编码），读 data.sysOrg.esignAuthStatus：1 已认证，0 / 缺失未认证；删除列表推断逻辑；测试改为 orgDetail 用例；README、docs/h5-foundation.md 同步。
+- 核对：dev swagger 企业信息基础表 esignAuthStatus「0未认证，1已认证」；用 PC 临时 token 只读调一次（广东福百盛 esignAuthStatus=1，int，id 为字符串大整数）。H5 用户 token 能否访问该接口未验证。
+- 接口模式下不再出现「认证中 / 认证失败」（接口只有 0 / 1）。
+- 验证：服务器无 Flutter，analyze / test 未运行，只做括号配平；用户本地自行打包推送。
+
 ## 2026-11-23｜ssh｜资产质押 / 解押信息、企业实名认证对接接口
 
 - 同步：master 已最新（f99cd9d）。用户说「dev 分支」，仓库只有 master，询问后用户确认就在 master 上做；接口按 dev 后端 swagger。
