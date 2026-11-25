@@ -5,7 +5,7 @@
 - 需求（用户）：H5 新增登录用户，直接调 PC（qianrong）新增用户接口，用户类型固定企业用户，新增的都属于当前企业；作为 H5 企业管理员给下属开账号的入口，不用登管理系统。
 - 依据：dev swagger `POST /system/user`（SysUser，userType 00/01/02/03）；PC `organization/user/template/handleDetail.vue` 新增时 password = encode(手机号后 6 位)、status 0、nickName = userName、postIds []；校验 userName ≤20 且仅中文字母数字下划线、手机号 1[3-9]。
 - 实现（master/bc47784）：ProfileRepository 加 `createsOperators` / `createOperator`；接口模式 fetchOperators 返回空（只新增），逐行 POST system/user（orgId 当前身份企业、userType 03）；页面成功行移出、失败行显示接口原因，全成功后提示并留一空行；名称加字符校验、手机号改 1[3-9]；我的页入口在接口模式放开（仍需企业已认证）。演示模式整表保存不变。测试：payload、请求、页面成功 / 失败各一。
-- 未做：前端不按角色拦截（LoginIdentity.isAdmin 取 roleId 为空，是否等于企业管理员未确认），权限以接口为准；H5 token 能否调 system/user 未验证。
+- 前端不按角色拦截，以接口权限为准（用户 2026-11-25 确认）；H5 token 能否调 system/user 未验证。
 - 验证：无 Flutter，analyze / test 未运行；括号配平、信息隔离 grep 通过。
 
 ## 2026-11-25 ssh｜我的页认证状态改取企业详情（master/215c471）

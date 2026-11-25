@@ -4,7 +4,7 @@
 - 同步：tq-plus-h5 master、tq-plus dev pull 均已最新（tq-plus 只读参考）。
 - tq-plus-h5 master/bc47784（已 push）：createOperator → POST system/user（userType 03、orgId 当前企业、初始密码手机号后 6 位 Base64）；页面逐行提交、失败行留原因；测试 4 条；README、h5-foundation 同步。
 - 验证：无 Flutter，未 analyze / test。
-- 待用户：本地 analyze / test、打包；确认 H5 登录 token 有新增用户权限；是否需要前端按企业管理员身份拦截入口。
+- 待用户：本地 analyze / test、打包；确认 H5 登录 token 有新增用户权限。用户确认不在前端拦截，以接口权限为准。
 
 ---
 
