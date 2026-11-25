@@ -3864,3 +3864,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-25 | path-of-solitude | ssh | main | 渲染脚本原地渲染修复灰鬃过小
 - fb6bcff 已推送：in_place 镜头跟随骨盆、逐动作位移诊断。待用户重新试渲染。
 
+## 2026-11-25 | path-of-solitude | ssh | main | 灰鬃改用 3D 骨骼模型
+- 2110ecd 恢复误删的灰犬图集；4ca1e03 加载 GLB 模型、原地播放、转向玩家、Blender 导出脚本。待用户导出 GLB 并在 Cocos 预览。
+
