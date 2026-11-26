@@ -3898,3 +3898,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-26 | path-of-solitude | ssh | main | 主角动作：步幅匹配、Mixamo 流程、法师映射
 - d92c939 步频匹配与整体姿态；898b6c4/7099a4b/252ff3f/0abe69e Mixamo 清单与整理 / 合并脚本；ae4223e 法师 Mixamo 动作映射。未运行。
 
+## 2026-11-26 | path-of-solitude | ssh | main | 画面光照可调与场景画质文档
+- 0765f43 已推送：光照默认值提亮、调试台画面光照、场景画质提升文档。未运行。
+
