@@ -1,3 +1,9 @@
+## 2026-11-26 work｜孤独之路：暗红战士骨骼资产交接（main）
+
+- 需求：以暗红战士和灰岩巨锤参考图制作独立模型，交付 Blender 源、Cocos 导入件、绑定和动作，范围为美术文件及说明。
+- 业务 `main/e5c9eda` 已推送。两件 GLB 位于 `client/assets/bundles/hero_models/warrior_3d/`，本机 .blend、FBX 和预览在项目 `raw_models/warrior_3d/`。项目交接文档记录 35 个骨骼节点、六段动作、握点和重击出手帧。
+- 验证：Blender 5.3 重开/重导入、逐帧双手挂点和 Cocos 3.8.8 隔离导入通过；游戏内及微信真机未测。
+
 ## 2026-11-26 ssh｜孤独之路：2D 界面生图指南（main）
 
 - 需求（用户）：新增界面参考稿 assets/Gemini_Generated_Image_uvzv87uvzv87uvzv.jpg，看怎么分解；给出 2D 切图、风格、主题色的总结性提示词；看还缺哪些、整体统一风格。3D 不管。
