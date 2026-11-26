@@ -3892,3 +3892,6 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 ## 2026-11-26 | path-of-solitude | ssh | main | 暗红战士模型接入游戏
 - 43c7d37 已推送：hero_models 设为分包，战士路线主角改用 GLB（巨锤挂点、六段动作）。未运行。
 
+## 2026-11-26 | path-of-solitude | ssh | main | 法师与游侠模型接入
+- 350b019 已推送：GLB 贴图压缩（37MB→3.7MB），主角模型按路线配置、缺动作兜底。未运行。
+
