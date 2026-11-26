@@ -1,3 +1,16 @@
+## 2026-11-26 ssh｜孤独之路：法师手臂静止姿势修正、主城营地地板 V3、包体控制（main）
+
+- 需求（用户）：主城换 营地地板V3.jpg 并清晰一点；法师跑动手还是错位、不像正常双臂轨迹，是否视角问题、该怎么定位描述；补充：Mixamo 预览都正常；大前提：体量不能影响发微信小游戏，做好分包，触及限制及时说。
+- 同步：开工 pull 到用户 0da3100（V3 原图 + ground.ts.meta）。
+- 手臂根因：按骨骼量上臂冠状面外展——绑定 +29°、idle（带皮本体）+10～15°、walk −51°、run −34～−41°；walk 少 61° = A 字与 T 字之差。merge_mixamo 把不带皮（T 字静止姿势）动作直接套到带皮本体（A 字），导出本地旋转 = R_A·R_T⁻¹·正确值，手臂链整体往里偏；与视角无关，上轮 22° 外展是误判。修正：新工具 tools/fix_mixamo_rest.py（重建 T 字：手臂链水平朝外最小旋转，改写非本体动作锁骨 / 上臂 / 前臂 / 手腕关键帧，asset.extras.restFixed 防重复），法师差 17.7 / 43.8 / 21.7 / 5～7°，改写 9968 关键帧；修正后 walk 外展 −3～+16°、手不过中线，离线渲染侧 / 正面跑走姿势正常；施法手速峰值不变。merge_mixamo 导出后自动调用（--no-rest-fix 跳过，未在 Blender 跑过）；armOut 默认改 0。
+- 地板：V3 = V2-2 构图的灰黑版；盖残迹后 Wang 生成（0.7/0.889，种子 5），每块铺 1 格（style span）≈240 px/格，地板 meta 加 anisotropy 8；按游戏 UV 离线拼图边界差 4.4 ≤ 格内 6.3。主城默认 V3、荒滩 V2-1；调试台样式精简。
+- 包体：微信口径主包 ≤4MB、合计 ≤30MB、普通分包不限（已 WebSearch 核对官方文档）。源文件：主包 resources 1.56 + 脚本 ~0.8；hero_models 7.85、monsters_shore 3.30、ground_tiles 3.19→1.53（删第一版 1～4、V2-2、V3 原图）、town_props 0.60、title_ui 0.53，合计 ~16MB + 引擎，未触及。engine.json 关掉未用模块（3D/2D 物理、2D 碰撞 / 粒子、富文本、Spine、龙骨、瓦片地图、地形、视频、网页视图、WebSocket）；README 已要求勾选分离引擎。新增记忆 wechat-package-budget。
+- Path-of-Solitude main/5250783（已 push）：mage.glb、tools/fix_mixamo_rest.py、merge_mixamo.py、ground.ts / renderer / devtools / art.ts、engine.json、文档（两篇 history、美术素材清单、Mixamo 动作清单、构建与安全、架构、README）。
+- 验证：骨骼计算、离线渲染、接缝数值、语法检查；无 Cocos / Blender，未构建、未看实际包体与画面。
+- 待用户：预览法师跑走与主城地面；Cocos 构建一次，在微信开发者工具看主包与总包大小；以后合并游侠 / 战士用新合并脚本；披风尖刺需 Blender 重刷权重。
+
+---
+
 ## 2026-11-26 ssh｜花盆APP：iOS 设置页顶部设备名多出数字 4、时有时无、最后为空（main）
 
 - 需求（用户）：花盆 iOS 设备列表 → 设备详情 → 帮助中心 → 返回 → 设置，设置页顶部设备名末尾多了数字 4；反复返回再进时有时无，最后设备名称也没了；Android 没问题；修复。
