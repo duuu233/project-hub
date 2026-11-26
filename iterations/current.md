@@ -1,3 +1,14 @@
+## 2026-11-26 ssh｜孤独之路：登录页改用美术切图（main）
+
+- 需求（用户）：仓库新增 assets/登录页切图（背景、LOGO、2×2 圆形图标，均黑底 JPG），按切图改登录 UI。
+- 同步：pull 到用户 421f488（含切图，另带两个 client/tools/package-private-keys/*.key，11-23 已有一个，未处理，已提醒用户）。
+- 切图：借用服务器已有 Go 1.25 标准库（GOCACHE / HOME / TMPDIR 全部指向 .codex-tmp，GOPROXY=off），背景 1600 JPEG 134KB、LOGO 抠黑底 + 量化 256 色 156KB、图标 4 × 约 20KB；合成预览核对过。工具留在 .codex-tmp/imgtool（不进业务仓）。
+- Path-of-Solitude main/4db0d7c（已 push）：新资源包 title_ui（小游戏分包）；标题页美术模式（背景推拉、紫雾、月光、LOGO 淡入、右侧公告 / 设置 / 须知 / 退出图标与弹窗），缺图退回代码绘制；Art 贴图导入夹边；GameState.soundOn / setSound；TITLE_NOTICE。
+- 验证：语法检查；无 Cocos，未看实际画面。
+- 待用户：Cocos 导入后提交图片 .meta；预览截图反馈布局；决定是否把 package-private-keys 移出仓库。
+
+---
+
 ## 2026-11-25 ssh｜孤独之路：装备手动拾取、物品卡、铭牌位置、标题登录页重做（main）
 
 - 需求（用户）：其它部位装备穿不上且看不到属性（用户确认等级限制是对的）；掉落名称在道具右上方间距大，要在正上方；装备不自动拾取，金币等自动；生成高清精细、创新、符合主题的登录页。
