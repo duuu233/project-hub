@@ -1,3 +1,18 @@
+## 2026-11-26 ssh｜孤独之路：主城篝火模型、CampfireVFX 与歇到天亮（main）
+
+- 需求（用户）：新加篝火 3D（.glb 传不上来）放到主城，点击恢复蓝和血药、直接到下一天；追加：模型本身没有火焰；「下一天」选「过夜并刷新商店」；在 bonfire 节点写 CampfireVFX 组件（程序化径向渐变圆点贴图、主火焰 / 上升火星 / 微弱烟雾三层 3D ParticleSystem、闪烁的暖橙色点光源）；以后可能让怪物难度随时间增长。
+- 同步：开工 pull 已最新（047e4e3）；中途用户推送 72ef085 / fdb8af5（篝火 GLB 放在 bundles 根目录），ff 拉取。
+- 发现：.gitignore 只放行 client/assets/bundles/** 的 .glb，而 11-26 我写的场景画质提升文档让道具放 assets/props/（被忽略）——已改文档。GLB 无颜色贴图（只有法线 PNG 7.6MB + ORM JPEG），1.06 万三角面，直径 1.48、高 0.47，原点底部中心。游戏里原本已有「薪火」交互（回满生命魔力），无天数概念；补给商每清一图刷新，赌装备无货架。
+- Path-of-Solitude main/32846f3（已 push）：
+  - 模型：新分包 town_props（自写 bundle meta），campfire.glb 贴图缩 512 JPEG → 0.60MB（网格逐字节不变），删原文件；view/prop-models.ts 预加载、缩放 0.65、tint #7a6a5c。
+  - 特效：view/campfire-vfx.ts（@ccclass CampfireVFX，radialDot、三层 ParticleSystem 模块按需补建、SphereLight 随机游走 + 双正弦闪烁与位置晃动，失败 ok=false 退回旧光团火焰）；新增 resources/materials/mat_particle.mtl 引用 builtin-particle（uuid d1346436-…，按内置值，未在编辑器确认）保证打包；渲染器 Bonfire 节点、地面暖光随闪烁。
+  - 歇到天亮：WorldSim.rest（回满生命 / 魔力 / 护盾 / 两瓶药、flow:rest）、tapCampfire；Authority.rest（单机 day+1 + vendor.stale；联网 POST /api/rest，服务端 rec.day+1、vendorStale，sync 返回 day 并由客户端采用）；Character.day 新字段；过夜黑屏「第 N 天」2.8 秒、HUD「第 N 天」。
+  - 文档：history、架构、美术素材清单（篝火一节、缺颜色贴图）、场景画质提升（交付位置）、构建与安全（town_props）、README。
+- 验证：node 去类型语法检查（组件去掉装饰器行后检查）；模拟 cc 跑 CampfireVFX（三层建成、模块补建、闪烁 0.77～1.12）；替身模块跑服务端 rest。无 Cocos / esbuild：未运行预览、未跑 selftest（改了商人刷新规则，按项目约定需跑）；粒子 API、mat_particle uuid、tint 属性名均未在引擎确认。
+- 待用户：Cocos 导入后提交新生成的 .meta（campfire.glb、town_props 内）；预览看篝火火焰 / 火光 / 歇息流程；提供篝火颜色贴图（BaseColor / Albedo）与许可来源；联网部署后跑 selftest；以后按天数加怪物难度时可直接用 Character.day / rec.day。
+
+---
+
 ## 2026-11-26 ssh｜孤独之路：法师贴地影子与落地扬尘（main）
 
 - 需求（用户）：消除移动时的浮空剥离感——核对角色 Y 偏移让靴底贴地；加脚底圆形渐变影子（或 Planar 阴影）；移动速度与 run 播放速率对齐消除滑步，run 左右脚落地帧挂轻微扬尘。中途补充：地板之后换建模素材。沿用上轮「先只管法师」。
