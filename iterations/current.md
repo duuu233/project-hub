@@ -1,3 +1,13 @@
+## 2026-11-26 ssh｜孤独之路：暗红战士模型接入游戏（main）
+
+- 需求（用户）：已推送战士建模与动作（e5c9eda：warrior.glb 2.0MB 六段动作、warrior_maul.glb 0.8MB、交接文档），试着引入游戏。
+- 发现：hero_models 文件夹 .meta 不是资源包，代码无法加载 → 改为小游戏分包。
+- Path-of-Solitude main/43c7d37（已 push）：view/hero-models.ts（巨锤挂 Grip_Main、实时骨骼、待机 / 跑 / Maul_Heavy 对齐出手 / Hit / Dodge_Roll 按 0.3 秒 / Fall），world-renderer-3d 战士路线用 GLB 主角、锤头光 / 拖尾 / 提灯取 GLB 节点，加载页预加载；文档同步。单手战锤暂显示巨锤。
+- 验证：语法检查；无 Cocos，未运行。
+- 待用户：预览战士（大小、握锤、出手时机、翻滚、受击、倒地复活）。
+
+---
+
 ## 2026-11-26 work｜孤独之路：暗红战士骨骼资产交接（main）
 
 - 需求：以暗红战士和灰岩巨锤参考图制作独立模型，交付 Blender 源、Cocos 导入件、绑定和动作，范围为美术文件及说明。
