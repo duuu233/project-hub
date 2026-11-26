@@ -5,6 +5,7 @@
 - Path-of-Solitude main/43c7d37（已 push）：view/hero-models.ts（巨锤挂 Grip_Main、实时骨骼、待机 / 跑 / Maul_Heavy 对齐出手 / Hit / Dodge_Roll 按 0.3 秒 / Fall），world-renderer-3d 战士路线用 GLB 主角、锤头光 / 拖尾 / 提灯取 GLB 节点，加载页预加载；文档同步。单手战锤暂显示巨锤。
 - 验证：语法检查；无 Cocos，未运行。
 - 待用户：预览战士（大小、握锤、出手时机、翻滚、受击、倒地复活）。
+- 追加：用户称已加入法师 / 游侠建模，但两个 tripo_convert_*.glb 放在根目录 assets/（被 *.glb 忽略，未进仓库）；用户 655c3b3 把 bundles 内 GLB 的放行规则注释掉 → 4092aad（已 push）恢复。已请用户移到 hero_models/mage_3d、ranger_3d 后推送；Tripo 导出可能无骨骼与动作，到后确认。用户要求用完压缩、删除不要的。
 
 ---
 
