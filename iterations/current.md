@@ -1,3 +1,14 @@
+## 2026-11-26 ssh｜花盆APP：iOS 设置页顶部设备名多出数字 4、时有时无、最后为空（main）
+
+- 需求（用户）：花盆 iOS 设备列表 → 设备详情 → 帮助中心 → 返回 → 设置，设置页顶部设备名末尾多了数字 4；反复返回再进时有时无，最后设备名称也没了；Android 没问题；修复。
+- 同步：flowerpot main pull 到 5472aa3（用户 iOS 涂鸦 7.11 两个提交）；无 `.codegraph/`。
+- 原因：设备名显示规则 `deviceDisplayName`（自定义名 → 涂鸦产品名 → 原始设备名 → 「设备」）用在列表 / 首页 / 信息页 / 割草机，唯独花盆设置页顶部卡片（`DeviceSettingsPageModel.fromDevice`）直接用涂鸦原始设备名 `device.name`；原始名是激活时云端生成，重复激活带序号（如「花盆test4」），且随 iOS deviceInfoUpdate 整台推送覆盖变化（为空就消失）。帮助中心是纯 Flutter 页面，排除。iOS 上原始名具体何时变化未能在服务器确认。
+- flowerpot main/e1a4a71（已 push）：设置页顶部改 `deviceDisplayName`（`fromDevice` 新增 `displayName`）；「其他设置」重新配网 / 移除确认里的设备名同改；`_applyDeviceUpdate` 原始名变化写联调日志「设备名 ←」；新增单元测试；docs/history 记录、history/README、AI_CONTEXT。
+- 验证：服务器无 Flutter / Dart，未 analyze / test、未编译、未真机。
+- 待用户：本地 `dart analyze lib test`、`flutter test`；iOS 真机按原路径反复进出确认；联调日志里看「设备名 ←」确认 iOS 推送原始名的变化。
+
+---
+
 ## 2026-11-26 ssh｜孤独之路：地板 V2 做成 Wang 瓦片无缝随机拼接（main）
 
 - 需求（用户）：按 V2（斜俯视画法的 地板V2-1/2.jpg）改地板，前提是无缝衔接，又要独一无二；每一处都无规律才真实。
