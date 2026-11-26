@@ -1,3 +1,46 @@
+## 2026-11-25 ssh｜孤独之路：装备手动拾取、物品卡、铭牌位置、标题登录页重做（main）
+
+- 需求（用户）：其它部位装备穿不上且看不到属性（用户确认等级限制是对的）；掉落名称在道具右上方间距大，要在正上方；装备不自动拾取，金币等自动；生成高清精细、创新、符合主题的登录页。
+- Path-of-Solitude main/b4ce468（已 push）：原因是详情和装备按钮画在 40 格行囊下方要滚动才看到 → 点物品弹物品卡（属性、部位、需要等级 / 当前、同部位对比、装备 / 分解 / 卸下 / 关闭），等级不够格子标红「Lv」；铭牌偏右上是 convertToUINode 在 DPR≠1 时按比例放大 → project 改用 worldToScreen 按摄像机窗口换算；铭牌在正上方叠高；装备仅点选拾取，行囊满留原地提示。
+- 登录页（随后一次提交，已 push）：title-view 重做为月夜迷雾荒滩（静态底层 + 动态上层，矢量绘制）：灯桩逐盏点亮、灯塔光束、提灯孤行者与脚印、月光倒影、浪花、闪电乌鸦、指尖散雾与涟漪。
+- 验证：语法检查；无 Cocos，未看实际画面。
+- 待用户：预览截图反馈登录页构图；浏览器与真机确认铭牌位置。
+
+---
+
+## 2026-11-25 ssh｜泰乾超级-qianrong H5：新增h5登录用户对接新增用户接口（master）
+
+- 需求（用户）：H5 企业管理员在 H5 直接给下属开账号，调 PC 新增用户接口，类型固定企业用户、归属当前企业。
+- 同步：tq-plus-h5 master、tq-plus dev pull 均已最新（tq-plus 只读参考）。
+- tq-plus-h5 master/bc47784（已 push）：createOperator → POST system/user（userType 03、orgId 当前企业、初始密码手机号后 6 位 Base64）；页面逐行提交、失败行留原因；测试 4 条；README、h5-foundation 同步。
+- 验证：无 Flutter，未 analyze / test。
+- 待用户：本地 analyze / test、打包；确认 H5 登录 token 有新增用户权限。用户确认不在前端拦截，以接口权限为准。
+
+---
+
+## 2026-11-25 ssh｜孤独之路：合入联调无敌、首领放到起点、灰鬃按技能播放动作（main）
+
+- 需求（用户）：已替换 BOSS 模型，拉代码后完成；BOSS 放到第一张图起点方便测试；上次的无敌开关没看到，要能开启无敌；几个版本整合后推送，含这次 BOSS 改造。
+- 同步：本地 2715a64（11-24 无敌 / 难度 / 灰犬放大）与远端 711e876、8d80e0f、7dd2f47 分叉；用户选 rebase。冲突仅美术素材清单一行，灰犬取本地、灰鬃取远端新版 → d2eccf1。无敌没看到的原因就是该提交一直未推送。
+- Path-of-Solitude main/e1108aa（已 push，d2eccf1 一并推送）：
+  - DevFlags.bossAtStart + 调试台开关（下次进图生效，起点沿路前 4–6 格找空地，玩家死亡重置回该点），HUD 提示。
+  - SpriteBoard 按技能 id 播同名动作（缺图用 attack），命中帧对齐各技能前摇；二阶段 roar、晕眩 stun。
+  - render_25d.py boss_greymane → Giang_99（Body / Armature，9 个动作，命中帧与 slam 截取均暂定）。
+  - 文档：README、美术素材清单、history。
+- 新模型 Giang_99.blend 只在用户 Windows（397MB，被忽略），仓库无新图：游戏里灰鬃仍是旧静态图，按技能动作需用户出图打包后可见。
+- 验证：Node strip-types 语法检查通过；无 Cocos / Blender / server 依赖，未运行、未 selftest。
+- 追加 fb6bcff（已 push）：用户首次试渲染身长仅 9.2 像素（正交缩放 49）。render_25d.py 加 in_place 原地渲染（镜头每帧跟随骨盆，去掉动作位移）与逐动作位移 / 身体最远诊断；slam 10fps、stun 6fps。用户试渲染用 --out 输出到临时目录，未进仓库、未打包，所以游戏内无变化。
+- 追加 1b92779（已 push）：二次试渲染正交缩放 5.8、身长 77.8 像素，元凶是 Jump_Atk 水平位移 7.82；诊断加各动作最高点，预计竖直方向仍被跳跃撑大，待看图与 slam 截取。
+- 追加（已 push）：朝向确认正面；Jump_Atk 最高 3.19 撑大竖直方向 → slam 加 in_place_z（去掉向上位移），游戏里砸地前摇按弧线跳起、命中落地（SLAM_HOP 1.6×H）。
+- 追加：用户 93132a5 上传正面序列帧（身长 69px、1.9MB），pack_sprites --only 误删灰犬 A1 图集与帧表 → 2110ecd 恢复并修脚本（未重打的怪物一律保留）。
+- 用户反馈不转向、模糊；测算 4 方向 7.7MB 仍糊、清晰版 35MB+ 超微信上限 → 用户选 3D 骨骼模型。4ca1e03（已 push）：view/monster-models.ts（GLB 预制体、动作同序列帧优先级、时间逐帧驱动、骨盆抵消水平位移、实时骨骼）、渲染器优先模型 + 首领转向玩家、tools/export_glb.py（只留 9 个动作、贴图 1024 JPEG、30fps）、.gitignore 放行 bundles 下 GLB。未运行、未在 Blender 跑导出。
+- 追加 b36ac4d（已 push）：用户 85f6a9a 上传 GLB（1.05MB）只含 Armature|Idle3 → 导出改 NLA 轨道并读回核对；一次性动作改为每次从头播放（起始时间 / 速度对齐命中）；删误提交的 __pycache__。待用户重新导出。
+- 追加 7a46b2f（已 push）：用户确认灰鬃 3D 效果（92b31dc，GLB 2.03MB 9 动作）。用户选灰犬也改 3D、删灰鬃序列帧：灰犬模型配置（预烘焙、bodyLen 2.78）、export_glb 支持 --preview-a1 / 减面 0.4 / 贴图 512；删灰鬃图集 2.2MB；pack_sprites 对有 GLB 的怪物不打序列帧。待用户导出灰犬 GLB、真机看帧率。
+- 追加（已 push）：用户 0c6fb6e 上传灰犬 GLB（1.27MB、8333 顶点、4 动作）；服务器运行 pack_sprites 清掉灰犬序列帧 570K，资源包仅剩两个 GLB 共 3.4M。用户反馈进图首帧卡顿 → 进图预热 3D 模型（每种小怪 8 个、首领 1 个，地面下画 3 帧后入池）。
+- 待用户：出 s 方向试渲染（看 forward、锚点、命中帧、slam 截取）；全 4 方向约 760 张，包体预算待定（降帧 / 截短 / BOSS 改 3D GLB）。
+
+---
+
 ## 2026-11-25 work｜孤独之路：腐化灰犬与新版灰鬃源模型交接（main）
 
 - 需求：用 Blender 跑两份模型报告。用户用有骨骼和动画的 `Giang_99.blend` 替换旧灰鬃源模型，要求恢复 `raw_models/` 忽略，并自行转发 Markdown 给 SSH 端。

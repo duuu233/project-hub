@@ -3856,3 +3856,23 @@ f049ed4已提交、再次pull/push成功；删顶部「设备仅支持 2.4G WiFi
 
 ## 2026-11-25 | taiqian-h5 | ssh | master | 我的页认证状态改取企业详情
 - master/215c471 已推送：认证状态由 system/orgAuth/list 推断改为 common/orgDetail 的 esignAuthStatus。未 analyze / test，用户本地打包。
+
+
+## 2026-11-25 | path-of-solitude | ssh | main | 合入联调无敌、首领放到起点、灰鬃按技能播放动作
+- rebase 后推送 d2eccf1 + e1108aa：联调无敌 / 难度、「首领放到起点」开关、序列帧按技能播放、Giang_99 渲染预设。新模型未出图，游戏内未运行。
+
+## 2026-11-25 | path-of-solitude | ssh | main | 渲染脚本原地渲染修复灰鬃过小
+- fb6bcff 已推送：in_place 镜头跟随骨盆、逐动作位移诊断。待用户重新试渲染。
+
+## 2026-11-25 | path-of-solitude | ssh | main | 灰鬃改用 3D 骨骼模型
+- 2110ecd 恢复误删的灰犬图集；4ca1e03 加载 GLB 模型、原地播放、转向玩家、Blender 导出脚本。待用户导出 GLB 并在 Cocos 预览。
+
+## 2026-11-25 | path-of-solitude | ssh | main | 灰犬改 3D、删灰鬃序列帧
+- b36ac4d 导出按 NLA 轨道；7a46b2f 灰犬 3D 配置与减面导出、删灰鬃图集 2.2MB。待用户导出灰犬 GLB。
+
+## 2026-11-25 | taiqian-h5 | ssh | master | 新增h5登录用户对接新增用户接口
+- 已推送：逐行 POST system/user（企业用户、当前企业），失败行留原因。未 analyze / test。
+
+## 2026-11-25 | path-of-solitude | ssh | main | 装备手动拾取、物品卡、铭牌修正、登录页重做
+- b4ce468 物品卡 / 手动拾取 / 投影修正；随后登录页重做（代码绘制）。未运行。
+
