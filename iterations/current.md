@@ -12,7 +12,8 @@
 - 追加 7099a4b（已 push）：tools/prepare_mixamo_upload.py（删 glTF_not_exported 骨骼显示小球、清动作回 A-Pose、另存 .blend、解包贴图、导出无动画 FBX，打印尺寸与对称检查），Mixamo 文档 2.1 改用脚本并保留手动做法。服务器无 Blender，未运行。
 - 追加 252ff3f（已 push）：用户反馈脚后方多一根长骨。核实不是 Root（Hips 上级只有 Armature 物体），而是法师 Tripo 多出的顶层骨 neutral_bone（游侠无），挂 4 个靴子顶点、无动作驱动 → 整理脚本删除 Hips 以外的顶层骨，顶点按距离转给最近骨骼。
 - 追加 0abe69e（已 push）：用户运行整理脚本报 select_set NoneType（删物体后视图层空位），整理与合并脚本都改为先刷新视图层并跳过空位；顶点转移已在用户机器上成功（LeftLeg / RightLeg 各 2 个）。
-- 待用户：按清单在 Mixamo 下载并合并；发武器模型与新战士。
+- 用户提交法师 Mixamo 动作（c53e5d7，3.25MB，17 段：idle / idle_combat / walk / run / death + 12 施法，无 hit / roll）。FK：run 1 倍速 2.20 格/秒（原 0.86），施法出手时刻按手速峰值 / 最前伸算出。ae4223e（已 push）：按技能 behavior 选施法（projectile 1H Atk02 0.60、chain 1H cast 0.68、nova 2H Area01 1.20、wall 2H Atk01 1.25、meteor 2H Cast01 0.60），出手 −0.12 秒开播、命中后可打断，战斗待机 4 秒，跑一圈最短 0.4 秒。
+- 待用户：预览法师；选定施法后去掉未用的 7 段（约 1MB）；游侠 / 战士照此流程；发武器模型。
 
 ---
 
