@@ -10,6 +10,7 @@
 - 追加：用户问是否发武器模型即可自主接入 → 给出 5 种武器（staff / wand / mace / maul / bow）交付要求（单独 GLB、原点在握手处、+Y 沿武器、≤5000 三角面、放 hero_models/weapons/）；建议新战士也用 Tripo + Mixamo 骨架以共用动作。
 - 898b6c4（已 push）：docs/design/Mixamo动作清单.md（七个动作 idle/run/walk/attack/hit/roll/death 的三职业候选与下载设置、上传与合并步骤）+ tools/merge_mixamo.py（Blender：待机 With Skin 作本体，其余只取动作，沿用原 GLB 材质，NLA 轨道导出并读回核对）。脚本未在 Blender 里跑过。
 - 追加 7099a4b（已 push）：tools/prepare_mixamo_upload.py（删 glTF_not_exported 骨骼显示小球、清动作回 A-Pose、另存 .blend、解包贴图、导出无动画 FBX，打印尺寸与对称检查），Mixamo 文档 2.1 改用脚本并保留手动做法。服务器无 Blender，未运行。
+- 追加 252ff3f（已 push）：用户反馈脚后方多一根长骨。核实不是 Root（Hips 上级只有 Armature 物体），而是法师 Tripo 多出的顶层骨 neutral_bone（游侠无），挂 4 个靴子顶点、无动作驱动 → 整理脚本删除 Hips 以外的顶层骨，顶点按距离转给最近骨骼。
 - 待用户：按清单在 Mixamo 下载并合并；发武器模型与新战士。
 
 ---
