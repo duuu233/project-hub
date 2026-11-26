@@ -5,7 +5,8 @@
 - 切图：借用服务器已有 Go 1.25 标准库（GOCACHE / HOME / TMPDIR 全部指向 .codex-tmp，GOPROXY=off），背景 1600 JPEG 134KB、LOGO 抠黑底 + 量化 256 色 156KB、图标 4 × 约 20KB；合成预览核对过。工具留在 .codex-tmp/imgtool（不进业务仓）。
 - Path-of-Solitude main/4db0d7c（已 push）：新资源包 title_ui（小游戏分包）；标题页美术模式（背景推拉、紫雾、月光、LOGO 淡入、右侧公告 / 设置 / 须知 / 退出图标与弹窗），缺图退回代码绘制；Art 贴图导入夹边；GameState.soundOn / setSound；TITLE_NOTICE。
 - 验证：语法检查；无 Cocos，未看实际画面。
-- 待用户：Cocos 导入后提交图片 .meta；预览截图反馈布局；决定是否把 package-private-keys 移出仓库。
+- 追加 0ec64f3（已 push）：用户 a56b768 提交图片 .meta 与按钮切图 btns.jpg → 按密度定位边框、外扩光晕边距、量化，各约 80KB；有存档「继续游戏」+「开始游戏」（覆盖存档改确认弹窗），无存档仅「开始游戏」；删除源图目录 assets/登录页切图（9.4MB，可从 a56b768 取回）。title_ui 包共约 550KB。
+- 待用户：Cocos 导入后提交两张按钮的 .meta；预览截图反馈布局；决定是否把 package-private-keys 移出仓库。
 
 ---
 
