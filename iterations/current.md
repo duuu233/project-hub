@@ -9,6 +9,7 @@
 - 追加（用户：动作滑稽、和场景不符，能否自主优化）：FK 量化跑步步幅 → 1 倍速对应 战士 0.65 / 法师 0.86 / 游侠 0.88 格/秒，游戏移动约 3 格/秒，打滑 3.5～4.6 倍。d92c939（已 push）：播放速率按步幅匹配（一圈 ≥0.5 秒）、跑动前倾 ≤10°、缺动作用整体姿态代替（前冲 / 后仰 / 蹲低）、定格站姿呼吸。残余打滑 1.4 倍（法师 / 游侠）、2.8 倍（战士），根治需冲刺跑动作。
 - 追加：用户问是否发武器模型即可自主接入 → 给出 5 种武器（staff / wand / mace / maul / bow）交付要求（单独 GLB、原点在握手处、+Y 沿武器、≤5000 三角面、放 hero_models/weapons/）；建议新战士也用 Tripo + Mixamo 骨架以共用动作。
 - 898b6c4（已 push）：docs/design/Mixamo动作清单.md（七个动作 idle/run/walk/attack/hit/roll/death 的三职业候选与下载设置、上传与合并步骤）+ tools/merge_mixamo.py（Blender：待机 With Skin 作本体，其余只取动作，沿用原 GLB 材质，NLA 轨道导出并读回核对）。脚本未在 Blender 里跑过。
+- 追加 7099a4b（已 push）：tools/prepare_mixamo_upload.py（删 glTF_not_exported 骨骼显示小球、清动作回 A-Pose、另存 .blend、解包贴图、导出无动画 FBX，打印尺寸与对称检查），Mixamo 文档 2.1 改用脚本并保留手动做法。服务器无 Blender，未运行。
 - 待用户：按清单在 Mixamo 下载并合并；发武器模型与新战士。
 
 ---
