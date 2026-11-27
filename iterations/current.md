@@ -1,3 +1,15 @@
+## 2026-11-27 ssh｜花盆APP：重新配网后自定义纪念日不同步、设备改名核对（main）
+
+- 需求（用户，转述测试）：设置自定义纪念日后「移除设备再配网」App 有纪念日；「重新配网」（DP150）后设备还有、联网后也重新上报 DP154，App 却不同步。另：设备名末尾数字是涂鸦同 UID 下多台设备的自动命名，看是否授权码 / 绑定关系导致 IoT 认不出多台设备；1. 检测设置名称是否正确调用涂鸦 SDK；2. 检测并修复纪念日问题。
+- 同步：Hub、flowerpot 开工 pull 均已最新（e1a4a71）；无 `.codegraph/`。
+- 原因：App 把 154 当只写，设备上报一律丢弃，自定义纪念日列表只认后端 `getProductAnniversaryList` 按涂鸦设备 id 查（并按返回行 deviceId 过滤）；功能点表 154 为 rw，帧 ID = 后端 anniversaryId。重新配网路径最可能是激活后设备 id 与保存时不同 → 按新 id 查不到；服务器无法真机确认，加日志直接比对。
+- flowerpot main/62637f5（已 push）：`TuyaMemorialCodec.decodeFrames`（多帧、删除帧）；state 记下 154 上报并补齐（取详情 → 挂别的 id 就 editUserProductAnniversary 改挂；后端没有就 addAnniversary 重建、写新 id 删设备旧 id；未接后端按帧补本机；保存中 / 本次删除不补；刷新后再补）；DP150 受理时记 id + uuid/mac，配网成功比对，id 变且 uuid 同则 `_migrateMemorials`；配网成功日志与设备列表快照加设备 ID / uuid / 激活时间、同 uuid 提示；退出登录清会话记录；测试三例 + codec 一例；docs/history、history/README、AI_CONTEXT。
+- 改名核对：Android 反射调用 `renameDevice(name, IResultCallback)`，iOS `ThingSmartDevice.updateName`，均为 SDK 改名接口，正确；后端 editUserProduct 映射从未填充、实际不调用。数字序号是云端激活取名；授权码重复 / 每次换新 id 可用新日志区分。
+- 验证：无 Flutter / Dart，未 analyze / test、未编译、未真机；后端 edit 接口是否允许改 deviceId 未确认。
+- 待用户：本地 `dart analyze`、`flutter test test/tuya/memorial_codec_test.dart test/features/devices/memorial_page_test.dart`；真机重新配网后看日志「重新配网 ✓/⚠️」「纪念日 ← / ↻」并确认纪念日出现；两台实物对比快照 uuid。
+
+---
+
 ## 2026-11-27 ssh｜孤独之路：序章剧情接入游戏（main）
 
 - 需求（用户）：按业务仓 docs/lore_chapter1.md 定稿的第一版故事优化文案并加入项目，改完总结故事给用户核对偏差。中途补充：三位首领「先随便用一个占位」；自由挑战，薇拉先倒下就潜伏到三个首领都死再屠村，薇拉最后倒下就当场摊牌、变身打伤主角去清算村子；三个首领之间有枷锁，不能互相攻击。
