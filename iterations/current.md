@@ -7,6 +7,7 @@
 - 改名核对：Android 反射调用 `renameDevice(name, IResultCallback)`，iOS `ThingSmartDevice.updateName`，均为 SDK 改名接口，正确；后端 editUserProduct 映射从未填充、实际不调用。数字序号是云端激活取名；授权码重复 / 每次换新 id 可用新日志区分。
 - 验证：无 Flutter / Dart，未 analyze / test、未编译、未真机；后端 edit 接口是否允许改 deviceId 未确认。
 - 待用户：本地 `dart analyze`、`flutter test test/tuya/memorial_codec_test.dart test/features/devices/memorial_page_test.dart`；真机重新配网后看日志「重新配网 ✓/⚠️」「纪念日 ← / ↻」并确认纪念日出现；两台实物对比快照 uuid。
+- 追加（用户：出一份改动说明给产品看，简单明了）：flowerpot main/bfe2ae2（已 push）新增 docs/reports/2026-11-27-花盆APP改动说明.md（纪念日问题 / 原因 / 改了什么；设备名称三点，含 11-26 设置页名称修正），docs/README 报告索引；按约定不写验收与说明段。
 
 ---
 
